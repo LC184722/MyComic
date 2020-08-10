@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.qmuiteam.qmui.widget.QMUIRadiusImageView
+                android:id="@+id/qivImg"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:background="@drawable/no_image"
+                app:qmui_border_width="0dp"
+                app:qmui_corner_radius="@dimen/dp_10" />
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tvCurChapter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="start"
+                android:maxLines="1"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/tvChapter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="start"
+                android:maxLines="1"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout
+            android:id="@+id/llTextUpdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="0dp"
+            android:paddingStart="@dimen/dp_4"
+            android:paddingEnd="@dimen/dp_4"
+            android:visibility="gone"
+            app:qmui_backgroundColor="@color/qmui_config_color_red"
+            app:qmui_borderColor="@color/qmui_config_color_red"
+            app:qmui_radiusBottomLeft="@dimen/dp_10"
+            app:qmui_radiusTopLeft="@dimen/dp_10">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="更新"
+                android:textColor="@color/white"
+                android:textSize="10sp" />
+
+        </com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>
+
+        <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout
+            android:id="@+id/llImageUpdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="-5dp"
+            android:layout_marginEnd="10dp"
+            android:visibility="gone"
+            app:qmui_borderColor="@color/qmui_config_color_red"
+            app:qmui_radiusBottomLeft="@dimen/dp_10"
+            app:qmui_radiusTopLeft="@dimen/dp_10">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_baseline_turned_in_24" />
+
+        </com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

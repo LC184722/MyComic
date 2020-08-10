@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <!--            <solid android:color="@color/qmui_config_color_blue" />-->
+            <solid android:color="@color/white" />
+        </shape>
+    </item>
+    <item
+        android:bottom="50dp"
+        android:gravity="bottom|center">
+        <bitmap android:src="@drawable/ic_text_blue" />
+    </item>
+
+</layer-list>

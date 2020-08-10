@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<litepal>
+    <dbname value="comic" />   <!-- 数据库的名字 -->
+    <version value="13" />  <!-- 数据库的版本号 -->
+
+    <list>
+        <!-- 配置模型类 -->
+        <mapping class="com.qc.mycomic.model.Comic" />
+        <mapping class="com.qc.mycomic.model.ComicInfo" />
+    </list>
+
+</litepal>

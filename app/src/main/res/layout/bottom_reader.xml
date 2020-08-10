@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.5"
+            android:background="@color/black">
+
+        </LinearLayout>
+
+        <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/dp_10"
+            android:paddingEnd="@dimen/dp_10"
+            app:qmui_backgroundColor="@color/white"
+            app:qmui_borderColor="@color/lightGray"
+            app:qmui_borderWidth="2dp"
+            app:qmui_radiusTopLeft="@dimen/dp_10"
+            app:qmui_radiusTopRight="@dimen/dp_10">
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/ibLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_keyboard_arrow_left_24" />
+
+            <SeekBar
+                android:id="@+id/seekBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/ibRight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_keyboard_arrow_right_24" />
+
+        </com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>
+
+    </RelativeLayout>
+
+
+</LinearLayout>

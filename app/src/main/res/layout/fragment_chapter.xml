@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="176dp"
+        android:padding="8dp"
+        app:qmui_borderColor="@color/lightGray"
+        app:qmui_borderWidth="2dp"
+        app:qmui_radius="10dp">
+
+        <com.qmuiteam.qmui.widget.QMUIRadiusImageView
+            android:id="@+id/qivImg"
+            android:layout_width="120dp"
+            android:layout_height="160dp"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/no_image"
+            app:qmui_border_width="0dp"
+            app:qmui_corner_radius="@dimen/dp_10" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_10">
+
+                <com.qmuiteam.qmui.widget.QMUIFontFitTextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="2"
+                    android:text="标题"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_10"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="漫画源：" />
+
+                <TextView
+                    android:id="@+id/tvSource"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="米推漫画"
+                    android:textColor="@color/qmui_config_color_blue" />
+
+                <TextView
+                    android:id="@+id/tvSourceSize"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="(2)"
+                    android:textColor="@color/qmui_config_color_red" />
+
+            </LinearLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/llUpdateTime"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_10"
+                        android:text="最新章节：" />
+
+                    <TextView
+                        android:id="@+id/tvUpdateChapter"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_10"
+                        android:text="最新章节！"
+                        android:textColor="@color/qmui_config_color_blue" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llUpdateTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/dp_10"
+                        android:text="更新时间：" />
+
+                    <TextView
+                        android:id="@+id/tvUpdateTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="0dp"
+                        android:text="2020-6-6" />
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>
+
+
+    <!--    <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="@dimen/dp_40"-->
+    <!--        android:layout_marginTop="@dimen/dp_10"-->
+    <!--        android:layout_marginBottom="@dimen/dp_10"-->
+    <!--        android:gravity="end"-->
+    <!--        android:padding="8dp"-->
+    <!--        app:qmui_borderColor="@color/lightGray"-->
+    <!--        app:qmui_borderWidth="2dp"-->
+    <!--        app:qmui_radius="10dp">-->
+
+    <!--        <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton-->
+    <!--            android:id="@+id/btCollect"-->
+    <!--            android:layout_width="100dp"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:paddingStart="@dimen/dp_10"-->
+    <!--            android:paddingTop="@dimen/dp_4"-->
+    <!--            android:paddingEnd="@dimen/dp_10"-->
+    <!--            android:paddingBottom="@dimen/dp_4"-->
+    <!--            android:text="收藏"-->
+    <!--            android:textColor="@color/lightGray"-->
+    <!--            app:qmui_borderColor="@color/lightGray"/>-->
+
+    <!--    </com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>-->
+
+
+</LinearLayout>

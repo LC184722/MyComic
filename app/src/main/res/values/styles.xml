@@ -1,0 +1,22 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="MyBaseTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <!--        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
+        <item name="colorPrimaryDark">@color/white</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <!--        <item name="color">@color/qmui_config_color_blue</item>#1B88EE-->
+    </style>
+
+    <style name="MyBaseTheme" parent="BaseTheme">
+        <!--        <item name="qmui_skin_support_round_btn_border_color">@color/gray</item>-->
+        <!--        <item name="qmui_skin_support_round_btn_text_color">@color/gray</item>-->
+    </style>
+
+    <style name="MyBaseTheme.Launcher">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowBackground">@drawable/splash</item>
+    </style>
+
+</resources>

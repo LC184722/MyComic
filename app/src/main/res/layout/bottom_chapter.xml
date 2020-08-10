@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom">
+
+    <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:qmui_backgroundColor="@color/white"
+        app:qmui_borderColor="@color/lightGray"
+        app:qmui_borderWidth="2dp"
+        app:qmui_radiusTopLeft="@dimen/dp_10"
+        app:qmui_radiusTopRight="@dimen/dp_10">
+
+        <com.qmuiteam.qmui.layout.QMUILinearLayout
+            android:id="@+id/favLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingStart="@dimen/dp_40">
+
+            <the.one.base.widge.ScaleImageView
+                android:id="@+id/ivFav"
+                android:layout_width="30dp"
+                android:layout_height="30dp" />
+
+            <TextView
+                android:id="@+id/tvFav"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="已收藏"
+                android:textSize="@dimen/qmui_btn_text_size" />
+
+        </com.qmuiteam.qmui.layout.QMUILinearLayout>
+
+
+        <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:qmui_backgroundColor="@color/colorPrimary"
+            app:qmui_radiusTopRight="@dimen/dp_10">
+
+            <TextView
+                android:id="@+id/tvRead"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="继续阅读"
+                android:textColor="@color/white"
+                android:textSize="@dimen/qmui_btn_text_size" />
+
+        </com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>
+
+    </com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>
+
+</LinearLayout>
