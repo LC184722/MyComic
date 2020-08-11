@@ -21,6 +21,11 @@ public class JsonNode {
         init(json);
     }
 
+    public JsonNode(String json, String... conditions) {
+        init(json);
+        initConditions(conditions);
+    }
+
     private JSONObject parse(String json) {
         return JSONObject.parseObject(json);
     }
@@ -32,6 +37,16 @@ public class JsonNode {
     public void init(String json) {
         try {
             this.jsonObject = parse(json);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void initConditions(String... conditions) {
+        try {
+            for (String condition : conditions) {
+                init(jsonObject(condition));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

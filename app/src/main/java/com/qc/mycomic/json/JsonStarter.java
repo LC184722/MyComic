@@ -10,8 +10,20 @@ public abstract class JsonStarter<T> {
 
     private JsonNode node = new JsonNode();
 
+    private int cur;
+
+    private int total;
+
     public boolean isDESC() {
         return true;
+    }
+
+    public int getCur() {
+        return cur;
+    }
+
+    public int getTotal() {
+        return total;
     }
 
     public List<T> startDataList(String json, String... conditions) {
@@ -27,10 +39,13 @@ public abstract class JsonStarter<T> {
         }
         List<T> list = new LinkedList<>();
         if (jsonArray != null) {
+            total = jsonArray.size();
+            cur = 0;
             for (Object o : jsonArray) {
                 JSONObject jsonObject = (JSONObject) o;
                 node.init(jsonObject);
                 T t = dealDataList(node);
+                cur++;
                 if (t != null) {
                     if (isDESC()) {
                         list.add(t);
@@ -45,9 +60,7 @@ public abstract class JsonStarter<T> {
 
     public void startData(String json, String... conditions) {
         node.init(json);
-        for (String condition : conditions) {
-            node.init(node.jsonObject(condition));
-        }
+        node.initConditions(conditions);
         dealData(node);
     }
 

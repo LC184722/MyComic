@@ -4,11 +4,9 @@ import android.util.Log;
 
 import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ComicInfo;
-import com.qc.mycomic.model.MyMap;
 import com.qc.mycomic.model.Source;
 import com.qc.mycomic.util.Codes;
 import com.qc.mycomic.util.NetUtil;
-import com.qc.mycomic.view.RankView;
 import com.qc.mycomic.view.RankView;
 
 import java.io.IOException;
@@ -51,11 +49,7 @@ public class RankPresenter extends BasePresenter<RankView> {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.e(TAG, "load: fail url = " + request.url());
-                AndroidSchedulers.mainThread().scheduleDirect(() -> {
-                    showErrorPage(e.getMessage(), v -> {
-                        load(request.url().toString());
-                    });
-                });
+                AndroidSchedulers.mainThread().scheduleDirect(() -> showErrorPage(e.getMessage(), v -> load(request.url().toString())));
             }
 
             @Override
@@ -70,9 +64,7 @@ public class RankPresenter extends BasePresenter<RankView> {
                 }
                 map.put(request.url().toString(), html);
                 RankView view = getView();
-                AndroidSchedulers.mainThread().scheduleDirect(() -> {
-                    dealHtml(view, html);
-                });
+                AndroidSchedulers.mainThread().scheduleDirect(() -> dealHtml(view, html));
             }
         };
         NetUtil.startLoad(request, callback);

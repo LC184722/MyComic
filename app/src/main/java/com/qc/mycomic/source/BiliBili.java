@@ -1,24 +1,29 @@
 package com.qc.mycomic.source;
 
-import android.util.Log;
-
 import com.qc.mycomic.json.JsonNode;
 import com.qc.mycomic.json.JsonStarter;
 import com.qc.mycomic.model.ChapterInfo;
 import com.qc.mycomic.model.ComicInfo;
 import com.qc.mycomic.model.ImageInfo;
+import com.qc.mycomic.model.ImageLoader;
 import com.qc.mycomic.model.MyMap;
 import com.qc.mycomic.model.Source;
 import com.qc.mycomic.util.Codes;
+import com.qc.mycomic.util.NetUtil;
 import com.qc.mycomic.util.StringUtil;
+import com.qc.mycomic.view.ReaderView;
 
-import java.util.LinkedList;
+import java.io.IOException;
 import java.util.List;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.MultipartBody;
 import okhttp3.Request;
+import okhttp3.Response;
 
-public class BiliBili implements Source {
+public class BiliBili implements Source, ImageLoader {
     @Override
     public int getSourceId() {
         return Codes.BILI_BILI;
@@ -92,7 +97,6 @@ public class BiliBili implements Source {
 
     @Override
     public void setComicDetail(ComicInfo comicInfo, String html) {
-        comicInfo.setDetailUrl("https://manga.bilibili.com/detail/mc25816");
         String id = StringUtil.match("(\\d+)", comicInfo.getDetailUrl());
         JsonStarter<ChapterInfo> starter = new JsonStarter<ChapterInfo>() {
             @Override
@@ -106,7 +110,11 @@ public class BiliBili implements Source {
 
             @Override
             public ChapterInfo dealDataList(JsonNode node) {
-                String title = node.string("title");
+                String title = node.string("short_title");
+                String oTitle = node.string("title");
+                if (oTitle != null) {
+                    title = title + " " + oTitle;
+                }
                 String chapterUrl = "https://manga.bilibili.com/mc" + id + "/" + node.string("id");
                 return new ChapterInfo(title, chapterUrl);
             }
@@ -117,7 +125,23 @@ public class BiliBili implements Source {
 
     @Override
     public List<ImageInfo> getImageInfoList(String html, int chapterId) {
-        return new LinkedList<>();
+        System.out.println("html = " + html);
+        JsonStarter<ImageInfo> starter = new JsonStarter<ImageInfo>() {
+            @Override
+            public void dealData(JsonNode node) {
+
+            }
+
+            @Override
+            public ImageInfo dealDataList(JsonNode node) {
+                String url = node.string("url");
+                String token = node.string("token");
+                String chapterUrl = url + "?token=" + token;
+                chapterUrl = chapterUrl.replace("\\u0026", "&");
+                return new ImageInfo(chapterId, getCur(), getTotal(), chapterUrl);
+            }
+        };
+        return starter.startDataList(html, "data");
     }
 
     @Override
@@ -185,5 +209,72 @@ public class BiliBili implements Source {
             list = starter.startDataList(html, "data", "comics");
         }
         return list;
+    }
+
+    @Override
+    public void loadImageInfoList(ReaderView view, String chapterUrl, int chapterId) {
+        int index = chapterUrl.lastIndexOf('/');
+        String id = StringUtil.match("(\\d+)", chapterUrl.substring(index));
+        if (id == null) {
+            AndroidSchedulers.mainThread().scheduleDirect(() -> {
+                view.showErrorPage("解析失败");
+            });
+        } else {
+            Callback callback = new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    AndroidSchedulers.mainThread().scheduleDirect(() -> {
+                        view.showErrorPage("解析失败");
+                    });
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    String html = response.body().string();
+                    JsonNode node = new JsonNode(html, "data", "index");
+                    String pics = node.string("pics");
+                    if (pics != null) {
+                        Callback callback = new Callback() {
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+                                String html = response.body().string();
+                                List<ImageInfo> imageInfoList = getImageInfoList(html, chapterId);
+                                AndroidSchedulers.mainThread().scheduleDirect(() -> {
+                                    if (view != null) {
+                                        if (imageInfoList.size() > 0) {
+                                            view.loadImageInfoListComplete(imageInfoList);
+                                        } else {
+                                            AndroidSchedulers.mainThread().scheduleDirect(() -> {
+                                                view.showErrorPage("解析失败");
+                                            });
+                                        }
+                                    }
+                                });
+                                System.out.println("response.body().string() = " + html);
+                            }
+                        };
+                        String url = "https://manga.bilibili.com/twirp/comic.v1.Comic/ImageToken?device=pc&platform=web";
+                        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+                        builder.addFormDataPart("urls", pics);
+                        Request request = new Request.Builder().addHeader("User-Agent", Codes.USER_AGENT_WEB).url(url).post(builder.build()).build();
+                        NetUtil.startLoad(request, callback);
+                    } else {
+                        AndroidSchedulers.mainThread().scheduleDirect(() -> {
+                            view.showErrorPage("解析失败");
+                        });
+                    }
+                }
+            };
+            String url = "https://manga.bilibili.com/twirp/comic.v1.Comic/GetImageIndex?device=pc&platform=web";
+            MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+            builder.addFormDataPart("ep_id", id);
+            Request request = new Request.Builder().addHeader("User-Agent", Codes.USER_AGENT_WEB).url(url).post(builder.build()).build();
+            NetUtil.startLoad(request, callback);
+        }
     }
 }

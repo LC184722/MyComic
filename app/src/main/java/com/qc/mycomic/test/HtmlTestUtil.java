@@ -211,7 +211,7 @@ public class HtmlTestUtil implements Source {
         Callback callback = new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                System.out.println("e.getMessage() = " + e.getMessage());
+                e.printStackTrace();
             }
 
             @Override
@@ -220,13 +220,30 @@ public class HtmlTestUtil implements Source {
                 System.out.println("response.body().string() = " + html);
                 List<ComicInfo> list = getRankComicInfoList(html);
                 System.out.println("list = " + list);
+                JsonStarter<String> starter = new JsonStarter<String>() {
+                    @Override
+                    public void dealData(JsonNode node) {
+                    }
+
+                    @Override
+                    public String dealDataList(JsonNode node) {
+                        return null;
+                    }
+                };
+                starter.startData(html, "data", "index");
+
+
             }
         };
-//        String url = "https://manga.bilibili.com/twirp/comic.v1.Comic/Index?device=h5&platform=h5";
-//        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
-//        builder.addFormDataPart("ep_id", "278228");
-//        Request request = new Request.Builder().addHeader("User-Agent", Codes.USER_AGENT_WEB).url(url).post(builder.build()).build();
-        Request request = getRankRequest("HomeFans-{\"last_week_offset\":0,\"last_month_offset\":0,\"type\":0}");
+        //            https://manga.bilibili.com/twirp/comic.v1.Comic/GetImageIndex?device=pc&platform=web
+        //            https://manga.bilibili.com/twirp/comic.v1.Comic/ImageToken?device=pc&platform=web
+        String url = "https://manga.bilibili.com/twirp/comic.v1.Comic/GetImageIndex?device=pc&platform=web";
+        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        builder.addFormDataPart("ep_id", "307985");
+        Request request = new Request.Builder().addHeader("User-Agent", Codes.USER_AGENT_WEB).url(url).post(builder.build()).build();
+
+//        Request request = getRankRequest("HomeFans-{\"last_week_offset\":0,\"last_month_offset\":0,\"type\":0}");
+
         NetUtil.startLoad(request, callback);
     }
 
