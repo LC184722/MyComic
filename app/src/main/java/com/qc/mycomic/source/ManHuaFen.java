@@ -116,7 +116,6 @@ public class ManHuaFen implements Source {
         List<ImageInfo> list = new LinkedList<>();
         String server = "https://img01.eshanyao.com/";
         String chapterImagesEncodeStr = StringUtil.match("var chapterImages = \"(.*?)\";", html);
-        System.out.println("chapterImagesEncodeStr = " + chapterImagesEncodeStr);
         //var chapterPath = "images/comic/259/517692/";
         String chapterPath = StringUtil.match("var chapterPath = \"(.*?)\";", html);
         String chapterImagesStr = decrypt(chapterImagesEncodeStr);

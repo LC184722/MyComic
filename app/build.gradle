@@ -1,5 +1,26 @@
 apply plugin: 'com.android.application'
 
+static def gitVersionCode() {
+    def cmd = 'git rev-list HEAD --first-parent --count'
+    cmd.execute().text.trim().toInteger()
+}
+
+static def gitVersionTag() {
+    def cmd = 'git describe --tags'
+    def version = cmd.execute().text.trim()
+
+    def pattern = "-(\\d+)-g"
+    def matcher = version =~ pattern
+
+    if (matcher) {
+        version = version.substring(0, matcher.start()) + "-" + matcher[0][1]
+    } else {
+        version = version + "-0"
+    }
+
+    return version
+}
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
@@ -8,8 +29,8 @@ android {
         applicationId "com.qc.mycomic"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 1
-        versionName "1.0.1"
+        versionCode gitVersionCode()
+        versionName gitVersionTag()
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -25,10 +46,10 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    android.applicationVariants.all {
+    applicationVariants.all {
         variant ->
             variant.outputs.all {
-                outputFileName = "MyComic-v${variant.versionName}.apk"
+                outputFileName = "MyComic-${variant.versionName}.apk"
             }
     }
 
@@ -40,7 +61,7 @@ dependencies {
     implementation 'org.litepal.android:java:3.0.0'
     implementation 'com.alibaba:fastjson:1.2.72'
     implementation 'org.mozilla:rhino:1.7.12'
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

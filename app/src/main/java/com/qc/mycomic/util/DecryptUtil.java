@@ -78,7 +78,6 @@ public class DecryptUtil {
             ctx.setOptimizationLevel(-1);
             Scriptable scope = ctx.initStandardObjects();
             Object object = ctx.evaluateString(scope, code, null, 0, null);
-            System.out.println("object = " + object);
             return Context.toString(object);
         } catch (Exception e) {
             e.printStackTrace();

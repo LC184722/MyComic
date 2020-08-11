@@ -61,14 +61,10 @@ public class BiliBili implements Source, ImageLoader {
     @Override
     public Request getRankRequest(String rankUrl) {
         String[] attrs = rankUrl.split("#");
-        System.out.println("attrs[0] = " + attrs[0]);
-        System.out.println("attrs[1] = " + attrs[1]);
         String url = String.format("https://manga.bilibili.com/twirp/comic.v1.Comic/%s?device=pc&platform=web", attrs[0]);
         JsonNode node = new JsonNode(attrs[1]);
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
         for (String key : node.keySet()) {
-            System.out.println("key = " + key);
-            System.out.println("node = " + node.string(key));
             builder.addFormDataPart(key, node.string(key));
         }
         return new Request.Builder().addHeader("User-Agent", Codes.USER_AGENT_WEB).url(url).post(builder.build()).build();
@@ -125,7 +121,6 @@ public class BiliBili implements Source, ImageLoader {
 
     @Override
     public List<ImageInfo> getImageInfoList(String html, int chapterId) {
-        System.out.println("html = " + html);
         JsonStarter<ImageInfo> starter = new JsonStarter<ImageInfo>() {
             @Override
             public void dealData(JsonNode node) {
@@ -154,10 +149,13 @@ public class BiliBili implements Source, ImageLoader {
         map.put("投喂榜", "HomeFans#{\"last_week_offset\":0,\"last_month_offset\":0,\"type\":0}");//{"last_week_offset":0,"last_month_offset":0,"type":0}
         map.put("飙升榜", "HomeHot#{\"type\":2}");//{"type":2}
         map.put("免费榜", "HomeHot#{\"type\":1}");//{"type":1}
-        //https://manga.bilibili.com/twirp/comic.v1.Comic/ClassPage?device=pc&platform=web {"style_id":1028,"area_id":-1,"is_finish":-1,"order":0,"page_num":1,"page_size":18,"is_free":-1}
+        //https://manga.bilibili.com/twirp/comic.v1.Comic/ClassPage?device=pc&platform=web {"style_id":-1,"area_id":1,"is_finish":-1,"order":0,"page_num":1,"page_size":200,"is_free":-1}
         map.put("免费", "ClassPage#{\"style_id\":-1,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":1}");
         map.put("付费", "ClassPage#{\"style_id\":-1,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":2}");
         map.put("等就免费", "ClassPage#{\"style_id\":-1,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":3}");
+        map.put("大陆", "ClassPage#{\"style_id\":-1,\"area_id\":1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":-1}");
+        map.put("日本", "ClassPage#{\"style_id\":-1,\"area_id\":2,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":-1}");
+        map.put("韩国", "ClassPage#{\"style_id\":-1,\"area_id\":6,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":-1}");
         map.put("连载", "ClassPage#{\"style_id\":-1,\"area_id\":-1,\"is_finish\":0,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":-1}");
         map.put("完结", "ClassPage#{\"style_id\":-1,\"area_id\":-1,\"is_finish\":1,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":-1}");
         map.put("正能量", "ClassPage#{\"style_id\":1028,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":-1}");
@@ -216,16 +214,12 @@ public class BiliBili implements Source, ImageLoader {
         int index = chapterUrl.lastIndexOf('/');
         String id = StringUtil.match("(\\d+)", chapterUrl.substring(index));
         if (id == null) {
-            AndroidSchedulers.mainThread().scheduleDirect(() -> {
-                view.showErrorPage("解析失败");
-            });
+            loadError(view);
         } else {
             Callback callback = new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    AndroidSchedulers.mainThread().scheduleDirect(() -> {
-                        view.showErrorPage("解析失败");
-                    });
+                    loadError(view);
                 }
 
                 @Override
@@ -249,13 +243,10 @@ public class BiliBili implements Source, ImageLoader {
                                         if (imageInfoList.size() > 0) {
                                             view.loadImageInfoListComplete(imageInfoList);
                                         } else {
-                                            AndroidSchedulers.mainThread().scheduleDirect(() -> {
-                                                view.showErrorPage("解析失败");
-                                            });
+                                            loadError(view);
                                         }
                                     }
                                 });
-                                System.out.println("response.body().string() = " + html);
                             }
                         };
                         String url = "https://manga.bilibili.com/twirp/comic.v1.Comic/ImageToken?device=pc&platform=web";
@@ -264,9 +255,7 @@ public class BiliBili implements Source, ImageLoader {
                         Request request = new Request.Builder().addHeader("User-Agent", Codes.USER_AGENT_WEB).url(url).post(builder.build()).build();
                         NetUtil.startLoad(request, callback);
                     } else {
-                        AndroidSchedulers.mainThread().scheduleDirect(() -> {
-                            view.showErrorPage("解析失败");
-                        });
+                        loadError(view);
                     }
                 }
             };
@@ -277,4 +266,12 @@ public class BiliBili implements Source, ImageLoader {
             NetUtil.startLoad(request, callback);
         }
     }
+
+    private void loadError(ReaderView view) {
+        AndroidSchedulers.mainThread().scheduleDirect(() -> {
+            view.showErrorPage("解析失败");
+        });
+    }
+
+
 }

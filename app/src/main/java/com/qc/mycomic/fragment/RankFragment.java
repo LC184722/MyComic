@@ -133,7 +133,6 @@ public class RankFragment extends BaseDataFragment<Comic> implements RankView {
             if (tmp != null) {
                 String page = pageString + tmp;
                 String nPage = pageString + pageNum;
-                System.out.println("url.replaceFirst(page, nPage) = " + url.replaceFirst(page, nPage));
                 return url.replaceFirst(page, nPage);
             }
         }

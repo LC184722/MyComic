@@ -105,7 +105,6 @@ public class ShelfFragment extends BaseTitleTabFragment {
                     for (Comic comic : comicList) {
                         if (random.nextBoolean()) {
                             comic.getComicInfo().setUpdateChapter("???");
-                            System.out.println("comic = " + comic);
                             DBUtil.saveData(comic.getComicInfo());
                         }
                     }
