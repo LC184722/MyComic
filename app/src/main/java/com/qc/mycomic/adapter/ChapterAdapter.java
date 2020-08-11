@@ -2,8 +2,6 @@ package com.qc.mycomic.adapter;
 
 import android.content.res.ColorStateList;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -11,9 +9,6 @@ import androidx.annotation.Nullable;
 import com.qc.mycomic.R;
 import com.qc.mycomic.model.ChapterInfo;
 import com.qc.mycomic.model.Comic;
-import com.qc.mycomic.model.ComicInfo;
-import com.qmuiteam.qmui.arch.QMUIFragment;
-import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton;
 import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButtonDrawable;
 import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout;
 

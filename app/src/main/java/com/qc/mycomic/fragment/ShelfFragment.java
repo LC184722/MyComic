@@ -1,43 +1,23 @@
 package com.qc.mycomic.fragment;
 
-import android.content.DialogInterface;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.qc.mycomic.R;
 import com.qc.mycomic.model.Comic;
-import com.qc.mycomic.model.ComicInfo;
-import com.qc.mycomic.model.Source;
-import com.qc.mycomic.presenter.ShelfPresenter;
-import com.qc.mycomic.source.MiTui;
 import com.qc.mycomic.util.Codes;
 import com.qc.mycomic.util.DBUtil;
-import com.qc.mycomic.util.TipUtil;
 import com.qmuiteam.qmui.alpha.QMUIAlphaImageButton;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
 import com.qmuiteam.qmui.util.QMUIColorHelper;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUITipDialog;
 import com.qmuiteam.qmui.widget.popup.QMUIPopup;
-
-import org.litepal.LitePal;
-import org.litepal.crud.LitePalSupport;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import the.one.base.ui.activity.BaseWebExplorerActivity;
 import the.one.base.ui.fragment.BaseFragment;
 import the.one.base.ui.fragment.BaseTitleTabFragment;
-import the.one.base.util.QMUIDialogUtil;
 import the.one.base.util.QMUIPopupUtil;
 
 public class ShelfFragment extends BaseTitleTabFragment {

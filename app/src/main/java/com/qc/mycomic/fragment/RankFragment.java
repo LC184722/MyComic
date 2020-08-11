@@ -1,6 +1,5 @@
 package com.qc.mycomic.fragment;
 
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -23,7 +22,6 @@ import com.qc.mycomic.util.StringUtil;
 import com.qc.mycomic.view.RankView;
 
 import java.util.List;
-import java.util.Map;
 
 import okhttp3.Request;
 import the.one.base.ui.fragment.BaseDataFragment;

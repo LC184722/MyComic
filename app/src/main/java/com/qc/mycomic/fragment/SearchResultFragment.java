@@ -3,7 +3,6 @@ package com.qc.mycomic.fragment;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 

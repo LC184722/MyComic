@@ -3,17 +3,13 @@ package com.qc.mycomic.adapter;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import androidx.annotation.Nullable;
-
 import com.qc.mycomic.R;
 import com.qc.mycomic.model.Comic;
-import com.qc.mycomic.model.MyMap;
 import com.qmuiteam.qmui.widget.QMUIRadiusImageView;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import the.one.base.adapter.TheBaseQuickAdapter;

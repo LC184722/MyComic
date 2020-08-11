@@ -2,7 +2,6 @@ package com.qc.mycomic.adapter;
 
 import com.qc.mycomic.R;
 import com.qc.mycomic.model.Comic;
-import com.qc.mycomic.model.ImageInfo;
 import com.qmuiteam.qmui.widget.QMUIRadiusImageView;
 
 import org.jetbrains.annotations.NotNull;

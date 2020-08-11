@@ -1,13 +1,11 @@
 package com.qc.mycomic.fragment;
 
 import com.qc.mycomic.R;
-import com.qc.mycomic.util.Utils;
 
 import java.util.ArrayList;
 
 import the.one.base.ui.fragment.BaseFragment;
 import the.one.base.ui.fragment.BaseHomeFragment;
-import the.one.base.widge.TheSearchView;
 
 public class MyHomeFragment extends BaseHomeFragment {
 

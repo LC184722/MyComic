@@ -9,10 +9,10 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.qc.mycomic.util.Codes;
+import com.qc.mycomic.util.PackageUtil;
 import com.qmuiteam.qmui.arch.QMUILatestVisit;
 
 public class LauncherActivity extends AppCompatActivity {
@@ -55,6 +55,8 @@ public class LauncherActivity extends AppCompatActivity {
         if (intent == null) {
             intent = new Intent(this, MainActivity.class);
         }
+        Codes.versionTag = PackageUtil.getVersionName(this);
+        Codes.versionCode = PackageUtil.getVersionCode(this);
         startActivity(intent);
         finish();
     }

@@ -2,14 +2,10 @@ package com.qc.mycomic.fragment;
 
 import android.view.Gravity;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import com.qc.mycomic.R;
 import com.qc.mycomic.model.Source;
 import com.qc.mycomic.util.SourceUtil;
-import com.qc.mycomic.util.Utils;
 import com.qmuiteam.qmui.alpha.QMUIAlphaImageButton;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
 
@@ -18,7 +14,6 @@ import java.util.List;
 
 import the.one.base.ui.fragment.BaseFragment;
 import the.one.base.ui.fragment.BaseTitleTabFragment;
-import the.one.base.widge.TheSearchView;
 
 public class SearchBaseFragment extends BaseTitleTabFragment {
 

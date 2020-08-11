@@ -1,13 +1,9 @@
 package com.qc.mycomic.fragment;
 
-import android.content.res.ColorStateList;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.qc.mycomic.R;
-import com.qc.mycomic.util.Utils;
 import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton;
 
 import the.one.base.ui.fragment.BaseFragment;

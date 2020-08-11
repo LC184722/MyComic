@@ -8,14 +8,12 @@ import android.view.animation.Animation;
 import androidx.annotation.NonNull;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.qc.mycomic.R;
 import com.qc.mycomic.adapter.ShelfAdapter;
 import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ComicInfo;
 import com.qc.mycomic.presenter.ShelfPresenter;
 import com.qc.mycomic.util.DBUtil;
 import com.qc.mycomic.util.SourceUtil;
-import com.qc.mycomic.util.StringUtil;
 import com.qc.mycomic.view.ShelfView;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;

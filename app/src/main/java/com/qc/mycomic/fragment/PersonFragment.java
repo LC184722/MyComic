@@ -1,25 +1,26 @@
 package com.qc.mycomic.fragment;
 
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 
 import com.qc.mycomic.R;
+import com.qc.mycomic.presenter.UpdatePresenter;
 import com.qc.mycomic.util.PackageUtil;
+import com.qc.mycomic.view.UpdateView;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
 import com.qmuiteam.qmui.widget.grouplist.QMUICommonListItemView;
 
-import the.one.base.Interface.IApkUpdate;
 import the.one.base.ui.activity.BaseWebExplorerActivity;
-import the.one.base.ui.fragment.BaseFragment;
 import the.one.base.ui.fragment.BaseGroupListFragment;
-import the.one.base.ui.presenter.BasePresenter;
-import the.one.base.util.BaseUpdateApkUtil;
 import the.one.base.util.QMUIDialogUtil;
 import the.one.base.widge.RoundImageView;
 
-public class PersonFragment extends BaseGroupListFragment implements View.OnClickListener {
+public class PersonFragment extends BaseGroupListFragment implements View.OnClickListener, UpdateView {
 
     private QMUICommonListItemView v1, v2, v3;
+
+    private UpdatePresenter presenter = new UpdatePresenter();
 
     @Override
     protected boolean isNeedChangeStatusBarMode() {
@@ -71,10 +72,24 @@ public class PersonFragment extends BaseGroupListFragment implements View.OnClic
         if (view == v1) {
             BaseWebExplorerActivity.newInstance(_mActivity, title, url);
         } else if (view == v2) {
-
-
-
-            QMUIDialogUtil.SuccessTipsDialog(getContext(), PackageUtil.getVersionName(_mActivity));
+            showLoadingDialog("正在检查更新");
+            presenter.checkUpdate();
         }
+    }
+
+    @Override
+    public void checkApkUpdate(boolean isUpdate) {
+        Log.i(TAG, "checkApkUpdate: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        hideLoadingDialog();
+        if (isUpdate) {
+            showFailTips("存在新版本，请访问主页更新");
+        } else {
+            showSuccessTips("已是最新版本");
+        }
+    }
+
+    @Override
+    public UpdatePresenter getPresenter() {
+        return presenter;
     }
 }

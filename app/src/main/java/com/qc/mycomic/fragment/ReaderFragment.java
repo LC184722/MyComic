@@ -17,7 +17,6 @@ import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.qc.mycomic.R;
 import com.qc.mycomic.adapter.ReaderAdapter;
-import com.qc.mycomic.model.ChapterInfo;
 import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ComicInfo;
 import com.qc.mycomic.model.ImageInfo;

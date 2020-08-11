@@ -4,6 +4,10 @@ public class Codes {
 
     public static final String TAG = "TAG";
 
+    public static String versionTag = null;
+
+    public static int versionCode = 0;
+
     public static final int STATUS_HIS = 0;
 
     public static final int STATUS_FAV = 1;
