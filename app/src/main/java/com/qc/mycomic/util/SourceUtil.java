@@ -4,6 +4,7 @@ import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ComicInfo;
 import com.qc.mycomic.model.MyMap;
 import com.qc.mycomic.model.Source;
+import com.qc.mycomic.source.BiliBili;
 import com.qc.mycomic.source.ManHuaFen;
 import com.qc.mycomic.source.MiTui;
 import com.qc.mycomic.source.PuFei;
@@ -25,6 +26,7 @@ public class SourceUtil {
         map.put(Codes.MAN_HUA_FEN, new ManHuaFen());
         map.put(Codes.PU_FEI, new PuFei());
         map.put(Codes.TENG_XUN, new TengXun());
+        map.put(Codes.BILI_BILI, new BiliBili());
         sourceList = map.getValueList();
     }
 

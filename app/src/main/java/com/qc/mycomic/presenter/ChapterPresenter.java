@@ -17,18 +17,21 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.Request;
 import okhttp3.Response;
 import the.one.base.ui.presenter.BasePresenter;
 
 public class ChapterPresenter extends BasePresenter<ChapterView> {
 
     public void load(Comic comic) {
-        String url = comic.getComicInfo().getDetailUrl();
-        Log.i(TAG, "load: url = " + url);
+        Source source = comic.getSource();
+        ComicInfo comicInfo = comic.getComicInfo();
+        Request request = source.getDetailRequest(comicInfo.getDetailUrl());
+        Log.i(TAG, "load: url = " + request.url());
         Callback callback = new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.e(TAG, "load: fail url = " + url);
+                Log.e(TAG, "load: fail url = " + request.url());
                 e.printStackTrace();
                 ChapterView view = getView();
                 AndroidSchedulers.mainThread().scheduleDirect(() -> {
@@ -60,19 +63,19 @@ public class ChapterPresenter extends BasePresenter<ChapterView> {
                 });
             }
         };
-        NetUtil.startLoad(url, callback);
+        NetUtil.startLoad(request, callback);
     }
 
     public void updateSource(Comic comic) {
         List<Source> sourceList = SourceUtil.getSourceList();
         for (Source source : sourceList) {
-            String url = source.getSearchUrl(comic.getTitle());
-            Log.i(TAG, "search: url = " + url);
+            Request request = source.getSearchRequest(comic.getTitle());
+            Log.i(TAG, "search: url = " + request.url());
             Callback callback = new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     ChapterView view = getView();
-                    Log.e(TAG, "updateSource: get fail url = " + url);
+                    Log.e(TAG, "updateSource: get fail url = " + request.url());
                     AndroidSchedulers.mainThread().scheduleDirect(() -> {
                         view.updateSourceComplete(null);
                     });
@@ -89,7 +92,7 @@ public class ChapterPresenter extends BasePresenter<ChapterView> {
                     });
                 }
             };
-            NetUtil.startLoad(url, callback);
+            NetUtil.startLoad(request, callback);
         }
     }
 }

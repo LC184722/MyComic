@@ -48,4 +48,8 @@ public class Codes {
 
     public static final String TENG_XUN_STRING = "腾讯动漫";
 
+    public static final int BILI_BILI = 5;
+
+    public static final String BILI_BILI_STRING = "哔哩哔哩";
+
 }

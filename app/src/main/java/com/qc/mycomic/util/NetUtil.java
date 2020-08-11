@@ -23,11 +23,15 @@ public class NetUtil {
     private static OkHttpClient okHttpClient = new OkHttpClient();
 
     public static Request getRequest(String url) {
-        if (url.contains(SourceUtil.getSource(Codes.TENG_XUN).getIndex())) {
-            return new Request.Builder().url(url).addHeader("User-Agent", Codes.USER_AGENT_WEB).method("GET", null).build();
+        if (url.contains("://m.")) {
+            return getRequest(url, Codes.USER_AGENT);
         } else {
-            return new Request.Builder().url(url).addHeader("User-Agent", Codes.USER_AGENT).method("GET", null).build();
+            return getRequest(url, Codes.USER_AGENT_WEB);
         }
+    }
+
+    public static Request getRequest(String url, String userAgent) {
+        return new Request.Builder().url(url).addHeader("User-Agent", userAgent).method("GET", null).build();
     }
 
     public static Request getRequest(String url, Map<String, String> map) {

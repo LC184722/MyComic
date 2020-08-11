@@ -8,12 +8,15 @@ import com.qc.mycomic.model.ImageInfo;
 import com.qc.mycomic.model.MyMap;
 import com.qc.mycomic.model.Source;
 import com.qc.mycomic.util.Codes;
+import com.qc.mycomic.util.NetUtil;
 import com.qc.mycomic.util.StringUtil;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import okhttp3.Request;
 
 public class MiTui implements Source {
 
@@ -33,8 +36,19 @@ public class MiTui implements Source {
     }
 
     @Override
-    public String getSearchUrl(String searchString) {
-        return "https://m.imitui.com/search/?keywords=" + searchString;
+    public Request getSearchRequest(String searchString) {
+        searchString = "https://m.imitui.com/search/?keywords=" + searchString;
+        return NetUtil.getRequest(searchString);
+    }
+
+    @Override
+    public Request getDetailRequest(String detailUrl) {
+        return NetUtil.getRequest(detailUrl);
+    }
+
+    @Override
+    public Request getRankRequest(String rankUrl) {
+        return NetUtil.getRequest(rankUrl);
     }
 
     @Override

@@ -17,6 +17,7 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.Request;
 import okhttp3.Response;
 import the.one.base.ui.presenter.BasePresenter;
 
@@ -28,12 +29,12 @@ public class SearchPresenter extends BasePresenter<SearchView> {
         comicList = new ArrayList<>();
         List<Source> sourceList = SourceUtil.getSourceList();
         for (Source source : sourceList) {
-            String url = source.getSearchUrl(searchString);
-            Log.i(TAG, "search: url = " + url);
+            Request request = source.getSearchRequest(searchString);
+            Log.i(TAG, "search: url = " + request.url());
             Callback callback = new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    Log.e(TAG, "load: fail url = " + url);
+                    Log.e(TAG, "load: fail url = " + request.url());
                     e.printStackTrace();
                     SearchView view = getView();
                     AndroidSchedulers.mainThread().scheduleDirect(() -> {
@@ -63,7 +64,7 @@ public class SearchPresenter extends BasePresenter<SearchView> {
                     });
                 }
             };
-            NetUtil.startLoad(url, callback);
+            NetUtil.startLoad(request, callback);
         }
     }
 

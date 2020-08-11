@@ -25,6 +25,7 @@ import com.qc.mycomic.view.RankView;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.Request;
 import the.one.base.ui.fragment.BaseDataFragment;
 import the.one.base.ui.presenter.BasePresenter;
 
@@ -34,19 +35,25 @@ public class RankFragment extends BaseDataFragment<Comic> implements RankView {
 
     private RankPresenter presenter;
 
+    private Source source;
+
     private MyMap<String, String> map;
+
+    private Request request;
 
     private String url;
 
     private List<Comic> comicList;
 
     public RankFragment(Source source) {
+        this.source = source;
         this.rankAdapter = new RankAdapter(R.layout.item_rank_right);
         this.presenter = new RankPresenter(source);
         if (source.getRankMap() != null) {
             this.map = source.getRankMap();
             if (!map.isEmpty()) {
-                url = map.getFirst().getValue();
+                url = map.getFirstValue();
+                request = source.getRankRequest(url);
             }
         } else {
             this.map = new MyMap<>();
@@ -81,6 +88,7 @@ public class RankFragment extends BaseDataFragment<Comic> implements RankView {
                 isLoadMore = false;
                 pageNum = 1;
                 url = map.getByIndex(position).getValue();
+                request = source.getRankRequest(url);
                 requestServer();
             }
         });
@@ -121,7 +129,6 @@ public class RankFragment extends BaseDataFragment<Comic> implements RankView {
                 "page/",
         };
         for (String pageString : pageStrings) {
-            System.out.println("pageString = " + pageString);
             String tmp = StringUtil.match(pageString + "(\\d+)", url);
             if (tmp != null) {
                 String page = pageString + tmp;

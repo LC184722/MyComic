@@ -20,6 +20,7 @@ import java.util.Map;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.Request;
 import okhttp3.Response;
 import the.one.base.ui.presenter.BasePresenter;
 
@@ -40,19 +41,19 @@ public class RankPresenter extends BasePresenter<RankView> {
             if (map.containsKey(url)) {
                 dealHtml(getView(), map.get(url));
             } else {
-                loadWithNet(url);
+                loadWithNet(source.getRankRequest(url));
             }
         }
     }
 
-    private void loadWithNet(String url) {
+    private void loadWithNet(Request request) {
         Callback callback = new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.e(TAG, "load: fail url = " + url);
+                Log.e(TAG, "load: fail url = " + request.url());
                 AndroidSchedulers.mainThread().scheduleDirect(() -> {
                     showErrorPage(e.getMessage(), v -> {
-                        load(url);
+                        load(request.url().toString());
                     });
                 });
             }
@@ -67,14 +68,14 @@ public class RankPresenter extends BasePresenter<RankView> {
                 } else {
                     html = response.body().string();
                 }
-                map.put(url, html);
+                map.put(request.url().toString(), html);
                 RankView view = getView();
                 AndroidSchedulers.mainThread().scheduleDirect(() -> {
                     dealHtml(view, html);
                 });
             }
         };
-        NetUtil.startLoad(url, callback);
+        NetUtil.startLoad(request, callback);
     }
 
     private void dealHtml(RankView view, String html) {

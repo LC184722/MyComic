@@ -10,6 +10,7 @@ import com.qc.mycomic.model.Source;
 import com.qc.mycomic.util.Codes;
 import com.qc.mycomic.util.DecryptUtil;
 import com.qc.mycomic.util.ImageInfoUtil;
+import com.qc.mycomic.util.NetUtil;
 import com.qc.mycomic.util.StringUtil;
 
 import org.jsoup.nodes.Element;
@@ -21,6 +22,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import okhttp3.Request;
 
 public class TengXun implements Source {
 
@@ -40,8 +43,19 @@ public class TengXun implements Source {
     }
 
     @Override
-    public String getSearchUrl(String searchString) {
-        return "https://ac.qq.com/Comic/searchList?search=" + searchString;
+    public Request getSearchRequest(String searchString) {
+        searchString = "https://ac.qq.com/Comic/searchList?search=" + searchString;
+        return NetUtil.getRequest(searchString);
+    }
+
+    @Override
+    public Request getDetailRequest(String detailUrl) {
+        return NetUtil.getRequest(detailUrl);
+    }
+
+    @Override
+    public Request getRankRequest(String rankUrl) {
+        return NetUtil.getRequest(rankUrl);
     }
 
     @Override

@@ -3,6 +3,8 @@ package com.qc.mycomic.model;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.Request;
+
 public interface Source {
 
     int getSourceId();
@@ -11,7 +13,11 @@ public interface Source {
 
     String getIndex();
 
-    String getSearchUrl(String searchString);
+    Request getSearchRequest(String searchString);
+
+    Request getDetailRequest(String detailUrl);
+
+    Request getRankRequest(String rankUrl);
 
     List<ComicInfo> getComicInfoList(String html);
 

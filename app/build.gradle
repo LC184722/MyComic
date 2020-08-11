@@ -9,7 +9,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
-        versionName "1.0.0"
+        versionName "1.0.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -38,7 +38,8 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'com.gitee.theoneee:TheBase:2.0.2'
     implementation 'org.litepal.android:java:3.0.0'
-    implementation files('libs/rhino-1.7.7.1.jar')
+    implementation 'com.alibaba:fastjson:1.2.72'
+    implementation 'org.mozilla:rhino:1.7.12'
     implementation 'androidx.appcompat:appcompat:1.1.0'
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'

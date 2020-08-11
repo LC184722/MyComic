@@ -9,6 +9,7 @@ import com.qc.mycomic.model.MyMap;
 import com.qc.mycomic.model.Source;
 import com.qc.mycomic.util.Codes;
 import com.qc.mycomic.util.DecryptUtil;
+import com.qc.mycomic.util.NetUtil;
 import com.qc.mycomic.util.StringUtil;
 
 import org.mozilla.javascript.Context;
@@ -17,6 +18,8 @@ import org.mozilla.javascript.Scriptable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import okhttp3.Request;
 
 public class PuFei implements Source {
 
@@ -36,9 +39,19 @@ public class PuFei implements Source {
     }
 
     @Override
-    public String getSearchUrl(String searchString) {
-        searchString = StringUtil.getGBKDecodedStr(searchString);
-        return "http://m.pufei8.com/e/search/?searchget=1&tbname=mh&show=title,player,playadmin,bieming,pinyin,playadmin&tempid=4&keyboard=" + searchString;
+    public Request getSearchRequest(String searchString) {
+        searchString = "http://m.pufei8.com/e/search/?searchget=1&tbname=mh&show=title,player,playadmin,bieming,pinyin,playadmin&tempid=4&keyboard=" + StringUtil.getGBKDecodedStr(searchString);
+        return NetUtil.getRequest(searchString);
+    }
+
+    @Override
+    public Request getDetailRequest(String detailUrl) {
+        return NetUtil.getRequest(detailUrl);
+    }
+
+    @Override
+    public Request getRankRequest(String rankUrl) {
+        return NetUtil.getRequest(rankUrl);
     }
 
     @Override
