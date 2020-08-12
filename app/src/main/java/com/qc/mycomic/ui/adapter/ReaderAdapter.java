@@ -25,7 +25,10 @@ import com.qmuiteam.qmui.util.QMUIDisplayHelper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import the.one.base.adapter.TheBaseQuickAdapter;
 import the.one.base.adapter.TheBaseViewHolder;
@@ -74,17 +77,17 @@ public class ReaderAdapter extends TheBaseQuickAdapter<ImageInfo> {
 
     public void initImageView(ImageView imageView, ImageInfo imageInfo, int status) {
         imageInfo.setStatus(status);
-        if (imageInfo.getStatus() == LOAD_NO) {
+        if (status == LOAD_NO) {
             imageInfo.setStatus(LOAD_ING);
             imageView.setLayoutParams(layoutParams);
             imageView.setScaleType(ImageView.ScaleType.CENTER);
             imageView.setImageDrawable(getDrawable(R.drawable.ic_baseline_image_search_24));
             loadImage(getContext(), imageInfo, imageView);
-        } else if (imageInfo.getStatus() == LOAD_ING) {
+        } else if (status == LOAD_ING) {
             imageView.setLayoutParams(layoutParams);
             imageView.setScaleType(ImageView.ScaleType.CENTER);
             imageView.setImageDrawable(getDrawable(R.drawable.ic_baseline_image_search_24));
-        } else if (imageInfo.getStatus() == LOAD_SUCCESS) {
+        } else if (status == LOAD_SUCCESS) {
             if (imageView.getTag().equals(imageInfo.toStringProgressDetail())) {
                 Drawable resource = map.get(imageInfo.toStringProgressDetail());
                 if (resource != null) {
@@ -95,7 +98,7 @@ public class ReaderAdapter extends TheBaseQuickAdapter<ImageInfo> {
                     initImageView(imageView, imageInfo, LOAD_NO);
                 }
             }
-        } else if (imageInfo.getStatus() == LOAD_FAIL) {
+        } else if (status == LOAD_FAIL) {
             imageView.setLayoutParams(layoutParams);
             imageView.setScaleType(ImageView.ScaleType.CENTER);
             imageView.setImageDrawable(getDrawable(R.drawable.ic_baseline_broken_image_24));
@@ -131,7 +134,7 @@ public class ReaderAdapter extends TheBaseQuickAdapter<ImageInfo> {
                     public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
                         map.put(imageInfo.toStringProgressDetail(), resource);
                         initImageView(imageView, imageInfo, LOAD_SUCCESS);
-                        Log.i(TAG, "onResourceReady: success " + imageInfo.toStringProgressDetail());
+                        Log.i(TAG, "onResourceReady: load success " + imageInfo.toStringProgressDetail());
                     }
 
                     @Override
@@ -146,6 +149,50 @@ public class ReaderAdapter extends TheBaseQuickAdapter<ImageInfo> {
                         initImageView(imageView, imageInfo, LOAD_FAIL);
                     }
                 });
+    }
+
+    private Set<String> set = new HashSet<>();
+
+    public void loadImage(Context context, ImageInfo imageInfo) {
+        String detail = imageInfo.toStringProgressDetail();
+        if (!map.containsKey(detail) && !set.contains(detail) && imageInfo.getStatus() == LOAD_NO) {
+            set.add(detail);
+            GlideUrl url;
+            if (comic.getComicInfo().getSourceId() == Codes.MI_TUI) {
+                Headers headers = new MyHeaders(comic.getComicInfo().getCurChapterInfo().getChapterUrl());
+                url = new GlideUrl(imageInfo.getUrl(), headers);
+            } else {
+                url = new GlideUrl(imageInfo.getUrl());
+            }
+            RequestOptions options = GlideUtil.getDefaultOptions();
+            Glide.with(context)
+                    .asDrawable()
+                    .load(url)
+                    .apply(options)
+                    .into(new CustomTarget<Drawable>() {
+                        @Override
+                        public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                            map.put(imageInfo.toStringProgressDetail(), resource);
+                            if (imageInfo.getStatus() == LOAD_NO) {
+                                imageInfo.setStatus(LOAD_SUCCESS);
+                            }
+                            Log.i(TAG, "onResourceReady: preLoad success " + imageInfo.toStringProgressDetail());
+                            set.remove(detail);
+                        }
+
+                        @Override
+                        public void onLoadCleared(@Nullable Drawable placeholder) {
+
+                        }
+
+                        @Override
+                        public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                            Log.e(TAG, "onLoadFailed: url = " + imageInfo.getUrl());
+                            Log.e(TAG, "onLoadFailed: preLoad fail " + imageInfo.toStringProgressDetail());
+                            set.remove(detail);
+                        }
+                    });
+        }
     }
 
 }

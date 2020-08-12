@@ -156,6 +156,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
 
     private int first;
     private int total;
+    private int preloadNum = 5;
 
     @Override
     protected RecyclerView.OnScrollListener getOnScrollListener() {
@@ -179,7 +180,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
                 super.onScrolled(recyclerView, dx, dy);
                 LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
                 if (manager != null) {
-//                        int count = manager.getChildCount();    //得到显示屏幕内的list数量
+                    int count = manager.getChildCount();    //得到显示屏幕内的list数量
 //                        int total = manager.getItemCount();    //得到list的总数量
                     first = manager.findFirstVisibleItemPosition();//得到显示屏内的第一个list的位置数position
 //                        Log.i(TAG, "onScrolled: first = " + first);
@@ -199,6 +200,10 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
                     if (total != imageInfo.getTotal() - 1) {
                         total = imageInfo.getTotal() - 1;
                         seekBar.setMax(total);
+                    }
+                    int bottom = first + count;
+                    for (int i = bottom; i < imageInfoList.size() && i < bottom + preloadNum; i++) {
+                        readerAdapter.loadImage(getContext(), imageInfoList.get(i));
                     }
                 } else {
                     Log.i(TAG, "onScrolled: is null");
