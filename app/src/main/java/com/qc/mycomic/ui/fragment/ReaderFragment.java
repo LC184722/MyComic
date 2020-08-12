@@ -29,7 +29,9 @@ import com.qmuiteam.qmui.util.QMUIDisplayHelper;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import the.one.base.ui.fragment.BaseDataFragment;
 import the.one.base.ui.presenter.BasePresenter;
@@ -217,18 +219,28 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
         return readerAdapter;
     }
 
+    private Set<Integer> set = new HashSet<>();
+
     @Override
     protected void requestServer() {
+        int loadPosition = -1;
         if (imageInfoList == null) {
-            presenter.loadImageInfoList(comic, curPosition);
+            loadPosition = curPosition;
         } else {
-            int nextPosition = getNextPosition(curPosition);
-            if (comicInfo.canLoad(nextPosition)) {
-                presenter.loadImageInfoList(comic, nextPosition);
-                readerAdapter.clearMap();
-            } else {
-                onComplete(null);
+            int position = curPosition;
+            while (set.contains(position)) {
+                position = getNextPosition(position);
             }
+            if (comicInfo.canLoad(position)) {
+                loadPosition = position;
+                readerAdapter.clearMap();
+            }
+        }
+        if (loadPosition != -1) {
+            set.add(loadPosition);
+            presenter.loadImageInfoList(comic, loadPosition);
+        } else {
+            onComplete(null);
         }
         DBUtil.saveData(comicInfo);
     }
