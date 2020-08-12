@@ -6,6 +6,12 @@ import org.jsoup.select.Elements;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * @author LuQiChuang
+ * @description
+ * @date 2020/8/12 15:25
+ * @ver 1.0
+ */
 public abstract class JsoupStarter<T> {
 
     private JsoupNode node = new JsoupNode();

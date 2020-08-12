@@ -5,6 +5,12 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+/**
+ * @author LuQiChuang
+ * @description
+ * @date 2020/8/12 15:25
+ * @ver 1.0
+ */
 public class HtmlUtil {
 
     public static String getSearchHtml() {

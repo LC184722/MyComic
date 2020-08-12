@@ -5,6 +5,12 @@ import com.qc.mycomic.model.ImageInfo;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * @author LuQiChuang
+ * @description 图片信息工具
+ * @date 2020/8/12 15:25
+ * @ver 1.0
+ */
 public class ImageInfoUtil {
 
     public static List<ImageInfo> getImageInfoList(String[] urls, int chapterId) {

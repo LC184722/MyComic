@@ -13,6 +13,12 @@ import java.util.List;
 import the.one.base.ui.fragment.BaseImageSnapFragment;
 import the.one.base.ui.presenter.BasePresenter;
 
+/**
+ * @author LuQiChuang
+ * @description 图片放大界面
+ * @date 2020/8/12 15:24
+ * @ver 1.0
+ */
 public class ReaderDetailFragment extends BaseImageSnapFragment<ImageInfo> {
 
     private ImageInfo imageInfo;

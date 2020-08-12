@@ -42,6 +42,12 @@ import the.one.base.util.QMUIPopupUtil;
 import the.one.base.util.glide.GlideEngine;
 import the.one.base.widge.decoration.SpacesItemDecoration;
 
+/**
+ * @author LuQiChuang
+ * @description 章节详情界面
+ * @date 2020/8/12 15:18
+ * @ver 1.0
+ */
 public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements ChapterView {
 
     private Comic comic;

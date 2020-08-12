@@ -10,6 +10,12 @@ import the.one.base.ui.fragment.BaseFragment;
 import the.one.base.ui.presenter.BasePresenter;
 import the.one.base.widge.TheSearchView;
 
+/**
+ * @author LuQiChuang
+ * @description 搜索输入界面
+ * @date 2020/8/12 15:26
+ * @ver 1.0
+ */
 public class SearchFragment extends BaseFragment {
 
     @Override

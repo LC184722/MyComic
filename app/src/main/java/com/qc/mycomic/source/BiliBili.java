@@ -23,6 +23,12 @@ import okhttp3.MultipartBody;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/**
+ * @author LuQiChuang
+ * @description
+ * @date 2020/8/12 15:25
+ * @ver 1.0
+ */
 public class BiliBili implements Source, ImageLoader {
     @Override
     public int getSourceId() {

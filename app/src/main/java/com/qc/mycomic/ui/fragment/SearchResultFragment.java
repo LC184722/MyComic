@@ -25,6 +25,12 @@ import the.one.base.ui.fragment.BaseDataFragment;
 import the.one.base.ui.presenter.BasePresenter;
 import the.one.base.util.QMUIDialogUtil;
 
+/**
+ * @author LuQiChuang
+ * @description 搜索结果界面
+ * @date 2020/8/12 15:31
+ * @ver 1.0
+ */
 public class SearchResultFragment extends BaseDataFragment<Comic> implements SearchView {
 
     private SearchPresenter presenter = new SearchPresenter();

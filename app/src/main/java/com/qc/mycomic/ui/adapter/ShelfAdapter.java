@@ -16,6 +16,12 @@ import the.one.base.adapter.TheBaseQuickAdapter;
 import the.one.base.adapter.TheBaseViewHolder;
 import the.one.base.util.glide.GlideEngine;
 
+/**
+ * @author LuQiChuang
+ * @description
+ * @date 2020/8/12 15:25
+ * @ver 1.0
+ */
 public class ShelfAdapter extends TheBaseQuickAdapter<Comic> {
 
     public Map<String, String> map = new HashMap<>();

@@ -29,6 +29,12 @@ import the.one.base.ui.presenter.BasePresenter;
 import the.one.base.util.QMUIBottomSheetUtil;
 import the.one.base.util.QMUIDialogUtil;
 
+/**
+ * @author LuQiChuang
+ * @description 漫画书架界面
+ * @date 2020/8/12 15:32
+ * @ver 1.0
+ */
 public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfView {
 
     private List<Comic> comicList;

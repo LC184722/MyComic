@@ -34,6 +34,12 @@ import the.one.base.adapter.TheBaseQuickAdapter;
 import the.one.base.adapter.TheBaseViewHolder;
 import the.one.base.util.glide.GlideUtil;
 
+/**
+ * @author LuQiChuang
+ * @description
+ * @date 2020/8/12 15:25
+ * @ver 1.0
+ */
 public class ReaderAdapter extends TheBaseQuickAdapter<ImageInfo> {
 
     private int count;

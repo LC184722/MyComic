@@ -14,6 +14,12 @@ import com.qc.mycomic.ui.view.UpdateView;
 import java.io.IOException;
 
 
+/**
+ * @author LuQiChuang
+ * @description
+ * @date 2020/8/12 15:25
+ * @ver 1.0
+ */
 public class UpdatePresenter extends BasePresenter<UpdateView> {
 
     private String url = "https://gitee.com/luqichuang/MyComic/releases";

@@ -10,14 +10,33 @@ import org.litepal.LitePal;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * @author LuQiChuang
+ * @description 数据库连接工具
+ * @date 2020/8/12 15:27
+ * @ver 1.0
+ */
 public class DBUtil {
 
     public static final String TAG = "DBUtil";
 
+    /**
+     * 保存该漫画信息及所有漫画源信息
+     *
+     * @param comic 保存漫画
+     * @return void
+     */
     public static void saveData(Comic comic) {
         saveData(comic, true);
     }
 
+    /**
+     * 保存漫画信息
+     *
+     * @param comic    当前漫画
+     * @param needInfo 是否保存所有漫画源信息
+     * @return void
+     */
     public static void saveData(Comic comic, boolean needInfo) {
         if (comic != null) {
             new Thread(() -> {
@@ -32,6 +51,12 @@ public class DBUtil {
         }
     }
 
+    /**
+     * 保存漫画源信息
+     *
+     * @param comicInfo 当前漫画源
+     * @return void
+     */
     public static void saveData(ComicInfo comicInfo) {
         if (comicInfo != null) {
             new Thread(() -> comicInfo.saveOrUpdate("title = ? and sourceId = ?", comicInfo.getTitle(), String.valueOf(comicInfo.getSourceId()))).start();
@@ -39,12 +64,24 @@ public class DBUtil {
         }
     }
 
+    /**
+     * 删除漫画
+     *
+     * @param comic 漫画
+     * @return void
+     */
     public static void deleteData(Comic comic) {
         if (comic != null) {
             new Thread(comic::delete).start();
         }
     }
 
+    /**
+     * 根据status查询漫画
+     *
+     * @param status 漫画状态,0 - 收藏，1 - 历史，2 - 所有
+     * @return List<Comic>
+     */
     public static List<Comic> findComicListByStatus(int status) {
         List<Comic> list;
         String order = "priority DESC, date DESC";
@@ -86,6 +123,12 @@ public class DBUtil {
         return list;
     }
 
+    /**
+     * 根据漫画标题查找信息表里所有信息
+     *
+     * @param title 漫画标题
+     * @return List<ComicInfo>
+     */
     public static List<ComicInfo> findComicInfoListByTitle(String title) {
         return LitePal.where("title = ?", title).find(ComicInfo.class);
     }

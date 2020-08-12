@@ -16,12 +16,24 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/**
+ * @author LuQiChuang
+ * @description 网络连接工具
+ * @date 2020/8/12 15:25
+ * @ver 1.0
+ */
 public class NetUtil {
 
     private static final String TAG = "NetUtil";
 
     private static OkHttpClient okHttpClient = new OkHttpClient();
 
+    /**
+     * 根据url，获得默认request
+     *
+     * @param url url
+     * @return Request
+     */
     public static Request getRequest(String url) {
         if (url.contains("://m.")) {
             return getRequest(url, Codes.USER_AGENT);
@@ -30,10 +42,24 @@ public class NetUtil {
         }
     }
 
+    /**
+     * 设置获得request的userAgent
+     *
+     * @param url       url
+     * @param userAgent userAgent
+     * @return Request
+     */
     public static Request getRequest(String url, String userAgent) {
         return new Request.Builder().url(url).addHeader("User-Agent", userAgent).method("GET", null).build();
     }
 
+    /**
+     * 通过map设置请求，获得Request
+     *
+     * @param url url
+     * @param map 存放头部信息
+     * @return Request
+     */
     public static Request getRequest(String url, Map<String, String> map) {
         if (map == null) {
             map = new HashMap<>();
@@ -52,11 +78,25 @@ public class NetUtil {
         return new Request.Builder().url(url).headers(headers).method("GET", null).build();
     }
 
+    /**
+     * 使用特定request开始连接网络
+     *
+     * @param request  request
+     * @param callback callback
+     * @return void
+     */
     public static void startLoad(Request request, Callback callback) {
         Call call = okHttpClient.newCall(request);
         call.enqueue(callback);
     }
 
+    /**
+     * 使用默认request开始连接网络
+     *
+     * @param url      url
+     * @param callback callback
+     * @return void
+     */
     public static void startLoad(String url, Callback callback) {
         Call call = okHttpClient.newCall(getRequest(url));
         call.enqueue(callback);

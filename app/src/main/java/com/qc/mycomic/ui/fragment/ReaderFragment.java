@@ -38,6 +38,12 @@ import the.one.base.ui.presenter.BasePresenter;
 
 import static androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE;
 
+/**
+ * @author LuQiChuang
+ * @description 漫画阅读界面
+ * @date 2020/8/12 15:25
+ * @ver 1.0
+ */
 public class ReaderFragment extends BaseDataFragment<ImageInfo> implements ReaderView {
 
     private Comic comic;
@@ -244,7 +250,6 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
                 }
                 return;
             } else {
-                isFresh = false;
                 isLoadNext = true;
                 loadPosition = position;
             }
@@ -332,7 +337,10 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
         onComplete(imageInfoList);
         this.imageInfoList = adapter.getData();
         initOtherView();
-        recycleView.scrollToPosition(0);
+        if (isFresh) {
+            isFresh = false;
+            recycleView.scrollToPosition(0);
+        }
 //        if (Codes.isFirstLoadWebView && comic.getSourceId() == Codes.MI_TUI) {
 //            WebView webView = new WebView(getContext());
 //            webView.addJavascriptInterface(new MyJavaScriptInterface(), "HTMLOUT");

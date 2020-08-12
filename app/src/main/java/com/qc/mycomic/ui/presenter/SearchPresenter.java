@@ -21,6 +21,12 @@ import okhttp3.Request;
 import okhttp3.Response;
 import the.one.base.ui.presenter.BasePresenter;
 
+/**
+ * @author LuQiChuang
+ * @description
+ * @date 2020/8/12 15:25
+ * @ver 1.0
+ */
 public class SearchPresenter extends BasePresenter<SearchView> {
 
     private List<Comic> comicList;

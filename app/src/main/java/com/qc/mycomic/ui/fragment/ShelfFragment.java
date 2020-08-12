@@ -20,6 +20,12 @@ import the.one.base.ui.fragment.BaseFragment;
 import the.one.base.ui.fragment.BaseTitleTabFragment;
 import the.one.base.util.QMUIPopupUtil;
 
+/**
+ * @author LuQiChuang
+ * @description 漫画书架基础界面
+ * @date 2020/8/12 15:31
+ * @ver 1.0
+ */
 public class ShelfFragment extends BaseTitleTabFragment {
 
     private QMUIQQFaceView mTitle;

@@ -7,6 +7,12 @@ import java.util.ArrayList;
 import the.one.base.ui.fragment.BaseFragment;
 import the.one.base.ui.fragment.BaseHomeFragment;
 
+/**
+ * @author LuQiChuang
+ * @description HOME界面
+ * @date 2020/8/12 15:26
+ * @ver 1.0
+ */
 public class MyHomeFragment extends BaseHomeFragment {
 
     @Override

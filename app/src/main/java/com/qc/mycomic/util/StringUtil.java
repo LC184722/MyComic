@@ -17,10 +17,24 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+/**
+ * @author LuQiChuang
+ * @description 字符串工具
+ * @date 2020/8/12 15:25
+ * @ver 1.0
+ */
 public class StringUtil {
 
     public static final String TAG = "StringUtil";
 
+    /**
+     * 查找字符串
+     *
+     * @param regex 正则
+     * @param input 输入字符串
+     * @param group 分组
+     * @return boolean
+     */
     public static boolean find(String regex, String input, int group) {
         try {
             Pattern pattern = Pattern.compile(regex);
@@ -32,10 +46,25 @@ public class StringUtil {
         return false;
     }
 
+    /**
+     * 查找第一个分组的字符串
+     *
+     * @param regex 正则
+     * @param input 输入字符串
+     * @return boolean
+     */
     public static boolean find(String regex, String input) {
         return find(regex, input, 1);
     }
 
+    /**
+     * 匹配字符串
+     *
+     * @param regex 正则
+     * @param input 输入字符串
+     * @param group 分组
+     * @return String
+     */
     public static String match(String regex, String input, int group) {
         try {
             Pattern pattern = Pattern.compile(regex);
@@ -49,6 +78,13 @@ public class StringUtil {
         return null;
     }
 
+    /**
+     * 匹配第一个分组的字符串
+     *
+     * @param regex 正则
+     * @param input 输入字符串
+     * @return String
+     */
     public static String match(String regex, String input) {
         return match(regex, input, 1);
     }
@@ -72,6 +108,14 @@ public class StringUtil {
         return matchLast(regex, input, 1);
     }
 
+    /**
+     * 匹配字符串数组
+     *
+     * @param regex 正则
+     * @param input 输入字符串
+     * @param group 分组
+     * @return String[]
+     */
     public static String[] matchArray(String regex, String input, int group) {
         try {
             Pattern pattern = Pattern.compile(regex);
@@ -89,10 +133,23 @@ public class StringUtil {
         return null;
     }
 
+    /**
+     * 匹配第一个分组的字符串数组
+     *
+     * @param regex 正则
+     * @param input 输入字符串
+     * @return String[]
+     */
     public static String[] matchArray(String regex, String input) {
         return matchArray(regex, input, 1);
     }
 
+    /**
+     * 获得GBK编码的字符串
+     *
+     * @param str str
+     * @return String
+     */
     public static String getGBKDecodedStr(String str) {
         byte[] helloBytes = str.getBytes(Charset.forName("GBK"));
         char[] hexArray = "0123456789ABCDEF".toCharArray();
@@ -115,6 +172,12 @@ public class StringUtil {
         return decodedStr.toString();
     }
 
+    /**
+     * 交换链表元素顺序
+     *
+     * @param list list
+     * @return void
+     */
     public static <T> void swapList(List<T> list) {
         List<T> nList = new LinkedList<>();
         for (T t : list) {

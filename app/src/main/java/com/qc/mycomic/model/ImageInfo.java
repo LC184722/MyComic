@@ -2,6 +2,12 @@ package com.qc.mycomic.model;
 
 import the.one.base.Interface.ImageSnap;
 
+/**
+ * @author LuQiChuang
+ * @description
+ * @date 2020/8/12 15:25
+ * @ver 1.0
+ */
 public class ImageInfo implements ImageSnap {
 
     private int id;

@@ -15,6 +15,12 @@ import java.util.List;
 import the.one.base.ui.fragment.BaseFragment;
 import the.one.base.ui.fragment.BaseTitleTabFragment;
 
+/**
+ * @author LuQiChuang
+ * @description 搜索基础界面
+ * @date 2020/8/12 15:26
+ * @ver 1.0
+ */
 public class SearchBaseFragment extends BaseTitleTabFragment {
 
     @Override

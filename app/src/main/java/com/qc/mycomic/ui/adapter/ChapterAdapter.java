@@ -19,6 +19,12 @@ import java.util.List;
 import the.one.base.adapter.TheBaseQuickAdapter;
 import the.one.base.adapter.TheBaseViewHolder;
 
+/**
+ * @author LuQiChuang
+ * @description
+ * @date 2020/8/12 15:25
+ * @ver 1.0
+ */
 public class ChapterAdapter extends TheBaseQuickAdapter<ChapterInfo> {
 
     Comic comic;

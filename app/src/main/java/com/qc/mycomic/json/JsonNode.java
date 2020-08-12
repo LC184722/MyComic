@@ -6,6 +6,12 @@ import com.alibaba.fastjson.JSONObject;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * @author LuQiChuang
+ * @description
+ * @date 2020/8/12 15:27
+ * @ver 1.0
+ */
 public class JsonNode {
 
     private JSONObject jsonObject;

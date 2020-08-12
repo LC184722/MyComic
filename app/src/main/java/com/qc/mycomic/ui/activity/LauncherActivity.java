@@ -15,6 +15,12 @@ import com.qc.mycomic.util.Codes;
 import com.qc.mycomic.util.PackageUtil;
 import com.qmuiteam.qmui.arch.QMUILatestVisit;
 
+/**
+ * @author LuQiChuang
+ * @description
+ * @date 2020/8/12 15:25
+ * @ver 1.0
+ */
 public class LauncherActivity extends AppCompatActivity {
 
     private static final int PERMISSIONS_REQUEST_CODE = 10;

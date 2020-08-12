@@ -10,6 +10,12 @@ import androidx.core.app.ActivityCompat;
 
 import the.one.base.widge.TheSearchView;
 
+/**
+ * @author LuQiChuang
+ * @description
+ * @date 2020/8/12 15:25
+ * @ver 1.0
+ */
 public class Utils {
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
