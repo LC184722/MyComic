@@ -11,7 +11,7 @@ import com.qc.mycomic.model.Source;
 import com.qc.mycomic.util.Codes;
 import com.qc.mycomic.util.NetUtil;
 import com.qc.mycomic.util.StringUtil;
-import com.qc.mycomic.view.ReaderView;
+import com.qc.mycomic.ui.view.ReaderView;
 
 import java.io.IOException;
 import java.util.List;

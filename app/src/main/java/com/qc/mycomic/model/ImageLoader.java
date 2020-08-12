@@ -1,6 +1,6 @@
 package com.qc.mycomic.model;
 
-import com.qc.mycomic.view.ReaderView;
+import com.qc.mycomic.ui.view.ReaderView;
 
 public interface ImageLoader {
 
