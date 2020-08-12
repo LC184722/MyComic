@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">MyComic</string>
+
+    <string name="defaultSourceIdStr">defaultSourceId</string>
+
+
 </resources>

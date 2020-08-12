@@ -1,19 +1,26 @@
 package com.qc.mycomic.ui.fragment;
 
-import android.util.Log;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.Gravity;
 import android.view.View;
 
 import com.qc.mycomic.R;
+import com.qc.mycomic.setting.Setting;
 import com.qc.mycomic.ui.presenter.UpdatePresenter;
+import com.qc.mycomic.ui.view.UpdateView;
 import com.qc.mycomic.util.Codes;
 import com.qc.mycomic.util.PackageUtil;
-import com.qc.mycomic.ui.view.UpdateView;
+import com.qc.mycomic.util.SourceUtil;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
+import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 import com.qmuiteam.qmui.widget.grouplist.QMUICommonListItemView;
 
-import the.one.base.ui.activity.BaseWebExplorerActivity;
+import java.util.List;
+
+import the.one.base.model.PopupItem;
 import the.one.base.ui.fragment.BaseGroupListFragment;
+import the.one.base.util.QMUIBottomSheetUtil;
 import the.one.base.widge.RoundImageView;
 
 /**
@@ -24,7 +31,7 @@ import the.one.base.widge.RoundImageView;
  */
 public class PersonFragment extends BaseGroupListFragment implements View.OnClickListener, UpdateView {
 
-    private QMUICommonListItemView v1, v2, v3;
+    private QMUICommonListItemView web, version, v1, v2;
 
     private UpdatePresenter presenter = new UpdatePresenter();
 
@@ -64,22 +71,52 @@ public class PersonFragment extends BaseGroupListFragment implements View.OnClic
         imageView.setImageDrawable(getDrawablee(R.drawable.head));
     }
 
+    private int defaultSourceId = Setting.getDefaultSourceId();
+
     @Override
     protected void addGroupListView() {
-        v1 = CreateNormalItemView("访问主页");
-        v2 = CreateDetailItemView("检查更新", PackageUtil.getVersionName(_mActivity));
-        addToGroup("关于", v1, v2);
+        web = CreateNormalItemView("访问主页");
+        version = CreateDetailItemView("检查更新", PackageUtil.getVersionName(_mActivity));
+        v1 = CreateDetailItemView("默认漫画源", SourceUtil.getSourceName(defaultSourceId));
+        v2 = CreateDetailItemView("阅读预加载图片数量", Setting.getPreloadNumTag());
+        addToGroup("设置", v1, v2);
+        addToGroup("关于", web, version);
     }
 
     @Override
     public void onClick(View view) {
         String url = "https://gitee.com/luqichuang/MyComic/releases";
-        String title = "MyComic";
-        if (view == v1) {
-            BaseWebExplorerActivity.newInstance(_mActivity, title, url);
-        } else if (view == v2) {
+        if (view == web) {
+            Uri uri = Uri.parse(url);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        } else if (view == version) {
             showLoadingDialog("正在检查更新");
             presenter.checkUpdate();
+        } else if (view == v1) {
+            List<PopupItem> list = SourceUtil.getPopupItemList();
+            int index = SourceUtil.getPopupItemIndex(defaultSourceId);
+            QMUIBottomSheetUtil.showSimpleBottomSheetList(getContext(), list, "选择默认漫画源", index, new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
+                @Override
+                public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
+                    int sourceId = SourceUtil.getSourceId(tag);
+                    Setting.setDefaultSourceId(sourceId);
+                    v1.setDetailText(tag);
+                    dialog.dismiss();
+                }
+            }).show();
+        } else if (view == v2) {
+            List<PopupItem> list = Setting.getPreloadNumItemList();
+            int index = Setting.getPreloadNumIndex();
+            QMUIBottomSheetUtil.showSimpleBottomSheetList(getContext(), list, "选择阅读预加载图片数量", index, new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
+                @Override
+                public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
+                    int preloadNum = Setting.getPreloadNumByTag(tag);
+                    Setting.setPreloadNum(preloadNum);
+                    v2.setDetailText(tag);
+                    dialog.dismiss();
+                }
+            }).show();
         }
     }
 

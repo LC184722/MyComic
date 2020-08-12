@@ -27,6 +27,8 @@ public class SourceUtil {
 
     private static List<Source> sourceList;
 
+    private static List<PopupItem> popupItemList;
+
     static {
         map.put(Codes.MI_TUI, new MiTui());
         map.put(Codes.MAN_HUA_FEN, new ManHuaFen());
@@ -45,12 +47,33 @@ public class SourceUtil {
         return source != null ? source.getSourceName() : null;
     }
 
+    public static List<PopupItem> getPopupItemList() {
+        if (popupItemList == null) {
+            popupItemList = new LinkedList<>();
+            for (Source source : sourceList) {
+                popupItemList.add(new PopupItem(source.getSourceName()));
+            }
+        }
+        return popupItemList;
+    }
+
     public static List<PopupItem> getPopupItemList(List<ComicInfo> comicInfoList) {
         List<PopupItem> list = new LinkedList<>();
         for (ComicInfo info : comicInfoList) {
             list.add(new PopupItem(getSourceName(info.getSourceId())));
         }
         return list;
+    }
+
+    public static int getPopupItemIndex(int sourceId) {
+        int i = 0;
+        for (Source source : sourceList) {
+            if (source.getSourceId() == sourceId) {
+                return i;
+            }
+            i++;
+        }
+        return -1;
     }
 
     public static int getPopupItemIndex(Comic comic) {

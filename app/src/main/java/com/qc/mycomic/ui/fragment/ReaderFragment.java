@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.qc.mycomic.R;
+import com.qc.mycomic.setting.Setting;
 import com.qc.mycomic.ui.adapter.ReaderAdapter;
 import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ComicInfo;
@@ -165,7 +166,6 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
 
     private int first;
     private int total;
-    private int preloadNum = 5;
 
     @Override
     protected RecyclerView.OnScrollListener getOnScrollListener() {
@@ -211,6 +211,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
                         seekBar.setMax(total);
                     }
                     int bottom = first + count;
+                    int preloadNum = Setting.getPreloadNum();
                     for (int i = bottom; i < imageInfoList.size() && i < bottom + preloadNum; i++) {
                         readerAdapter.loadImage(getContext(), imageInfoList.get(i));
                     }

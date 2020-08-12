@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.qc.mycomic.R;
+import com.qc.mycomic.setting.Setting;
 import com.qc.mycomic.ui.adapter.SearchAdapter;
 import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ComicInfo;
@@ -24,6 +25,7 @@ import java.util.List;
 import the.one.base.ui.fragment.BaseDataFragment;
 import the.one.base.ui.presenter.BasePresenter;
 import the.one.base.util.QMUIDialogUtil;
+import the.one.base.util.SpUtil;
 
 /**
  * @author LuQiChuang
@@ -116,13 +118,16 @@ public class SearchResultFragment extends BaseDataFragment<Comic> implements Sea
 
     @Override
     public void searchComplete(List<Comic> comicList, String sourceName) {
-        count++;
-        onFirstComplete(comicList);
-        adapter.notifyDataSetChanged();
         if (sourceName != null) {
             errorList.add(sourceName);
         }
-        if (count == size) {
+        if (++count == size) {
+            int sourceId = Setting.getDefaultSourceId();
+            for (Comic comic : comicList) {
+                comic.changeComicInfo(sourceId);
+            }
+            onFirstComplete(comicList);
+            adapter.notifyDataSetChanged();
             count = 0;
             hideProgressDialog();
             if (errorList.isEmpty()) {
@@ -136,6 +141,8 @@ public class SearchResultFragment extends BaseDataFragment<Comic> implements Sea
                 errorList.clear();
             }
         } else {
+            onFirstComplete(comicList);
+            adapter.notifyDataSetChanged();
             showProgressDialog(getPercent(), total);
             progressDialog.setMessage(getMsg());
         }
