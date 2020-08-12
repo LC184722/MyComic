@@ -43,8 +43,6 @@ public class RankFragment extends BaseDataFragment<Comic> implements RankView {
 
     private MyMap<String, String> map;
 
-    private Request request;
-
     private String url;
 
     private List<Comic> comicList;
@@ -57,7 +55,6 @@ public class RankFragment extends BaseDataFragment<Comic> implements RankView {
             this.map = source.getRankMap();
             if (!map.isEmpty()) {
                 url = map.getFirstValue();
-                request = source.getRankRequest(url);
             }
         } else {
             this.map = new MyMap<>();
@@ -92,7 +89,6 @@ public class RankFragment extends BaseDataFragment<Comic> implements RankView {
                 isLoadMore = false;
                 pageNum = 1;
                 url = map.getByIndex(position).getValue();
-                request = source.getRankRequest(url);
                 requestServer();
             }
         });
@@ -111,6 +107,7 @@ public class RankFragment extends BaseDataFragment<Comic> implements RankView {
     @Override
     public void onRefresh() {
         pageNum = 0;
+        isLoadMore = false;
         super.onRefresh();
     }
 
