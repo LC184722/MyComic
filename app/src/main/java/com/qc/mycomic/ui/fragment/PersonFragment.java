@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.qc.mycomic.R;
 import com.qc.mycomic.ui.presenter.UpdatePresenter;
+import com.qc.mycomic.util.Codes;
 import com.qc.mycomic.util.PackageUtil;
 import com.qc.mycomic.ui.view.UpdateView;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
@@ -59,14 +60,14 @@ public class PersonFragment extends BaseGroupListFragment implements View.OnClic
 
     @Override
     protected void addGroupListView() {
-        v1 = CreateNormalItemView("访问网站");
+        v1 = CreateNormalItemView("访问主页");
         v2 = CreateDetailItemView("检查更新", PackageUtil.getVersionName(_mActivity));
         addToGroup("关于", v1, v2);
     }
 
     @Override
     public void onClick(View view) {
-        String url = "https://gitee.com/luqichuang/MyComic";
+        String url = "https://gitee.com/luqichuang/MyComic/releases";
         String title = "MyComic";
         if (view == v1) {
             BaseWebExplorerActivity.newInstance(_mActivity, title, url);
@@ -77,11 +78,10 @@ public class PersonFragment extends BaseGroupListFragment implements View.OnClic
     }
 
     @Override
-    public void checkApkUpdate(boolean isUpdate) {
-        Log.i(TAG, "checkApkUpdate: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    public void getVersionTag(String versionTag) {
         hideLoadingDialog();
-        if (isUpdate) {
-            showFailTips("存在新版本，请访问主页更新");
+        if (versionTag != null && !versionTag.equals(Codes.versionTag)) {
+            showFailTips("存在新版本" + versionTag + "，请访问主页更新");
         } else {
             showSuccessTips("已是最新版本");
         }

@@ -27,7 +27,7 @@ public class UpdatePresenter extends BasePresenter<UpdateView> {
                     @Override
                     public void run() {
                         if (view != null) {
-                            view.checkApkUpdate(false);
+                            view.getVersionTag(null);
                         }
                     }
                 });
@@ -37,30 +37,18 @@ public class UpdatePresenter extends BasePresenter<UpdateView> {
             public void onResponse(Call call, Response response) throws IOException {
                 String html = response.body().string();
                 JsoupNode node = new JsoupNode(html);
-                String tagName = removeSuffix(node.ownText("div.tag-name span"));
-                String versionTag = removeSuffix(Codes.versionTag);
-                boolean isUpdate = !tagName.equals(versionTag);
+                String versionTag = node.ownText("div.tag-name span");
                 AndroidSchedulers.mainThread().scheduleDirect(new Runnable() {
                     @Override
                     public void run() {
                         if (view != null) {
-                            view.checkApkUpdate(isUpdate);
+                            view.getVersionTag(versionTag);
                         }
                     }
                 });
             }
         };
         NetUtil.startLoad(url, callback);
-    }
-
-    private String removeSuffix(String string) {
-        if (string == null) {
-            return "";
-        }
-        while (string.endsWith(".0")) {
-            string = string.substring(0, string.lastIndexOf('.'));
-        }
-        return string;
     }
 
 }

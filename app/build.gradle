@@ -9,19 +9,25 @@ static def gitVersionTag() {
     def cmd = 'git describe --tags'
     def version = cmd.execute().text.trim()
 
-    def pattern = "-(\\d+)-g"
+//    def pattern = "-(\\d+)-g"
+//    def matcher = version =~ pattern
+
+//    if (matcher) {
+//        version = version.substring(0, matcher.start()) + "." + matcher[0][1]
+//    } else {
+//        version = version + ".0"
+//    }
+    def pattern = "-g"
     def matcher = version =~ pattern
 
     if (matcher) {
         version = version.substring(0, matcher.start()) + "." + matcher[0][1]
-    } else {
-        version = version + ".0"
     }
 
     return version
 }
 
-//println gitVersionTag()
+println gitVersionTag()
 
 android {
     compileSdkVersion 29

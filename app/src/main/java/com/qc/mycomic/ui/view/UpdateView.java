@@ -4,6 +4,6 @@ import the.one.base.ui.view.BaseView;
 
 public interface UpdateView extends BaseView {
 
-    void checkApkUpdate(boolean isUpdate);
+    void getVersionTag(String versionTag);
 
 }
