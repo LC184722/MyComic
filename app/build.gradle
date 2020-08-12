@@ -27,7 +27,7 @@ static def gitVersionTag() {
     return version
 }
 
-println gitVersionTag()
+//println gitVersionTag()
 
 android {
     compileSdkVersion 29
