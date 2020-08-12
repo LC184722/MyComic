@@ -121,6 +121,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
     }
 
     private boolean isSmooth = false;
+    private boolean isFresh = false;
 
     private void setListener() {
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -146,10 +147,12 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
         });
 
         ibLeft.setOnClickListener(v -> {
+            isFresh = true;
             onRefresh();
         });
 
         ibRight.setOnClickListener(v -> {
+            isFresh = true;
             super.onRefresh();
         });
     }
@@ -231,14 +234,38 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
         int loadPosition = -1;
         if (imageInfoList == null) {
             loadPosition = curPosition;
+        } else if (isFresh) {
+            int position = getNextPosition(curPosition);
+            if (!comicInfo.canLoad(position)) {
+                if (isLoadNext) {
+                    showFailTips("没有下一章了");
+                } else {
+                    showFailTips("没有上一章了");
+                }
+                return;
+            } else {
+                isFresh = false;
+                isLoadNext = true;
+                loadPosition = position;
+            }
         } else {
             int position = curPosition;
-            while (set.contains(position)) {
+            if (isLoadNext) {
+                while (set.contains(position)) {
+                    position = getNextPosition(position);
+                }
+                if (comicInfo.canLoad(position)) {
+                    loadPosition = position;
+                    readerAdapter.clearMap();
+                }
+            } else {
                 position = getNextPosition(position);
-            }
-            if (comicInfo.canLoad(position)) {
-                loadPosition = position;
-                readerAdapter.clearMap();
+                if (comicInfo.canLoad(position)) {
+                    loadPosition = position;
+                } else {
+                    loadPosition = curPosition;
+                }
+                isLoadNext = true;
             }
         }
         if (loadPosition != -1) {
@@ -258,7 +285,6 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
                 return position - 1;
             }
         } else {
-            isLoadNext = true;
             if (comicInfo.getOrder() == Codes.ASC) {
                 return position - 1;
             } else {
@@ -306,6 +332,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
         onComplete(imageInfoList);
         this.imageInfoList = adapter.getData();
         initOtherView();
+        recycleView.scrollToPosition(0);
 //        if (Codes.isFirstLoadWebView && comic.getSourceId() == Codes.MI_TUI) {
 //            WebView webView = new WebView(getContext());
 //            webView.addJavascriptInterface(new MyJavaScriptInterface(), "HTMLOUT");
