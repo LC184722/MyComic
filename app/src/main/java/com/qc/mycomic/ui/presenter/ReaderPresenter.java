@@ -22,7 +22,7 @@ import the.one.base.ui.presenter.BasePresenter;
 
 /**
  * @author LuQiChuang
- * @description
+ * @desc
  * @date 2020/8/12 15:25
  * @ver 1.0
  */
@@ -30,9 +30,11 @@ public class ReaderPresenter extends BasePresenter<ReaderView> {
 
     List<ChapterInfo> chapterInfoList;
 
-    public void loadImageInfoList(Comic comic, int chapterId) {
+    public void loadImageInfoList(Comic comic) {
         chapterInfoList = comic.getComicInfo().getChapterInfoList();
-        String url = chapterInfoList.get(chapterId).getChapterUrl();
+        int position = comic.getComicInfo().getPosition();
+        int chapterId = comic.getComicInfo().getCurChapterId();
+        String url = chapterInfoList.get(position).getChapterUrl();
         Source source = comic.getSource();
         if (!(source instanceof ImageLoader)) {
             Log.i(TAG, "loadImageInfoList: url = " + url);
@@ -45,7 +47,7 @@ public class ReaderPresenter extends BasePresenter<ReaderView> {
                             showErrorPage(e.getMessage(), v -> {
                                 Log.e(TAG, "onClick: getError " + e.getMessage());
                                 view.showLoadingPage();
-                                loadImageInfoList(comic, chapterId);
+                                loadImageInfoList(comic);
                             });
                         }
                         Log.i(TAG, "run: get html fail ok...");

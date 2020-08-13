@@ -9,7 +9,7 @@ import the.one.base.ui.fragment.BaseHomeFragment;
 
 /**
  * @author LuQiChuang
- * @description HOME界面
+ * @desc HOME界面
  * @date 2020/8/12 15:26
  * @ver 1.0
  */

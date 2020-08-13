@@ -25,7 +25,7 @@ import okhttp3.Response;
 
 /**
  * @author LuQiChuang
- * @description
+ * @desc
  * @date 2020/8/12 15:25
  * @ver 1.0
  */
@@ -85,7 +85,7 @@ public class BiliBili implements Source, ImageLoader {
             }
 
             @Override
-            public ComicInfo dealDataList(JsonNode node) {
+            public ComicInfo dealDataList(JsonNode node, int dataId) {
                 String title = node.string("org_title");
                 String author = node.arrayToString("author_name");
                 String updateTime = null;
@@ -111,14 +111,14 @@ public class BiliBili implements Source, ImageLoader {
             }
 
             @Override
-            public ChapterInfo dealDataList(JsonNode node) {
+            public ChapterInfo dealDataList(JsonNode node, int dataId) {
                 String title = node.string("short_title");
                 String oTitle = node.string("title");
                 if (oTitle != null) {
                     title = title + " " + oTitle;
                 }
                 String chapterUrl = "https://manga.bilibili.com/mc" + id + "/" + node.string("id");
-                return new ChapterInfo(title, chapterUrl);
+                return new ChapterInfo(dataId, title, chapterUrl);
             }
         };
         starter.startData(html, "data");
@@ -134,12 +134,12 @@ public class BiliBili implements Source, ImageLoader {
             }
 
             @Override
-            public ImageInfo dealDataList(JsonNode node) {
+            public ImageInfo dealDataList(JsonNode node, int dataId) {
                 String url = node.string("url");
                 String token = node.string("token");
                 String chapterUrl = url + "?token=" + token;
                 chapterUrl = chapterUrl.replace("\\u0026", "&");
-                return new ImageInfo(chapterId, getCur(), getTotal(), chapterUrl);
+                return new ImageInfo(dataId, getCur(), getTotal(), chapterUrl);
             }
         };
         return starter.startDataList(html, "data");
@@ -195,7 +195,7 @@ public class BiliBili implements Source, ImageLoader {
             }
 
             @Override
-            public ComicInfo dealDataList(JsonNode node) {
+            public ComicInfo dealDataList(JsonNode node, int dataId) {
                 String title = node.string("title");
                 String author = node.arrayToString("author");
                 String updateTime = null;

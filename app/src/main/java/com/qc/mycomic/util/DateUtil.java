@@ -6,7 +6,7 @@ import java.util.Locale;
 
 /**
  * @author LuQiChuang
- * @description 日期工具
+ * @desc 日期工具
  * @date 2020/8/12 15:25
  * @ver 1.0
  */

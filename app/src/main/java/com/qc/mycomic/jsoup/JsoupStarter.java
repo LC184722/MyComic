@@ -1,5 +1,7 @@
 package com.qc.mycomic.jsoup;
 
+import android.util.Log;
+
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -8,7 +10,7 @@ import java.util.List;
 
 /**
  * @author LuQiChuang
- * @description
+ * @desc
  * @date 2020/8/12 15:25
  * @ver 1.0
  */
@@ -20,6 +22,14 @@ public abstract class JsoupStarter<T> {
         return true;
     }
 
+    private int getId(int i, int size) {
+        if (isDESC()) {
+            return size - i;
+        } else {
+            return i + 1;
+        }
+    }
+
     public void startInfo(String html) {
         node.init(html);
         dealInfo(node);
@@ -29,9 +39,12 @@ public abstract class JsoupStarter<T> {
         node.init(html);
         Elements elements = node.getElements(cssQuery);
         List<T> list = new LinkedList<>();
+        int i = 0;
+        int size = elements.size();
         for (Element element : elements) {
             node.init(element);
-            T t = dealElement(node);
+            int chapterId = getId(i++, size);
+            T t = dealElement(node, chapterId);
             if (t != null) {
                 if (isDESC()) {
                     list.add(t);
@@ -45,6 +58,6 @@ public abstract class JsoupStarter<T> {
 
     public abstract void dealInfo(JsoupNode node);
 
-    public abstract T dealElement(JsoupNode node);
+    public abstract T dealElement(JsoupNode node, int elementId);
 
 }

@@ -12,7 +12,7 @@ import the.one.base.util.SpUtil;
 /**
  * @author LuQiChuang
  * @version 1.0
- * @description
+ * @desc
  * @date 2020/8/12 21:14
  */
 public class Setting {

@@ -8,7 +8,7 @@ import the.one.base.ui.view.BaseView;
 
 /**
  * @author LuQiChuang
- * @description
+ * @desc
  * @date 2020/8/12 15:25
  * @ver 1.0
  */

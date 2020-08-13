@@ -1,45 +1,20 @@
 package com.qc.mycomic.test;
 
-import android.widget.ListView;
-
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.qc.mycomic.json.JsonNode;
 import com.qc.mycomic.json.JsonStarter;
-import com.qc.mycomic.jsoup.JsoupNode;
-import com.qc.mycomic.jsoup.JsoupStarter;
 import com.qc.mycomic.model.ChapterInfo;
-import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ComicInfo;
 import com.qc.mycomic.model.ImageInfo;
 import com.qc.mycomic.model.MyMap;
 import com.qc.mycomic.model.Source;
-import com.qc.mycomic.source.ManHuaFen;
-import com.qc.mycomic.source.MiTui;
-import com.qc.mycomic.source.PuFei;
-import com.qc.mycomic.source.TengXun;
 import com.qc.mycomic.util.Codes;
-import com.qc.mycomic.util.DecryptUtil;
-import com.qc.mycomic.util.ImageInfoUtil;
 import com.qc.mycomic.util.NetUtil;
 import com.qc.mycomic.util.StringUtil;
 
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.Function;
-import org.mozilla.javascript.Scriptable;
-
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -49,7 +24,7 @@ import okhttp3.Response;
 
 /**
  * @author LuQiChuang
- * @description
+ * @desc
  * @date 2020/8/12 15:25
  * @ver 1.0
  */
@@ -110,7 +85,7 @@ public class HtmlTestUtil implements Source {
             }
 
             @Override
-            public ComicInfo dealDataList(JsonNode node) {
+            public ComicInfo dealDataList(JsonNode node, int dataId) {
                 String title = node.string("org_title");
                 String author = node.arrayToString("author_name");
                 String updateTime = null;
@@ -145,10 +120,10 @@ public class HtmlTestUtil implements Source {
             }
 
             @Override
-            public ChapterInfo dealDataList(JsonNode node) {
+            public ChapterInfo dealDataList(JsonNode node, int dataId) {
                 String title = node.string("title");
                 String chapterUrl = "https://manga.bilibili.com/mc" + id + "/" + node.string("id");
-                return new ChapterInfo(title, chapterUrl);
+                return new ChapterInfo(dataId, title, chapterUrl);
             }
         };
         starter.startData(html, "data");
@@ -181,7 +156,7 @@ public class HtmlTestUtil implements Source {
             }
 
             @Override
-            public ComicInfo dealDataList(JsonNode node) {
+            public ComicInfo dealDataList(JsonNode node, int dataId) {
                 String title = node.string("title");
                 String author = node.arrayToString("author");
                 String updateTime = null;
@@ -224,21 +199,6 @@ public class HtmlTestUtil implements Source {
             public void onResponse(Call call, Response response) throws IOException {
                 String html = response.body().string();
                 System.out.println("response.body().string() = " + html);
-                List<ComicInfo> list = getRankComicInfoList(html);
-                System.out.println("list = " + list);
-                JsonStarter<String> starter = new JsonStarter<String>() {
-                    @Override
-                    public void dealData(JsonNode node) {
-                    }
-
-                    @Override
-                    public String dealDataList(JsonNode node) {
-                        return null;
-                    }
-                };
-                starter.startData(html, "data", "index");
-
-
             }
         };
         //            https://manga.bilibili.com/twirp/comic.v1.Comic/GetImageIndex?device=pc&platform=web
@@ -247,9 +207,6 @@ public class HtmlTestUtil implements Source {
         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
         builder.addFormDataPart("ep_id", "307985");
         Request request = new Request.Builder().addHeader("User-Agent", Codes.USER_AGENT_WEB).url(url).post(builder.build()).build();
-
-//        Request request = getRankRequest("HomeFans-{\"last_week_offset\":0,\"last_month_offset\":0,\"type\":0}");
-
         NetUtil.startLoad(request, callback);
     }
 

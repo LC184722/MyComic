@@ -23,6 +23,7 @@ import com.qc.mycomic.model.ComicInfo;
 import com.qc.mycomic.model.ImageInfo;
 import com.qc.mycomic.ui.presenter.ReaderPresenter;
 import com.qc.mycomic.util.Codes;
+import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DBUtil;
 import com.qc.mycomic.ui.view.ReaderView;
 import com.qmuiteam.qmui.util.QMUIDisplayHelper;
@@ -30,10 +31,12 @@ import com.qmuiteam.qmui.util.QMUIDisplayHelper;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import the.one.base.BaseApplication;
 import the.one.base.ui.fragment.BaseDataFragment;
 import the.one.base.ui.presenter.BasePresenter;
 
@@ -41,7 +44,7 @@ import static androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE;
 
 /**
  * @author LuQiChuang
- * @description 漫画阅读界面
+ * @desc 漫画阅读界面
  * @date 2020/8/12 15:25
  * @ver 1.0
  */
@@ -50,8 +53,6 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
     private Comic comic;
 
     private ComicInfo comicInfo;
-
-    private int curPosition;
 
     private boolean isLoadNext;
 
@@ -70,10 +71,10 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
     private SeekBar seekBar;
     private boolean firstLoad = true;
 
-    public ReaderFragment(Comic comic, int curPosition) {
+    public ReaderFragment(Comic comic) {
         this.comic = comic;
         this.comicInfo = comic.getComicInfo();
-        this.curPosition = curPosition;
+        Log.i(TAG, "start: cons chapterId = " + comicInfo.getCurChapterId());
         this.isLoadNext = true;
         Codes.toStatus = Codes.READER_TO_CHAPTER;
     }
@@ -118,8 +119,6 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
                 first = 0;
             }
             ImageInfo imageInfo = imageInfoList.get(first);
-            curPosition = imageInfo.getChapterId();
-            comicInfo.setCurPosition(imageInfo.getChapterId());
             tvChapter.setText(comicInfo.getCurChapterTitle());
             tvProgress.setText(imageInfo.toStringProgress());
             seekBar.setMax(imageInfo.getTotal() - 1);
@@ -128,7 +127,6 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
     }
 
     private boolean isSmooth = false;
-    private boolean isFresh = false;
 
     private void setListener() {
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -154,12 +152,10 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
         });
 
         ibLeft.setOnClickListener(v -> {
-            isFresh = true;
             onRefresh();
         });
 
         ibRight.setOnClickListener(v -> {
-            isFresh = true;
             super.onRefresh();
         });
     }
@@ -195,8 +191,9 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
 //                        Log.i(TAG, "onScrolled: first = " + first);
 //                        Log.i(TAG, "onScrolled: " + imageInfoList.size());
                     ImageInfo imageInfo = imageInfoList.get(first);
-                    curPosition = imageInfo.getChapterId();
-                    comicInfo.setCurPosition(imageInfo.getChapterId());
+                    comicInfo.setCurChapterId(imageInfo.getChapterId());
+
+
                     tvChapter.setText(comicInfo.getCurChapterTitle());
                     tvProgress.setText(imageInfo.toStringProgress());
                     Log.i(TAG, "onScrolled: first = " + first);
@@ -234,67 +231,21 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
         return readerAdapter;
     }
 
-    private Set<Integer> set = new HashSet<>();
-
     @Override
     protected void requestServer() {
-        int loadPosition = -1;
         if (imageInfoList == null) {
-            loadPosition = curPosition;
-        } else if (isFresh) {
-            int position = getNextPosition(curPosition);
-            if (!comicInfo.canLoad(position)) {
-                if (isLoadNext) {
-                    showFailTips("没有下一章了");
-                } else {
-                    showFailTips("没有上一章了");
-                }
-                return;
+            presenter.loadImageInfoList(comic);
+        } else {
+            Log.i(TAG, "start: chapterId = " + comicInfo.getCurChapterId());
+            if (comicInfo.canLoad(isLoadNext)) {
+                Log.i(TAG, "requestServer: start: curId = " + comicInfo.getCurChapterId());
+                presenter.loadImageInfoList(comic);
+            } else if (isLoadNext) {
+                onComplete(null);
             } else {
                 isLoadNext = true;
-                loadPosition = position;
-            }
-        } else {
-            int position = curPosition;
-            if (isLoadNext) {
-                while (set.contains(position)) {
-                    position = getNextPosition(position);
-                }
-                if (comicInfo.canLoad(position)) {
-                    loadPosition = position;
-                    readerAdapter.clearMap();
-                }
-            } else {
-                position = getNextPosition(position);
-                if (comicInfo.canLoad(position)) {
-                    loadPosition = position;
-                } else {
-                    loadPosition = curPosition;
-                }
-                isLoadNext = true;
-            }
-        }
-        if (loadPosition != -1) {
-            set.add(loadPosition);
-            presenter.loadImageInfoList(comic, loadPosition);
-        } else {
-            onComplete(null);
-        }
-        DBUtil.saveData(comicInfo);
-    }
-
-    private int getNextPosition(int position) {
-        if (isLoadNext) {
-            if (comicInfo.getOrder() == Codes.ASC) {
-                return position + 1;
-            } else {
-                return position - 1;
-            }
-        } else {
-            if (comicInfo.getOrder() == Codes.ASC) {
-                return position - 1;
-            } else {
-                return position + 1;
+                showFailTips("没有上一章");
+                setPullLayoutEnabled(false);
             }
         }
     }
@@ -338,10 +289,6 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
         onComplete(imageInfoList);
         this.imageInfoList = adapter.getData();
         initOtherView();
-        if (isFresh) {
-            isFresh = false;
-            recycleView.scrollToPosition(0);
-        }
 //        if (Codes.isFirstLoadWebView && comic.getSourceId() == Codes.MI_TUI) {
 //            WebView webView = new WebView(getContext());
 //            webView.addJavascriptInterface(new MyJavaScriptInterface(), "HTMLOUT");
@@ -377,4 +324,11 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        comic.setDate(new Date());
+        ComicUtil.first(comic);
+        DBUtil.saveComic(comic, DBUtil.SAVE_CUR);
+    }
 }

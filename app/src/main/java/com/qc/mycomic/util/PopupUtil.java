@@ -8,7 +8,7 @@ import the.one.base.model.PopupItem;
 /**
  * @author LuQiChuang
  * @version 1.0
- * @description
+ * @desc
  * @date 2020/8/12 21:33
  */
 public class PopupUtil {

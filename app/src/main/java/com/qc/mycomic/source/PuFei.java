@@ -12,18 +12,14 @@ import com.qc.mycomic.util.DecryptUtil;
 import com.qc.mycomic.util.NetUtil;
 import com.qc.mycomic.util.StringUtil;
 
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.Scriptable;
-
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import okhttp3.Request;
 
 /**
  * @author LuQiChuang
- * @description
+ * @desc
  * @date 2020/8/12 15:25
  * @ver 1.0
  */
@@ -69,7 +65,7 @@ public class PuFei implements Source {
             }
 
             @Override
-            public ComicInfo dealElement(JsoupNode node) {
+            public ComicInfo dealElement(JsoupNode node, int elementId) {
                 String title = node.ownText("h3");
                 String author = node.ownText("dl dd");
                 String updateTime = node.text("dl", 3, "dd");
@@ -94,10 +90,10 @@ public class PuFei implements Source {
             }
 
             @Override
-            public ChapterInfo dealElement(JsoupNode node) {
+            public ChapterInfo dealElement(JsoupNode node, int elementId) {
                 String title = node.title("a");
                 String chapterUrl = getIndex() + node.href("a");
-                return new ChapterInfo(title, chapterUrl);
+                return new ChapterInfo(elementId, title, chapterUrl);
             }
         };
         starter.startInfo(html);

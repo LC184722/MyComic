@@ -2,6 +2,8 @@ package com.qc.mycomic.util;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ComicInfo;
 
@@ -12,7 +14,7 @@ import java.util.List;
 
 /**
  * @author LuQiChuang
- * @description 数据库连接工具
+ * @desc 数据库连接工具
  * @date 2020/8/12 15:27
  * @ver 1.0
  */
@@ -20,31 +22,46 @@ public class DBUtil {
 
     public static final String TAG = "DBUtil";
 
+    public static final int SAVE_ONLY = 0;
+    public static final int SAVE_CUR = 1;
+    public static final int SAVE_ALL = 2;
+
+    public static final int STATUS_HIS = 0;
+    public static final int STATUS_FAV = 1;
+    public static final int STATUS_ALL = 2;
+
     /**
-     * 保存该漫画信息及所有漫画源信息
+     * 保存漫画信息，默认保存所有漫画信息
      *
-     * @param comic 保存漫画
+     * @param comic comic
      * @return void
      */
-    public static void saveData(Comic comic) {
-        saveData(comic, true);
+    public static void saveComic(Comic comic) {
+        saveComic(comic, SAVE_ALL);
     }
 
     /**
-     * 保存漫画信息
+     * 根据mode，保存漫画信息
      *
-     * @param comic    当前漫画
-     * @param needInfo 是否保存所有漫画源信息
+     * @param comic comic
+     * @param mode  DBUtil.SAVE_* , only - 保存漫画信息，cur - 保存当前源信息，all - 保存所有源信息
      * @return void
      */
-    public static void saveData(Comic comic, boolean needInfo) {
+    public static void saveComic(Comic comic, int mode) {
         if (comic != null) {
-            new Thread(() -> {
-                comic.saveOrUpdate("title = ?", comic.getTitle());
-                Log.i(TAG, "saveComic: " + comic.getTitle() + " p = " + comic.getPriority());
-                if (!comic.getComicInfoList().isEmpty() && needInfo) {
-                    for (ComicInfo info : comic.getComicInfoList()) {
-                        DBUtil.saveData(info);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    if (mode == SAVE_ONLY) {
+                        saveComicData(comic);
+                    } else if (mode == SAVE_CUR) {
+                        saveComicData(comic);
+                        saveComicInfoData(comic.getComicInfo());
+                    } else {
+                        saveComicData(comic);
+                        for (ComicInfo comicInfo : comic.getComicInfoList()) {
+                            saveComicInfoData(comicInfo);
+                        }
                     }
                 }
             }).start();
@@ -54,15 +71,77 @@ public class DBUtil {
     /**
      * 保存漫画源信息
      *
-     * @param comicInfo 当前漫画源
+     * @param comicInfo comicInfo
      * @return void
      */
-    public static void saveData(ComicInfo comicInfo) {
+    public static void saveComicInfo(ComicInfo comicInfo) {
         if (comicInfo != null) {
-            new Thread(() -> comicInfo.saveOrUpdate("title = ? and sourceId = ?", comicInfo.getTitle(), String.valueOf(comicInfo.getSourceId()))).start();
-            Log.i(TAG, "saveComicInfo: " + comicInfo.getTitle() + "->" + SourceUtil.getSourceName(comicInfo.getSourceId()));
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    saveComicInfoData(comicInfo);
+                }
+            }).start();
         }
     }
+
+    private static void saveComicData(Comic comic) {
+        if (comic != null) {
+            comic.saveOrUpdate("title = ?", comic.getTitle());
+            Log.i(TAG, "saveComicData: comic --> " + comic.getTitle());
+        }
+    }
+
+    private static void saveComicInfoData(ComicInfo comicInfo) {
+        if (comicInfo != null) {
+            comicInfo.saveOrUpdate("title = ? and sourceId = ?", comicInfo.getTitle(), String.valueOf(comicInfo.getSourceId()));
+            Log.i(TAG, "saveComicInfoData: comicInfo --> " + comicInfo.getTitle() + " " + SourceUtil.getSourceName(comicInfo.getSourceId()));
+        }
+    }
+
+//    /**
+//     * 保存该漫画信息及所有漫画源信息
+//     *
+//     * @param comic 保存漫画
+//     * @return void
+//     */
+//    public static void saveData(Comic comic) {
+//        saveData(comic, true);
+//    }
+//
+//    /**
+//     * 保存漫画信息
+//     *
+//     * @param comic    当前漫画
+//     * @param needInfo 是否保存所有漫画源信息
+//     * @return void
+//     */
+//    public static void saveData(Comic comic, boolean needInfo) {
+//        if (comic != null) {
+//            new Thread(() -> {
+//                comic.saveOrUpdate("title = ?", comic.getTitle());
+//                Log.i(TAG, "saveComic: " + comic.getTitle() + " p = " + comic.getPriority());
+//                if (!comic.getComicInfoList().isEmpty() && needInfo) {
+//                    for (ComicInfo info : comic.getComicInfoList()) {
+//                        DBUtil.saveData(info);
+//                    }
+//                }
+//            }).start();
+//        }
+//    }
+//
+//    /**
+//     * 保存漫画源信息
+//     *
+//     * @param comicInfo 当前漫画源
+//     * @return void
+//     */
+//    public static void saveData(ComicInfo comicInfo) {
+//        if (comicInfo != null) {
+//            new Thread(() -> comicInfo.saveOrUpdate("title = ? and sourceId = ?", comicInfo.getTitle(), String.valueOf(comicInfo.getSourceId()))).start();
+//            Log.i(TAG, "saveComicInfo: " + comicInfo.getTitle() + "->" + SourceUtil.getSourceName(comicInfo.getSourceId()));
+//        }
+//    }
 
     /**
      * 删除漫画

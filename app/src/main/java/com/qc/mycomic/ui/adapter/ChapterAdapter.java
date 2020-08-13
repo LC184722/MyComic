@@ -21,7 +21,7 @@ import the.one.base.adapter.TheBaseViewHolder;
 
 /**
  * @author LuQiChuang
- * @description
+ * @desc
  * @date 2020/8/12 15:25
  * @ver 1.0
  */
@@ -45,7 +45,7 @@ public class ChapterAdapter extends TheBaseQuickAdapter<ChapterInfo> {
     @Override
     protected void convert(@NotNull TheBaseViewHolder holder, ChapterInfo chapterInfo) {
         holder.setText(R.id.tvTitle, chapterInfo.getTitle());
-        if (comic.getComicInfo().getCurPosition() == holder.getAdapterPosition() - 1) {
+        if (comic.getComicInfo().getPosition() == holder.getAdapterPosition() - 1) {
             TextView tvTitle = holder.findView(R.id.tvTitle);
             tvTitle.setTextColor(getColor(R.color.white));
             QMUIRoundLinearLayout linearLayout = holder.findView(R.id.linearLayout);

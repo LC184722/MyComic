@@ -9,25 +9,21 @@ import com.qc.mycomic.model.MyMap;
 import com.qc.mycomic.model.Source;
 import com.qc.mycomic.util.Codes;
 import com.qc.mycomic.util.DecryptUtil;
-import com.qc.mycomic.util.ImageInfoUtil;
+import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.NetUtil;
 import com.qc.mycomic.util.StringUtil;
 
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import okhttp3.Request;
 
 /**
  * @author LuQiChuang
- * @description
+ * @desc
  * @date 2020/8/12 15:25
  * @ver 1.0
  */
@@ -73,7 +69,7 @@ public class TengXun implements Source {
             }
 
             @Override
-            public ComicInfo dealElement(JsoupNode node) {
+            public ComicInfo dealElement(JsoupNode node, int elementId) {
                 String title = node.title("a");
                 String author = null;
                 String updateTime = null;
@@ -104,10 +100,10 @@ public class TengXun implements Source {
             }
 
             @Override
-            public ChapterInfo dealElement(JsoupNode node) {
+            public ChapterInfo dealElement(JsoupNode node, int elementId) {
                 String title = node.ownText("a");
                 String chapterUrl = getIndex() + node.href("a");
-                return new ChapterInfo(title, chapterUrl);
+                return new ChapterInfo(elementId, title, chapterUrl);
             }
         };
         starter.startInfo(html);
@@ -140,7 +136,7 @@ public class TengXun implements Source {
                 urls = StringUtil.matchArray("pid(.*?)\"url\":\"(.*?)\"", data, 2);
             }
         }
-        return ImageInfoUtil.getImageInfoList(urls, chapterId);
+        return ComicUtil.getImageInfoList(urls, chapterId);
     }
 
     private String getJsCode() {
@@ -211,7 +207,7 @@ public class TengXun implements Source {
             }
 
             @Override
-            public ComicInfo dealElement(JsoupNode node) {
+            public ComicInfo dealElement(JsoupNode node, int elementId) {
                 String title = node.ownText("strong.comic-title");
                 String author = node.ownText("small.comic-update");
                 String updateTime = null;
@@ -238,7 +234,7 @@ public class TengXun implements Source {
                 }
 
                 @Override
-                public ComicInfo dealElement(JsoupNode node) {
+                public ComicInfo dealElement(JsoupNode node, int elementId) {
                     String title = node.title("h3.ret-works-title a");
                     String author = node.title("p.ret-works-author");
                     String updateTime = null;

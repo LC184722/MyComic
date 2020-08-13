@@ -1,5 +1,7 @@
 package com.qc.mycomic.source;
 
+import android.util.Log;
+
 import com.qc.mycomic.jsoup.JsoupNode;
 import com.qc.mycomic.jsoup.JsoupStarter;
 import com.qc.mycomic.model.ChapterInfo;
@@ -14,13 +16,12 @@ import com.qc.mycomic.util.StringUtil;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import okhttp3.Request;
 
 /**
  * @author LuQiChuang
- * @description
+ * @desc
  * @date 2020/8/12 15:25
  * @ver 1.0
  */
@@ -66,7 +67,7 @@ public class ManHuaFen implements Source {
             }
 
             @Override
-            public ComicInfo dealElement(JsoupNode node) {
+            public ComicInfo dealElement(JsoupNode node, int elementId) {
                 String title = node.ownText("a.title");
                 String author = node.ownText("p.txtItme");
                 String updateTime = node.ownText("span.date");
@@ -100,14 +101,14 @@ public class ManHuaFen implements Source {
             }
 
             @Override
-            public ChapterInfo dealElement(JsoupNode node) {
+            public ChapterInfo dealElement(JsoupNode node, int elementId) {
                 String title = node.ownText("span");
                 String chapterUrl = node.href("a");
                 if (chapterUrl.contains("html")) {
                     if (!chapterUrl.startsWith("http")) {
                         chapterUrl = getIndex() + chapterUrl;
                     }
-                    return new ChapterInfo(title, chapterUrl);
+                    return new ChapterInfo(elementId, title, chapterUrl);
                 } else {
                     return null;
                 }
@@ -208,7 +209,7 @@ public class ManHuaFen implements Source {
                 }
 
                 @Override
-                public ComicInfo dealElement(JsoupNode node) {
+                public ComicInfo dealElement(JsoupNode node, int elementId) {
                     String title = node.ownText("a.txtA");
                     String author = node.ownText("span.info a");
                     String updateTime = null;

@@ -7,7 +7,7 @@ import android.content.pm.PackageManager;
 
 /**
  * @author LuQiChuang
- * @description 版本工具，获得版本名、版本号等信息
+ * @desc 版本工具，获得版本名、版本号等信息
  * @date 2020/8/12 15:25
  * @ver 1.0
  */

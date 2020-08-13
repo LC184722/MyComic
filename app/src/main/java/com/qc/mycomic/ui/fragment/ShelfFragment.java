@@ -22,7 +22,7 @@ import the.one.base.util.QMUIPopupUtil;
 
 /**
  * @author LuQiChuang
- * @description 漫画书架基础界面
+ * @desc 漫画书架基础界面
  * @date 2020/8/12 15:31
  * @ver 1.0
  */
@@ -91,7 +91,7 @@ public class ShelfFragment extends BaseTitleTabFragment {
                     for (Comic comic : comicList) {
                         if (random.nextBoolean()) {
                             comic.getComicInfo().setUpdateChapter("???");
-                            DBUtil.saveData(comic.getComicInfo());
+                            DBUtil.saveComicInfo(comic.getComicInfo());
                         }
                     }
                     fragment.getAdapter().notifyDataSetChanged();

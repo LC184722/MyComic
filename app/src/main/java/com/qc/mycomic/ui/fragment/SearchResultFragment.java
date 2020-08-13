@@ -29,7 +29,7 @@ import the.one.base.util.SpUtil;
 
 /**
  * @author LuQiChuang
- * @description 搜索结果界面
+ * @desc 搜索结果界面
  * @date 2020/8/12 15:31
  * @ver 1.0
  */

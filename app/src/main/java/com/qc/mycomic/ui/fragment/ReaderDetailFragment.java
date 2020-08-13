@@ -15,7 +15,7 @@ import the.one.base.ui.presenter.BasePresenter;
 
 /**
  * @author LuQiChuang
- * @description 图片放大界面
+ * @desc 图片放大界面
  * @date 2020/8/12 15:24
  * @ver 1.0
  */

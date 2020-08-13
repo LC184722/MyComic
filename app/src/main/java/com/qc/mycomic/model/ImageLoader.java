@@ -4,7 +4,7 @@ import com.qc.mycomic.ui.view.ReaderView;
 
 /**
  * @author LuQiChuang
- * @description 重写获得图片信息链表
+ * @desc 重写获得图片信息链表
  * @date 2020/8/12 15:24
  * @ver 1.0
  */

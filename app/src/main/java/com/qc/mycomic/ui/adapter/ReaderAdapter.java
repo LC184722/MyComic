@@ -36,7 +36,7 @@ import the.one.base.util.glide.GlideUtil;
 
 /**
  * @author LuQiChuang
- * @description
+ * @desc
  * @date 2020/8/12 15:25
  * @ver 1.0
  */
@@ -125,7 +125,7 @@ public class ReaderAdapter extends TheBaseQuickAdapter<ImageInfo> {
     public void loadImage(Context context, ImageInfo imageInfo, ImageView imageView) {
         GlideUrl url;
         if (comic.getComicInfo().getSourceId() == Codes.MI_TUI) {
-            Headers headers = new MyHeaders(comic.getComicInfo().getCurChapterInfo().getChapterUrl());
+            Headers headers = new MyHeaders(comic.getComicInfo().getChapterInfo().getChapterUrl());
             url = new GlideUrl(imageInfo.getUrl(), headers);
         } else {
             url = new GlideUrl(imageInfo.getUrl());
@@ -165,7 +165,7 @@ public class ReaderAdapter extends TheBaseQuickAdapter<ImageInfo> {
             set.add(detail);
             GlideUrl url;
             if (comic.getComicInfo().getSourceId() == Codes.MI_TUI) {
-                Headers headers = new MyHeaders(comic.getComicInfo().getCurChapterInfo().getChapterUrl());
+                Headers headers = new MyHeaders(comic.getComicInfo().getChapterInfo().getChapterUrl());
                 url = new GlideUrl(imageInfo.getUrl(), headers);
             } else {
                 url = new GlideUrl(imageInfo.getUrl());

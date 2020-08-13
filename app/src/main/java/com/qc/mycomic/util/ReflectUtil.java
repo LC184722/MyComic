@@ -5,7 +5,7 @@ import java.lang.reflect.Field;
 /**
  * @author LuQiChuang
  * @version 1.0
- * @description
+ * @desc
  * @date 2020/8/12 21:37
  */
 public class ReflectUtil {

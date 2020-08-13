@@ -3,6 +3,7 @@ package com.qc.mycomic.ui.presenter;
 import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ComicInfo;
 import com.qc.mycomic.util.Codes;
+import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DBUtil;
 import com.qc.mycomic.util.NetUtil;
 import com.qc.mycomic.util.SourceUtil;
@@ -19,7 +20,7 @@ import the.one.base.ui.presenter.BasePresenter;
 
 /**
  * @author LuQiChuang
- * @description
+ * @desc
  * @date 2020/8/12 15:25
  * @ver 1.0
  */
@@ -76,15 +77,9 @@ public class ShelfPresenter extends BasePresenter<ShelfView> {
                             if (curUpdateChapter == null || !curUpdateChapter.equals(info.getUpdateChapter())) {
                                 comic.setUpdate(comic.changeComicInfo(info.getSourceId()));
                                 comic.setPriority(++priority);
-                                int index = comicList.indexOf(comic);
-                                if (index != -1) {
-                                    comicList.add(0, comicList.remove(index));
-                                }
-//                            } else if (comic.isUpdate()) {
-//                                comic.setPriority(1);
+                                ComicUtil.first(comic);
                             }
-                            DBUtil.saveData(comic, false);
-                            DBUtil.saveData(info);
+                            DBUtil.saveComic(comic, DBUtil.SAVE_CUR);
                             view.checkUpdateComplete(null);
                         }
                     }

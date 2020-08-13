@@ -29,7 +29,7 @@ import the.one.base.ui.presenter.BasePresenter;
 
 /**
  * @author LuQiChuang
- * @description 排行榜界面
+ * @desc 排行榜界面
  * @date 2020/8/12 15:19
  * @ver 1.0
  */

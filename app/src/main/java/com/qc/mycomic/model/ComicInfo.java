@@ -12,7 +12,7 @@ import java.util.Objects;
 
 /**
  * @author LuQiChuang
- * @description
+ * @desc
  * @date 2020/8/12 15:25
  * @ver 1.0
  */
@@ -71,42 +71,95 @@ public class ComicInfo extends LitePalSupport {
         this.intro = intro;
     }
 
-    public void loadNext() {
-        curChapterId++;
-    }
-
-    public boolean canLoad(int position) {
-        return position >= 0 && position < chapterInfoList.size();
-    }
-
-
-    public int getCurPosition() {
-        if (order == Codes.DESC) {
-            return chapterInfoList.size() - curChapterId - 1;
+    public boolean canLoad(boolean isLoadNext) {
+        int id;
+        if (isLoadNext) {
+            id = curChapterId + 1;
         } else {
-            return curChapterId;
+            id = curChapterId - 1;
         }
+        boolean flag = checkChapterId(id);
+        if (flag) {
+            curChapterId = id;
+        }
+        return flag;
     }
 
-    public int getLastPosition() {
-        if (order == Codes.DESC) {
-            return 0;
-        } else {
-            return chapterInfoList.size() - 1;
-        }
+    public boolean checkChapterId(int chapterId) {
+        return chapterId >= 1 && chapterId <= chapterInfoList.size();
     }
 
-    public void setCurPosition(int position) {
-        if (order == Codes.DESC) {
-            curChapterId = chapterInfoList.size() - position - 1;
-        } else {
-            curChapterId = position;
-        }
+    /**
+     * 获得当前章节id的chapterList position
+     *
+     * @return int
+     */
+    public int getPosition() {
+        return chapterIdToPosition(curChapterId);
+    }
+
+    /**
+     * 获得指定章节id的chapterList position
+     *
+     * @param chapterId chapterId
+     * @return int
+     */
+    public int getPosition(int chapterId) {
+        return chapterIdToPosition(chapterId);
+    }
+
+    /**
+     * 设置chapterList章节position
+     *
+     * @param position position
+     * @return void
+     */
+    public void setPosition(int position) {
         curChapterTitle = chapterInfoList.get(position).getTitle();
+        curChapterId = positionToChapterId(position);
     }
 
-    public ChapterInfo getCurChapterInfo() {
-        return chapterInfoList.get(getCurPosition());
+    /**
+     * 章节position 转 curChapterId
+     *
+     * @param position position
+     * @return int
+     */
+    public int positionToChapterId(int position) {
+        return chapterInfoList.get(position).getId();
+    }
+
+    /**
+     * curChapterId 转 章节position
+     *
+     * @param chapterId chapterId
+     * @return int
+     */
+    public int chapterIdToPosition(int chapterId) {
+        int position;
+        if (order == Codes.DESC) {
+            position = chapterInfoList.size() - chapterId;
+        } else {
+            position = chapterId - 1;
+        }
+        return position;
+    }
+
+    /**
+     * 获得当前的chapterInfo
+     *
+     * @return ChapterInfo
+     */
+    public ChapterInfo getChapterInfo() {
+        return chapterInfoList.get(getPosition());
+    }
+
+    public int getNextChapterId() {
+        return curChapterId + 1;
+    }
+
+    public int getPrevChapterId() {
+        return curChapterId - 1;
     }
 
     @Override
@@ -139,22 +192,6 @@ public class ComicInfo extends LitePalSupport {
                 ", chapterInfoList=" + chapterInfoList +
                 '}';
     }
-
-    public int getNextChapterId() {
-        return curChapterId + 1;
-    }
-
-    public int getPrevChapterId() {
-        return curChapterId - 1;
-    }
-
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (o == null || getClass() != o.getClass()) return false;
-//        ComicInfo comicInfo = (ComicInfo) o;
-//        return Objects.equals(title, comicInfo.title);
-//    }
 
     public void initChapterInfoList(List<ChapterInfo> list) {
         initChapterInfoList(list, Codes.DESC);

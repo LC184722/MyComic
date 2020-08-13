@@ -12,6 +12,7 @@ import com.qc.mycomic.ui.adapter.ShelfAdapter;
 import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ComicInfo;
 import com.qc.mycomic.ui.presenter.ShelfPresenter;
+import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DBUtil;
 import com.qc.mycomic.util.SourceUtil;
 import com.qc.mycomic.ui.view.ShelfView;
@@ -31,7 +32,7 @@ import the.one.base.util.QMUIDialogUtil;
 
 /**
  * @author LuQiChuang
- * @description 漫画书架界面
+ * @desc 漫画书架界面
  * @date 2020/8/12 15:32
  * @ver 1.0
  */
@@ -52,7 +53,7 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
     @Override
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
         if (enter && adapter != null) {
-            requestServer();
+            adapter.notifyDataSetChanged();
         }
         return super.onCreateAnimation(transit, enter, nextAnim);
     }
@@ -91,26 +92,12 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
     @Override
     protected void requestServer() {
         if (comicList == null) {
-            comicList = DBUtil.findComicListByStatus(status);
-            onFirstComplete(comicList);
-        } else if (comicList == shelfAdapter.getData()) {
-            Log.i(TAG, "requestServer: " + comicList);
-            List<Comic> list = DBUtil.findComicListByStatus(status);
-            List<Comic> nList = new LinkedList<>();
-            for (Comic comic : list) {
-                int index = comicList.indexOf(comic);
-                if (index != -1) {
-                    nList.add(comicList.get(index));
-                } else {
-                    nList.add(comic);
-                }
-            }
-            comicList.clear();
-            comicList.addAll(nList);
-            Log.i(TAG, "requestServer: " + comicList);
+            comicList = ComicUtil.getComicList(status);
             onFirstComplete(comicList);
         } else if (sList == shelfAdapter.getData()) {
             onFirstComplete(sList);
+        } else {
+            onFirstComplete(comicList);
         }
         adapter.notifyDataSetChanged();
     }
@@ -121,9 +108,10 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
         if (comic.isUpdate()) {
             comic.setUpdate(false);
             comic.setDate(new Date());
+            ComicUtil.first(comic);
         }
         comic.setPriority(0);
-        DBUtil.saveData(comic, false);
+        DBUtil.saveComic(comic, DBUtil.SAVE_ONLY);
         startFragment(new ChapterFragment(comic));
     }
 
@@ -152,7 +140,7 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
                             comic.setSourceId(sourceId);
                             if (comic.changeComicInfo()) {
                                 adapter.notifyDataSetChanged();
-                                DBUtil.saveData(comic, false);
+                                DBUtil.saveComic(comic, DBUtil.SAVE_ONLY);
                             }
                             dialog.dismiss();
                         }

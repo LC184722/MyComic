@@ -12,7 +12,7 @@ import the.one.base.widge.TheSearchView;
 
 /**
  * @author LuQiChuang
- * @description 搜索输入界面
+ * @desc 搜索输入界面
  * @date 2020/8/12 15:26
  * @ver 1.0
  */

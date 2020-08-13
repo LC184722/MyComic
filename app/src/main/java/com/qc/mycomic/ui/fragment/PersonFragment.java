@@ -25,7 +25,7 @@ import the.one.base.widge.RoundImageView;
 
 /**
  * @author LuQiChuang
- * @description 个人中心界面
+ * @desc 个人中心界面
  * @date 2020/8/12 15:19
  * @ver 1.0
  */

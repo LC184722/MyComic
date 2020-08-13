@@ -18,7 +18,7 @@ import okhttp3.Response;
 
 /**
  * @author LuQiChuang
- * @description 网络连接工具
+ * @desc 网络连接工具
  * @date 2020/8/12 15:25
  * @ver 1.0
  */

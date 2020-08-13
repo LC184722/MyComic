@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * @author LuQiChuang
- * @description
+ * @desc
  * @date 2020/8/12 15:25
  * @ver 1.0
  */
@@ -32,6 +32,14 @@ public abstract class JsonStarter<T> {
         return total;
     }
 
+    private int getId(int i, int size) {
+        if (isDESC()) {
+            return size - i;
+        } else {
+            return i + 1;
+        }
+    }
+
     public List<T> startDataList(String json, String... conditions) {
         node.init(json);
         JSONArray jsonArray = null;
@@ -50,7 +58,8 @@ public abstract class JsonStarter<T> {
             for (Object o : jsonArray) {
                 JSONObject jsonObject = (JSONObject) o;
                 node.init(jsonObject);
-                T t = dealDataList(node);
+                int chapterId = getId(cur++, total);
+                T t = dealDataList(node, chapterId);
                 cur++;
                 if (t != null) {
                     if (isDESC()) {
@@ -72,6 +81,6 @@ public abstract class JsonStarter<T> {
 
     public abstract void dealData(JsonNode node);
 
-    public abstract T dealDataList(JsonNode node);
+    public abstract T dealDataList(JsonNode node, int dataId);
 
 }

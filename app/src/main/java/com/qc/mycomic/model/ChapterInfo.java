@@ -2,7 +2,7 @@ package com.qc.mycomic.model;
 
 /**
  * @author LuQiChuang
- * @description
+ * @desc
  * @date 2020/8/12 15:27
  * @ver 1.0
  */
@@ -23,29 +23,25 @@ public class ChapterInfo {
     }
 
     public ChapterInfo(String title, String chapterUrl) {
-        this(title, chapterUrl, 0);
-    }
-
-    public ChapterInfo(String title, String chapterUrl, Integer status) {
         this.title = title;
         this.chapterUrl = chapterUrl;
-        this.status = status;
     }
 
     @Override
     public String toString() {
         return "ChapterInfo{" +
-                "title='" + title + '\'' +
+                "id=" + id +
+                ", title='" + title + '\'' +
                 ", chapterUrl='" + chapterUrl + '\'' +
                 ", status=" + status +
                 '}';
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -65,11 +61,11 @@ public class ChapterInfo {
         this.chapterUrl = chapterUrl;
     }
 
-    public Integer getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 }

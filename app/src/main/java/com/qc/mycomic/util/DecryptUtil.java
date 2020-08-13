@@ -12,7 +12,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 /**
  * @author LuQiChuang
- * @description 解密工具
+ * @desc 解密工具
  * @date 2020/8/12 15:25
  * @ver 1.0
  */
