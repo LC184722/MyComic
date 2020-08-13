@@ -24,9 +24,9 @@ public abstract class JsoupStarter<T> {
 
     private int getId(int i, int size) {
         if (isDESC()) {
-            return size - i;
+            return size - i - 1;
         } else {
-            return i + 1;
+            return i;
         }
     }
 

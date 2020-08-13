@@ -64,8 +64,22 @@ public class ComicUtil {
 
     public static void first(Comic comic) {
         List<Comic> list = getComicList(comic.getStatus());
-        list.remove(comic);
-        list.add(0, comic);
+        if (comic.isUpdate()) {
+            list.remove(comic);
+            list.add(0, comic);
+        } else {
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).getPriority() == 0) {
+                    list.remove(comic);
+                    if (i == 0) {
+                        list.add(i, comic);
+                    } else {
+                        list.add(i - 1, comic);
+                    }
+                    break;
+                }
+            }
+        }
     }
 
 //    public static void sortList(int status) {

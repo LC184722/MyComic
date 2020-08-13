@@ -86,7 +86,7 @@ public class ComicInfo extends LitePalSupport {
     }
 
     public boolean checkChapterId(int chapterId) {
-        return chapterId >= 1 && chapterId <= chapterInfoList.size();
+        return chapterId >= 0 && chapterId < chapterInfoList.size();
     }
 
     /**
@@ -115,8 +115,23 @@ public class ComicInfo extends LitePalSupport {
      * @return void
      */
     public void setPosition(int position) {
-        curChapterTitle = chapterInfoList.get(position).getTitle();
         curChapterId = positionToChapterId(position);
+        initChapterTitle(position);
+    }
+
+    public void newestChapter() {
+        initChapterId(chapterInfoList.size() - 1);
+    }
+
+    public void initChapterId(int chapterId) {
+        this.curChapterId = chapterId;
+        initChapterTitle(chapterIdToPosition(chapterId));
+    }
+
+    private void initChapterTitle(int position) {
+        if (checkChapterId(position)) {
+            curChapterTitle = chapterInfoList.get(position).getTitle();
+        }
     }
 
     /**
@@ -138,9 +153,9 @@ public class ComicInfo extends LitePalSupport {
     public int chapterIdToPosition(int chapterId) {
         int position;
         if (order == Codes.DESC) {
-            position = chapterInfoList.size() - chapterId;
+            position = chapterInfoList.size() - chapterId - 1;
         } else {
-            position = chapterId - 1;
+            position = chapterId;
         }
         return position;
     }

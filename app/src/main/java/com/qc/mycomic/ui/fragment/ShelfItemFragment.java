@@ -202,7 +202,7 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
             count = 0;
             hideProgressDialog();
             presenter.initPriority();
-            sortList(comicList);
+//            sortList(comicList);
             adapter.notifyDataSetChanged();
             if (errorList.isEmpty()) {
                 showSuccessTips("检查更新完成");
@@ -251,7 +251,7 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
         list.addAll(nList);
     }
 
-    private List<Comic> sList;
+    private List<Comic> sList = new LinkedList<>();
 
     public void screen(boolean isScreen) {
         if (isScreen) {
@@ -264,7 +264,7 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
                     if (which == 0) {
-                        sList = new LinkedList<>();
+                        sList.clear();
                         for (Comic comic : comicList) {
                             ComicInfo comicInfo = comic.getComicInfo();
                             if (comicInfo.getCurChapterTitle() == null || !comicInfo.getCurChapterTitle().equals(comicInfo.getUpdateChapter())) {
@@ -278,7 +278,7 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
                             @Override
                             public void getEditText(QMUIDialog dialog, String content, int index) {
                                 if (!content.trim().equals("")) {
-                                    sList = new LinkedList<>();
+                                    sList.clear();
                                     for (Comic comic : comicList) {
                                         if (comic.getTitle().contains(content)) {
                                             sList.add(comic);

@@ -10,6 +10,7 @@ import com.qc.mycomic.util.StringUtil;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import okhttp3.Call;
@@ -27,20 +28,7 @@ import okhttp3.Response;
 public class TestUtil {
 
     public static void main(String[] args) {
-        String tagName = removeSuffix("1.0");
-        String versionTag = removeSuffix("1.0.0");
-        System.out.println("tagName = " + tagName);
-        System.out.println("versionTag = " + versionTag);
-    }
 
-    public static String removeSuffix(String string) {
-        if (string == null) {
-            return "";
-        }
-        while (string.endsWith(".0")) {
-            string = string.substring(0, string.lastIndexOf('.'));
-        }
-        return string;
     }
 
 }

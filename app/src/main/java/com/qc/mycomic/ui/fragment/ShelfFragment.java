@@ -90,8 +90,8 @@ public class ShelfFragment extends BaseTitleTabFragment {
                     Random random = new Random();
                     for (Comic comic : comicList) {
                         if (random.nextBoolean()) {
-                            comic.getComicInfo().setUpdateChapter("???");
-                            DBUtil.saveComicInfo(comic.getComicInfo());
+                            comic.getComicInfo().setUpdateChapter("测试新章节");
+//                            DBUtil.saveComicInfo(comic.getComicInfo());
                         }
                     }
                     fragment.getAdapter().notifyDataSetChanged();

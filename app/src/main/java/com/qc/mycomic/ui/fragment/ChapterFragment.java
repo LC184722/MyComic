@@ -165,9 +165,7 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         TextView tvUpdateChapter = headerView.findViewById(R.id.tvUpdateChapter);
         tvUpdateChapter.setOnClickListener(v -> {
             if (checkNotEmpty()) {
-                ComicInfo comicInfo = comic.getComicInfo();
-                int size = comicInfo.getChapterInfoList().size();
-                comicInfo.setCurChapterId(size);
+                comic.getComicInfo().newestChapter();
                 start();
                 DBUtil.saveComic(comic, DBUtil.SAVE_CUR);
             } else {
@@ -190,7 +188,7 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
                 if (comic.getComicInfo().checkChapterId(comic.getComicInfo().getCurChapterId())) {
                     start();
                 } else {
-                    start(comic.getComicInfo().getPosition(1));
+                    start(comic.getComicInfo().getPosition(0));
                 }
             } else {
                 showFailTips("暂无漫画章节");

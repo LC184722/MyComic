@@ -51,16 +51,12 @@ import static androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE;
 public class ReaderFragment extends BaseDataFragment<ImageInfo> implements ReaderView {
 
     private Comic comic;
-
     private ComicInfo comicInfo;
-
     private boolean isLoadNext;
-
     private ReaderPresenter presenter = new ReaderPresenter();
-
     private List<ImageInfo> imageInfoList;
-
     private ReaderAdapter readerAdapter;
+    private int curChapterId;
 
     private View topView;
     private View bottomView;
@@ -74,7 +70,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
     public ReaderFragment(Comic comic) {
         this.comic = comic;
         this.comicInfo = comic.getComicInfo();
-        Log.i(TAG, "start: cons chapterId = " + comicInfo.getCurChapterId());
+        this.curChapterId = comicInfo.getCurChapterId();
         this.isLoadNext = true;
         Codes.toStatus = Codes.READER_TO_CHAPTER;
     }
@@ -127,6 +123,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
     }
 
     private boolean isSmooth = false;
+    private boolean isFresh = false;
 
     private void setListener() {
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -152,11 +149,21 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
         });
 
         ibLeft.setOnClickListener(v -> {
-            onRefresh();
+            if (comicInfo.checkChapterId(comicInfo.getPrevChapterId())) {
+                isFresh = true;
+                onRefresh();
+            } else {
+                showFailTips("没有上一章");
+            }
         });
 
         ibRight.setOnClickListener(v -> {
-            super.onRefresh();
+            if (comicInfo.checkChapterId(comicInfo.getNextChapterId())) {
+                isFresh = true;
+                super.onRefresh();
+            } else {
+                showFailTips("没有下一章");
+            }
         });
     }
 
@@ -191,9 +198,11 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
 //                        Log.i(TAG, "onScrolled: first = " + first);
 //                        Log.i(TAG, "onScrolled: " + imageInfoList.size());
                     ImageInfo imageInfo = imageInfoList.get(first);
-                    comicInfo.setCurChapterId(imageInfo.getChapterId());
-
-
+                    comicInfo.initChapterId(imageInfo.getChapterId());
+                    if (curChapterId != imageInfo.getChapterId()) {
+                        curChapterId = imageInfo.getChapterId();
+                        readerAdapter.clearMap();
+                    }
                     tvChapter.setText(comicInfo.getCurChapterTitle());
                     tvProgress.setText(imageInfo.toStringProgress());
                     Log.i(TAG, "onScrolled: first = " + first);
@@ -289,6 +298,11 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
         onComplete(imageInfoList);
         this.imageInfoList = adapter.getData();
         initOtherView();
+        isLoadNext = true;
+        if (isFresh) {
+            isFresh = false;
+            recycleView.scrollToPosition(0);
+        }
 //        if (Codes.isFirstLoadWebView && comic.getSourceId() == Codes.MI_TUI) {
 //            WebView webView = new WebView(getContext());
 //            webView.addJavascriptInterface(new MyJavaScriptInterface(), "HTMLOUT");
