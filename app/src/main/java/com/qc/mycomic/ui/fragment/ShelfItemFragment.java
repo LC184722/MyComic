@@ -8,6 +8,7 @@ import android.view.animation.Animation;
 import androidx.annotation.NonNull;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.qc.mycomic.R;
 import com.qc.mycomic.ui.adapter.ShelfAdapter;
 import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ComicInfo;
@@ -56,6 +57,7 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
             if (comicList != ComicUtil.getComicList(status)) {
                 requestServer();
             } else {
+                Log.i(TAG, "onCreateAnimation: " + comicList.size());
                 adapter.notifyDataSetChanged();
             }
         }
@@ -63,13 +65,9 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
     }
 
     @Override
-    protected boolean showTitleBar() {
-        return false;
-    }
-
-    @Override
     protected void initView(View rootView) {
         super.initView(rootView);
+        mTopLayout.setVisibility(View.GONE);
     }
 
     @Override
@@ -97,6 +95,9 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
     protected void requestServer() {
         if (comicList == null) {
             comicList = ComicUtil.getComicList(status);
+//            if (ComicUtil.getComicList().isEmpty() && status == ComicUtil.STATUS_FAV) {
+//                showToast("快去搜索漫画吧！");
+//            }
             onFirstComplete(comicList);
         } else if (sList == shelfAdapter.getData()) {
             onFirstComplete(sList);

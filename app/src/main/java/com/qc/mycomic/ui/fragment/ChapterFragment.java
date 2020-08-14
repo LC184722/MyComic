@@ -1,8 +1,11 @@
 package com.qc.mycomic.ui.fragment;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewPropertyAnimator;
 import android.view.animation.Animation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -13,18 +16,18 @@ import androidx.annotation.NonNull;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.qc.mycomic.R;
-import com.qc.mycomic.ui.adapter.ChapterAdapter;
 import com.qc.mycomic.model.ChapterInfo;
 import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ComicInfo;
 import com.qc.mycomic.other.MySpacesItemDecoration;
+import com.qc.mycomic.ui.adapter.ChapterAdapter;
 import com.qc.mycomic.ui.presenter.ChapterPresenter;
+import com.qc.mycomic.ui.view.ChapterView;
 import com.qc.mycomic.util.Codes;
 import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DBUtil;
 import com.qc.mycomic.util.SourceUtil;
 import com.qc.mycomic.util.StringUtil;
-import com.qc.mycomic.ui.view.ChapterView;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
 import com.qmuiteam.qmui.util.QMUIDisplayHelper;
 import com.qmuiteam.qmui.widget.QMUIRadiusImageView;
@@ -100,6 +103,16 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
     private View headerView;
     private View bottomView;
 
+    private QMUIRadiusImageView qivImg;
+    private TextView tvTitle;
+    private TextView tvSource;
+    private TextView tvSourceSize;
+    private TextView tvUpdateTime;
+    private TextView tvUpdateChapter;
+    private LinearLayout favLayout;
+    private ImageView ivFav;
+    private TextView tvFav;
+
     @Override
     protected void initView(View rootView) {
         super.initView(rootView);
@@ -110,6 +123,15 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         addTopBarBackBtn();
         headerView = getView(R.layout.fragment_chapter);
         bottomView = getView(R.layout.bottom_chapter);
+        qivImg = headerView.findViewById(R.id.qivImg);
+        tvTitle = headerView.findViewById(R.id.tvTitle);
+        tvSource = headerView.findViewById(R.id.tvSource);
+        tvSourceSize = headerView.findViewById(R.id.tvSourceSize);
+        tvUpdateTime = headerView.findViewById(R.id.tvUpdateTime);
+        tvUpdateChapter = headerView.findViewById(R.id.tvUpdateChapter);
+        favLayout = bottomView.findViewById(R.id.favLayout);
+        ivFav = favLayout.findViewById(R.id.ivFav);
+        tvFav = favLayout.findViewById(R.id.tvFav);
         setValue();
     }
 
@@ -176,8 +198,11 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         //收藏漫画
         LinearLayout favLayout = bottomView.findViewById(R.id.favLayout);
         favLayout.setOnClickListener(v -> {
-            setFavLayout(favLayout, comic.getStatus() != Codes.STATUS_FAV);
+            clickFav = true;
+            setFavLayout(comic.getStatus() != Codes.STATUS_FAV);
+            ComicUtil.removeComic(comic);
             comic.setStatus(comic.getStatus() != Codes.STATUS_FAV ? Codes.STATUS_FAV : Codes.STATUS_HIS);
+            Log.i(TAG, "setListener: " + comic);
             ComicUtil.first(comic);
             DBUtil.saveComic(comic, DBUtil.SAVE_CUR);
         });
@@ -209,20 +234,13 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
     }
 
     private void setValue() {
-        QMUIRadiusImageView qivImg = headerView.findViewById(R.id.qivImg);
         GlideEngine.createGlideEngine().loadImage(getContext(), comic.getComicInfo().getImgUrl(), qivImg);
-        TextView tvTitle = headerView.findViewById(R.id.tvTitle);
-        TextView tvSource = headerView.findViewById(R.id.tvSource);
-        TextView tvSourceSize = headerView.findViewById(R.id.tvSourceSize);
-        TextView tvUpdateTime = headerView.findViewById(R.id.tvUpdateTime);
-        TextView tvUpdateChapter = headerView.findViewById(R.id.tvUpdateChapter);
         tvTitle.setText(comic.getComicInfo().getTitle());
         tvSource.setText(comic.getSourceName());
         tvSourceSize.setText("(" + comic.getSourceSize() + ")");
         tvUpdateChapter.setText(comic.getComicInfo().getUpdateChapter());
         tvUpdateTime.setText(comic.getComicInfo().getUpdateTime());
-        LinearLayout favLayout = bottomView.findViewById(R.id.favLayout);
-        setFavLayout(favLayout, comic.getStatus() == Codes.STATUS_FAV);
+        setFavLayout(comic.getStatus() == Codes.STATUS_FAV);
     }
 
     @Override
@@ -231,16 +249,48 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         adapter.getLoadMoreModule().setOnLoadMoreListener(null);
     }
 
-    public void setFavLayout(View favLayout, boolean isFav) {
-        ImageView ivFav = favLayout.findViewById(R.id.ivFav);
-        TextView tvFav = favLayout.findViewById(R.id.tvFav);
+    private boolean clickFav = false;
+
+    public void setFavLayout(boolean isFav) {
         if (isFav) {
-            ivFav.setImageDrawable(getDrawablee(R.drawable.ic_baseline_favorite_24));
+            if (clickFav) {
+                startAnimation(ivFav, true);
+            } else {
+                ivFav.setImageDrawable(getDrawablee(R.drawable.ic_baseline_favorite_24));
+            }
             tvFav.setText("已收藏");
         } else {
-            ivFav.setImageDrawable(getDrawablee(R.drawable.ic_baseline_favorite_border_24));
+            if (clickFav) {
+                clickFav = false;
+                startAnimation(ivFav, false);
+            } else {
+                ivFav.setImageDrawable(getDrawablee(R.drawable.ic_baseline_favorite_border_24));
+            }
             tvFav.setText("未收藏");
         }
+    }
+
+    public void startAnimation(ImageView ivFav, boolean isFav) {
+        ViewPropertyAnimator animator = ivFav.animate();
+        animator.alpha(0f)
+                .setDuration(200)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        try {
+                            if (isFav) {
+                                ivFav.setImageDrawable(getDrawablee(R.drawable.ic_baseline_favorite_24));
+                            } else {
+                                ivFav.setImageDrawable(getDrawablee(R.drawable.ic_baseline_favorite_border_24));
+                            }
+                            animator.alpha(1f)
+                                    .setDuration(200)
+                                    .start();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
     }
 
     @Override

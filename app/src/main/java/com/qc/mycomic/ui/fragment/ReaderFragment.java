@@ -1,5 +1,7 @@
 package com.qc.mycomic.ui.fragment;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.util.Log;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -267,9 +269,23 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
 
     private void changeVisibility(View view) {
         if (view.getVisibility() == View.VISIBLE) {
-            view.setVisibility(View.GONE);
+            bottomView.animate()
+                    .alpha(0f)
+                    .setDuration(300)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            bottomView.setVisibility(View.GONE);
+                        }
+                    }).start();
         } else {
             view.setVisibility(View.VISIBLE);
+            view.setAlpha(0f);
+            bottomView.animate()
+                    .alpha(1f)
+                    .setDuration(300)
+                    .setListener(null)
+                    .start();
         }
     }
 

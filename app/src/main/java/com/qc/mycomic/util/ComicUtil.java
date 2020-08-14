@@ -67,21 +67,30 @@ public class ComicUtil {
         return getComicList(STATUS_ALL);
     }
 
+    public static void removeComic(Comic comic) {
+        List<Comic> list = getComicList(comic.getStatus());
+        list.remove(comic);
+    }
+
     public static void first(Comic comic) {
         List<Comic> list = getComicList(comic.getStatus());
         if (comic.isUpdate()) {
             list.remove(comic);
             list.add(0, comic);
         } else {
-            for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).getPriority() == 0) {
-                    list.remove(comic);
-                    if (i == 0) {
-                        list.add(i, comic);
-                    } else {
-                        list.add(i - 1, comic);
+            if (list.size() == 0) {
+                list.add(comic);
+            } else {
+                for (int i = 0; i < list.size(); i++) {
+                    if (list.get(i).getPriority() == 0) {
+                        list.remove(comic);
+                        if (i == 0) {
+                            list.add(i, comic);
+                        } else {
+                            list.add(i - 1, comic);
+                        }
+                        break;
                     }
-                    break;
                 }
             }
         }
