@@ -49,7 +49,19 @@ public class MyMap<K, V> extends LinkedHashMap<K, V> {
         return getByIndex(size() - 1);
     }
 
-    public int indexOf(K key) {
+
+    public K getKeyByValue(V value) {
+        int index = 0;
+        for (Entry<K, V> kvEntry : entrySet()) {
+            if (Objects.equals(value, kvEntry.getValue())) {
+                return kvEntry.getKey();
+            }
+            index++;
+        }
+        return null;
+    }
+
+    public int indexOf(Object key) {
         int index = 0;
         for (Entry<K, V> kvEntry : entrySet()) {
             if (Objects.equals(key, kvEntry.getKey())) {

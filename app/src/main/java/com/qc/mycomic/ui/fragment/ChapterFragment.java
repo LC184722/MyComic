@@ -1,11 +1,8 @@
 package com.qc.mycomic.ui.fragment;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewPropertyAnimator;
 import android.view.animation.Animation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -30,6 +27,7 @@ import com.qc.mycomic.util.SourceUtil;
 import com.qc.mycomic.util.StringUtil;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
 import com.qmuiteam.qmui.util.QMUIDisplayHelper;
+import com.qmuiteam.qmui.util.QMUIViewHelper;
 import com.qmuiteam.qmui.widget.QMUIRadiusImageView;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 import com.qmuiteam.qmui.widget.popup.QMUIPopup;
@@ -64,7 +62,6 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
 
     public ChapterFragment(Comic comic) {
         this.comic = comic;
-        Log.i(TAG, "ChapterFragment: start: comic.getComicInfo().getOrder() " + comic.getComicInfo().getOrder());
     }
 
     @Override
@@ -111,6 +108,7 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
     private TextView tvUpdateChapter;
     private LinearLayout favLayout;
     private ImageView ivFav;
+    private ImageView ivFavNot;
     private TextView tvFav;
 
     @Override
@@ -131,6 +129,7 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         tvUpdateChapter = headerView.findViewById(R.id.tvUpdateChapter);
         favLayout = bottomView.findViewById(R.id.favLayout);
         ivFav = favLayout.findViewById(R.id.ivFav);
+        ivFavNot = favLayout.findViewById(R.id.ivFavNot);
         tvFav = favLayout.findViewById(R.id.tvFav);
         setValue();
     }
@@ -198,10 +197,11 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         //收藏漫画
         LinearLayout favLayout = bottomView.findViewById(R.id.favLayout);
         favLayout.setOnClickListener(v -> {
-            clickFav = true;
-            setFavLayout(comic.getStatus() != Codes.STATUS_FAV);
+            boolean isFav = comic.getStatus() != Codes.STATUS_FAV;
+            startAnimation(isFav);
+            tvFav.setText(isFav ? "已收藏" : "未收藏");
             ComicUtil.removeComic(comic);
-            comic.setStatus(comic.getStatus() != Codes.STATUS_FAV ? Codes.STATUS_FAV : Codes.STATUS_HIS);
+            comic.setStatus(isFav ? Codes.STATUS_FAV : Codes.STATUS_HIS);
             Log.i(TAG, "setListener: " + comic);
             ComicUtil.first(comic);
             DBUtil.saveComic(comic, DBUtil.SAVE_CUR);
@@ -253,44 +253,42 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
 
     public void setFavLayout(boolean isFav) {
         if (isFav) {
-            if (clickFav) {
-                startAnimation(ivFav, true);
-            } else {
-                ivFav.setImageDrawable(getDrawablee(R.drawable.ic_baseline_favorite_24));
-            }
+            ivFavNot.setVisibility(View.GONE);
+            ivFav.setVisibility(View.VISIBLE);
             tvFav.setText("已收藏");
         } else {
-            if (clickFav) {
-                clickFav = false;
-                startAnimation(ivFav, false);
-            } else {
-                ivFav.setImageDrawable(getDrawablee(R.drawable.ic_baseline_favorite_border_24));
-            }
+            ivFav.setVisibility(View.GONE);
+            ivFavNot.setVisibility(View.VISIBLE);
             tvFav.setText("未收藏");
         }
     }
 
-    public void startAnimation(ImageView ivFav, boolean isFav) {
-        ViewPropertyAnimator animator = ivFav.animate();
-        animator.alpha(0f)
-                .setDuration(200)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        try {
-                            if (isFav) {
-                                ivFav.setImageDrawable(getDrawablee(R.drawable.ic_baseline_favorite_24));
-                            } else {
-                                ivFav.setImageDrawable(getDrawablee(R.drawable.ic_baseline_favorite_border_24));
-                            }
-                            animator.alpha(1f)
-                                    .setDuration(200)
-                                    .start();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }).start();
+    public void startAnimation(boolean isFav) {
+        View outView;
+        View inView;
+        if (isFav) {
+            outView = ivFavNot;
+            inView = ivFav;
+        } else {
+            outView = ivFav;
+            inView = ivFavNot;
+        }
+        QMUIViewHelper.fadeOut(outView, 200, new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                QMUIViewHelper.fadeIn(inView, 200, null, true);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        }, true);
     }
 
     @Override

@@ -12,6 +12,7 @@ import com.qc.mycomic.source.TengXun;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import the.one.base.model.PopupItem;
 
@@ -104,5 +105,17 @@ public class SourceUtil {
 
     public static List<Source> getSourceList() {
         return sourceList;
+    }
+
+    public static MyMap<Source, String> popupMap;
+
+    public static MyMap<Source, String> getPopupMap() {
+        if (popupMap == null) {
+            popupMap = new MyMap<>();
+            for (Map.Entry<Integer, Source> entry : map.entrySet()) {
+                popupMap.put(entry.getValue(), entry.getValue().getSourceName());
+            }
+        }
+        return popupMap;
     }
 }

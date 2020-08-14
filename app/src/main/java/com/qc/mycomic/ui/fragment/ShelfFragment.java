@@ -1,5 +1,6 @@
 package com.qc.mycomic.ui.fragment;
 
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 
@@ -10,6 +11,7 @@ import com.qc.mycomic.util.DBUtil;
 import com.qmuiteam.qmui.alpha.QMUIAlphaImageButton;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
 import com.qmuiteam.qmui.util.QMUIColorHelper;
+import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 import com.qmuiteam.qmui.widget.popup.QMUIPopup;
 
 import java.util.ArrayList;
@@ -72,7 +74,8 @@ public class ShelfFragment extends BaseTitleTabFragment {
             "检查更新",
             "筛选漫画",
             "取消筛选",
-//            "Test"
+//            "Test",
+//            "Test2",
     };
 
     private void showSettingPopup() {
@@ -86,15 +89,21 @@ public class ShelfFragment extends BaseTitleTabFragment {
                 } else if (position == 2) {
                     fragment.screen(false);
                 } else if (position == 3) {
-                    List<Comic> comicList = fragment.getAdapter().getData();
-                    Random random = new Random();
-                    for (Comic comic : comicList) {
-                        if (random.nextBoolean()) {
-                            comic.getComicInfo().setUpdateChapter("测试新章节");
-//                            DBUtil.saveComicInfo(comic.getComicInfo());
-                        }
-                    }
-                    fragment.getAdapter().notifyDataSetChanged();
+//                    List<Comic> comicList = fragment.getAdapter().getData();
+//                    Random random = new Random();
+//                    for (Comic comic : comicList) {
+//                        if (random.nextBoolean()) {
+//                            comic.getComicInfo().setUpdateChapter("测试新章节");
+////                            DBUtil.saveComicInfo(comic.getComicInfo());
+//                        }
+//                    }
+//                    fragment.getAdapter().notifyDataSetChanged();
+                    boolean flag = QMUIStatusBarHelper.setStatusBarDarkMode(getBaseFragmentActivity());
+                    mTopLayout.setBackgroundColor(getColorr(R.color.black));
+                    Log.i(TAG, "showSettingPopup: darkMode " + flag);
+                } else if (position == 4) {
+                    boolean flag = QMUIStatusBarHelper.setStatusBarLightMode(getBaseFragmentActivity());
+                    Log.i(TAG, "showSettingPopup: lightMode " + flag);
                 }
                 mSettingPopup.dismiss();
             });

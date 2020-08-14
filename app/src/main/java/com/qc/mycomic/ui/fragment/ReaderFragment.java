@@ -18,30 +18,31 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.qc.mycomic.R;
-import com.qc.mycomic.setting.Setting;
-import com.qc.mycomic.ui.adapter.ReaderAdapter;
 import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ComicInfo;
 import com.qc.mycomic.model.ImageInfo;
+import com.qc.mycomic.setting.Setting;
+import com.qc.mycomic.ui.adapter.ReaderAdapter;
 import com.qc.mycomic.ui.presenter.ReaderPresenter;
+import com.qc.mycomic.ui.view.ReaderView;
 import com.qc.mycomic.util.Codes;
 import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DBUtil;
-import com.qc.mycomic.ui.view.ReaderView;
 import com.qmuiteam.qmui.util.QMUIDisplayHelper;
+import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
+import com.qmuiteam.qmui.util.QMUIViewHelper;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import the.one.base.BaseApplication;
 import the.one.base.ui.fragment.BaseDataFragment;
 import the.one.base.ui.presenter.BasePresenter;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE;
 
 /**
@@ -197,27 +198,33 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
                     int count = manager.getChildCount();    //得到显示屏幕内的list数量
 //                        int total = manager.getItemCount();    //得到list的总数量
                     first = manager.findFirstVisibleItemPosition();//得到显示屏内的第一个list的位置数position
-//                        Log.i(TAG, "onScrolled: first = " + first);
-//                        Log.i(TAG, "onScrolled: " + imageInfoList.size());
                     ImageInfo imageInfo = imageInfoList.get(first);
+                    //设置chapterId,chapterTitle
                     comicInfo.initChapterId(imageInfo.getChapterId());
+                    //图片id和当前id是否相等，相等则清除adapter中map数据
                     if (curChapterId != imageInfo.getChapterId()) {
                         curChapterId = imageInfo.getChapterId();
                         readerAdapter.clearMap();
                     }
+                    //设置数据
                     tvChapter.setText(comicInfo.getCurChapterTitle());
                     tvProgress.setText(imageInfo.toStringProgress());
-                    Log.i(TAG, "onScrolled: first = " + first);
+
+                    //防止滑动seekBar与onScrolled发生冲突
                     if (!isSmooth) {
+                        //设置seekBar position
                         seekBar.setProgress(imageInfo.getCur());
-                        if (bottomView.getVisibility() == View.VISIBLE) {
-                            bottomView.setVisibility(View.GONE);
+                        //改变bottomView visible
+                        if (bottomView.getTag() != "GONE") {
+                            changeVisibility(bottomView, false);
                         }
                     }
+                    //设置seekBar最大值
                     if (total != imageInfo.getTotal() - 1) {
                         total = imageInfo.getTotal() - 1;
                         seekBar.setMax(total);
                     }
+                    //预加载
                     int bottom = first + count;
                     int preloadNum = Setting.getPreloadNum();
                     for (int i = bottom; i < imageInfoList.size() && i < bottom + preloadNum; i++) {
@@ -247,9 +254,8 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
         if (imageInfoList == null) {
             presenter.loadImageInfoList(comic);
         } else {
-            Log.i(TAG, "start: chapterId = " + comicInfo.getCurChapterId());
+            comicInfo.initChapterId(imageInfoList.get(imageInfoList.size() - 1).getChapterId());
             if (comicInfo.canLoad(isLoadNext)) {
-                Log.i(TAG, "requestServer: start: curId = " + comicInfo.getCurChapterId());
                 presenter.loadImageInfoList(comic);
             } else if (isLoadNext) {
                 onComplete(null);
@@ -263,29 +269,16 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
 
     @Override
     public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
-        Log.i(TAG, "onItemClick: click...");
-        changeVisibility(bottomView);
+        changeVisibility(bottomView, bottomView.getVisibility() != VISIBLE);
     }
 
-    private void changeVisibility(View view) {
-        if (view.getVisibility() == View.VISIBLE) {
-            bottomView.animate()
-                    .alpha(0f)
-                    .setDuration(300)
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            bottomView.setVisibility(View.GONE);
-                        }
-                    }).start();
+    private void changeVisibility(View view, boolean isVisible) {
+        if (isVisible) {
+            bottomView.setTag("VISIBLE");
+            QMUIViewHelper.fadeIn(view, 300, null, true);
         } else {
-            view.setVisibility(View.VISIBLE);
-            view.setAlpha(0f);
-            bottomView.animate()
-                    .alpha(1f)
-                    .setDuration(300)
-                    .setListener(null)
-                    .start();
+            bottomView.setTag("GONE");
+            QMUIViewHelper.fadeOut(view, 300, null, true);
         }
     }
 

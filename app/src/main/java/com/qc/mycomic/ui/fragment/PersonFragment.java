@@ -7,12 +7,17 @@ import android.view.View;
 
 import com.qc.mycomic.R;
 import com.qc.mycomic.model.Comic;
+import com.qc.mycomic.model.MyMap;
+import com.qc.mycomic.model.Source;
+import com.qc.mycomic.setting.CommonSetting;
+import com.qc.mycomic.setting.PreloadNumSetting;
 import com.qc.mycomic.setting.Setting;
 import com.qc.mycomic.ui.presenter.UpdatePresenter;
 import com.qc.mycomic.ui.view.UpdateView;
 import com.qc.mycomic.util.Codes;
 import com.qc.mycomic.util.DBUtil;
 import com.qc.mycomic.util.PackageUtil;
+import com.qc.mycomic.util.PopupUtil;
 import com.qc.mycomic.util.SourceUtil;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
@@ -76,14 +81,14 @@ public class PersonFragment extends BaseGroupListFragment implements View.OnClic
         imageView.setImageDrawable(getDrawablee(R.drawable.head));
     }
 
-    private int defaultSourceId = Setting.getDefaultSourceId();
+//    private int defaultSourceId = Setting.getDefaultSourceId();
 
     @Override
     protected void addGroupListView() {
         web = CreateNormalItemView("访问主页");
         version = CreateDetailItemView("检查更新", PackageUtil.getVersionName(_mActivity));
-        v1 = CreateDetailItemView("默认漫画源", SourceUtil.getSourceName(defaultSourceId));
-        v2 = CreateDetailItemView("阅读预加载图片数量", Setting.getPreloadNumTag());
+        v1 = CreateDetailItemView("默认漫画源", SourceUtil.getSourceName(Setting.getDefaultSourceId()));
+        v2 = CreateDetailItemView("阅读预加载图片数量", Setting.getPreloadDesc());
         v3 = CreateDetailItemView("备份数据");
         v4 = CreateDetailItemView("还原数据");
         addToGroup("设置", v1, v2);
@@ -102,29 +107,27 @@ public class PersonFragment extends BaseGroupListFragment implements View.OnClic
             showLoadingDialog("正在检查更新");
             presenter.checkUpdate();
         } else if (view == v1) {
-            List<PopupItem> list = SourceUtil.getPopupItemList();
-            int index = SourceUtil.getPopupItemIndex(defaultSourceId);
-            QMUIBottomSheetUtil.showSimpleBottomSheetList(getContext(), list, "选择默认漫画源", index, new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
+            MyMap<Source, String> myMap = SourceUtil.getPopupMap();
+            Source source = SourceUtil.getSource(Setting.getDefaultSourceId());
+            PopupUtil.showSimpleBottomSheetList(getContext(), myMap, "选择默认漫画源", source, new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
                 @Override
                 public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
-                    int sourceId = SourceUtil.getSourceId(tag);
-                    Setting.setDefaultSourceId(sourceId);
+                    Setting.setDefaultSourceId(myMap.getKeyByValue(tag).getSourceId());
                     v1.setDetailText(tag);
                     dialog.dismiss();
                 }
-            }).show();
+            });
         } else if (view == v2) {
-            List<PopupItem> list = Setting.getPreloadNumItemList();
-            int index = Setting.getPreloadNumIndex();
-            QMUIBottomSheetUtil.showSimpleBottomSheetList(getContext(), list, "选择阅读预加载图片数量", index, new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
+            MyMap<Integer, String> myMap = Setting.getPreloadMap();
+            PopupUtil.showSimpleBottomSheetList(getContext(), myMap, "选择预加载图片数量", Setting.getPreloadNum(), new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
                 @Override
                 public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
-                    int preloadNum = Setting.getPreloadNumByTag(tag);
+                    int preloadNum = myMap.getKeyByValue(tag);
                     Setting.setPreloadNum(preloadNum);
                     v2.setDetailText(tag);
                     dialog.dismiss();
                 }
-            }).show();
+            });
         } else if (view == v3) {
             QMUIDialogUtil.showSimpleDialog(getContext(), "备份漫画", "是否备份漫画数据？", new QMUIDialogAction.ActionListener() {
                 @Override

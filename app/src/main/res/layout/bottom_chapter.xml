@@ -24,7 +24,15 @@
             <the.one.base.widge.ScaleImageView
                 android:id="@+id/ivFav"
                 android:layout_width="30dp"
-                android:layout_height="30dp" />
+                android:layout_height="30dp"
+                android:src="@drawable/ic_baseline_favorite_24" />
+
+            <the.one.base.widge.ScaleImageView
+                android:id="@+id/ivFavNot"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_baseline_favorite_border_24"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/tvFav"

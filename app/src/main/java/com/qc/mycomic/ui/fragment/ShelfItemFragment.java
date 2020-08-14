@@ -57,7 +57,6 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
             if (comicList != ComicUtil.getComicList(status)) {
                 requestServer();
             } else {
-                Log.i(TAG, "onCreateAnimation: " + comicList.size());
                 adapter.notifyDataSetChanged();
             }
         }
@@ -95,9 +94,9 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
     protected void requestServer() {
         if (comicList == null) {
             comicList = ComicUtil.getComicList(status);
-//            if (ComicUtil.getComicList().isEmpty() && status == ComicUtil.STATUS_FAV) {
-//                showToast("快去搜索漫画吧！");
-//            }
+            if (ComicUtil.getComicList().isEmpty() && status == ComicUtil.STATUS_FAV) {
+                showToast("快去搜索漫画吧！");
+            }
             onFirstComplete(comicList);
         } else if (sList == shelfAdapter.getData()) {
             onFirstComplete(sList);
@@ -239,24 +238,6 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
 
     private String getMsg() {
         return "正在检查更新 " + getLoadProcess();
-    }
-
-    private void sortList(List<Comic> list) {
-        List<Comic> nList = new LinkedList<>();
-        while (!list.isEmpty()) {
-            int index = -1;
-            int max = -1;
-            for (int i = 0; i < list.size(); i++) {
-                int priority = list.get(i).getPriority();
-                if (priority > max) {
-                    index = i;
-                    max = priority;
-                }
-            }
-            nList.add(list.remove(index));
-            Log.i(TAG, "orderList: remove -> " + index);
-        }
-        list.addAll(nList);
     }
 
     private List<Comic> sList = new LinkedList<>();
