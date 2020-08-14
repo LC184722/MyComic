@@ -27,6 +27,11 @@ public class ComicUtil {
     private static List<Comic> favComicList;
     private static List<Comic> comicList;
 
+    public static List<Comic> initComicList(int status) {
+        comicList = null;
+        return getComicList(status);
+    }
+
     public static List<Comic> getComicList(int status) {
         if (comicList == null) {
             comicList = DBUtil.findComicListByStatus(STATUS_ALL);

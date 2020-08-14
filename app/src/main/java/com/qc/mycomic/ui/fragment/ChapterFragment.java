@@ -178,6 +178,7 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         favLayout.setOnClickListener(v -> {
             setFavLayout(favLayout, comic.getStatus() != Codes.STATUS_FAV);
             comic.setStatus(comic.getStatus() != Codes.STATUS_FAV ? Codes.STATUS_FAV : Codes.STATUS_HIS);
+            ComicUtil.first(comic);
             DBUtil.saveComic(comic, DBUtil.SAVE_CUR);
         });
 

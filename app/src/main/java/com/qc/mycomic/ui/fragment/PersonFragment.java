@@ -6,14 +6,18 @@ import android.view.Gravity;
 import android.view.View;
 
 import com.qc.mycomic.R;
+import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.setting.Setting;
 import com.qc.mycomic.ui.presenter.UpdatePresenter;
 import com.qc.mycomic.ui.view.UpdateView;
 import com.qc.mycomic.util.Codes;
+import com.qc.mycomic.util.DBUtil;
 import com.qc.mycomic.util.PackageUtil;
 import com.qc.mycomic.util.SourceUtil;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 import com.qmuiteam.qmui.widget.grouplist.QMUICommonListItemView;
 
 import java.util.List;
@@ -21,6 +25,7 @@ import java.util.List;
 import the.one.base.model.PopupItem;
 import the.one.base.ui.fragment.BaseGroupListFragment;
 import the.one.base.util.QMUIBottomSheetUtil;
+import the.one.base.util.QMUIDialogUtil;
 import the.one.base.widge.RoundImageView;
 
 /**
@@ -31,7 +36,7 @@ import the.one.base.widge.RoundImageView;
  */
 public class PersonFragment extends BaseGroupListFragment implements View.OnClickListener, UpdateView {
 
-    private QMUICommonListItemView web, version, v1, v2;
+    private QMUICommonListItemView web, version, v1, v2, v3, v4;
 
     private UpdatePresenter presenter = new UpdatePresenter();
 
@@ -79,7 +84,10 @@ public class PersonFragment extends BaseGroupListFragment implements View.OnClic
         version = CreateDetailItemView("检查更新", PackageUtil.getVersionName(_mActivity));
         v1 = CreateDetailItemView("默认漫画源", SourceUtil.getSourceName(defaultSourceId));
         v2 = CreateDetailItemView("阅读预加载图片数量", Setting.getPreloadNumTag());
+        v3 = CreateDetailItemView("备份数据");
+        v4 = CreateDetailItemView("还原数据");
         addToGroup("设置", v1, v2);
+        addToGroup("数据", v3, v4);
         addToGroup("关于", web, version);
     }
 
@@ -114,6 +122,36 @@ public class PersonFragment extends BaseGroupListFragment implements View.OnClic
                     int preloadNum = Setting.getPreloadNumByTag(tag);
                     Setting.setPreloadNum(preloadNum);
                     v2.setDetailText(tag);
+                    dialog.dismiss();
+                }
+            }).show();
+        } else if (view == v3) {
+            QMUIDialogUtil.showSimpleDialog(getContext(), "备份漫画", "是否备份漫画数据？", new QMUIDialogAction.ActionListener() {
+                @Override
+                public void onClick(QMUIDialog dialog, int index) {
+                    showLoadingDialog("正在备份");
+                    boolean flag = DBUtil.backupData(_mActivity);
+                    hideLoadingDialog();
+                    if (flag) {
+                        showSuccessTips("备份成功");
+                    } else {
+                        showFailTips("备份失败");
+                    }
+                    dialog.dismiss();
+                }
+            }).show();
+        } else if (view == v4) {
+            QMUIDialogUtil.showSimpleDialog(getContext(), "还原漫画", "是否还原漫画数据？", new QMUIDialogAction.ActionListener() {
+                @Override
+                public void onClick(QMUIDialog dialog, int index) {
+                    showLoadingDialog("正在还原");
+                    boolean flag = DBUtil.restoreData(_mActivity);
+                    hideLoadingDialog();
+                    if (flag) {
+                        showSuccessTips("还原成功");
+                    } else {
+                        showFailTips("还原失败");
+                    }
                     dialog.dismiss();
                 }
             }).show();

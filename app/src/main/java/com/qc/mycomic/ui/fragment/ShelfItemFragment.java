@@ -53,7 +53,11 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
     @Override
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
         if (enter && adapter != null) {
-            adapter.notifyDataSetChanged();
+            if (comicList != ComicUtil.getComicList(status)) {
+                requestServer();
+            } else {
+                adapter.notifyDataSetChanged();
+            }
         }
         return super.onCreateAnimation(transit, enter, nextAnim);
     }
@@ -96,6 +100,9 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
             onFirstComplete(comicList);
         } else if (sList == shelfAdapter.getData()) {
             onFirstComplete(sList);
+        } else if (comicList != ComicUtil.getComicList(status)) {
+            comicList = ComicUtil.getComicList(status);
+            onFirstComplete(comicList);
         } else {
             onFirstComplete(comicList);
         }

@@ -1,5 +1,6 @@
 package com.qc.mycomic.util;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -9,8 +10,15 @@ import com.qc.mycomic.model.ComicInfo;
 
 import org.litepal.LitePal;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.LinkedList;
 import java.util.List;
+
+import the.one.base.util.FileUtils;
 
 /**
  * @author LuQiChuang
@@ -214,6 +222,72 @@ public class DBUtil {
 
     public static <T> List<T> findAll(Class<T> clazz) {
         return LitePal.findAll(clazz);
+    }
+
+
+    public static boolean backupData(Context context) {
+        return dealData(context, true);
+    }
+
+    public static boolean restoreData(Context context) {
+        return dealData(context, false);
+    }
+
+    private static boolean dealData(Context context, boolean isBackup) {
+        String dbFileName = "comic.db";
+        String backupFileName = "backup_comic.db";
+        String tmpFileName = "tmp.db";
+        String path = FileUtils.gainSDCardPath() + "/MyComic/";
+        try {
+            File dbFile = context.getDatabasePath(dbFileName);
+            File backupFile = new File(path + backupFileName);
+
+            if (!dbFile.exists()) {
+                Log.i(TAG, "dealData: dbFile not exists");
+                dbFile.createNewFile();
+            }
+            if (!backupFile.exists()) {
+                Log.i(TAG, "dealData: backupFile not exists");
+                backupFile.createNewFile();
+            }
+            if (isBackup) {
+                fileCopy(dbFile, backupFile);
+            } else {
+                File tmpFile = new File(path + tmpFileName);
+                if (!tmpFile.exists()) {
+                    Log.i(TAG, "dealData: backupFile not exists");
+                    tmpFile.createNewFile();
+                }
+                fileCopy(dbFile, tmpFile);
+                fileCopy(backupFile, dbFile);
+                ComicUtil.initComicList(STATUS_ALL);
+                tmpFile.delete();
+            }
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            try {
+                if (!isBackup) {
+                    File tmpFile = new File(path + tmpFileName);
+                    File dbFile = context.getDatabasePath(dbFileName);
+                    if (tmpFile.exists()) {
+                        fileCopy(tmpFile, dbFile);
+                        tmpFile.delete();
+                    }
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    private static void fileCopy(File oFile, File toFile) {
+        try (FileChannel inChannel = new FileInputStream(oFile).getChannel(); FileChannel outChannel = new FileOutputStream(toFile).getChannel()) {
+            inChannel.transferTo(0, inChannel.size(), outChannel);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
