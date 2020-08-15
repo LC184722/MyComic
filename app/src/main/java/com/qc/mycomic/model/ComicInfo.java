@@ -1,7 +1,5 @@
 package com.qc.mycomic.model;
 
-import android.util.Log;
-
 import com.qc.mycomic.util.Codes;
 
 import org.litepal.crud.LitePalSupport;

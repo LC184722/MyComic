@@ -1,7 +1,5 @@
 package com.qc.mycomic.util;
 
-import com.qc.mycomic.model.Comic;
-import com.qc.mycomic.model.ComicInfo;
 import com.qc.mycomic.model.MyMap;
 import com.qc.mycomic.model.Source;
 import com.qc.mycomic.source.BiliBili;
@@ -10,11 +8,7 @@ import com.qc.mycomic.source.MiTui;
 import com.qc.mycomic.source.PuFei;
 import com.qc.mycomic.source.TengXun;
 
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-
-import the.one.base.model.PopupItem;
 
 /**
  * @author LuQiChuang
@@ -28,8 +22,6 @@ public class SourceUtil {
 
     private static List<Source> sourceList;
 
-    private static List<PopupItem> popupItemList;
-
     static {
         map.put(Codes.MI_TUI, new MiTui());
         map.put(Codes.MAN_HUA_FEN, new ManHuaFen());
@@ -37,6 +29,10 @@ public class SourceUtil {
         map.put(Codes.TENG_XUN, new TengXun());
         map.put(Codes.BILI_BILI, new BiliBili());
         sourceList = map.getValueList();
+    }
+
+    public static MyMap<Integer, Source> getMap() {
+        return map;
     }
 
     public static Source getSource(int sourceId) {
@@ -48,58 +44,7 @@ public class SourceUtil {
         return source != null ? source.getSourceName() : null;
     }
 
-    public static List<PopupItem> getPopupItemList() {
-        if (popupItemList == null) {
-            popupItemList = new LinkedList<>();
-            for (Source source : sourceList) {
-                popupItemList.add(new PopupItem(source.getSourceName()));
-            }
-        }
-        return popupItemList;
-    }
-
-    public static List<PopupItem> getPopupItemList(List<ComicInfo> comicInfoList) {
-        List<PopupItem> list = new LinkedList<>();
-        for (ComicInfo info : comicInfoList) {
-            list.add(new PopupItem(getSourceName(info.getSourceId())));
-        }
-        return list;
-    }
-
-    public static int getPopupItemIndex(int sourceId) {
-        int i = 0;
-        for (Source source : sourceList) {
-            if (source.getSourceId() == sourceId) {
-                return i;
-            }
-            i++;
-        }
-        return -1;
-    }
-
-    public static int getPopupItemIndex(Comic comic) {
-        int i = 0;
-        for (ComicInfo comicInfo : comic.getComicInfoList()) {
-            if (comicInfo.getSourceId() == comic.getSourceId()) {
-                return i;
-            }
-            i++;
-        }
-        return -1;
-    }
-
-    public static int getSourceId(String sourceName) {
-        if (sourceName != null) {
-            for (Source source : sourceList) {
-                if (sourceName.equals(source.getSourceName())) {
-                    return source.getSourceId();
-                }
-            }
-        }
-        return -1;
-    }
-
-    public static int getSize() {
+    public static int size() {
         return sourceList.size();
     }
 
@@ -107,15 +52,4 @@ public class SourceUtil {
         return sourceList;
     }
 
-    public static MyMap<Source, String> popupMap;
-
-    public static MyMap<Source, String> getPopupMap() {
-        if (popupMap == null) {
-            popupMap = new MyMap<>();
-            for (Map.Entry<Integer, Source> entry : map.entrySet()) {
-                popupMap.put(entry.getValue(), entry.getValue().getSourceName());
-            }
-        }
-        return popupMap;
-    }
 }

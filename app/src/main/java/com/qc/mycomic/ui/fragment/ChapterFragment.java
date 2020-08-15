@@ -16,6 +16,7 @@ import com.qc.mycomic.R;
 import com.qc.mycomic.model.ChapterInfo;
 import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ComicInfo;
+import com.qc.mycomic.model.MyMap;
 import com.qc.mycomic.other.MySpacesItemDecoration;
 import com.qc.mycomic.ui.adapter.ChapterAdapter;
 import com.qc.mycomic.ui.presenter.ChapterPresenter;
@@ -23,6 +24,7 @@ import com.qc.mycomic.ui.view.ChapterView;
 import com.qc.mycomic.util.Codes;
 import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DBUtil;
+import com.qc.mycomic.util.PopupUtil;
 import com.qc.mycomic.util.SourceUtil;
 import com.qc.mycomic.util.StringUtil;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
@@ -35,10 +37,8 @@ import com.qmuiteam.qmui.widget.popup.QMUIPopup;
 import java.util.Date;
 import java.util.List;
 
-import the.one.base.model.PopupItem;
 import the.one.base.ui.fragment.BaseDataFragment;
 import the.one.base.ui.presenter.BasePresenter;
-import the.one.base.util.QMUIBottomSheetUtil;
 import the.one.base.util.QMUIDialogUtil;
 import the.one.base.util.QMUIPopupUtil;
 import the.one.base.util.glide.GlideEngine;
@@ -164,12 +164,11 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         //改变漫画源
         TextView tvSource = headerView.findViewById(R.id.tvSource);
         tvSource.setOnClickListener(v -> {
-            List<PopupItem> list = SourceUtil.getPopupItemList(comic.getComicInfoList());
-            int index = SourceUtil.getPopupItemIndex(comic);
-            QMUIBottomSheetUtil.showSimpleBottomSheetList(getContext(), list, "切换漫画源", index, new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
+            MyMap<Integer, String> myMap = PopupUtil.getMyMap(comic.getComicInfoList());
+            PopupUtil.showSimpleBottomSheetList(getContext(), myMap, "切换漫画源", comic.getSourceId(), new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
                 @Override
                 public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
-                    int sourceId = SourceUtil.getSourceId(tag);
+                    int sourceId = myMap.getKeyByValue(tag);
                     comic.setSourceId(sourceId);
                     if (comic.changeComicInfo()) {
                         showLoadingPage();
@@ -179,7 +178,7 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
                     }
                     dialog.dismiss();
                 }
-            }).show();
+            });
         });
 
         //阅读最新章节
@@ -399,7 +398,7 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
                 updateComicInfo(info);
             }
         }
-        if (count == SourceUtil.getSize()) {
+        if (count == SourceUtil.size()) {
             count = 0;
             hideLoadingDialog();
             showSuccessTips("搜索完毕");

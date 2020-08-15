@@ -1,21 +1,11 @@
 package com.qc.mycomic.util;
 
-import android.util.Log;
-
-import com.qc.mycomic.model.Comic;
-
 import java.nio.charset.Charset;
-import java.util.Base64;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.crypto.Cipher;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 
 /**
  * @author LuQiChuang

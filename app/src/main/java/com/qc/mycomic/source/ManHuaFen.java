@@ -1,7 +1,5 @@
 package com.qc.mycomic.source;
 
-import android.util.Log;
-
 import com.qc.mycomic.jsoup.JsoupNode;
 import com.qc.mycomic.jsoup.JsoupStarter;
 import com.qc.mycomic.model.ChapterInfo;

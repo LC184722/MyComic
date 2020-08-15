@@ -9,12 +9,14 @@ import androidx.annotation.NonNull;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.qc.mycomic.R;
+import com.qc.mycomic.model.MyMap;
 import com.qc.mycomic.ui.adapter.ShelfAdapter;
 import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ComicInfo;
 import com.qc.mycomic.ui.presenter.ShelfPresenter;
 import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DBUtil;
+import com.qc.mycomic.util.PopupUtil;
 import com.qc.mycomic.util.SourceUtil;
 import com.qc.mycomic.ui.view.ShelfView;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
@@ -111,6 +113,7 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
 
     @Override
     public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
+        Log.i(TAG, "onItemClick: ???????");
         Comic comic = shelfAdapter.getItem(position);
         if (comic.isUpdate()) {
             comic.setUpdate(false);
@@ -120,6 +123,7 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
         comic.setPriority(0);
         DBUtil.saveComic(comic, DBUtil.SAVE_ONLY);
         startFragment(new ChapterFragment(comic));
+        Log.i(TAG, "onItemClick: ???????");
     }
 
     @Override
@@ -138,12 +142,11 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
                 if (which == 0) {
                     QMUIDialogUtil.showSimpleDialog(getContext(), "查看信息", comic.toStringView()).show();
                 } else if (which == 1) {
-                    List<PopupItem> list = SourceUtil.getPopupItemList(comic.getComicInfoList());
-                    int index = SourceUtil.getPopupItemIndex(comic);
-                    QMUIBottomSheetUtil.showSimpleBottomSheetList(getContext(), list, "切换漫画源", index, new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
+                    MyMap<Integer, String> myMap = PopupUtil.getMyMap(comic.getComicInfoList());
+                    PopupUtil.showSimpleBottomSheetList(getContext(), myMap, "切换漫画源", comic.getSourceId(), new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
                         @Override
                         public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
-                            int sourceId = SourceUtil.getSourceId(tag);
+                            int sourceId = myMap.getKeyByValue(tag);
                             comic.setSourceId(sourceId);
                             if (comic.changeComicInfo()) {
                                 adapter.notifyDataSetChanged();
@@ -151,7 +154,7 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
                             }
                             dialog.dismiss();
                         }
-                    }).show();
+                    });
                 } else if (which == 2) {
                     QMUIDialogUtil.showSimpleDialog(getContext(), "删除漫画", "是否删除该漫画？", new QMUIDialogAction.ActionListener() {
                         @Override

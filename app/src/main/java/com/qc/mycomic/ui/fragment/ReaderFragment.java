@@ -1,7 +1,5 @@
 package com.qc.mycomic.ui.fragment;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.util.Log;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -21,7 +19,7 @@ import com.qc.mycomic.R;
 import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ComicInfo;
 import com.qc.mycomic.model.ImageInfo;
-import com.qc.mycomic.setting.Setting;
+import com.qc.mycomic.setting.SettingFactory;
 import com.qc.mycomic.ui.adapter.ReaderAdapter;
 import com.qc.mycomic.ui.presenter.ReaderPresenter;
 import com.qc.mycomic.ui.view.ReaderView;
@@ -29,7 +27,6 @@ import com.qc.mycomic.util.Codes;
 import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DBUtil;
 import com.qmuiteam.qmui.util.QMUIDisplayHelper;
-import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 import com.qmuiteam.qmui.util.QMUIViewHelper;
 
 import org.jsoup.Jsoup;
@@ -41,7 +38,6 @@ import java.util.List;
 import the.one.base.ui.fragment.BaseDataFragment;
 import the.one.base.ui.presenter.BasePresenter;
 
-import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE;
 
@@ -226,7 +222,8 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
                     }
                     //预加载
                     int bottom = first + count;
-                    int preloadNum = Setting.getPreloadNum();
+                    String data = SettingFactory.getInstance().getSetting(SettingFactory.SETTING_PRELOAD_NUM).getData();
+                    int preloadNum = Integer.parseInt(data);
                     for (int i = bottom; i < imageInfoList.size() && i < bottom + preloadNum; i++) {
                         readerAdapter.loadImage(getContext(), imageInfoList.get(i));
                     }

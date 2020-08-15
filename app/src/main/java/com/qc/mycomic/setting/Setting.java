@@ -15,51 +15,37 @@ import the.one.base.util.SpUtil;
 /**
  * @author LuQiChuang
  * @version 1.0
- * @desc
+ * @desc 设置抽象类
  * @date 2020/8/12 21:14
  */
-public class Setting {
+public abstract class Setting {
 
-    /*===默认漫画源============================================================*/
-    public static String defaultSourceIdStr = "defaultSourceId";
+    private MyMap<String, String> myMap;
 
-    public static int getDefaultSourceId() {
-        return SpUtil.getInstance().getInt(defaultSourceIdStr, Codes.MI_TUI);
+    public abstract String getSaveStr();
+
+    public abstract String getDefaultValue();
+
+    public String getData() {
+        return SpUtil.getInstance().getString(getSaveStr(), getDefaultValue());
     }
 
-    public static void setDefaultSourceId(int defaultSourceId) {
-        SpUtil.getInstance().putInt(defaultSourceIdStr, defaultSourceId);
-    }
-    /*===默认漫画源============================================================*/
-
-    /*===预加载数量============================================================*/
-    private static String preloadNumStr = "preloadNum";
-    private static int preloadNumDefault = 0;
-
-    private static MyMap<Integer, String> preloadMap;
-
-    public static int getPreloadNum() {
-        return SpUtil.getInstance().getInt(preloadNumStr, preloadNumDefault);
+    public void setData(String data) {
+        SpUtil.getInstance().putString(getSaveStr(), data);
     }
 
-    public static void setPreloadNum(int preloadNum) {
-        SpUtil.getInstance().putInt(preloadNumStr, preloadNum);
-    }
-
-    public static MyMap<Integer, String> getPreloadMap() {
-        if (preloadMap == null) {
-            preloadMap = new MyMap<>();
-            preloadMap.put(0, "关闭预加载");
-            preloadMap.put(5, "5");
-            preloadMap.put(10, "10");
-            preloadMap.put(10000, "预加载所有");
+    public MyMap<String, String> getMyMap() {
+        if (myMap == null) {
+            myMap = new MyMap<>();
+            dealMyMap(myMap);
         }
-        return preloadMap;
+        return myMap;
     }
 
-    public static String getPreloadDesc() {
-        return getPreloadMap().get(getPreloadNum());
+    public abstract void dealMyMap(MyMap<String, String> myMap);
+
+    public String getDetailDesc() {
+        return getMyMap().get(getData());
     }
-    /*===预加载数量============================================================*/
 
 }

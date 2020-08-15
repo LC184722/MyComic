@@ -74,7 +74,7 @@ public class ShelfFragment extends BaseTitleTabFragment {
             "检查更新",
             "筛选漫画",
             "取消筛选",
-//            "Test",
+            "Test",
 //            "Test2",
     };
 
@@ -89,18 +89,18 @@ public class ShelfFragment extends BaseTitleTabFragment {
                 } else if (position == 2) {
                     fragment.screen(false);
                 } else if (position == 3) {
-//                    List<Comic> comicList = fragment.getAdapter().getData();
-//                    Random random = new Random();
-//                    for (Comic comic : comicList) {
-//                        if (random.nextBoolean()) {
-//                            comic.getComicInfo().setUpdateChapter("测试新章节");
-////                            DBUtil.saveComicInfo(comic.getComicInfo());
-//                        }
-//                    }
-//                    fragment.getAdapter().notifyDataSetChanged();
-                    boolean flag = QMUIStatusBarHelper.setStatusBarDarkMode(getBaseFragmentActivity());
-                    mTopLayout.setBackgroundColor(getColorr(R.color.black));
-                    Log.i(TAG, "showSettingPopup: darkMode " + flag);
+                    List<Comic> comicList = fragment.getAdapter().getData();
+                    Random random = new Random();
+                    for (Comic comic : comicList) {
+                        if (random.nextBoolean()) {
+                            comic.getComicInfo().setUpdateChapter("测试新章节");
+//                            DBUtil.saveComicInfo(comic.getComicInfo());
+                        }
+                    }
+                    fragment.getAdapter().notifyDataSetChanged();
+//                    boolean flag = QMUIStatusBarHelper.setStatusBarDarkMode(getBaseFragmentActivity());
+//                    mTopLayout.setBackgroundColor(getColorr(R.color.black));
+//                    Log.i(TAG, "showSettingPopup: darkMode " + flag);
                 } else if (position == 4) {
                     boolean flag = QMUIStatusBarHelper.setStatusBarLightMode(getBaseFragmentActivity());
                     Log.i(TAG, "showSettingPopup: lightMode " + flag);

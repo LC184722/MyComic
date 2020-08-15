@@ -3,6 +3,7 @@ package com.qc.mycomic.util;
 import android.content.Context;
 import android.view.View;
 
+import com.qc.mycomic.model.ComicInfo;
 import com.qc.mycomic.model.MyMap;
 import com.qc.mycomic.setting.Setting;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
@@ -22,50 +23,26 @@ import the.one.base.util.QMUIBottomSheetUtil;
  */
 public class PopupUtil {
 
-    public static List<PopupItem> getPopupItemList(List<String> list) {
+    public static List<PopupItem> getPopupItemList(MyMap<?, String> myMap) {
         List<PopupItem> itemList = new LinkedList<>();
-        for (String s : list) {
-            itemList.add(new PopupItem(s));
+        for (Map.Entry<?, String> entry : myMap.entrySet()) {
+            itemList.add(new PopupItem(entry.getValue()));
         }
         return itemList;
     }
 
-    public static List<PopupItem> getPopupItemList(String[] strings) {
-        List<PopupItem> itemList = new LinkedList<>();
-        for (String s : strings) {
-            itemList.add(new PopupItem(s));
+    public static MyMap<Integer, String> getMyMap(List<ComicInfo> comicInfoList) {
+        MyMap<Integer, String> myMap = new MyMap<>();
+        for (ComicInfo comicInfo : comicInfoList) {
+            myMap.put(comicInfo.getSourceId(), SourceUtil.getSourceName(comicInfo.getSourceId()));
         }
-        return itemList;
+        return myMap;
     }
 
-
-    public static void main(String[] args) {
-
-//        List<PopupItem> list = SourceUtil.getPopupItemList();
-//        int index = SourceUtil.getPopupItemIndex(defaultSourceId);
-//        QMUIBottomSheetUtil.showSimpleBottomSheetList(getContext(), list, "选择默认漫画源", index, new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
-//            @Override
-//            public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
-//                int sourceId = SourceUtil.getSourceId(tag);
-//                Setting.setDefaultSourceId(sourceId);
-//                v1.setDetailText(tag);
-//                dialog.dismiss();
-//            }
-//        }).show();
-    }
-
-    public static void showSimpleBottomSheetList(Context context, MyMap<?, ?> myMap, String title, Object key, QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener listener) {
+    public static void showSimpleBottomSheetList(Context context, MyMap<?, String> myMap, String title, Object key, QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener listener) {
         List<PopupItem> list = getPopupItemList(myMap);
         int index = myMap.indexOf(key);
         QMUIBottomSheetUtil.showSimpleBottomSheetList(context, list, title, index, listener).show();
-    }
-
-    public static List<PopupItem> getPopupItemList(MyMap<?, ?> myMap) {
-        List<PopupItem> itemList = new LinkedList<>();
-        for (Map.Entry<?, ?> entry : myMap.entrySet()) {
-            itemList.add(new PopupItem(entry.getValue().toString()));
-        }
-        return itemList;
     }
 
 }

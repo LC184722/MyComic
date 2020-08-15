@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.qc.mycomic.R;
-import com.qc.mycomic.setting.Setting;
+import com.qc.mycomic.setting.SettingFactory;
 import com.qc.mycomic.ui.adapter.SearchAdapter;
 import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ComicInfo;
@@ -25,7 +25,6 @@ import java.util.List;
 import the.one.base.ui.fragment.BaseDataFragment;
 import the.one.base.ui.presenter.BasePresenter;
 import the.one.base.util.QMUIDialogUtil;
-import the.one.base.util.SpUtil;
 
 /**
  * @author LuQiChuang
@@ -122,7 +121,8 @@ public class SearchResultFragment extends BaseDataFragment<Comic> implements Sea
             errorList.add(sourceName);
         }
         if (++count == size) {
-            int sourceId = Setting.getDefaultSourceId();
+            String data = SettingFactory.getInstance().getSetting(SettingFactory.SETTING_DEFAULT_SOURCE).getData();
+            int sourceId = Integer.parseInt(data);
             for (Comic comic : comicList) {
                 comic.changeComicInfo(sourceId);
             }

@@ -6,30 +6,21 @@ import android.view.Gravity;
 import android.view.View;
 
 import com.qc.mycomic.R;
-import com.qc.mycomic.model.Comic;
-import com.qc.mycomic.model.MyMap;
-import com.qc.mycomic.model.Source;
-import com.qc.mycomic.setting.CommonSetting;
-import com.qc.mycomic.setting.PreloadNumSetting;
 import com.qc.mycomic.setting.Setting;
+import com.qc.mycomic.setting.SettingFactory;
 import com.qc.mycomic.ui.presenter.UpdatePresenter;
 import com.qc.mycomic.ui.view.UpdateView;
 import com.qc.mycomic.util.Codes;
 import com.qc.mycomic.util.DBUtil;
 import com.qc.mycomic.util.PackageUtil;
 import com.qc.mycomic.util.PopupUtil;
-import com.qc.mycomic.util.SourceUtil;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 import com.qmuiteam.qmui.widget.grouplist.QMUICommonListItemView;
 
-import java.util.List;
-
-import the.one.base.model.PopupItem;
 import the.one.base.ui.fragment.BaseGroupListFragment;
-import the.one.base.util.QMUIBottomSheetUtil;
 import the.one.base.util.QMUIDialogUtil;
 import the.one.base.widge.RoundImageView;
 
@@ -87,8 +78,8 @@ public class PersonFragment extends BaseGroupListFragment implements View.OnClic
     protected void addGroupListView() {
         web = CreateNormalItemView("访问主页");
         version = CreateDetailItemView("检查更新", PackageUtil.getVersionName(_mActivity));
-        v1 = CreateDetailItemView("默认漫画源", SourceUtil.getSourceName(Setting.getDefaultSourceId()));
-        v2 = CreateDetailItemView("阅读预加载图片数量", Setting.getPreloadDesc());
+        v1 = CreateDetailItemView("默认漫画源", SettingFactory.getInstance().getSetting(SettingFactory.SETTING_DEFAULT_SOURCE).getDetailDesc());
+        v2 = CreateDetailItemView("阅读预加载图片数量", SettingFactory.getInstance().getSetting(SettingFactory.SETTING_PRELOAD_NUM).getDetailDesc());
         v3 = CreateDetailItemView("备份数据");
         v4 = CreateDetailItemView("还原数据");
         addToGroup("设置", v1, v2);
@@ -107,23 +98,21 @@ public class PersonFragment extends BaseGroupListFragment implements View.OnClic
             showLoadingDialog("正在检查更新");
             presenter.checkUpdate();
         } else if (view == v1) {
-            MyMap<Source, String> myMap = SourceUtil.getPopupMap();
-            Source source = SourceUtil.getSource(Setting.getDefaultSourceId());
-            PopupUtil.showSimpleBottomSheetList(getContext(), myMap, "选择默认漫画源", source, new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
+            Setting setting = SettingFactory.getInstance().getSetting(SettingFactory.SETTING_DEFAULT_SOURCE);
+            PopupUtil.showSimpleBottomSheetList(getContext(), setting.getMyMap(), "选择默认漫画源", setting.getData(), new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
                 @Override
                 public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
-                    Setting.setDefaultSourceId(myMap.getKeyByValue(tag).getSourceId());
+                    setting.setData(setting.getMyMap().getKeyByValue(tag));
                     v1.setDetailText(tag);
                     dialog.dismiss();
                 }
             });
         } else if (view == v2) {
-            MyMap<Integer, String> myMap = Setting.getPreloadMap();
-            PopupUtil.showSimpleBottomSheetList(getContext(), myMap, "选择预加载图片数量", Setting.getPreloadNum(), new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
+            Setting setting = SettingFactory.getInstance().getSetting(SettingFactory.SETTING_PRELOAD_NUM);
+            PopupUtil.showSimpleBottomSheetList(getContext(), setting.getMyMap(), "选择预加载图片数量", setting.getData(), new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
                 @Override
                 public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
-                    int preloadNum = myMap.getKeyByValue(tag);
-                    Setting.setPreloadNum(preloadNum);
+                    setting.setData(setting.getMyMap().getKeyByValue(tag));
                     v2.setDetailText(tag);
                     dialog.dismiss();
                 }

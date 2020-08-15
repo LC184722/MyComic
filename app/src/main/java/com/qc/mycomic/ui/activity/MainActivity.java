@@ -1,7 +1,5 @@
 package com.qc.mycomic.ui.activity;
 
-import android.util.Log;
-
 import com.qc.mycomic.ui.fragment.MyHomeFragment;
 
 import org.litepal.LitePal;
@@ -19,7 +17,6 @@ public class MainActivity extends BaseFragmentActivity {
 
     @Override
     protected BaseFragment getFirstFragment() {
-//        Utils.verifyStoragePermissions(this);
         LitePal.initialize(this);
         return new MyHomeFragment();
     }
