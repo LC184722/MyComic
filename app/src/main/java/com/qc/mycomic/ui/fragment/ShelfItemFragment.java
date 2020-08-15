@@ -113,7 +113,6 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
 
     @Override
     public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
-        Log.i(TAG, "onItemClick: ???????");
         Comic comic = shelfAdapter.getItem(position);
         if (comic.isUpdate()) {
             comic.setUpdate(false);
@@ -123,7 +122,6 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
         comic.setPriority(0);
         DBUtil.saveComic(comic, DBUtil.SAVE_ONLY);
         startFragment(new ChapterFragment(comic));
-        Log.i(TAG, "onItemClick: ???????");
     }
 
     @Override

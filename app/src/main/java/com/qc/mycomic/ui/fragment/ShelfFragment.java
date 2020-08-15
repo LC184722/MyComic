@@ -74,7 +74,7 @@ public class ShelfFragment extends BaseTitleTabFragment {
             "检查更新",
             "筛选漫画",
             "取消筛选",
-            "Test",
+//            "Test",
 //            "Test2",
     };
 
