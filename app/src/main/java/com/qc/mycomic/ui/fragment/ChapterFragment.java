@@ -248,8 +248,6 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         adapter.getLoadMoreModule().setOnLoadMoreListener(null);
     }
 
-    private boolean clickFav = false;
-
     public void setFavLayout(boolean isFav) {
         if (isFav) {
             ivFavNot.setVisibility(View.GONE);

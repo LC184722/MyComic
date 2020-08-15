@@ -18,9 +18,10 @@
 
         <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="80dp"
             android:layout_alignParentBottom="true"
             android:gravity="center_vertical"
+            android:orientation="vertical"
             android:paddingStart="@dimen/dp_10"
             android:paddingEnd="@dimen/dp_10"
             app:qmui_backgroundColor="@color/white"
@@ -29,23 +30,74 @@
             app:qmui_radiusTopLeft="@dimen/dp_10"
             app:qmui_radiusTopRight="@dimen/dp_10">
 
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/ibLeft"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_baseline_keyboard_arrow_left_24" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <SeekBar
+                    android:id="@+id/seekBar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
 
-            <SeekBar
-                android:id="@+id/seekBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
+            </LinearLayout>
 
-            <androidx.appcompat.widget.AppCompatImageButton
-                android:id="@+id/ibRight"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_baseline_keyboard_arrow_right_24" />
+                android:layout_marginTop="@dimen/dp_10">
+
+                <LinearLayout
+                    android:id="@+id/llLeft"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <androidx.appcompat.widget.AppCompatImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_baseline_keyboard_arrow_left_24" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="上一章" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tvInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/app_name" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llRight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="下一章" />
+
+                    <androidx.appcompat.widget.AppCompatImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_baseline_keyboard_arrow_right_24" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
 
         </com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>
 

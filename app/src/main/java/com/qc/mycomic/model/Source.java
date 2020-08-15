@@ -39,7 +39,7 @@ public interface Source {
     /**
      * 获得搜索漫画request
      *
-     * @param searchString
+     * @param searchString searchString
      * @return Request
      */
     Request getSearchRequest(String searchString);
@@ -47,7 +47,7 @@ public interface Source {
     /**
      * 获得漫画详情request
      *
-     * @param detailUrl
+     * @param detailUrl detailUrl
      * @return Request
      */
     Request getDetailRequest(String detailUrl);
@@ -55,7 +55,7 @@ public interface Source {
     /**
      * 获得漫画排行榜request
      *
-     * @param rankUrl
+     * @param rankUrl rankUrl
      * @return Request
      */
     Request getRankRequest(String rankUrl);
@@ -63,7 +63,7 @@ public interface Source {
     /**
      * 获得漫画信息链表
      *
-     * @param html
+     * @param html html
      * @return List<ComicInfo>
      */
     List<ComicInfo> getComicInfoList(String html);
@@ -71,8 +71,8 @@ public interface Source {
     /**
      * 设置漫画详情
      *
-     * @param comicInfo
-     * @param html
+     * @param comicInfo comicInfo
+     * @param html html
      * @return void
      */
     void setComicDetail(ComicInfo comicInfo, String html);
@@ -80,8 +80,8 @@ public interface Source {
     /**
      * 获得漫画图片信息链表
      *
-     * @param html
-     * @param chapterId
+     * @param html html
+     * @param chapterId chapterId
      * @return List<ImageInfo>
      */
     List<ImageInfo> getImageInfoList(String html, int chapterId);
@@ -96,7 +96,7 @@ public interface Source {
     /**
      * 获得排行榜的漫画信息链表
      *
-     * @param html
+     * @param html html
      * @return List<ComicInfo>
      */
     List<ComicInfo> getRankComicInfoList(String html);

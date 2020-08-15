@@ -58,7 +58,7 @@ public abstract class JsonStarter<T> {
             for (Object o : jsonArray) {
                 JSONObject jsonObject = (JSONObject) o;
                 node.init(jsonObject);
-                int chapterId = getId(cur++, total);
+                int chapterId = getId(cur, total);
                 T t = dealDataList(node, chapterId);
                 cur++;
                 if (t != null) {

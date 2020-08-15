@@ -34,6 +34,7 @@ import org.jsoup.nodes.Document;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import the.one.base.ui.fragment.BaseDataFragment;
 import the.one.base.ui.presenter.BasePresenter;
@@ -61,8 +62,9 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
     private View bottomView;
     private TextView tvChapter;
     private TextView tvProgress;
-    private ImageButton ibLeft;
-    private ImageButton ibRight;
+    private TextView tvInfo;
+    private LinearLayout llLeft;
+    private LinearLayout llRight;
     private SeekBar seekBar;
     private boolean firstLoad = true;
 
@@ -93,9 +95,10 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(QMUIDisplayHelper.getScreenWidth(_mActivity), QMUIDisplayHelper.getScreenHeight(_mActivity));
             mStatusLayout.addView(bottomView, 1, layoutParams);
             bottomView.setVisibility(View.GONE);
-            ibLeft = bottomView.findViewById(R.id.ibLeft);
-            ibRight = bottomView.findViewById(R.id.ibRight);
+            llLeft = bottomView.findViewById(R.id.llLeft);
+            llRight = bottomView.findViewById(R.id.llRight);
             seekBar = bottomView.findViewById(R.id.seekBar);
+            tvInfo = bottomView.findViewById(R.id.tvInfo);
         }
         setValue();
     }
@@ -118,6 +121,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
             tvProgress.setText(imageInfo.toStringProgress());
             seekBar.setMax(imageInfo.getTotal() - 1);
             seekBar.setProgress(imageInfo.getCur());
+            tvInfo.setText(String.format(Locale.CHINA, "%d/%d", imageInfo.getChapterId() + 1, comicInfo.getChapterInfoList().size()));
         }
     }
 
@@ -147,7 +151,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
             }
         });
 
-        ibLeft.setOnClickListener(v -> {
+        llLeft.setOnClickListener(v -> {
             if (comicInfo.checkChapterId(comicInfo.getPrevChapterId())) {
                 isFresh = true;
                 onRefresh();
@@ -156,7 +160,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
             }
         });
 
-        ibRight.setOnClickListener(v -> {
+        llRight.setOnClickListener(v -> {
             if (comicInfo.checkChapterId(comicInfo.getNextChapterId())) {
                 isFresh = true;
                 super.onRefresh();
@@ -200,6 +204,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
                     //图片id和当前id是否相等，相等则清除adapter中map数据
                     if (curChapterId != imageInfo.getChapterId()) {
                         curChapterId = imageInfo.getChapterId();
+                        tvInfo.setText(String.format(Locale.CHINA, "%d/%d", imageInfo.getChapterId() + 1, comicInfo.getChapterInfoList().size()));
                         readerAdapter.clearMap();
                     }
                     //设置数据
@@ -252,6 +257,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
             presenter.loadImageInfoList(comic);
         } else {
             comicInfo.initChapterId(imageInfoList.get(imageInfoList.size() - 1).getChapterId());
+            Log.i(TAG, "requestServer: " + comicInfo.getCurChapterId());
             if (comicInfo.canLoad(isLoadNext)) {
                 presenter.loadImageInfoList(comic);
             } else if (isLoadNext) {

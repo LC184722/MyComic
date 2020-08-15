@@ -1,5 +1,7 @@
 package com.qc.mycomic.source;
 
+import android.util.Log;
+
 import com.qc.mycomic.json.JsonNode;
 import com.qc.mycomic.json.JsonStarter;
 import com.qc.mycomic.model.ChapterInfo;
@@ -139,7 +141,8 @@ public class BiliBili implements Source, ImageLoader {
                 String token = node.string("token");
                 String chapterUrl = url + "?token=" + token;
                 chapterUrl = chapterUrl.replace("\\u0026", "&");
-                return new ImageInfo(dataId, getCur(), getTotal(), chapterUrl);
+                Log.i("TAG", "dealDataList: getCur = " + getCur());
+                return new ImageInfo(chapterId, getCur(), getTotal(), chapterUrl);
             }
         };
         return starter.startDataList(html, "data");

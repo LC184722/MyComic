@@ -28,10 +28,8 @@ import the.one.base.ui.presenter.BasePresenter;
  */
 public class ReaderPresenter extends BasePresenter<ReaderView> {
 
-    List<ChapterInfo> chapterInfoList;
-
     public void loadImageInfoList(Comic comic) {
-        chapterInfoList = comic.getComicInfo().getChapterInfoList();
+        List<ChapterInfo> chapterInfoList = comic.getComicInfo().getChapterInfoList();
         int position = comic.getComicInfo().getPosition();
         int chapterId = comic.getComicInfo().getCurChapterId();
         String url = chapterInfoList.get(position).getChapterUrl();
