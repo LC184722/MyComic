@@ -1,8 +1,10 @@
 package com.qc.mycomic.test;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 /**
@@ -1623,6 +1625,17 @@ public class HtmlUtil {
             e.printStackTrace();
         }
         return "";
+    }
+
+    public static void writeFile(String html) {
+        try {
+            String filePath = "D:\\Programming\\Files\\ZA\\2020寒假\\CUR\\text.html";
+            BufferedWriter in = new BufferedWriter(new FileWriter(new File(filePath)));
+            in.write(html);
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

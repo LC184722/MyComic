@@ -5,6 +5,7 @@ import com.qc.mycomic.model.Source;
 import com.qc.mycomic.source.BiliBili;
 import com.qc.mycomic.source.ManHuaFen;
 import com.qc.mycomic.source.MiTui;
+import com.qc.mycomic.source.OH;
 import com.qc.mycomic.source.PuFei;
 import com.qc.mycomic.source.TengXun;
 
@@ -28,6 +29,7 @@ public class SourceUtil {
         map.put(Codes.PU_FEI, new PuFei());
         map.put(Codes.TENG_XUN, new TengXun());
         map.put(Codes.BILI_BILI, new BiliBili());
+        map.put(Codes.OH, new OH());
         sourceList = map.getValueList();
     }
 

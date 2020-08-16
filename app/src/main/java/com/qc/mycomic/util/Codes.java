@@ -62,4 +62,8 @@ public class Codes {
 
     public static final String BILI_BILI_STRING = "哔哩哔哩";
 
+    public static final int OH = 6;
+
+    public static final String OH_STRING = "oh漫画";
+
 }

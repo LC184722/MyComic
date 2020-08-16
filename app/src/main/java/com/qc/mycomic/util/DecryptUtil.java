@@ -4,6 +4,8 @@ import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Base64;
 
 import javax.crypto.Cipher;
@@ -90,6 +92,17 @@ public class DecryptUtil {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static String getUrlEncodeStr(String url) {
+        String resUrl = null;
+        try {
+            resUrl = URLEncoder.encode(url, "UTF-8");
+            resUrl = resUrl.replace("%2F", "/").replace("+", "%20");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return resUrl;
     }
 
     /**

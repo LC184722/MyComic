@@ -84,6 +84,14 @@ public class JsoupNode {
         }
     }
 
+    public String ownText(String cssQuery, int index) {
+        try {
+            return element.select(cssQuery).get(index).ownText();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public String ownText(String... cssQuery) {
         for (String s : cssQuery) {
             String result = ownText(s);
@@ -142,5 +150,9 @@ public class JsoupNode {
 
     public Elements getElements() {
         return elements;
+    }
+
+    public Element getElement() {
+        return element;
     }
 }

@@ -1,8 +1,6 @@
-package com.qc.mycomic.test;
+package com.qc.mycomic.source;
 
 import com.alibaba.fastjson.JSONObject;
-import com.qc.mycomic.json.JsonNode;
-import com.qc.mycomic.json.JsonStarter;
 import com.qc.mycomic.jsoup.JsoupNode;
 import com.qc.mycomic.jsoup.JsoupStarter;
 import com.qc.mycomic.model.ChapterInfo;
@@ -16,29 +14,18 @@ import com.qc.mycomic.util.DecryptUtil;
 import com.qc.mycomic.util.NetUtil;
 import com.qc.mycomic.util.StringUtil;
 
-import org.jsoup.select.Elements;
-
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.MultipartBody;
 import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  * @author LuQiChuang
  * @desc
- * @date 2020/8/12 15:25
+ * @date 2020/8/16 23:41
  * @ver 1.0
  */
-public class HtmlTestUtil implements Source {
+public class OH implements Source {
 
     @Override
     public int getSourceId() {
@@ -175,114 +162,4 @@ public class HtmlTestUtil implements Source {
         return null;
     }
 
-    public static void main(String[] args) {
-        HtmlTestUtil testUtil = new HtmlTestUtil();
-//        testUtil.testSearch();
-//        testUtil.testDetail();
-        testUtil.testImage();
-//        testUtil.testRank();
-//        testUtil.test();
-//        testUtil.testRequest();
-    }
-
-    public void test() {
-        String url = "https://manga.bilibili.com/twirp/comic.v1.Comic/%s?device=pc&platform=web";
-        url = String.format(url, "hot");
-        System.out.println("url = " + url);
-    }
-
-    private void testRequest() {
-        Callback callback = new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String html = response.body().string();
-                System.out.println("response.body().string() = " + html);
-                HtmlUtil.writeFile(html);
-            }
-        };
-//        String url = "https://manga.bilibili.com/twirp/comic.v1.Comic/GetImageIndex?device=pc&platform=web";
-//        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
-//        builder.addFormDataPart("ep_id", "307985");
-//        Request request = new Request.Builder().addHeader("User-Agent", Codes.USER_AGENT_WEB).url(url).post(builder.build()).build();
-//        Request request = getSearchRequest("放开那个女巫");
-        Request request = getDetailRequest("https://www.ohmanhua.com/12394/1/180.html");
-        NetUtil.startLoad(request, callback);
-    }
-
-    private void testSearch() {
-//        String html = HtmlUtil.getSearchHtml();
-        String html = HtmlUtil.getHtmlByFile();
-        List<ComicInfo> comicInfoList;
-        comicInfoList = getComicInfoList(html);
-//        comicInfoList = new PuFei().getComicInfoList(html);
-        if (comicInfoList != null) {
-            System.out.println("comicInfoList.size() = " + comicInfoList.size());
-            for (ComicInfo info : comicInfoList) {
-                System.out.println("info.getTitle() = " + info.getTitle());
-                System.out.println("info.getAuthor() = " + info.getAuthor());
-                System.out.println("info.getUpdateTime() = " + info.getUpdateTime());
-                System.out.println("info.getImgUrl() = " + info.getImgUrl());
-                System.out.println("info.getDetailUrl() = " + info.getDetailUrl());
-                System.out.println();
-            }
-        } else {
-            System.out.println("comicInfoList = " + comicInfoList);
-        }
-    }
-
-    private void testDetail() {
-//        String html = HtmlUtil.getDetailHtml();
-        String html = HtmlUtil.getHtmlByFile();
-        ComicInfo info = new ComicInfo();
-        setComicDetail(info, html);
-//        new MiTui().setComicDetail(info, html);
-
-        System.out.println("info.getAuthor() = " + info.getAuthor());
-        System.out.println("info.getUpdateTime() = " + info.getUpdateTime());
-        System.out.println("info.getUpdateChapter() = " + info.getUpdateChapter());
-        System.out.println("info.getUpdateStatus() = " + info.getUpdateStatus());
-        System.out.println("info.getIntro() = " + info.getIntro());
-        System.out.println("info.getChapterInfoList().size() = " + info.getChapterInfoList().size());
-        int size = info.getChapterInfoList().size();
-        if (size > 0) {
-            int first = 0;
-            int last = size - 1;
-            System.out.println("info.getChapterInfoList().get(first) = " + info.getChapterInfoList().get(first));
-            System.out.println(".......................................");
-            System.out.println("info.getChapterInfoList().get(last) = " + info.getChapterInfoList().get(last));
-        }
-    }
-
-    private void testImage() {
-//        String html = HtmlUtil.getImageHtml();
-        String html = HtmlUtil.getHtmlByFile();
-        List<ImageInfo> imageInfoList = getImageInfoList(html, 100);
-//        List<ImageInfo> imageInfoList = new TengXun().getImageInfoList(html, 100);
-        System.out.println("imageInfoList.size() = " + imageInfoList.size());
-        for (ImageInfo imageInfo : imageInfoList) {
-            System.out.println("imageInfo = " + imageInfo.getUrl());
-        }
-    }
-
-    private void testRank() {
-//        String html = HtmlUtil.getSearchHtml();
-        String html = HtmlUtil.getHtmlByFile();
-        List<ComicInfo> comicInfoList;
-        comicInfoList = getRankComicInfoList(html);
-//        comicInfoList = new PuFei().getComicInfoList(html);
-        System.out.println("comicInfoList.size() = " + comicInfoList.size());
-        for (ComicInfo info : comicInfoList) {
-            System.out.println("info.getTitle() = " + info.getTitle());
-            System.out.println("info.getAuthor() = " + info.getAuthor());
-            System.out.println("info.getUpdateTime() = " + info.getUpdateTime());
-            System.out.println("info.getImgUrl() = " + info.getImgUrl());
-            System.out.println("info.getDetailUrl() = " + info.getDetailUrl());
-            System.out.println();
-        }
-    }
 }

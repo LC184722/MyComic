@@ -17,11 +17,11 @@ static def gitVersionTag() {
 //    } else {
 //        version = version + ".0"
 //    }
-    def pattern = "-g"
+    def pattern = "-(\\d+)-g"
     def matcher = version =~ pattern
 
     if (matcher) {
-        version = version.substring(0, matcher.start())
+        version = version.substring(0, matcher.start()) + "." + matcher[0][1]
     }
 
     return version
