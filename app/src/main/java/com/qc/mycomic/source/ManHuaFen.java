@@ -138,7 +138,7 @@ public class ManHuaFen implements Source {
                 if (!url.startsWith("http")) {
                     url = server + chapterPath + url;
                 } else {
-                    url = "https://img01.eshanyao.com/showImage.php?url=" + url;
+                    url = "https://dl.manhuachi.com/acqq.php?url=" + url;
                 }
                 ImageInfo imageInfo = new ImageInfo(chapterId, i++, urls.length, url);
                 list.add(imageInfo);
