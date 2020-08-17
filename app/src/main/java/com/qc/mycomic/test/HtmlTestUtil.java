@@ -98,10 +98,10 @@ public class HtmlTestUtil implements Source {
 
             @Override
             public void dealInfo(JsoupNode node) {
-                String author = node.ownText("div.fed-part-layout li", 1, "a");
+                String author = node.ownText("div.fed-part-layout li.fed-col-md6", 1, "a");
                 String intro = node.ownText("p.fed-padding.fed-part-both.fed-text-muted");
-                String updateStatus = node.ownText("div.fed-part-layout li", 0, "a");
-                String updateTime = node.ownText("div.fed-part-layout li", 2, "a");
+                String updateStatus = node.ownText("div.fed-part-layout li.fed-col-md6", 0, "a");
+                String updateTime = node.ownText("div.fed-part-layout li.fed-col-md6", 2, "a");
                 comicInfo.setDetail(author, updateTime, updateStatus, intro);
             }
 
@@ -138,48 +138,71 @@ public class HtmlTestUtil implements Source {
 
     @Override
     public MyMap<String, String> getRankMap() {
-//        MyMap<String, String> map = new MyMap<>();
-//        map.put("日漫榜", "HomeHot-{\"type\":3}");//https://manga.bilibili.com/twirp/comic.v1.Comic/HomeHot?device=pc&platform=web {"type":3}
-//        map.put("国漫榜", "HomeHot-{\"type\":4}");//{"type":4}
-//        map.put("月票榜", "HomeFans-{\"last_week_offset\":0,\"last_month_offset\":0,\"type\":1}");//{"last_week_offset":0,"last_month_offset":0,"type":1}
-//        map.put("投喂榜", "HomeFans-{\"last_week_offset\":0,\"last_month_offset\":0,\"type\":0}");//{"last_week_offset":0,"last_month_offset":0,"type":0}
-//        map.put("飙升榜", "HomeHot-{\"type\":2}");//{"type":2}
-//        map.put("免费榜", "HomeHot-{\"type\":1}");//{"type":1}
-//        return map;
-        return null;
+        MyMap<String, String> map = new MyMap<>();
+        map.put("月点击", "https://www.ohmanhua.com/show?orderBy=monthlyCount&page=1");
+        map.put("周点击", "https://www.ohmanhua.com/show?orderBy=weeklyCount&page=1");
+        map.put("日点击", "https://www.ohmanhua.com/show?orderBy=dailyCount&page=1");
+        map.put("收录日", "https://www.ohmanhua.com/show?orderBy=create&page=1");
+        map.put("更新日", "https://www.ohmanhua.com/show?orderBy=update&page=1");
+        map.put("玄幻", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10024&page=1");
+        map.put("热血", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10023&page=1");
+        map.put("恋爱", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10126&page=1");
+        map.put("都市", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10124&page=1");
+        map.put("古风", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10143&page=1");
+        map.put("冒险", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10210&page=1");
+        map.put("穿越", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10129&page=1");
+        map.put("爆笑", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10201&page=1");
+        map.put("搞笑", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10122&page=1");
+        map.put("奇幻", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10242&page=1");
+        map.put("校园", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10131&page=1");
+        map.put("少年", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10321&page=1");
+        map.put("修真", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10133&page=1");
+        map.put("霸总", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10127&page=1");
+        map.put("其他", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10560&page=1");
+        map.put("动作", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10125&page=1");
+        map.put("生活", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10142&page=1");
+        map.put("少女", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10301&page=1");
+        map.put("后宫", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10138&page=1");
+        map.put("少男", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10641&page=1");
+        map.put("逆转", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10702&page=1");
+        map.put("武侠", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10139&page=1");
+        map.put("重生", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10461&page=1");
+        map.put("科幻", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10181&page=1");
+        map.put("总裁", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10306&page=1");
+        map.put("剧情", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10480&page=1");
+        map.put("大女主", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10706&page=1");
+        map.put("悬疑", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10183&page=1");
+        map.put("魔幻", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10227&page=1");
+        map.put("恐怖", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10185&page=1");
+        return map;
     }
 
     @Override
-    public List<ComicInfo> getRankComicInfoList(String html) {
-//        JsonStarter<ComicInfo> starter = new JsonStarter<ComicInfo>() {
-//            @Override
-//            public void dealData(JsonNode node) {
-//
-//            }
-//
-//            @Override
-//            public ComicInfo dealDataList(JsonNode node, int dataId) {
-//                String title = node.string("title");
-//                String author = node.arrayToString("author");
-//                String updateTime = null;
-//                String imgUrl = node.string("vertical_cover");
-//                String detailUrl = "https://manga.bilibili.com/detail/mc" + node.string("comic_id");
-//                return new ComicInfo(getSourceId(), title, author, detailUrl, imgUrl, updateTime);
-//            }
-//        };
-//        List<ComicInfo> list = starter.startDataList(html, "data");
-//        if (list.isEmpty()) {
-//            list = starter.startDataList(html, "data", "comics");
-//        }
-//        return list;
-        return null;
+    public List<ComicInfo> getRankComicInfoList(String html) {//fed-list-item
+        JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
+            @Override
+            public void dealInfo(JsoupNode node) {
+
+            }
+
+            @Override
+            public ComicInfo dealElement(JsoupNode node, int elementId) {
+                String title = node.ownText("a.fed-list-title");
+                String author = null;
+                String updateTime = node.ownText("span.fed-list-desc");
+                String imgUrl = node.attr("a", "data-original");
+                String detailUrl = getIndex() + node.href("a");
+                return new ComicInfo(getSourceId(), title, author, detailUrl, imgUrl, updateTime);
+            }
+        };
+        return starter.startElements(html, "li.fed-list-item");
     }
 
     public static void main(String[] args) {
         HtmlTestUtil testUtil = new HtmlTestUtil();
 //        testUtil.testSearch();
-//        testUtil.testDetail();
-        testUtil.testImage();
+        testUtil.testDetail();
+//        testUtil.testImage();
 //        testUtil.testRank();
 //        testUtil.test();
 //        testUtil.testRequest();
@@ -210,7 +233,7 @@ public class HtmlTestUtil implements Source {
 //        builder.addFormDataPart("ep_id", "307985");
 //        Request request = new Request.Builder().addHeader("User-Agent", Codes.USER_AGENT_WEB).url(url).post(builder.build()).build();
 //        Request request = getSearchRequest("放开那个女巫");
-        Request request = getDetailRequest("https://www.ohmanhua.com/12394/1/180.html");
+        Request request = getDetailRequest("https://www.ohmanhua.com/show?orderBy=monthlyCount");
         NetUtil.startLoad(request, callback);
     }
 

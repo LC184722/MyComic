@@ -75,30 +75,26 @@ public class RankFragment extends BaseDataFragment<Comic> implements RankView {
     protected void initView(View rootView) {
         super.initView(rootView);
         mTopLayout.setVisibility(View.GONE);
-        View leftView = getView(R.layout.fragment_rank_left);
-        List<String> items = map.getKeyList();
-        RankLeftAdapter rankLeftAdapter = new RankLeftAdapter(R.layout.item_rank_left, items);
-        RecyclerView leftRecyclerView = leftView.findViewById(R.id.recycleView);
-        initRecycleView(leftRecyclerView, TYPE_LIST, rankLeftAdapter);
-        leftRecyclerView.addItemDecoration(new DividerItemDecoration(_mActivity, DividerItemDecoration.VERTICAL));
-        rankLeftAdapter.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
-                rankLeftAdapter.setPosition(position);
-                showLoadingPage();
-                isLoadMore = false;
-                pageNum = 1;
-                url = map.getByIndex(position).getValue();
-                requestServer();
-            }
-        });
-        flLeftLayout.addView(leftView);
-    }
-
-    @Override
-    protected void initAdapter() {
-        super.initAdapter();
-//        adapter.getLoadMoreModule().setOnLoadMoreListener(null);
+        if (!map.isEmpty()) {
+            View leftView = getView(R.layout.fragment_rank_left);
+            List<String> items = map.getKeyList();
+            RankLeftAdapter rankLeftAdapter = new RankLeftAdapter(R.layout.item_rank_left, items);
+            RecyclerView leftRecyclerView = leftView.findViewById(R.id.recycleView);
+            initRecycleView(leftRecyclerView, TYPE_LIST, rankLeftAdapter);
+            leftRecyclerView.addItemDecoration(new DividerItemDecoration(_mActivity, DividerItemDecoration.VERTICAL));
+            rankLeftAdapter.setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
+                    rankLeftAdapter.setPosition(position);
+                    showLoadingPage();
+                    isLoadMore = false;
+                    pageNum = 1;
+                    url = map.getByIndex(position).getValue();
+                    requestServer();
+                }
+            });
+            flLeftLayout.addView(leftView);
+        }
     }
 
     private boolean isLoadMore = false;
@@ -120,7 +116,7 @@ public class RankFragment extends BaseDataFragment<Comic> implements RankView {
                 presenter.load(checkUrl(url, ++pageNum));
             }
         } else {
-            showContentPage();
+            showEmptyPage("暂无数据");
         }
     }
 
