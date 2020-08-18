@@ -162,24 +162,20 @@ public class PersonFragment extends BaseGroupListFragment implements View.OnClic
 
     public boolean existUpdate(String updateTag, String localTag) {
         boolean flag = false;
-        if (updateTag != null && localTag != null) {
-            if (updateTag.equals(localTag)) {
-                flag = true;
-            } else {
-                String[] tags = updateTag.replace("v", "").split("\\.");
-                String[] locals = localTag.replace("v", "").split("\\.");
-                try {
-                    for (int i = 0; i < tags.length; i++) {
-                        int tag = Integer.parseInt(tags[i]);
-                        int local = Integer.parseInt(locals[i]);
-                        if (tag > local) {
-                            flag = true;
-                            break;
-                        }
+        if (updateTag != null && localTag != null && !updateTag.equals(localTag)) {
+            String[] tags = updateTag.replace("v", "").split("\\.");
+            String[] locals = localTag.replace("v", "").split("\\.");
+            try {
+                for (int i = 0; i < tags.length; i++) {
+                    int tag = Integer.parseInt(tags[i]);
+                    int local = Integer.parseInt(locals[i]);
+                    if (tag > local) {
+                        flag = true;
+                        break;
                     }
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
                 }
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
             }
         }
         return flag;

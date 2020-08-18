@@ -1,6 +1,7 @@
 package com.qc.mycomic.ui.fragment;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -10,6 +11,8 @@ import androidx.annotation.NonNull;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.qc.mycomic.R;
 import com.qc.mycomic.model.MyMap;
+import com.qc.mycomic.ui.activity.LauncherActivity;
+import com.qc.mycomic.ui.activity.MainActivity;
 import com.qc.mycomic.ui.adapter.ShelfAdapter;
 import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ComicInfo;
@@ -17,6 +20,7 @@ import com.qc.mycomic.ui.presenter.ShelfPresenter;
 import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DBUtil;
 import com.qc.mycomic.util.PopupUtil;
+import com.qc.mycomic.util.RestartUtil;
 import com.qc.mycomic.util.SourceUtil;
 import com.qc.mycomic.ui.view.ShelfView;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
@@ -28,10 +32,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import the.one.base.model.PopupItem;
+import the.one.base.ui.activity.BaseCrashActivity;
 import the.one.base.ui.fragment.BaseDataFragment;
 import the.one.base.ui.presenter.BasePresenter;
 import the.one.base.util.QMUIBottomSheetUtil;
 import the.one.base.util.QMUIDialogUtil;
+import the.one.base.util.crash.CrashUtil;
 
 /**
  * @author LuQiChuang
@@ -48,6 +54,10 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
     private ShelfAdapter shelfAdapter = new ShelfAdapter();
 
     private int status;
+
+    public ShelfItemFragment() {
+        this.status = -1;
+    }
 
     public ShelfItemFragment(int status) {
         this.status = status;
@@ -94,21 +104,25 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
 
     @Override
     protected void requestServer() {
-        if (comicList == null) {
-            comicList = ComicUtil.getComicList(status);
-            if (ComicUtil.getComicList().isEmpty() && status == ComicUtil.STATUS_FAV) {
-                showToast("快去搜索漫画吧！");
+        if (status != -1) {
+            if (comicList == null) {
+                comicList = ComicUtil.getComicList(status);
+                if (ComicUtil.getComicList().isEmpty() && status == ComicUtil.STATUS_FAV) {
+                    showToast("快去搜索漫画吧！");
+                }
+                onFirstComplete(comicList);
+            } else if (sList == shelfAdapter.getData()) {
+                onFirstComplete(sList);
+            } else if (comicList != ComicUtil.getComicList(status)) {
+                comicList = ComicUtil.getComicList(status);
+                onFirstComplete(comicList);
+            } else {
+                onFirstComplete(comicList);
             }
-            onFirstComplete(comicList);
-        } else if (sList == shelfAdapter.getData()) {
-            onFirstComplete(sList);
-        } else if (comicList != ComicUtil.getComicList(status)) {
-            comicList = ComicUtil.getComicList(status);
-            onFirstComplete(comicList);
+            adapter.notifyDataSetChanged();
         } else {
-            onFirstComplete(comicList);
+            RestartUtil.restart(_mActivity);
         }
-        adapter.notifyDataSetChanged();
     }
 
     @Override

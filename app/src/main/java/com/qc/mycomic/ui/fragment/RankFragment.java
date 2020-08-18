@@ -18,6 +18,7 @@ import com.qc.mycomic.model.Source;
 import com.qc.mycomic.ui.presenter.RankPresenter;
 import com.qc.mycomic.util.Codes;
 import com.qc.mycomic.util.DBUtil;
+import com.qc.mycomic.util.RestartUtil;
 import com.qc.mycomic.util.StringUtil;
 import com.qc.mycomic.ui.view.RankView;
 
@@ -46,6 +47,10 @@ public class RankFragment extends BaseDataFragment<Comic> implements RankView {
     private String url;
 
     private List<Comic> comicList;
+
+    public RankFragment() {
+        this.source = null;
+    }
 
     public RankFragment(Source source) {
         this.source = source;
@@ -109,14 +114,18 @@ public class RankFragment extends BaseDataFragment<Comic> implements RankView {
 
     @Override
     protected void requestServer() {
-        if (url != null) {
-            if (!isLoadMore) {
-                presenter.load(url);
+        if (source != null) {
+            if (url != null) {
+                if (!isLoadMore) {
+                    presenter.load(url);
+                } else {
+                    presenter.load(checkUrl(url, ++pageNum));
+                }
             } else {
-                presenter.load(checkUrl(url, ++pageNum));
+                showEmptyPage("暂无数据");
             }
         } else {
-            showEmptyPage("暂无数据");
+            RestartUtil.restart(_mActivity);
         }
     }
 

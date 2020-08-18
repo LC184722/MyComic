@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.qc.mycomic.R;
 import com.qc.mycomic.model.ImageInfo;
+import com.qc.mycomic.util.RestartUtil;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
 
 import java.util.LinkedList;
@@ -24,6 +25,10 @@ public class ReaderDetailFragment extends BaseImageSnapFragment<ImageInfo> {
     private ImageInfo imageInfo;
 
     private List<ImageInfo> imageInfoList;
+
+    public ReaderDetailFragment() {
+        this.imageInfo = null;
+    }
 
     public ReaderDetailFragment(ImageInfo imageInfo) {
         this.imageInfo = imageInfo;
@@ -64,7 +69,11 @@ public class ReaderDetailFragment extends BaseImageSnapFragment<ImageInfo> {
 
     @Override
     protected void requestServer() {
-        onComplete(imageInfoList);
+        if (imageInfo != null) {
+            onComplete(imageInfoList);
+        } else {
+            RestartUtil.restart(_mActivity);
+        }
     }
 
     @Override

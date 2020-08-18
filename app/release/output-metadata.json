@@ -11,10 +11,10 @@
       "type": "SINGLE",
       "filters": [],
       "properties": [],
-      "versionCode": 29,
-      "versionName": "v1.0.11.2",
+      "versionCode": 30,
+      "versionName": "v1.0.12",
       "enabled": true,
-      "outputFile": "MyComic-v1.0.11.2.apk"
+      "outputFile": "MyComic-v1.0.12.apk"
     }
   ]
 }

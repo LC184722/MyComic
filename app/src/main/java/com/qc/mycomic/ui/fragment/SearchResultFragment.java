@@ -15,6 +15,7 @@ import com.qc.mycomic.model.ComicInfo;
 import com.qc.mycomic.ui.presenter.SearchPresenter;
 import com.qc.mycomic.util.Codes;
 import com.qc.mycomic.util.DBUtil;
+import com.qc.mycomic.util.RestartUtil;
 import com.qc.mycomic.util.SourceUtil;
 import com.qc.mycomic.ui.view.SearchView;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
@@ -40,6 +41,10 @@ public class SearchResultFragment extends BaseDataFragment<Comic> implements Sea
 
     private String searchString;
 
+    public SearchResultFragment() {
+        this.searchString = null;
+    }
+
     public SearchResultFragment(String searchString) {
         this.searchString = searchString;
     }
@@ -61,18 +66,22 @@ public class SearchResultFragment extends BaseDataFragment<Comic> implements Sea
 
     @Override
     protected void requestServer() {
-        count = 0;
-        presenter.search(searchString);
-        showContentPage();
-        if (progressDialog == null) {
-            showProgressDialog(getPercent(), total, getMsg());
+        if (searchString != null) {
+            count = 0;
+            presenter.search(searchString);
+            showContentPage();
+            if (progressDialog == null) {
+                showProgressDialog(getPercent(), total, getMsg());
+            } else {
+                progressDialog.setProgress(getPercent(), total);
+                progressDialog.setMessage(getMsg());
+                progressDialog.show();
+            }
+            if (comicList == null) {
+                comicList = DBUtil.findComicListByStatus(Codes.STATUS_ALL);
+            }
         } else {
-            progressDialog.setProgress(getPercent(), total);
-            progressDialog.setMessage(getMsg());
-            progressDialog.show();
-        }
-        if (comicList == null) {
-            comicList = DBUtil.findComicListByStatus(Codes.STATUS_ALL);
+            RestartUtil.restart(_mActivity);
         }
     }
 

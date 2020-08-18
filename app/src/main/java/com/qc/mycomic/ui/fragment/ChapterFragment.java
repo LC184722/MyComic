@@ -25,6 +25,7 @@ import com.qc.mycomic.util.Codes;
 import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DBUtil;
 import com.qc.mycomic.util.PopupUtil;
+import com.qc.mycomic.util.RestartUtil;
 import com.qc.mycomic.util.SourceUtil;
 import com.qc.mycomic.util.StringUtil;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
@@ -59,6 +60,10 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
     private boolean isChangeSource = false;
 
     private ChapterPresenter presenter = new ChapterPresenter();
+
+    public ChapterFragment() {
+        this.comic = null;
+    }
 
     public ChapterFragment(Comic comic) {
         this.comic = comic;
@@ -295,12 +300,16 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
 
     @Override
     protected void requestServer() {
-        List<ChapterInfo> chapterInfoList = comic.getComicInfo().getChapterInfoList();
-        Log.i(TAG, "requestServer: Codes.toStatus = " + Codes.toStatus);
-        if (chapterInfoList == null || chapterInfoList.size() == 0) {
-            presenter.load(comic);
+        if (comic != null) {
+            List<ChapterInfo> chapterInfoList = comic.getComicInfo().getChapterInfoList();
+            Log.i(TAG, "requestServer: Codes.toStatus = " + Codes.toStatus);
+            if (chapterInfoList == null || chapterInfoList.size() == 0) {
+                presenter.load(comic);
+            } else {
+                loadComplete();
+            }
         } else {
-            loadComplete();
+            RestartUtil.restart(_mActivity);
         }
     }
 

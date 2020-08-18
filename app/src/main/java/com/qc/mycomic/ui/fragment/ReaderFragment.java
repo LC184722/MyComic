@@ -26,6 +26,7 @@ import com.qc.mycomic.ui.view.ReaderView;
 import com.qc.mycomic.util.Codes;
 import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DBUtil;
+import com.qc.mycomic.util.RestartUtil;
 import com.qmuiteam.qmui.util.QMUIDisplayHelper;
 import com.qmuiteam.qmui.util.QMUIViewHelper;
 
@@ -67,6 +68,10 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
     private LinearLayout llRight;
     private SeekBar seekBar;
     private boolean firstLoad = true;
+
+    public ReaderFragment() {
+        this.comic = null;
+    }
 
     public ReaderFragment(Comic comic) {
         this.comic = comic;
@@ -253,20 +258,24 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
 
     @Override
     protected void requestServer() {
-        if (imageInfoList == null) {
-            presenter.loadImageInfoList(comic);
-        } else {
-            comicInfo.initChapterId(imageInfoList.get(imageInfoList.size() - 1).getChapterId());
-            Log.i(TAG, "requestServer: " + comicInfo.getCurChapterId());
-            if (comicInfo.canLoad(isLoadNext)) {
+        if (comic != null) {
+            if (imageInfoList == null) {
                 presenter.loadImageInfoList(comic);
-            } else if (isLoadNext) {
-                onComplete(null);
             } else {
-                isLoadNext = true;
-                showFailTips("没有上一章");
-                setPullLayoutEnabled(false);
+                comicInfo.initChapterId(imageInfoList.get(imageInfoList.size() - 1).getChapterId());
+                Log.i(TAG, "requestServer: " + comicInfo.getCurChapterId());
+                if (comicInfo.canLoad(isLoadNext)) {
+                    presenter.loadImageInfoList(comic);
+                } else if (isLoadNext) {
+                    onComplete(null);
+                } else {
+                    isLoadNext = true;
+                    showFailTips("没有上一章");
+                    setPullLayoutEnabled(false);
+                }
             }
+        } else {
+            RestartUtil.restart(_mActivity);
         }
     }
 

@@ -1,11 +1,17 @@
 package com.qc.mycomic.ui.fragment;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 
 import com.qc.mycomic.R;
 import com.qc.mycomic.model.Comic;
+import com.qc.mycomic.ui.activity.LauncherActivity;
 import com.qc.mycomic.util.Codes;
 import com.qc.mycomic.util.DBUtil;
 import com.qmuiteam.qmui.alpha.QMUIAlphaImageButton;
@@ -14,6 +20,7 @@ import com.qmuiteam.qmui.util.QMUIColorHelper;
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 import com.qmuiteam.qmui.widget.popup.QMUIPopup;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -21,6 +28,8 @@ import java.util.Random;
 import the.one.base.ui.fragment.BaseFragment;
 import the.one.base.ui.fragment.BaseTitleTabFragment;
 import the.one.base.util.QMUIPopupUtil;
+import the.one.base.util.crash.CrashConfig;
+import the.one.base.util.crash.CrashUtil;
 
 /**
  * @author LuQiChuang
@@ -102,8 +111,12 @@ public class ShelfFragment extends BaseTitleTabFragment {
 //                    mTopLayout.setBackgroundColor(getColorr(R.color.black));
 //                    Log.i(TAG, "showSettingPopup: darkMode " + flag);
                 } else if (position == 4) {
-                    boolean flag = QMUIStatusBarHelper.setStatusBarLightMode(getBaseFragmentActivity());
-                    Log.i(TAG, "showSettingPopup: lightMode " + flag);
+                    Intent intent = new Intent(_mActivity, LauncherActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    _mActivity.startActivity(intent);
+                    android.os.Process.killProcess(android.os.Process.myPid());
+//                    boolean flag = QMUIStatusBarHelper.setStatusBarLightMode(getBaseFragmentActivity());
+//                    Log.i(TAG, "showSettingPopup: lightMode " + flag);
                 }
                 mSettingPopup.dismiss();
             });
