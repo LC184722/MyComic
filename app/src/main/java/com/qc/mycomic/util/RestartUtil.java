@@ -22,7 +22,6 @@ public class RestartUtil {
         intent.setAction(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
         activity.startActivity(intent);
-        activity.finish();
         android.os.Process.killProcess(android.os.Process.myPid());
     }
 

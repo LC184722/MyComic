@@ -14,6 +14,7 @@ import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.ui.activity.LauncherActivity;
 import com.qc.mycomic.util.Codes;
 import com.qc.mycomic.util.DBUtil;
+import com.qc.mycomic.util.RestartUtil;
 import com.qmuiteam.qmui.alpha.QMUIAlphaImageButton;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
 import com.qmuiteam.qmui.util.QMUIColorHelper;
@@ -111,10 +112,7 @@ public class ShelfFragment extends BaseTitleTabFragment {
 //                    mTopLayout.setBackgroundColor(getColorr(R.color.black));
 //                    Log.i(TAG, "showSettingPopup: darkMode " + flag);
                 } else if (position == 4) {
-                    Intent intent = new Intent(_mActivity, LauncherActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    _mActivity.startActivity(intent);
-                    android.os.Process.killProcess(android.os.Process.myPid());
+                    RestartUtil.restart(_mActivity);
 //                    boolean flag = QMUIStatusBarHelper.setStatusBarLightMode(getBaseFragmentActivity());
 //                    Log.i(TAG, "showSettingPopup: lightMode " + flag);
                 }

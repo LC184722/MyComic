@@ -135,10 +135,10 @@ public class ManHuaFen implements Source {
 //                } else if (Math.abs(length - url.length()) > 4) {
 //                    continue;
 //                }
-                if (!url.startsWith("http")) {
-                    url = server + chapterPath + url;
-                } else {
+                if (url.startsWith("http:")) {
                     url = "https://dl.manhuachi.com/acqq.php?url=" + url;
+                } else if (!url.startsWith("https:")) {
+                    url = server + chapterPath + url;
                 }
                 ImageInfo imageInfo = new ImageInfo(chapterId, i++, urls.length, url);
                 list.add(imageInfo);
