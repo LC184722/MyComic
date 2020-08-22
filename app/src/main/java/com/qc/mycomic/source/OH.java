@@ -107,7 +107,7 @@ public class OH implements Source {
     public List<ImageInfo> getImageInfoList(String html, int chapterId) {
         String[] urls = null;
         String chapterImagesStr = StringUtil.match("C_DATA='(.*?)'", html);
-        String result = DecryptUtil.decryptAES(DecryptUtil.decryptBase64(chapterImagesStr), "JRUIFMVJDIWE569j");
+        String result = DecryptUtil.decryptAES(DecryptUtil.decryptBase64(chapterImagesStr), "fw12558899ertyui");//|SEPARATER|
         if (result != null) {
             String server = "http://image.mljzmm.com/comic/";
             result = StringUtil.match("(\\{.*?\\})", result);
