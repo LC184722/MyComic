@@ -224,8 +224,8 @@ public class ManHuaFen implements Source {
     }
 
     private String decrypt(String code) {
-        String key = "KA58ZAQ54321bbG1";
-        String iv = "A1B2C3DEF1G321bb";
+        String key = "KA58ZAQ321oobbG1";
+        String iv = "A1B2C3DEF1G321oo";
         return DecryptUtil.decryptAES(code, key, iv);
     }
 
