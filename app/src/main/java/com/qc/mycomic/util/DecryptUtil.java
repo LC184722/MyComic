@@ -99,7 +99,7 @@ public class DecryptUtil {
         try {
             resUrl = URLEncoder.encode(url, "UTF-8");
             resUrl = resUrl.replace("%2F", "/").replace("+", "%20");
-        } catch (UnsupportedEncodingException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return resUrl;

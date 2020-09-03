@@ -120,17 +120,24 @@ public class HtmlTestUtil implements Source {
     public List<ImageInfo> getImageInfoList(String html, int chapterId) {
         String[] urls = null;
         String chapterImagesStr = StringUtil.match("C_DATA='(.*?)'", html);
-        String result = DecryptUtil.decryptAES(DecryptUtil.decryptBase64(chapterImagesStr), "JRUIFMVJDIWE569j");
+        String result = DecryptUtil.decryptAES(DecryptUtil.decryptBase64(chapterImagesStr), "fw12558899ertyui");//|SEPARATER|
         if (result != null) {
-            String server = "http://image.mljzmm.com/comic/";
-            result = StringUtil.match("(\\{.*?\\})", result);
-            JSONObject jsonObject = JSONObject.parseObject(result);
-            String imgPath = jsonObject.getString("imgpath");
-            imgPath = DecryptUtil.getUrlEncodeStr(imgPath);
-            int total = jsonObject.getInteger("totalimg");
-            urls = new String[total];
-            for (int i = 0; i < total; i++) {
-                urls[i] = server + imgPath + String.format(Locale.CHINA, "%04d.jpg", i + 1);
+            try {
+                String server = "http://image.mljzmm.com/comic/";
+                result = StringUtil.match("(\\{.*?\\})", result);
+                JSONObject jsonObject = JSONObject.parseObject(result);
+                String imgPath = jsonObject.getString("enc_code2");
+                imgPath = DecryptUtil.decryptAES(DecryptUtil.decryptBase64(imgPath), "fw125gjdi9ertyui");
+                imgPath = DecryptUtil.getUrlEncodeStr(imgPath);
+                String encCode1 = jsonObject.getString("enc_code1");
+                encCode1 = DecryptUtil.decryptAES(DecryptUtil.decryptBase64(encCode1), "fw12558899ertyui");
+                int total = encCode1 != null ? Integer.parseInt(encCode1) : 50;
+                urls = new String[total];
+                for (int i = 0; i < total; i++) {
+                    urls[i] = server + imgPath + String.format(Locale.CHINA, "%04d.jpg", i + 1);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         return ComicUtil.getImageInfoList(urls, chapterId);
@@ -201,8 +208,8 @@ public class HtmlTestUtil implements Source {
     public static void main(String[] args) {
         HtmlTestUtil testUtil = new HtmlTestUtil();
 //        testUtil.testSearch();
-        testUtil.testDetail();
-//        testUtil.testImage();
+//        testUtil.testDetail();
+        testUtil.testImage();
 //        testUtil.testRank();
 //        testUtil.test();
 //        testUtil.testRequest();

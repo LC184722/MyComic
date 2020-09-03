@@ -116,7 +116,7 @@ public class MiTui implements Source {
     }
 
     private static String[] servers = {
-            "https://res0730.imitui.com",
+            "https://res0818.imitui.com",
             "https://imgimtmaa.1a3.net",
             "https://imgimtmi.1a3.net",
             "https://res.imitui.com",
