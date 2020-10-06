@@ -110,7 +110,7 @@ public class OH implements Source {
         String result = DecryptUtil.decryptAES(DecryptUtil.decryptBase64(chapterImagesStr), "fw12558899ertyui");//|SEPARATER|
         if (result != null) {
             try {
-                String server = "http://image.mljzmm.com/comic/";
+                String server = "https://img.ohmanhua.com/comic/";
                 result = StringUtil.match("(\\{.*?\\})", result);
                 JSONObject jsonObject = JSONObject.parseObject(result);
                 String imgPath = jsonObject.getString("enc_code2");

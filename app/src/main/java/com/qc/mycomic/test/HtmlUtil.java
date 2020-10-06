@@ -54,6 +54,23 @@ public class HtmlUtil {
         return "";
     }
 
+    public static String getHtmlByFile(String filename) {
+        try {
+            String filePath = "D:\\Programming\\Files\\MH\\" + filename;
+            BufferedReader in = new BufferedReader(new FileReader(new File(filePath)));
+            String line;
+            StringBuilder builder = new StringBuilder();
+            while ((line = in.readLine()) != null) {
+                builder.append(line);
+            }
+            in.close();
+            return builder.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
     public static String getTextByFile() {
         try {
             String filePath = "D:\\Programming\\Files\\MH\\text.txt";

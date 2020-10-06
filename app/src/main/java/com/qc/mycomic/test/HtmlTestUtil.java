@@ -42,22 +42,22 @@ public class HtmlTestUtil implements Source {
 
     @Override
     public int getSourceId() {
-        return Codes.OH;
+        return Codes.MAN_HUA_FEN;
     }
 
     @Override
     public String getSourceName() {
-        return Codes.OH_STRING;
+        return Codes.MAN_HUA_FEN_STRING;
     }
 
     @Override
     public String getIndex() {
-        return "https://www.ohmanhua.com";
+        return "https://m.manhuafen.com";
     }
 
     @Override
     public Request getSearchRequest(String searchString) {
-        searchString = "https://www.ohmanhua.com/search?searchString=" + searchString;
+        searchString = "https://m.manhuafen.com/search/?keywords=" + searchString;
         return NetUtil.getRequest(searchString);
     }
 
@@ -81,128 +81,167 @@ public class HtmlTestUtil implements Source {
 
             @Override
             public ComicInfo dealElement(JsoupNode node, int elementId) {
-                String title = node.ownText("h1 a");
-                String author = node.ownText("ul li.fed-col-xs6", 1);
-                String updateTime = node.ownText("ul li.fed-col-xs6", 2);
-                String imgUrl = node.attr("a", "data-original");
-                String detailUrl = getIndex() + node.href("a");
+                String title = node.ownText("a.title");
+                String author = node.ownText("p.txtItme");
+                String updateTime = node.ownText("span.date");
+                String imgUrl = node.src("img");
+                String detailUrl = node.href("a.title");
                 return new ComicInfo(getSourceId(), title, author, detailUrl, imgUrl, updateTime);
             }
         };
-        return starter.startElements(html, "dl.fed-deta-info");
+        return starter.startElements(html, "div.itemBox");
     }
 
     @Override
     public void setComicDetail(ComicInfo comicInfo, String html) {
         JsoupStarter<ChapterInfo> starter = new JsoupStarter<ChapterInfo>() {
+            @Override
+            public boolean isDESC() {
+                return false;
+            }
 
             @Override
             public void dealInfo(JsoupNode node) {
-                String author = node.ownText("div.fed-part-layout li.fed-col-md6", 1, "a");
-                String intro = node.ownText("p.fed-padding.fed-part-both.fed-text-muted");
-                String updateStatus = node.ownText("div.fed-part-layout li.fed-col-md6", 0, "a");
-                String updateTime = node.ownText("div.fed-part-layout li.fed-col-md6", 2, "a");
+                String author = node.ownText("p.txtItme");
+                String intro = node.ownText("p#full-des", "p#simple-des");
+                String updateStatus = node.ownText("p.txtItme:eq(2) :eq(3)");
+                String updateTime = node.ownText("p.txtItme span.date");
+                try {
+                    intro = intro.substring(intro.indexOf(':') + 1);
+                } catch (Exception ignored) {
+                }
                 comicInfo.setDetail(author, updateTime, updateStatus, intro);
             }
 
             @Override
             public ChapterInfo dealElement(JsoupNode node, int elementId) {
-                String title = node.title("a");
-                String chapterUrl = getIndex() + node.href("a");
-                return new ChapterInfo(elementId, title, chapterUrl);
+                String title = node.ownText("span");
+                String chapterUrl = node.href("a");
+                if (chapterUrl.contains("html")) {
+                    if (!chapterUrl.startsWith("http")) {
+                        chapterUrl = getIndex() + chapterUrl;
+                    }
+                    return new ChapterInfo(elementId, title, chapterUrl);
+                } else {
+                    return null;
+                }
             }
         };
         starter.startInfo(html);
-        comicInfo.initChapterInfoList(starter.startElements(html, "ul.fed-part-rows li.fed-col-lg3"));
+        comicInfo.initChapterInfoList(starter.startElements(html, "ul#chapter-list-1 li"));
     }
 
     @Override
     public List<ImageInfo> getImageInfoList(String html, int chapterId) {
-        String[] urls = null;
-        String chapterImagesStr = StringUtil.match("C_DATA='(.*?)'", html);
-        String result = DecryptUtil.decryptAES(DecryptUtil.decryptBase64(chapterImagesStr), "fw12558899ertyui");//|SEPARATER|
-        if (result != null) {
-            try {
-                String server = "http://image.mljzmm.com/comic/";
-                result = StringUtil.match("(\\{.*?\\})", result);
-                JSONObject jsonObject = JSONObject.parseObject(result);
-                String imgPath = jsonObject.getString("enc_code2");
-                imgPath = DecryptUtil.decryptAES(DecryptUtil.decryptBase64(imgPath), "fw125gjdi9ertyui");
-                imgPath = DecryptUtil.getUrlEncodeStr(imgPath);
-                String encCode1 = jsonObject.getString("enc_code1");
-                encCode1 = DecryptUtil.decryptAES(DecryptUtil.decryptBase64(encCode1), "fw12558899ertyui");
-                int total = encCode1 != null ? Integer.parseInt(encCode1) : 50;
-                urls = new String[total];
-                for (int i = 0; i < total; i++) {
-                    urls[i] = server + imgPath + String.format(Locale.CHINA, "%04d.jpg", i + 1);
+        List<ImageInfo> list = new LinkedList<>();
+        String server = "https://img01.eshanyao.com/";
+        String chapterImagesEncodeStr = StringUtil.match("var chapterImages = \"(.*?)\";", html);
+        //var chapterPath = "images/comic/259/517692/";
+        String chapterPath = StringUtil.match("var chapterPath = \"(.*?)\";", html);
+        String chapterImagesStr = decrypt(chapterImagesEncodeStr);
+        if (chapterImagesStr != null) {
+            chapterImagesStr = chapterImagesStr.replaceAll("\\\\", "");
+            String[] urls = StringUtil.matchArray("\"(.*?)\"", chapterImagesStr);
+            int i = 0;
+//            int length = -1;
+            for (String url : urls) {
+//                if (length == -1) {
+//                    length = url.length();
+//                } else if (Math.abs(length - url.length()) > 4) {
+//                    continue;
+//                }
+                if (url.startsWith("http:")) {
+                    url = "https://dl.manhuachi.com/acqq.php?url=" + url;
+                } else if (!url.startsWith("https:")) {
+                    url = server + chapterPath + url;
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+                ImageInfo imageInfo = new ImageInfo(chapterId, i++, urls.length, url);
+                list.add(imageInfo);
             }
         }
-        return ComicUtil.getImageInfoList(urls, chapterId);
+        return list;
     }
 
     @Override
     public MyMap<String, String> getRankMap() {
         MyMap<String, String> map = new MyMap<>();
-        map.put("月点击", "https://www.ohmanhua.com/show?orderBy=monthlyCount&page=1");
-        map.put("周点击", "https://www.ohmanhua.com/show?orderBy=weeklyCount&page=1");
-        map.put("日点击", "https://www.ohmanhua.com/show?orderBy=dailyCount&page=1");
-        map.put("收录日", "https://www.ohmanhua.com/show?orderBy=create&page=1");
-        map.put("更新日", "https://www.ohmanhua.com/show?orderBy=update&page=1");
-        map.put("玄幻", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10024&page=1");
-        map.put("热血", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10023&page=1");
-        map.put("恋爱", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10126&page=1");
-        map.put("都市", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10124&page=1");
-        map.put("古风", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10143&page=1");
-        map.put("冒险", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10210&page=1");
-        map.put("穿越", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10129&page=1");
-        map.put("爆笑", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10201&page=1");
-        map.put("搞笑", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10122&page=1");
-        map.put("奇幻", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10242&page=1");
-        map.put("校园", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10131&page=1");
-        map.put("少年", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10321&page=1");
-        map.put("修真", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10133&page=1");
-        map.put("霸总", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10127&page=1");
-        map.put("其他", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10560&page=1");
-        map.put("动作", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10125&page=1");
-        map.put("生活", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10142&page=1");
-        map.put("少女", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10301&page=1");
-        map.put("后宫", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10138&page=1");
-        map.put("少男", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10641&page=1");
-        map.put("逆转", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10702&page=1");
-        map.put("武侠", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10139&page=1");
-        map.put("重生", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10461&page=1");
-        map.put("科幻", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10181&page=1");
-        map.put("总裁", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10306&page=1");
-        map.put("剧情", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10480&page=1");
-        map.put("大女主", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10706&page=1");
-        map.put("悬疑", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10183&page=1");
-        map.put("魔幻", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10227&page=1");
-        map.put("恐怖", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10185&page=1");
+        map.put("人气排行", "https://m.manhuafen.com/rank/popularity/?page=1");
+        map.put("点击排行", "https://m.manhuafen.com/rank/click/?page=1");
+        map.put("订阅排行", "https://m.manhuafen.com/rank/subscribe/?page=1");
+        map.put("刚刚更新", "https://m.manhuafen.com/update/?page=1");
+        map.put("热血", "https://m.manhuafen.com/list/rexue/click/?page=1");
+        map.put("玄幻", "https://m.manhuafen.com/list/maoxian/click/page=1");
+        map.put("修真", "https://m.manhuafen.com/list/xiuzhen/click/?page=1");
+        map.put("古风", "https://m.manhuafen.com/list/gufeng/click/?page=1");
+        map.put("恋爱", "https://m.manhuafen.com/list/lianai/click/?page=1");
+        map.put("穿越", "https://m.manhuafen.com/list/chuanyue/click/?page=1");
+        map.put("都市", "https://m.manhuafen.com/list/dushi/click/?page=1");
+        map.put("霸总", "https://m.manhuafen.com/list/bazong/click/?page=1");
+        map.put("悬疑", "https://m.manhuafen.com/list/xuanyi/click/?page=1");
+        map.put("搞笑", "https://m.manhuafen.com/list/gaoxiao/click/?page=1");
+        map.put("奇幻", "https://m.manhuafen.com/list/qihuan/click/?page=1");
+        map.put("总裁", "https://m.manhuafen.com/list/zongcai/click/?page=1");
+        map.put("日常", "https://m.manhuafen.com/list/richang/click/?page=1");
+        map.put("冒险", "https://m.manhuafen.com/list/maoxian/click/?page=1");
+        map.put("科幻", "https://m.manhuafen.com/list/kehuan/click/?page=1");
+        map.put("纯爱", "https://m.manhuafen.com/list/chunai/click/?page=1");
+        map.put("魔幻", "https://m.manhuafen.com/list/mohuan/click/?page=1");
+        map.put("战争", "https://m.manhuafen.com/list/zhanzheng/click/?page=1");
+        map.put("蔷薇", "https://m.manhuafen.com/list/qiangwei/click/?page=1");
+        map.put("武侠", "https://m.manhuafen.com/list/wuxia/click/?page=1");
+        map.put("生活", "https://m.manhuafen.com/list/shenghuo/click/?page=1");
+        map.put("动作", "https://m.manhuafen.com/list/dongzuo/click/?page=1");
+        map.put("后宫", "https://m.manhuafen.com/list/hougong/click/?page=1");
+        map.put("游戏", "https://m.manhuafen.com/list/youxi/click/?page=1");
+        map.put("恐怖", "https://m.manhuafen.com/list/kongbu/click/?page=1");
+        map.put("漫改", "https://m.manhuafen.com/list/mangai/click/?page=1");
+        map.put("真人", "https://m.manhuafen.com/list/zhenren/click/?page=1");
+        map.put("校园", "https://m.manhuafen.com/list/xiaoyuan/click/?page=1");
+        map.put("剧情", "https://m.manhuafen.com/list/juqing/click/?page=1");
+        map.put("灵异", "https://m.manhuafen.com/list/lingyi/click/?page=1");
+        map.put("少年", "https://m.manhuafen.com/list/shaonian/click/?page=1");
+        map.put("推理", "https://m.manhuafen.com/list/tuili/click/?page=1");
+        map.put("怀旧", "https://m.manhuafen.com/list/huaijiu/click/?page=1");
+        map.put("情感", "https://m.manhuafen.com/list/qinggan/click/?page=1");
+        map.put("偶像", "https://m.manhuafen.com/list/ouxiang/click/?page=1");
+        map.put("少女", "https://m.manhuafen.com/list/shaonv/click/?page=1");
+        map.put("独家", "https://m.manhuafen.com/list/dujia/click/?page=1");
         return map;
     }
 
     @Override
-    public List<ComicInfo> getRankComicInfoList(String html) {//fed-list-item
-        JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
-            @Override
-            public void dealInfo(JsoupNode node) {
+    public List<ComicInfo> getRankComicInfoList(String html) {
+        List<ComicInfo> list = getComicInfoList(html);
+        if (list.size() > 0) {
+            return list;
+        } else {
+            JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
+                @Override
+                public void dealInfo(JsoupNode node) {
 
-            }
+                }
 
-            @Override
-            public ComicInfo dealElement(JsoupNode node, int elementId) {
-                String title = node.ownText("a.fed-list-title");
-                String author = null;
-                String updateTime = node.ownText("span.fed-list-desc");
-                String imgUrl = node.attr("a", "data-original");
-                String detailUrl = getIndex() + node.href("a");
-                return new ComicInfo(getSourceId(), title, author, detailUrl, imgUrl, updateTime);
-            }
-        };
-        return starter.startElements(html, "li.fed-list-item");
+                @Override
+                public ComicInfo dealElement(JsoupNode node, int elementId) {
+                    String title = node.ownText("a.txtA");
+                    String author = node.ownText("span.info a");
+                    String updateTime = null;
+                    String imgUrl = node.src("img");
+                    String detailUrl = node.href("a.txtA");
+                    if (author != null) {
+                        author = "更新至：" + author;
+                    }
+                    return new ComicInfo(getSourceId(), title, author, detailUrl, imgUrl, updateTime);
+                }
+            };
+            return starter.startElements(html, "ul#comic-items li");
+        }
+    }
+
+    private String decrypt(String code) {
+        String key = "KA58ZAQ321oobbG1";
+        String iv = "A1B2C3DEF1G321oo";
+        return DecryptUtil.decryptAES(code, key, iv);
     }
 
     public static void main(String[] args) {
