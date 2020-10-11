@@ -23,7 +23,7 @@ import okhttp3.Request;
  * @date 2020/8/12 15:25
  * @ver 1.0
  */
-public class PuFei implements Source {
+public class PuFei extends BaseSource {
 
     @Override
     public int getSourceId() {
@@ -44,16 +44,6 @@ public class PuFei implements Source {
     public Request getSearchRequest(String searchString) {
         searchString = "http://m.pufei8.com/e/search/?searchget=1&tbname=mh&show=title,player,playadmin,bieming,pinyin,playadmin&tempid=4&keyboard=" + StringUtil.getGBKDecodedStr(searchString);
         return NetUtil.getRequest(searchString);
-    }
-
-    @Override
-    public Request getDetailRequest(String detailUrl) {
-        return NetUtil.getRequest(detailUrl);
-    }
-
-    @Override
-    public Request getRankRequest(String rankUrl) {
-        return NetUtil.getRequest(rankUrl);
     }
 
     @Override

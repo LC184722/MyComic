@@ -22,7 +22,7 @@ import okhttp3.Request;
  * @date 2020/8/12 15:25
  * @ver 1.0
  */
-public class MiTui implements Source {
+public class MiTui extends BaseSource {
 
     @Override
     public int getSourceId() {
@@ -43,16 +43,6 @@ public class MiTui implements Source {
     public Request getSearchRequest(String searchString) {
         searchString = "https://m.imitui.com/search/?keywords=" + searchString;
         return NetUtil.getRequest(searchString);
-    }
-
-    @Override
-    public Request getDetailRequest(String detailUrl) {
-        return NetUtil.getRequest(detailUrl);
-    }
-
-    @Override
-    public Request getRankRequest(String rankUrl) {
-        return NetUtil.getRequest(rankUrl);
     }
 
     @Override

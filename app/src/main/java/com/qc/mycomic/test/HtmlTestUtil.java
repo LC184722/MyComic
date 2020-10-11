@@ -1,34 +1,23 @@
 package com.qc.mycomic.test;
 
-import com.alibaba.fastjson.JSONObject;
-import com.qc.mycomic.json.JsonNode;
-import com.qc.mycomic.json.JsonStarter;
 import com.qc.mycomic.jsoup.JsoupNode;
 import com.qc.mycomic.jsoup.JsoupStarter;
 import com.qc.mycomic.model.ChapterInfo;
 import com.qc.mycomic.model.ComicInfo;
 import com.qc.mycomic.model.ImageInfo;
 import com.qc.mycomic.model.MyMap;
-import com.qc.mycomic.model.Source;
+import com.qc.mycomic.source.BaseSource;
 import com.qc.mycomic.util.Codes;
-import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DecryptUtil;
 import com.qc.mycomic.util.NetUtil;
 import com.qc.mycomic.util.StringUtil;
 
-import org.jsoup.select.Elements;
-
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.MultipartBody;
 import okhttp3.Request;
 import okhttp3.Response;
 
@@ -38,7 +27,7 @@ import okhttp3.Response;
  * @date 2020/8/12 15:25
  * @ver 1.0
  */
-public class HtmlTestUtil implements Source {
+public class HtmlTestUtil extends BaseSource {
 
     @Override
     public int getSourceId() {
@@ -61,17 +50,7 @@ public class HtmlTestUtil implements Source {
         return NetUtil.getRequest(searchString);
     }
 
-    @Override
-    public Request getDetailRequest(String detailUrl) {
-        return NetUtil.getRequest(detailUrl);
-    }
-
-    @Override
-    public Request getRankRequest(String rankUrl) {
-        return NetUtil.getRequest(rankUrl);
-    }
-
-    @Override
+@Override
     public List<ComicInfo> getComicInfoList(String html) {
         JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
             @Override

@@ -25,7 +25,7 @@ import okhttp3.Request;
  * @date 2020/8/16 23:41
  * @ver 1.0
  */
-public class OH implements Source {
+public class OH extends BaseSource {
 
     @Override
     public int getSourceId() {
@@ -46,16 +46,6 @@ public class OH implements Source {
     public Request getSearchRequest(String searchString) {
         searchString = "https://www.ohmanhua.com/search?searchString=" + searchString;
         return NetUtil.getRequest(searchString);
-    }
-
-    @Override
-    public Request getDetailRequest(String detailUrl) {
-        return NetUtil.getRequest(detailUrl);
-    }
-
-    @Override
-    public Request getRankRequest(String rankUrl) {
-        return NetUtil.getRequest(rankUrl);
     }
 
     @Override

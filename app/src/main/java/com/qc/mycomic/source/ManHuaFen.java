@@ -23,7 +23,7 @@ import okhttp3.Request;
  * @date 2020/8/12 15:25
  * @ver 1.0
  */
-public class ManHuaFen implements Source {
+public class ManHuaFen extends BaseSource {
 
     @Override
     public int getSourceId() {
@@ -44,16 +44,6 @@ public class ManHuaFen implements Source {
     public Request getSearchRequest(String searchString) {
         searchString = "https://m.manhuafen.com/search/?keywords=" + searchString;
         return NetUtil.getRequest(searchString);
-    }
-
-    @Override
-    public Request getDetailRequest(String detailUrl) {
-        return NetUtil.getRequest(detailUrl);
-    }
-
-    @Override
-    public Request getRankRequest(String rankUrl) {
-        return NetUtil.getRequest(rankUrl);
     }
 
     @Override
@@ -136,7 +126,8 @@ public class ManHuaFen implements Source {
 //                    continue;
 //                }
                 if (url.startsWith("http:")) {
-                    url = "https://dl.manhuachi.com/acqq.php?url=" + url;
+                    url = url.replace("%", "%25");
+                    url = "https://img01.eshanyao.com/showImage2.php?url=" + url;
                 } else if (!url.startsWith("https:")) {
                     url = server + chapterPath + url;
                 }

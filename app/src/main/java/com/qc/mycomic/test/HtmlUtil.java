@@ -1,6 +1,8 @@
 package com.qc.mycomic.test;
 
+import com.qc.mycomic.model.ImageInfo;
 import com.qc.mycomic.model.MyMap;
+import com.qc.mycomic.model.Source;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -10,6 +12,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -157,6 +160,15 @@ public class HtmlUtil {
             unicodeStr = unicodeStr.replace(group1, ch + "");
         }
         return unicodeStr.replace("\\", "").trim();
+    }
+
+    public static void getImageInfoListTest(Source source, String fileName) {
+        String html = HtmlUtil.getHtmlByFile(fileName);
+        List<ImageInfo> imageInfoList = source.getImageInfoList(html, 100);
+        System.out.println("imageInfoList.size() = " + imageInfoList.size());
+        for (ImageInfo imageInfo : imageInfoList) {
+            System.out.println("imageInfo = " + imageInfo.getUrl());
+        }
     }
 
 }

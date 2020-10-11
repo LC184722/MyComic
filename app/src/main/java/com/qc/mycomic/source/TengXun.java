@@ -27,7 +27,7 @@ import okhttp3.Request;
  * @date 2020/8/12 15:25
  * @ver 1.0
  */
-public class TengXun implements Source {
+public class TengXun extends BaseSource {
 
     @Override
     public int getSourceId() {
@@ -48,16 +48,6 @@ public class TengXun implements Source {
     public Request getSearchRequest(String searchString) {
         searchString = "https://ac.qq.com/Comic/searchList?search=" + searchString;
         return NetUtil.getRequest(searchString);
-    }
-
-    @Override
-    public Request getDetailRequest(String detailUrl) {
-        return NetUtil.getRequest(detailUrl);
-    }
-
-    @Override
-    public Request getRankRequest(String rankUrl) {
-        return NetUtil.getRequest(rankUrl);
     }
 
     @Override
