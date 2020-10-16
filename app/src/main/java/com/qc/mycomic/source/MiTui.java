@@ -1,5 +1,7 @@
 package com.qc.mycomic.source;
 
+import android.util.Log;
+
 import com.qc.mycomic.jsoup.JsoupNode;
 import com.qc.mycomic.jsoup.JsoupStarter;
 import com.qc.mycomic.model.ChapterInfo;
@@ -94,6 +96,8 @@ public class MiTui extends BaseSource {
                 if (chapterUrl.contains("html")) {
                     if (!chapterUrl.startsWith("http")) {
                         chapterUrl = getIndex() + chapterUrl;
+                    } else {
+                        chapterUrl = chapterUrl.replace("//m.", "//www.");
                     }
                     return new ChapterInfo(elementId, title, chapterUrl);
                 } else {
