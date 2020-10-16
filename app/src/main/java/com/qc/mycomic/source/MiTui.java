@@ -36,7 +36,7 @@ public class MiTui extends BaseSource {
 
     @Override
     public String getIndex() {
-        return "https://m.imitui.com";
+        return "https://www.imitui.com";
     }
 
     @Override

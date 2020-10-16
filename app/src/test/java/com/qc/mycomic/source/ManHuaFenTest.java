@@ -27,6 +27,6 @@ public class ManHuaFenTest {
 
     @Test
     public void getImageInfoList() {
-        HtmlUtil.getImageInfoListTest(source, "mhf-test.html");
+        HtmlUtil.getImageInfoListTest(source, "mhf/mhf-test.html");
     }
 }

@@ -30,12 +30,7 @@ public class OHTest {
 
     @Test
     public void getImageInfoList() {
-        String html = HtmlUtil.getHtmlByFile("oh-test.html");
-        List<ImageInfo> imageInfoList = source.getImageInfoList(html, 100);
-        System.out.println("imageInfoList.size() = " + imageInfoList.size());
-        for (ImageInfo imageInfo : imageInfoList) {
-            System.out.println("imageInfo = " + imageInfo.getUrl());
-        }
+        HtmlUtil.getImageInfoListTest(source, "oh/oh-test.html");
     }
 
     @Test
