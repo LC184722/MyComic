@@ -10,10 +10,11 @@ import com.qc.mycomic.model.ImageInfo;
 import com.qc.mycomic.model.MyMap;
 import com.qc.mycomic.model.Source;
 import com.qc.mycomic.util.Codes;
+import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.NetUtil;
 import com.qc.mycomic.util.StringUtil;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Request;
@@ -50,11 +51,6 @@ public class MiTui extends BaseSource {
     @Override
     public List<ComicInfo> getComicInfoList(String html) {
         JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
-            @Override
-            public void dealInfo(JsoupNode node) {
-
-            }
-
             @Override
             public ComicInfo dealElement(JsoupNode node, int elementId) {
                 String title = node.ownText("a.title");
@@ -109,32 +105,25 @@ public class MiTui extends BaseSource {
         comicInfo.initChapterInfoList(starter.startElements(html, "ul#chapter-list-1 li"));
     }
 
-    private static String[] servers = {
-            "https://res0818.imitui.com",
-            "https://imgimtmaa.1a3.net",
-            "https://imgimtmi.1a3.net",
-            "https://res.imitui.com",
-    };
-
     @Override
     public List<ImageInfo> getImageInfoList(String html, int chapterId) {
-        List<ImageInfo> list = new LinkedList<>();
+        List<ImageInfo> list = new ArrayList<>();
         String chapterImagesStr = StringUtil.match("chapterImages = \\[(.*?)\\]", html);
         String chapterPath = StringUtil.match("var chapterPath = \"(.*?)\";", html);
+        String[] urls = null;
         if (chapterImagesStr != null) {
-            String[] urls = chapterImagesStr.split(",");
-            String server = Codes.miTuiServer != null ? Codes.miTuiServer : servers[0];
-            int i = 0;
-            for (String url : urls) {
+            urls = chapterImagesStr.split(",");
+            String server = "https://res0818.imitui.com";
+            for (int i = 0; i < urls.length; i++) {
+                String url = urls[i];
                 url = url.replace("\"", "").replace("\\", "");
                 if (!url.startsWith("/")) {
                     url = "/" + chapterPath + url;
                 }
-                ImageInfo imageInfo = new ImageInfo(chapterId, i++, urls.length, server + url);
-                list.add(imageInfo);
+                urls[i] = server + url;
             }
         }
-        return list;
+        return ComicUtil.getImageInfoList(urls, chapterId);
     }
 
     @Override
@@ -191,11 +180,6 @@ public class MiTui extends BaseSource {
             return list;
         } else {
             JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
-                @Override
-                public void dealInfo(JsoupNode node) {
-
-                }
-
                 @Override
                 public ComicInfo dealElement(JsoupNode node, int elementId) {
                     String title = node.ownText("a.txtA");

@@ -40,8 +40,6 @@ public class Codes {
 
     public static int toStatus = NORMAL;
 
-    public static String miTuiServer = null;
-
     public static final int MI_TUI = 1;
 
     public static final String MI_TUI_STRING = "米推漫画";

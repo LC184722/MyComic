@@ -8,11 +8,12 @@ import com.qc.mycomic.model.ImageInfo;
 import com.qc.mycomic.model.MyMap;
 import com.qc.mycomic.model.Source;
 import com.qc.mycomic.util.Codes;
+import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DecryptUtil;
 import com.qc.mycomic.util.NetUtil;
 import com.qc.mycomic.util.StringUtil;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Request;
@@ -49,11 +50,6 @@ public class ManHuaFen extends BaseSource {
     @Override
     public List<ComicInfo> getComicInfoList(String html) {
         JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
-            @Override
-            public void dealInfo(JsoupNode node) {
-
-            }
-
             @Override
             public ComicInfo dealElement(JsoupNode node, int elementId) {
                 String title = node.ownText("a.title");
@@ -108,34 +104,27 @@ public class ManHuaFen extends BaseSource {
 
     @Override
     public List<ImageInfo> getImageInfoList(String html, int chapterId) {
-        List<ImageInfo> list = new LinkedList<>();
         String server = "https://img01.eshanyao.com/";
         String chapterImagesEncodeStr = StringUtil.match("var chapterImages = \"(.*?)\";", html);
         //var chapterPath = "images/comic/259/517692/";
         String chapterPath = StringUtil.match("var chapterPath = \"(.*?)\";", html);
         String chapterImagesStr = decrypt(chapterImagesEncodeStr);
+        List<String> urlList = null;
         if (chapterImagesStr != null) {
             chapterImagesStr = chapterImagesStr.replaceAll("\\\\", "");
-            String[] urls = StringUtil.matchArray("\"(.*?)\"", chapterImagesStr);
-            int i = 0;
-//            int length = -1;
-            for (String url : urls) {
-//                if (length == -1) {
-//                    length = url.length();
-//                } else if (Math.abs(length - url.length()) > 4) {
-//                    continue;
-//                }
+            urlList = StringUtil.matchList("\"(.*?)\"", chapterImagesStr);
+            for (int i = 0; i < urlList.size(); i++) {
+                String url = urlList.get(i);
                 if (url.startsWith("http:")) {
                     url = url.replace("%", "%25");
                     url = "https://img01.eshanyao.com/showImage2.php?url=" + url;
                 } else if (!url.startsWith("https:")) {
                     url = server + chapterPath + url;
                 }
-                ImageInfo imageInfo = new ImageInfo(chapterId, i++, urls.length, url);
-                list.add(imageInfo);
+                urlList.set(i, url);
             }
         }
-        return list;
+        return ComicUtil.getImageInfoList(urlList, chapterId);
     }
 
     @Override
@@ -192,11 +181,6 @@ public class ManHuaFen extends BaseSource {
             return list;
         } else {
             JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
-                @Override
-                public void dealInfo(JsoupNode node) {
-
-                }
-
                 @Override
                 public ComicInfo dealElement(JsoupNode node, int elementId) {
                     String title = node.ownText("a.txtA");

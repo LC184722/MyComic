@@ -15,7 +15,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import the.one.base.util.FileUtils;
@@ -177,7 +177,7 @@ public class DBUtil {
         } else {
             list = LitePal.where("status = ?", String.valueOf(status)).order(order).find(Comic.class);
         }
-        List<Comic> dList = new LinkedList<>();
+        List<Comic> dList = new ArrayList<>();
         for (Comic comic : list) {
             List<ComicInfo> infoList = findComicInfoListByTitle(comic.getTitle());
             for (ComicInfo info : infoList) {

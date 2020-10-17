@@ -20,7 +20,7 @@ import com.qc.mycomic.util.SourceUtil;
 import com.qc.mycomic.ui.view.SearchView;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import the.one.base.ui.fragment.BaseDataFragment;
@@ -122,7 +122,7 @@ public class SearchResultFragment extends BaseDataFragment<Comic> implements Sea
     private int count = 0;
     private int total = 100;
     private int size = SourceUtil.getSourceList().size();
-    private List<String> errorList = new LinkedList<>();
+    private List<String> errorList = new ArrayList<>();
 
     @Override
     public void searchComplete(List<Comic> comicList, String sourceName) {

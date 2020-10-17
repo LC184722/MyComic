@@ -1,7 +1,7 @@
 package com.qc.mycomic.model;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
@@ -73,7 +73,7 @@ public class MyMap<K, V> extends LinkedHashMap<K, V> {
     }
 
     public List<V> getValueList() {
-        List<V> list = new LinkedList<>();
+        List<V> list = new ArrayList<>();
         for (Entry<K, V> kvEntry : entrySet()) {
             list.add(kvEntry.getValue());
         }
@@ -81,7 +81,7 @@ public class MyMap<K, V> extends LinkedHashMap<K, V> {
     }
 
     public List<K> getKeyList() {
-        List<K> list = new LinkedList<>();
+        List<K> list = new ArrayList<>();
         for (Entry<K, V> kvEntry : entrySet()) {
             list.add(kvEntry.getKey());
         }

@@ -1,7 +1,7 @@
 package com.qc.mycomic.util;
 
 import java.nio.charset.Charset;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -110,13 +110,47 @@ public class StringUtil {
         try {
             Pattern pattern = Pattern.compile(regex);
             Matcher matcher = pattern.matcher(input);
-            List<String> list = new LinkedList<>();
+            List<String> list = new ArrayList<>();
             while (matcher.find()) {
                 list.add(Objects.requireNonNull(matcher.group(group)).trim());
             }
             String[] result = new String[list.size()];
             list.toArray(result);
             return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 匹配链表
+     *
+     * @param regex 正则
+     * @param input 输入字符串
+     * @return String[]
+     */
+    public static List<String> matchList(String regex, String input) {
+        return matchList(regex, input, 1);
+    }
+
+    /**
+     * 匹配链表
+     *
+     * @param regex 正则
+     * @param input 输入字符串
+     * @param group 分组
+     * @return String[]
+     */
+    public static List<String> matchList(String regex, String input, int group) {
+        try {
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(input);
+            List<String> list = new ArrayList<>();
+            while (matcher.find()) {
+                list.add(Objects.requireNonNull(matcher.group(group)).trim());
+            }
+            return list;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -169,7 +203,7 @@ public class StringUtil {
      * @return void
      */
     public static <T> void swapList(List<T> list) {
-        List<T> nList = new LinkedList<>();
+        List<T> nList = new ArrayList<>();
         for (T t : list) {
             nList.add(0, t);
         }

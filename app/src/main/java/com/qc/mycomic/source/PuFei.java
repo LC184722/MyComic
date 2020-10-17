@@ -8,11 +8,12 @@ import com.qc.mycomic.model.ImageInfo;
 import com.qc.mycomic.model.MyMap;
 import com.qc.mycomic.model.Source;
 import com.qc.mycomic.util.Codes;
+import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DecryptUtil;
 import com.qc.mycomic.util.NetUtil;
 import com.qc.mycomic.util.StringUtil;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Request;
@@ -49,11 +50,6 @@ public class PuFei extends BaseSource {
     @Override
     public List<ComicInfo> getComicInfoList(String html) {
         JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
-            @Override
-            public void dealInfo(JsoupNode node) {
-
-            }
-
             @Override
             public ComicInfo dealElement(JsoupNode node, int elementId) {
                 String title = node.ownText("h3");
@@ -92,18 +88,14 @@ public class PuFei extends BaseSource {
 
     @Override
     public List<ImageInfo> getImageInfoList(String html, int chapterId) {
-        List<ImageInfo> list = new LinkedList<>();
+        List<ImageInfo> list = new ArrayList<>();
         String encodeStr = StringUtil.match("cp=\"(.*?)\"", html);
+        String[] urls = null;
         if (encodeStr != null) {
-            String[] urls = decodeStr(encodeStr);
-            String prevUrl = "http://res.img.youzipi.net/";
-            int i = 0;
-            for (String url : urls) {
-                ImageInfo imageInfo = new ImageInfo(chapterId, i++, urls.length, prevUrl + url);
-                list.add(imageInfo);
-            }
+            urls = decodeStr(encodeStr);
         }
-        return list;
+        String prevUrl = "http://res.img.youzipi.net/";
+        return ComicUtil.getImageInfoList(urls, chapterId, prevUrl);
     }
 
     @Override

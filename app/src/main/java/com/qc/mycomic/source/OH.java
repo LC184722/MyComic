@@ -52,11 +52,6 @@ public class OH extends BaseSource {
     public List<ComicInfo> getComicInfoList(String html) {
         JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
             @Override
-            public void dealInfo(JsoupNode node) {
-
-            }
-
-            @Override
             public ComicInfo dealElement(JsoupNode node, int elementId) {
                 String title = node.ownText("h1 a");
                 String author = node.ownText("ul li.fed-col-xs6", 1);

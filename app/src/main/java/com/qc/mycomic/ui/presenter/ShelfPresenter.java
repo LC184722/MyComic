@@ -60,13 +60,7 @@ public class ShelfPresenter extends BasePresenter<ShelfView> {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                String html;
-                if (info.getSourceId() == Codes.PU_FEI) {
-                    byte[] b = response.body().bytes(); //获取数据的bytes
-                    html = new String(b, "GB2312"); //然后将其转为gb2312
-                } else {
-                    html = response.body().string();
-                }
+                String html = ComicUtil.getHtml(response, comic.getSourceId());
                 ShelfView view = getView();
                 AndroidSchedulers.mainThread().scheduleDirect(new Runnable() {
                     @Override

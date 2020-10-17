@@ -5,7 +5,7 @@ import android.util.Log;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,7 +14,7 @@ import java.util.List;
  * @date 2020/8/12 15:25
  * @ver 1.0
  */
-public abstract class JsoupStarter<T> {
+public class JsoupStarter<T> {
 
     private JsoupNode node = new JsoupNode();
 
@@ -22,23 +22,15 @@ public abstract class JsoupStarter<T> {
         return true;
     }
 
-    private int getId(int i, int size) {
-        if (isDESC()) {
-            return size - i - 1;
-        } else {
-            return i;
-        }
-    }
-
-    public void startInfo(String html) {
+    public final void startInfo(String html) {
         node.init(html);
         dealInfo(node);
     }
 
-    public List<T> startElements(String html, String cssQuery) {
+    public final List<T> startElements(String html, String cssQuery) {
         node.init(html);
         Elements elements = node.getElements(cssQuery);
-        List<T> list = new LinkedList<>();
+        List<T> list = new ArrayList<>();
         int i = 0;
         int size = elements.size();
         for (Element element : elements) {
@@ -56,8 +48,19 @@ public abstract class JsoupStarter<T> {
         return list;
     }
 
-    public abstract void dealInfo(JsoupNode node);
+    public void dealInfo(JsoupNode node) {
+    }
 
-    public abstract T dealElement(JsoupNode node, int elementId);
+    public T dealElement(JsoupNode node, int elementId) {
+        return null;
+    }
+
+    private int getId(int i, int size) {
+        if (isDESC()) {
+            return size - i - 1;
+        } else {
+            return i;
+        }
+    }
 
 }

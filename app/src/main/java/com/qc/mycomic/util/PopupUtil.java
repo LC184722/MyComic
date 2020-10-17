@@ -8,7 +8,7 @@ import com.qc.mycomic.model.MyMap;
 import com.qc.mycomic.setting.Setting;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +24,7 @@ import the.one.base.util.QMUIBottomSheetUtil;
 public class PopupUtil {
 
     public static List<PopupItem> getPopupItemList(MyMap<?, String> myMap) {
-        List<PopupItem> itemList = new LinkedList<>();
+        List<PopupItem> itemList = new ArrayList<>();
         for (Map.Entry<?, String> entry : myMap.entrySet()) {
             itemList.add(new PopupItem(entry.getValue()));
         }

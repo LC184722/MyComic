@@ -15,8 +15,8 @@ import com.qc.mycomic.util.StringUtil;
 
 import org.jsoup.nodes.Element;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 import okhttp3.Request;
@@ -53,11 +53,6 @@ public class TengXun extends BaseSource {
     @Override
     public List<ComicInfo> getComicInfoList(String html) {
         JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
-            @Override
-            public void dealInfo(JsoupNode node) {
-
-            }
-
             @Override
             public ComicInfo dealElement(JsoupNode node, int elementId) {
                 String title = node.title("a");
@@ -118,15 +113,15 @@ public class TengXun extends BaseSource {
             nonce = DecryptUtil.exeJsCode(nonce);
         }
         String data = DecryptUtil.exeJsFunction(getJsCode(), "decode", raw, nonce);
-        String[] urls = null;
+        List<String> urlList = null;
         if (data != null) {
             data = DecryptUtil.decryptBase64(data);
             if (data != null) {
                 data = data.replaceAll("\\\\", "");
-                urls = StringUtil.matchArray("pid(.*?)\"url\":\"(.*?)\"", data, 2);
+                urlList = StringUtil.matchList("pid(.*?)\"url\":\"(.*?)\"", data, 2);
             }
         }
-        return ComicUtil.getImageInfoList(urls, chapterId);
+        return ComicUtil.getImageInfoList(urlList, chapterId);
     }
 
     private String getJsCode() {
@@ -177,7 +172,7 @@ public class TengXun extends BaseSource {
 
     @Override
     public List<ComicInfo> getRankComicInfoList(String html) {
-        List<ComicInfo> list = new LinkedList<>();
+        List<ComicInfo> list = new ArrayList<>();
         JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
             @Override
             public void dealInfo(JsoupNode node) {
@@ -218,11 +213,6 @@ public class TengXun extends BaseSource {
             return list;
         } else {
             return new JsoupStarter<ComicInfo>() {
-                @Override
-                public void dealInfo(JsoupNode node) {
-
-                }
-
                 @Override
                 public ComicInfo dealElement(JsoupNode node, int elementId) {
                     String title = node.title("h3.ret-works-title a");

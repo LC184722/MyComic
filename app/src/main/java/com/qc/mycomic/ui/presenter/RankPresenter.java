@@ -6,6 +6,7 @@ import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ComicInfo;
 import com.qc.mycomic.model.Source;
 import com.qc.mycomic.util.Codes;
+import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.NetUtil;
 import com.qc.mycomic.ui.view.RankView;
 
@@ -61,13 +62,7 @@ public class RankPresenter extends BasePresenter<RankView> {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 Log.i(TAG, "load: " + response.toString());
-                String html;
-                if (source.getSourceId() == Codes.PU_FEI) {
-                    byte[] b = response.body().bytes(); //获取数据的bytes
-                    html = new String(b, "GB2312"); //然后将其转为gb2312
-                } else {
-                    html = response.body().string();
-                }
+                String html = ComicUtil.getHtml(response, source.getSourceId());
                 map.put(request.url().toString(), html);
                 RankView view = getView();
                 AndroidSchedulers.mainThread().scheduleDirect(() -> dealHtml(view, html));

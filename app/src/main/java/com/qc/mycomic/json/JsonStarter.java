@@ -3,7 +3,7 @@ package com.qc.mycomic.json;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -51,7 +51,7 @@ public abstract class JsonStarter<T> {
                 jsonArray = node.jsonArray(condition);
             }
         }
-        List<T> list = new LinkedList<>();
+        List<T> list = new ArrayList<>();
         if (jsonArray != null) {
             total = jsonArray.size();
             cur = 0;

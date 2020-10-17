@@ -8,7 +8,7 @@ import com.qc.mycomic.model.ImageInfo;
 import com.qc.mycomic.util.RestartUtil;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import the.one.base.ui.fragment.BaseImageSnapFragment;
@@ -32,7 +32,7 @@ public class ReaderDetailFragment extends BaseImageSnapFragment<ImageInfo> {
 
     public ReaderDetailFragment(ImageInfo imageInfo) {
         this.imageInfo = imageInfo;
-        this.imageInfoList = new LinkedList<>();
+        this.imageInfoList = new ArrayList<>();
         this.imageInfoList.add(imageInfo);
     }
 

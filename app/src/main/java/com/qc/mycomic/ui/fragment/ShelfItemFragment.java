@@ -27,8 +27,8 @@ import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 import the.one.base.model.PopupItem;
@@ -211,7 +211,7 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
 
     private int count = 0;
     private int total = 100;
-    private List<String> errorList = new LinkedList<>();
+    private List<String> errorList = new ArrayList<>();
 
     @Override
     public void checkUpdateComplete(String title) {
@@ -255,7 +255,7 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
         return "正在检查更新 " + getLoadProcess();
     }
 
-    private List<Comic> sList = new LinkedList<>();
+    private List<Comic> sList = new ArrayList<>();
 
     public void screen(boolean isScreen) {
         if (isScreen) {

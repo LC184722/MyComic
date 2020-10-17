@@ -344,20 +344,20 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
 //        }
     }
 
-    class MyJavaScriptInterface {
-        @JavascriptInterface
-        @SuppressWarnings("unused")
-        public void processHTML(String html) {
-            // 注意啦，此处就是执行了js以后 的网页源码
-            Log.i(TAG, "processHTML: " + html.length());
-            Document document = Jsoup.parse(html);
-            String src = document.selectFirst("img#image").attr("src");
-            if (src != null) {
-                Codes.miTuiServer = src.substring(0, src.indexOf('/', src.indexOf('.')));
-            }
-            Log.i(TAG, "processHTML: server = " + Codes.miTuiServer);
-        }
-    }
+//    class MyJavaScriptInterface {
+//        @JavascriptInterface
+//        @SuppressWarnings("unused")
+//        public void processHTML(String html) {
+//            // 注意啦，此处就是执行了js以后 的网页源码
+//            Log.i(TAG, "processHTML: " + html.length());
+//            Document document = Jsoup.parse(html);
+//            String src = document.selectFirst("img#image").attr("src");
+//            if (src != null) {
+//                Codes.miTuiServer = src.substring(0, src.indexOf('/', src.indexOf('.')));
+//            }
+//            Log.i(TAG, "processHTML: server = " + Codes.miTuiServer);
+//        }
+//    }
 
     @Override
     public void onDestroy() {

@@ -13,7 +13,7 @@ import com.qc.mycomic.util.NetUtil;
 import com.qc.mycomic.util.StringUtil;
 
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Call;
@@ -53,12 +53,7 @@ public class HtmlTestUtil extends BaseSource {
 @Override
     public List<ComicInfo> getComicInfoList(String html) {
         JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
-            @Override
-            public void dealInfo(JsoupNode node) {
-
-            }
-
-            @Override
+@Override
             public ComicInfo dealElement(JsoupNode node, int elementId) {
                 String title = node.ownText("a.title");
                 String author = node.ownText("p.txtItme");
@@ -112,7 +107,7 @@ public class HtmlTestUtil extends BaseSource {
 
     @Override
     public List<ImageInfo> getImageInfoList(String html, int chapterId) {
-        List<ImageInfo> list = new LinkedList<>();
+        List<ImageInfo> list = new ArrayList<>();
         String server = "https://img01.eshanyao.com/";
         String chapterImagesEncodeStr = StringUtil.match("var chapterImages = \"(.*?)\";", html);
         //var chapterPath = "images/comic/259/517692/";
@@ -195,12 +190,7 @@ public class HtmlTestUtil extends BaseSource {
             return list;
         } else {
             JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
-                @Override
-                public void dealInfo(JsoupNode node) {
-
-                }
-
-                @Override
+    @Override
                 public ComicInfo dealElement(JsoupNode node, int elementId) {
                     String title = node.ownText("a.txtA");
                     String author = node.ownText("span.info a");

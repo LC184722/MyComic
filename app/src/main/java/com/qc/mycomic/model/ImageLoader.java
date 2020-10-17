@@ -13,9 +13,9 @@ public interface ImageLoader {
     /**
      * 通过章节链接获得图片信息
      *
-     * @param view
-     * @param chapterUrl
-     * @param chapterId
+     * @param view       view
+     * @param chapterUrl chapterUrl
+     * @param chapterId  chapterId
      * @return void
      */
     void loadImageInfoList(ReaderView view, String chapterUrl, int chapterId);
