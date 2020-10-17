@@ -136,6 +136,42 @@ public class ManHuaTai extends BaseSource {
         map.put("付费榜", "https://m.manhuatai.com/top/charge.html");
         map.put("完结榜", "https://m.manhuatai.com/top/finish.html");
         map.put("连载榜", "https://m.manhuatai.com/top/serialize.html");
+        map.put("热血", "https://m.manhuatai.com/sort/rexue.html");
+        map.put("机战", "https://m.manhuatai.com/sort/jizhan.html");
+        map.put("运动", "https://m.manhuatai.com/sort/yundong.html");
+        map.put("推理", "https://m.manhuatai.com/sort/tuili.html");
+        map.put("冒险", "https://m.manhuatai.com/sort/maoxian.html");
+        map.put("耽美", "https://m.manhuatai.com/sort/danmei.html");
+        map.put("百合", "https://m.manhuatai.com/sort/baihe.html");
+        map.put("搞笑", "https://m.manhuatai.com/sort/gaoxiao.html");
+        map.put("战争", "https://m.manhuatai.com/sort/zhanzheng.html");
+        map.put("神魔", "https://m.manhuatai.com/sort/shenmo.html");
+        map.put("忍者", "https://m.manhuatai.com/sort/renzhe.html");
+        map.put("竞技", "https://m.manhuatai.com/sort/jingji.html");
+        map.put("悬疑", "https://m.manhuatai.com/sort/xuanyi.html");
+        map.put("社会", "https://m.manhuatai.com/sort/shehui.html");
+        map.put("恋爱", "https://m.manhuatai.com/sort/lianai.html");
+        map.put("宠物", "https://m.manhuatai.com/sort/chongwu.html");
+        map.put("吸血", "https://m.manhuatai.com/sort/xixue.html");
+        map.put("萝莉", "https://m.manhuatai.com/sort/luoli.html");
+        map.put("后宫", "https://m.manhuatai.com/sort/hougong.html");
+        map.put("御姐", "https://m.manhuatai.com/sort/yujie.html");
+        map.put("霸总", "https://m.manhuatai.com/sort/bazong.html");
+        map.put("玄幻", "https://m.manhuatai.com/sort/xuanhuan.html");
+        map.put("古风", "https://m.manhuatai.com/sort/gufeng.html");
+        map.put("历史", "https://m.manhuatai.com/sort/lishi.html");
+        map.put("漫改", "https://m.manhuatai.com/sort/mangai.html");
+        map.put("游戏", "https://m.manhuatai.com/sort/youxi.html");
+        map.put("穿越", "https://m.manhuatai.com/sort/chuanyue.html");
+        map.put("恐怖", "https://m.manhuatai.com/sort/kongbu.html");
+        map.put("真人", "https://m.manhuatai.com/sort/zhenren.html");
+        map.put("科幻", "https://m.manhuatai.com/sort/kehuan.html");
+        map.put("都市", "https://m.manhuatai.com/sort/dushi.html");
+        map.put("武侠", "https://m.manhuatai.com/sort/wuxia.html");
+        map.put("修真", "https://m.manhuatai.com/sort/xiuzhen.html");
+        map.put("生活", "https://m.manhuatai.com/sort/shenghuo.html");
+        map.put("动作", "https://m.manhuatai.com/sort/dongzuo.html");
+        map.put("防疫", "https://m.manhuatai.com/sort/fangyi.html");
         return map;
     }
 
@@ -172,22 +208,21 @@ public class ManHuaTai extends BaseSource {
         };
         starter.startInfo(html);
         list.addAll(starter.startElements(html, "ul.comic-list li.list"));
-        return list;
-//        if (!list.isEmpty()) {
-//            return list;
-//        } else {
-//            return new JsoupStarter<ComicInfo>() {
-//                @Override
-//                public ComicInfo dealElement(JsoupNode node, int elementId) {
-//                    String title = node.title("h3.ret-works-title a");
-//                    String author = node.title("p.ret-works-author");
-//                    String updateTime = null;
-//                    String imgUrl = node.attr("img", "data-original");
-//                    String detailUrl = getIndex() + node.href("a");
-//                    return new ComicInfo(getSourceId(), title, author, detailUrl, imgUrl, updateTime);
-//                }
-//            }.startElements(html, "ul.clearfix li");
-//        }
+        if (!list.isEmpty()) {
+            return list;
+        } else {
+            return new JsoupStarter<ComicInfo>() {
+                @Override
+                public ComicInfo dealElement(JsoupNode node, int elementId) {
+                    String title = node.ownText("p.title");
+                    String author = null;
+                    String updateTime = node.ownText("span.chapter");
+                    String imgUrl = "https:" + node.attr("img.img", "data-src");
+                    String detailUrl = getIndex() + node.href("a");
+                    return new ComicInfo(getSourceId(), title, author, detailUrl, imgUrl, updateTime);
+                }
+            }.startElements(html, "ul.comic-sort li");
+        }
     }
 
 }
