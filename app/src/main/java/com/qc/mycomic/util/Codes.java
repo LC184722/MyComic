@@ -64,4 +64,8 @@ public class Codes {
 
     public static final String OH_STRING = "oh漫画";
 
+    public static final int MAN_HUA_TAI = 7;
+
+    public static final String MAN_HUA_TAI_STRING = "漫画台";
+
 }

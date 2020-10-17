@@ -1,4 +1,4 @@
-package com.qc.mycomic.test;
+package com.qc.mycomic.util.test;
 
 import com.qc.mycomic.jsoup.JsoupNode;
 import com.qc.mycomic.jsoup.JsoupStarter;

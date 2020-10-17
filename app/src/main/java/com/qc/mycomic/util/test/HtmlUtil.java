@@ -1,5 +1,6 @@
-package com.qc.mycomic.test;
+package com.qc.mycomic.util.test;
 
+import com.qc.mycomic.model.ComicInfo;
 import com.qc.mycomic.model.ImageInfo;
 import com.qc.mycomic.model.MyMap;
 import com.qc.mycomic.model.Source;
@@ -23,22 +24,6 @@ import java.util.regex.Pattern;
  * @ver 1.0
  */
 public class HtmlUtil {
-
-    public static String getSearchHtml() {
-        return "";
-    }
-
-    public static String getDetailHtml() {
-        return "";
-    }
-
-    public static String getImageHtml() {
-        return "";
-    }
-
-    public static String getTestHtml() {
-        return "";
-    }
 
     public static String getHtmlByFile() {
         try {
@@ -162,12 +147,68 @@ public class HtmlUtil {
         return unicodeStr.replace("\\", "").trim();
     }
 
+    public static void getComicInfoListTest(Source source, String fileName) {
+        String html = HtmlUtil.getHtmlByFile(fileName);
+        List<ComicInfo> comicInfoList;
+        comicInfoList = source.getComicInfoList(html);
+        if (comicInfoList != null) {
+            System.out.println("comicInfoList.size() = " + comicInfoList.size());
+            for (ComicInfo info : comicInfoList) {
+                System.out.println("info.getTitle() = " + info.getTitle());
+                System.out.println("info.getAuthor() = " + info.getAuthor());
+                System.out.println("info.getUpdateTime() = " + info.getUpdateTime());
+                System.out.println("info.getImgUrl() = " + info.getImgUrl());
+                System.out.println("info.getDetailUrl() = " + info.getDetailUrl());
+                System.out.println();
+            }
+        } else {
+            System.out.println("comicInfoList = null");
+        }
+    }
+
+    public static void setComicDetailTest(Source source, String fileName) {
+        String html = HtmlUtil.getHtmlByFile(fileName);
+        ComicInfo info = new ComicInfo();
+        source.setComicDetail(info, html);
+        System.out.println("info.getAuthor() = " + info.getAuthor());
+        System.out.println("info.getUpdateTime() = " + info.getUpdateTime());
+        System.out.println("info.getUpdateChapter() = " + info.getUpdateChapter());
+        System.out.println("info.getUpdateStatus() = " + info.getUpdateStatus());
+        System.out.println("info.getIntro() = " + info.getIntro());
+        System.out.println("info.getChapterInfoList().size() = " + info.getChapterInfoList().size());
+        int size = info.getChapterInfoList().size();
+        if (size > 0) {
+            int first = 0;
+            int last = size - 1;
+            System.out.println("last  chapter = " + info.getChapterInfoList().get(first));
+            System.out.println(".......................................");
+            System.out.println("first chapter = " + info.getChapterInfoList().get(last));
+        }
+    }
+
     public static void getImageInfoListTest(Source source, String fileName) {
         String html = HtmlUtil.getHtmlByFile(fileName);
         List<ImageInfo> imageInfoList = source.getImageInfoList(html, 100);
         System.out.println("imageInfoList.size() = " + imageInfoList.size());
         for (ImageInfo imageInfo : imageInfoList) {
             System.out.println("imageInfo = " + imageInfo.getUrl());
+        }
+    }
+
+    public static void getRankComicInfoListTest(Source source, String fileName) {
+        String html = HtmlUtil.getHtmlByFile(fileName);
+        List<ComicInfo> comicInfoList = source.getRankComicInfoList(html);
+        System.out.println("comicInfoList.size() = " + comicInfoList.size());
+        int i = 0;
+        for (ComicInfo info : comicInfoList) {
+            System.out.println("--------------------  " + (++i) + "  ----------------------");
+            System.out.println("info.getTitle() = " + info.getTitle());
+            System.out.println("info.getAuthor() = " + info.getAuthor());
+            System.out.println("info.getUpdateTime() = " + info.getUpdateTime());
+            System.out.println("info.getImgUrl() = " + info.getImgUrl());
+            System.out.println("info.getDetailUrl() = " + info.getDetailUrl());
+            System.out.println("----------------------------------------------");
+            System.out.println();
         }
     }
 

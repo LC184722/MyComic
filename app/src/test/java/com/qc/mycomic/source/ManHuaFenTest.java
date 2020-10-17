@@ -1,11 +1,9 @@
 package com.qc.mycomic.source;
 
 import com.qc.mycomic.model.Source;
-import com.qc.mycomic.test.HtmlUtil;
+import com.qc.mycomic.util.test.HtmlUtil;
 
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * @author LuQiChuang
