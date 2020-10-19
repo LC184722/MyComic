@@ -5,8 +5,8 @@ MyComic安卓漫画阅读器。
 
 #### 软件架构
 
-[Tencent / QMUI_Android](https://github.com/Tencent/QMUI_Android "Tencent / QMUI_Android") : 腾讯UI框架
-[Theone / TheBaseAndroid](https://gitee.com/theoneee/TheBase "Theone / TheBaseAndroid") : 主要以QMUI封装的一个快速开发框架。
+1.  [Tencent / QMUI_Android](https://github.com/Tencent/QMUI_Android "Tencent / QMUI_Android") : 腾讯UI框架
+2.  [Theone / TheBaseAndroid](https://gitee.com/theoneee/TheBase "Theone / TheBaseAndroid") : 主要以QMUI封装的一个快速开发框架。
 
 #### 软件预览
 
