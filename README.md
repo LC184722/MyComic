@@ -5,7 +5,7 @@ MyComic安卓漫画阅读器。
 
 #### 软件架构
 
-1.  [Tencent / QMUI_Android](https://github.com/Tencent/QMUI_Android "Tencent / QMUI_Android") : 腾讯UI框架
+1.  [Tencent / QMUI_Android](https://github.com/Tencent/QMUI_Android "Tencent / QMUI_Android") : 腾讯UI框架。
 2.  [Theone / TheBaseAndroid](https://gitee.com/theoneee/TheBase "Theone / TheBaseAndroid") : 主要以QMUI封装的一个快速开发框架。
 
 #### 软件预览
@@ -15,10 +15,11 @@ MyComic安卓漫画阅读器。
 |<img src="https://gitee.com/luqichuang/MyComic/raw/master/app/src/main/assets/4.jpg" width="300" alt="搜索页面"/>|<img src="https://gitee.com/luqichuang/MyComic/raw/master/app/src/main/assets/5.jpg" width="300" alt="个人中心"/>|   |
 
 #### 使用说明
-1.  画架页可以检查更新、长按漫画可以执行切换漫画源、查看详情、删除等操作
-2.  详情页可以切换漫画源、阅读最新章节、继续阅读等
-3.  阅读页面长按加载失败图片可以重新加载、长按已显示图片可以单独缩放
-4.  个人中心可以检查更新，获得最新软件
+1.  画架页可以检查更新、长按漫画可以执行切换漫画源、查看详情、删除等操作。
+2.  详情页可以切换漫画源、阅读最新章节、继续阅读等。
+3.  阅读页面长按加载失败图片可以重新加载，长按已显示图片可以单独缩放。
+4.  个人中心可以检查更新，获得最新软件。
+5.  前往[下载最新APK](https://gitee.com/luqichuang/MyComic/releases "下载最新APK")。
 
 #### 漫画源
 

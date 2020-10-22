@@ -6,7 +6,7 @@
 
     <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout
         android:layout_width="match_parent"
-        android:layout_height="176dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:padding="8dp"
         app:qmui_borderColor="@color/lightGray"
@@ -17,14 +17,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp">
-
-            <com.qmuiteam.qmui.widget.QMUIRadiusImageView
-                android:id="@+id/qivImg"
-                android:layout_width="120dp"
-                android:layout_height="160dp"
-                android:background="@drawable/no_image"
-                app:qmui_border_width="0dp"
-                app:qmui_corner_radius="@dimen/dp_10" />
 
             <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout
                 android:layout_width="26dp"
@@ -48,14 +40,15 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tvTitle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:layout_marginBottom="5dp"
+                android:gravity="start|center"
                 android:text="标题"
                 android:textStyle="bold" />
 
@@ -64,22 +57,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
+                android:layout_weight="1"
                 android:text="作者" />
 
-            <RelativeLayout
+            <TextView
+                android:id="@+id/tvUpdateTime"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/tvUpdateTime"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginBottom="0dp"
-                    android:gravity="end"
-                    android:text="更新：NULL" />
-            </RelativeLayout>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:text="更新时间：未知" />
 
         </LinearLayout>
 
