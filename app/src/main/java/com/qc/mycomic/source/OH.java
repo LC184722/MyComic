@@ -39,12 +39,12 @@ public class OH extends BaseSource {
 
     @Override
     public String getIndex() {
-        return "https://www.ohmanhua.com";
+        return "https://www.cocomanhua.com/";
     }
 
     @Override
     public Request getSearchRequest(String searchString) {
-        searchString = "https://www.ohmanhua.com/search?searchString=" + searchString;
+        searchString = "https://www.cocomanhua.com/search?searchString=" + searchString;
         return NetUtil.getRequest(searchString);
     }
 
@@ -118,43 +118,43 @@ public class OH extends BaseSource {
     @Override
     public MyMap<String, String> getRankMap() {
         MyMap<String, String> map = new MyMap<>();
-        map.put("月点击", "https://www.ohmanhua.com/show?orderBy=monthlyCount&page=1");
-        map.put("周点击", "https://www.ohmanhua.com/show?orderBy=weeklyCount&page=1");
-        map.put("日点击", "https://www.ohmanhua.com/show?orderBy=dailyCount&page=1");
-        map.put("收录日", "https://www.ohmanhua.com/show?orderBy=create&page=1");
-        map.put("更新日", "https://www.ohmanhua.com/show?orderBy=update&page=1");
-        map.put("连载中", "https://www.ohmanhua.com/show?orderBy=weeklyCount&status=1&page=1");
-        map.put("已完结", "https://www.ohmanhua.com/show?orderBy=weeklyCount&status=2&page=1");
-        map.put("玄幻", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10024&page=1");
-        map.put("热血", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10023&page=1");
-        map.put("恋爱", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10126&page=1");
-        map.put("都市", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10124&page=1");
-        map.put("古风", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10143&page=1");
-        map.put("冒险", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10210&page=1");
-        map.put("穿越", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10129&page=1");
-        map.put("爆笑", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10201&page=1");
-        map.put("搞笑", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10122&page=1");
-        map.put("奇幻", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10242&page=1");
-        map.put("校园", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10131&page=1");
-        map.put("少年", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10321&page=1");
-        map.put("修真", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10133&page=1");
-        map.put("霸总", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10127&page=1");
-        map.put("其他", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10560&page=1");
-        map.put("动作", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10125&page=1");
-        map.put("生活", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10142&page=1");
-        map.put("少女", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10301&page=1");
-        map.put("后宫", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10138&page=1");
-        map.put("少男", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10641&page=1");
-        map.put("逆转", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10702&page=1");
-        map.put("武侠", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10139&page=1");
-        map.put("重生", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10461&page=1");
-        map.put("科幻", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10181&page=1");
-        map.put("总裁", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10306&page=1");
-        map.put("剧情", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10480&page=1");
-        map.put("大女主", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10706&page=1");
-        map.put("悬疑", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10183&page=1");
-        map.put("魔幻", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10227&page=1");
-        map.put("恐怖", "https://www.ohmanhua.com/show?orderBy=weeklyCount&mainCategoryId=10185&page=1");
+        map.put("月点击", "https://www.cocomanhua.com/show?orderBy=monthlyCount&page=1");
+        map.put("周点击", "https://www.cocomanhua.com/show?orderBy=weeklyCount&page=1");
+        map.put("日点击", "https://www.cocomanhua.com/show?orderBy=dailyCount&page=1");
+        map.put("收录日", "https://www.cocomanhua.com/show?orderBy=create&page=1");
+        map.put("更新日", "https://www.cocomanhua.com/show?orderBy=update&page=1");
+        map.put("连载中", "https://www.cocomanhua.com/show?orderBy=weeklyCount&status=1&page=1");
+        map.put("已完结", "https://www.cocomanhua.com/show?orderBy=weeklyCount&status=2&page=1");
+        map.put("玄幻", "https://www.cocomanhua.com/show?orderBy=weeklyCount&mainCategoryId=10024&page=1");
+        map.put("热血", "https://www.cocomanhua.com/show?orderBy=weeklyCount&mainCategoryId=10023&page=1");
+        map.put("恋爱", "https://www.cocomanhua.com/show?orderBy=weeklyCount&mainCategoryId=10126&page=1");
+        map.put("都市", "https://www.cocomanhua.com/show?orderBy=weeklyCount&mainCategoryId=10124&page=1");
+        map.put("古风", "https://www.cocomanhua.com/show?orderBy=weeklyCount&mainCategoryId=10143&page=1");
+        map.put("冒险", "https://www.cocomanhua.com/show?orderBy=weeklyCount&mainCategoryId=10210&page=1");
+        map.put("穿越", "https://www.cocomanhua.com/show?orderBy=weeklyCount&mainCategoryId=10129&page=1");
+        map.put("爆笑", "https://www.cocomanhua.com/show?orderBy=weeklyCount&mainCategoryId=10201&page=1");
+        map.put("搞笑", "https://www.cocomanhua.com/show?orderBy=weeklyCount&mainCategoryId=10122&page=1");
+        map.put("奇幻", "https://www.cocomanhua.com/show?orderBy=weeklyCount&mainCategoryId=10242&page=1");
+        map.put("校园", "https://www.cocomanhua.com/show?orderBy=weeklyCount&mainCategoryId=10131&page=1");
+        map.put("少年", "https://www.cocomanhua.com/show?orderBy=weeklyCount&mainCategoryId=10321&page=1");
+        map.put("修真", "https://www.cocomanhua.com/show?orderBy=weeklyCount&mainCategoryId=10133&page=1");
+        map.put("霸总", "https://www.cocomanhua.com/show?orderBy=weeklyCount&mainCategoryId=10127&page=1");
+        map.put("其他", "https://www.cocomanhua.com/show?orderBy=weeklyCount&mainCategoryId=10560&page=1");
+        map.put("动作", "https://www.cocomanhua.com/show?orderBy=weeklyCount&mainCategoryId=10125&page=1");
+        map.put("生活", "https://www.cocomanhua.com/show?orderBy=weeklyCount&mainCategoryId=10142&page=1");
+        map.put("少女", "https://www.cocomanhua.com/show?orderBy=weeklyCount&mainCategoryId=10301&page=1");
+        map.put("后宫", "https://www.cocomanhua.com/show?orderBy=weeklyCount&mainCategoryId=10138&page=1");
+        map.put("少男", "https://www.cocomanhua.com/show?orderBy=weeklyCount&mainCategoryId=10641&page=1");
+        map.put("逆转", "https://www.cocomanhua.com/show?orderBy=weeklyCount&mainCategoryId=10702&page=1");
+        map.put("武侠", "https://www.cocomanhua.com/show?orderBy=weeklyCount&mainCategoryId=10139&page=1");
+        map.put("重生", "https://www.cocomanhua.com/show?orderBy=weeklyCount&mainCategoryId=10461&page=1");
+        map.put("科幻", "https://www.cocomanhua.com/show?orderBy=weeklyCount&mainCategoryId=10181&page=1");
+        map.put("总裁", "https://www.cocomanhua.com/show?orderBy=weeklyCount&mainCategoryId=10306&page=1");
+        map.put("剧情", "https://www.cocomanhua.com/show?orderBy=weeklyCount&mainCategoryId=10480&page=1");
+        map.put("大女主", "https://www.cocomanhua.com/show?orderBy=weeklyCount&mainCategoryId=10706&page=1");
+        map.put("悬疑", "https://www.cocomanhua.com/show?orderBy=weeklyCount&mainCategoryId=10183&page=1");
+        map.put("魔幻", "https://www.cocomanhua.com/show?orderBy=weeklyCount&mainCategoryId=10227&page=1");
+        map.put("恐怖", "https://www.cocomanhua.com/show?orderBy=weeklyCount&mainCategoryId=10185&page=1");
         return map;
     }
 
