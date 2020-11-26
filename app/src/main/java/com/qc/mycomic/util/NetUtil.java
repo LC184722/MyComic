@@ -2,6 +2,8 @@ package com.qc.mycomic.util;
 
 import android.util.Log;
 
+import com.qc.mycomic.R;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -12,6 +14,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Headers;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -77,6 +80,34 @@ public class NetUtil {
         Headers headers = builder.build();
         return new Request.Builder().url(url).headers(headers).method("GET", null).build();
     }
+
+    /**
+     * 发送post请求
+     *
+     * @param url         url
+     * @param userAgent   userAgent
+     * @param formDataMap formDataMap
+     * @return Request
+     */
+    public static Request postRequest(String url, String userAgent, Map<String, String> formDataMap) {
+        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        for (Map.Entry<String, String> entry : formDataMap.entrySet()) {
+            builder.addFormDataPart(entry.getKey(), entry.getValue());
+        }
+        return new Request.Builder().addHeader("User-Agent", userAgent).url(url).post(builder.build()).build();
+    }
+
+//    public static Request postRequest(String url, Map<String, String> formDataMap, Map<String, String> headerMap) {
+//        Request.Builder requestBuilder = new Request.Builder();
+//        for (Map.Entry<String, String> entry : headerMap.entrySet()) {
+//            requestBuilder.addHeader(entry.getKey(), entry.getValue());
+//        }
+//        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+//        for (Map.Entry<String, String> entry : formDataMap.entrySet()) {
+//            builder.addFormDataPart(entry.getKey(), entry.getValue());
+//        }
+//        return requestBuilder.url(url).post(builder.build()).build();
+//    }
 
     /**
      * 使用特定request开始连接网络

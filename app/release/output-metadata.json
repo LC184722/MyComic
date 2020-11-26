@@ -1,20 +1,18 @@
 {
-  "version": 1,
+  "version": 2,
   "artifactType": {
     "type": "APK",
     "kind": "Directory"
   },
   "applicationId": "com.qc.mycomic",
-  "variantName": "release",
+  "variantName": "processReleaseResources",
   "elements": [
     {
       "type": "SINGLE",
       "filters": [],
-      "properties": [],
-      "versionCode": 50,
-      "versionName": "v1.0.20",
-      "enabled": true,
-      "outputFile": "MyComic-v1.0.20.apk"
+      "versionCode": 51,
+      "versionName": "v1.0.21",
+      "outputFile": "MyComic-v1.0.21.apk"
     }
   ]
 }

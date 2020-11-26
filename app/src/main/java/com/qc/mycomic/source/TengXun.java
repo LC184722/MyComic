@@ -6,7 +6,6 @@ import com.qc.mycomic.model.ChapterInfo;
 import com.qc.mycomic.model.ComicInfo;
 import com.qc.mycomic.model.ImageInfo;
 import com.qc.mycomic.model.MyMap;
-import com.qc.mycomic.model.Source;
 import com.qc.mycomic.util.Codes;
 import com.qc.mycomic.util.DecryptUtil;
 import com.qc.mycomic.util.ComicUtil;
@@ -54,7 +53,7 @@ public class TengXun extends BaseSource {
     public List<ComicInfo> getComicInfoList(String html) {
         JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
             @Override
-            public ComicInfo dealElement(JsoupNode node, int elementId) {
+            protected ComicInfo dealElement(JsoupNode node, int elementId) {
                 String title = node.title("a");
                 String author = null;
                 String updateTime = null;
@@ -71,12 +70,12 @@ public class TengXun extends BaseSource {
         JsoupStarter<ChapterInfo> starter = new JsoupStarter<ChapterInfo>() {
 
             @Override
-            public boolean isDESC() {
+            protected boolean isDESC() {
                 return false;
             }
 
             @Override
-            public void dealInfo(JsoupNode node) {
+            protected void dealInfo(JsoupNode node) {
                 String author = node.ownText("div.works-intro span.first em");
                 String intro = node.ownText("div.works-intro p.works-intro-short");
                 String updateStatus = node.ownText("div.works-intro label.works-intro-status");
@@ -85,7 +84,7 @@ public class TengXun extends BaseSource {
             }
 
             @Override
-            public ChapterInfo dealElement(JsoupNode node, int elementId) {
+            protected ChapterInfo dealElement(JsoupNode node, int elementId) {
                 String title = node.ownText("a");
                 String chapterUrl = getIndex() + node.href("a");
                 return new ChapterInfo(elementId, title, chapterUrl);
@@ -175,7 +174,7 @@ public class TengXun extends BaseSource {
         List<ComicInfo> list = new ArrayList<>();
         JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
             @Override
-            public void dealInfo(JsoupNode node) {
+            protected void dealInfo(JsoupNode node) {
                 node.addElement("div.top3-box-item1");
                 node.addElement("div.top3-box-item2");
                 node.addElement("div.top3-box-item3");
@@ -192,7 +191,7 @@ public class TengXun extends BaseSource {
             }
 
             @Override
-            public ComicInfo dealElement(JsoupNode node, int elementId) {
+            protected ComicInfo dealElement(JsoupNode node, int elementId) {
                 String title = node.ownText("strong.comic-title");
                 String author = node.ownText("small.comic-update");
                 String updateTime = null;
@@ -214,7 +213,7 @@ public class TengXun extends BaseSource {
         } else {
             return new JsoupStarter<ComicInfo>() {
                 @Override
-                public ComicInfo dealElement(JsoupNode node, int elementId) {
+                protected ComicInfo dealElement(JsoupNode node, int elementId) {
                     String title = node.title("h3.ret-works-title a");
                     String author = node.title("p.ret-works-author");
                     String updateTime = null;

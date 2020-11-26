@@ -1,14 +1,11 @@
 package com.qc.mycomic.source;
 
-import android.util.Log;
-
 import com.qc.mycomic.jsoup.JsoupNode;
 import com.qc.mycomic.jsoup.JsoupStarter;
 import com.qc.mycomic.model.ChapterInfo;
 import com.qc.mycomic.model.ComicInfo;
 import com.qc.mycomic.model.ImageInfo;
 import com.qc.mycomic.model.MyMap;
-import com.qc.mycomic.model.Source;
 import com.qc.mycomic.util.Codes;
 import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.NetUtil;
@@ -52,7 +49,7 @@ public class MiTui extends BaseSource {
     public List<ComicInfo> getComicInfoList(String html) {
         JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
             @Override
-            public ComicInfo dealElement(JsoupNode node, int elementId) {
+            protected ComicInfo dealElement(JsoupNode node, int elementId) {
                 String title = node.ownText("a.title");
                 String author = node.ownText("p.txtItme");
                 String updateTime = node.ownText("span.date");
@@ -68,12 +65,12 @@ public class MiTui extends BaseSource {
     public void setComicDetail(ComicInfo comicInfo, String html) {
         JsoupStarter<ChapterInfo> starter = new JsoupStarter<ChapterInfo>() {
             @Override
-            public boolean isDESC() {
+            protected boolean isDESC() {
                 return false;
             }
 
             @Override
-            public void dealInfo(JsoupNode node) {
+            protected void dealInfo(JsoupNode node) {
                 String author = node.ownText("p.txtItme");
                 String intro = node.ownText("p#full-des", "p#simple-des");
                 String updateStatus = node.ownText("p.txtItme:eq(2) :eq(3)");
@@ -86,7 +83,7 @@ public class MiTui extends BaseSource {
             }
 
             @Override
-            public ChapterInfo dealElement(JsoupNode node, int elementId) {
+            protected ChapterInfo dealElement(JsoupNode node, int elementId) {
                 String title = node.ownText("span");
                 String chapterUrl = node.href("a");
                 if (chapterUrl.contains("html")) {
@@ -181,7 +178,7 @@ public class MiTui extends BaseSource {
         } else {
             JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
                 @Override
-                public ComicInfo dealElement(JsoupNode node, int elementId) {
+                protected ComicInfo dealElement(JsoupNode node, int elementId) {
                     String title = node.ownText("a.txtA");
                     String author = node.ownText("span.info");
                     String updateTime = null;

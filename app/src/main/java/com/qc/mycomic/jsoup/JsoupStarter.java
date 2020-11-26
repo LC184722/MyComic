@@ -1,7 +1,5 @@
 package com.qc.mycomic.jsoup;
 
-import android.util.Log;
-
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -18,7 +16,7 @@ public class JsoupStarter<T> {
 
     private JsoupNode node = new JsoupNode();
 
-    public boolean isDESC() {
+    protected boolean isDESC() {
         return true;
     }
 
@@ -48,10 +46,10 @@ public class JsoupStarter<T> {
         return list;
     }
 
-    public void dealInfo(JsoupNode node) {
+    protected void dealInfo(JsoupNode node) {
     }
 
-    public T dealElement(JsoupNode node, int elementId) {
+    protected T dealElement(JsoupNode node, int elementId) {
         return null;
     }
 

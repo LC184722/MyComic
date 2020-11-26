@@ -50,11 +50,11 @@ public class HtmlTestUtil extends BaseSource {
         return NetUtil.getRequest(searchString);
     }
 
-@Override
+    @Override
     public List<ComicInfo> getComicInfoList(String html) {
         JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
-@Override
-            public ComicInfo dealElement(JsoupNode node, int elementId) {
+            @Override
+            protected ComicInfo dealElement(JsoupNode node, int elementId) {
                 String title = node.ownText("a.title");
                 String author = node.ownText("p.txtItme");
                 String updateTime = node.ownText("span.date");
@@ -70,12 +70,12 @@ public class HtmlTestUtil extends BaseSource {
     public void setComicDetail(ComicInfo comicInfo, String html) {
         JsoupStarter<ChapterInfo> starter = new JsoupStarter<ChapterInfo>() {
             @Override
-            public boolean isDESC() {
+            protected boolean isDESC() {
                 return false;
             }
 
             @Override
-            public void dealInfo(JsoupNode node) {
+            protected void dealInfo(JsoupNode node) {
                 String author = node.ownText("p.txtItme");
                 String intro = node.ownText("p#full-des", "p#simple-des");
                 String updateStatus = node.ownText("p.txtItme:eq(2) :eq(3)");
@@ -88,7 +88,7 @@ public class HtmlTestUtil extends BaseSource {
             }
 
             @Override
-            public ChapterInfo dealElement(JsoupNode node, int elementId) {
+            protected ChapterInfo dealElement(JsoupNode node, int elementId) {
                 String title = node.ownText("span");
                 String chapterUrl = node.href("a");
                 if (chapterUrl.contains("html")) {
@@ -190,8 +190,8 @@ public class HtmlTestUtil extends BaseSource {
             return list;
         } else {
             JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
-    @Override
-                public ComicInfo dealElement(JsoupNode node, int elementId) {
+                @Override
+                protected ComicInfo dealElement(JsoupNode node, int elementId) {
                     String title = node.ownText("a.txtA");
                     String author = node.ownText("span.info a");
                     String updateTime = null;

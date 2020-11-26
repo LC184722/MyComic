@@ -147,4 +147,16 @@ public class DecryptUtil {
         }
     }
 
+    /**
+     * packedJs解密 输入eval(function(p,a,c,k,e,d)...)字符串，返回计算结果
+     *
+     * @param jsCode jsCode
+     * @return String
+     */
+    public static String decryptPackedJsCode(String jsCode) {
+        jsCode = jsCode.substring(5, jsCode.length() - 1);
+        jsCode = "function fun(){return " + jsCode + "}";
+        return exeJsFunction(jsCode, "fun");
+    }
+
 }

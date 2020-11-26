@@ -6,7 +6,6 @@ import com.qc.mycomic.model.ChapterInfo;
 import com.qc.mycomic.model.ComicInfo;
 import com.qc.mycomic.model.ImageInfo;
 import com.qc.mycomic.model.MyMap;
-import com.qc.mycomic.model.Source;
 import com.qc.mycomic.util.Codes;
 import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DecryptUtil;
@@ -51,7 +50,7 @@ public class PuFei extends BaseSource {
     public List<ComicInfo> getComicInfoList(String html) {
         JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
             @Override
-            public ComicInfo dealElement(JsoupNode node, int elementId) {
+            protected ComicInfo dealElement(JsoupNode node, int elementId) {
                 String title = node.ownText("h3");
                 String author = node.ownText("dl dd");
                 String updateTime = node.text("dl", 3, "dd");
@@ -67,7 +66,7 @@ public class PuFei extends BaseSource {
     public void setComicDetail(ComicInfo comicInfo, String html) {
         JsoupStarter<ChapterInfo> starter = new JsoupStarter<ChapterInfo>() {
             @Override
-            public void dealInfo(JsoupNode node) {
+            protected void dealInfo(JsoupNode node) {
                 String author = node.ownText("div.book-detail dl:eq(3) dd");
                 String intro = node.ownText("div#bookIntro p");
                 String updateStatus = node.ownText("div.thumb i");
@@ -76,7 +75,7 @@ public class PuFei extends BaseSource {
             }
 
             @Override
-            public ChapterInfo dealElement(JsoupNode node, int elementId) {
+            protected ChapterInfo dealElement(JsoupNode node, int elementId) {
                 String title = node.title("a");
                 String chapterUrl = getIndex() + node.href("a");
                 return new ChapterInfo(elementId, title, chapterUrl);

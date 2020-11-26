@@ -20,7 +20,7 @@ public abstract class JsonStarter<T> {
 
     private int total;
 
-    public boolean isDESC() {
+    protected boolean isDESC() {
         return true;
     }
 
@@ -51,6 +51,10 @@ public abstract class JsonStarter<T> {
                 jsonArray = node.jsonArray(condition);
             }
         }
+        return startDataList(jsonArray);
+    }
+
+    public List<T> startDataList(JSONArray jsonArray) {
         List<T> list = new ArrayList<>();
         if (jsonArray != null) {
             total = jsonArray.size();

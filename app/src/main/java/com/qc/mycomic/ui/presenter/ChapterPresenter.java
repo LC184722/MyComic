@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ComicInfo;
+import com.qc.mycomic.model.DetailLoader;
 import com.qc.mycomic.model.Source;
 import com.qc.mycomic.util.Codes;
 import com.qc.mycomic.util.ComicUtil;
@@ -30,6 +31,15 @@ import the.one.base.ui.presenter.BasePresenter;
 public class ChapterPresenter extends BasePresenter<ChapterView> {
 
     public void load(Comic comic) {
+        Source source = comic.getSource();
+        if (!(source instanceof DetailLoader)) {
+            loadInfoDetail(comic);
+        } else {
+            ((DetailLoader) source).loadInfoDetail(getView(), comic);
+        }
+    }
+
+    private void loadInfoDetail(Comic comic) {
         Source source = comic.getSource();
         ComicInfo comicInfo = comic.getComicInfo();
         Request request = source.getDetailRequest(comicInfo.getDetailUrl());

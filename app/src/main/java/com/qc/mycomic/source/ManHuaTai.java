@@ -51,7 +51,7 @@ public class ManHuaTai extends BaseSource {
     public List<ComicInfo> getComicInfoList(String html) {
         JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
             @Override
-            public ComicInfo dealElement(JsoupNode node, int elementId) {
+            protected ComicInfo dealElement(JsoupNode node, int elementId) {
                 String title = node.ownText("p.title");
                 String author = null;
                 String updateTime = null;
@@ -67,12 +67,12 @@ public class ManHuaTai extends BaseSource {
     public void setComicDetail(ComicInfo comicInfo, String html) {
         JsoupStarter<ChapterInfo> starter = new JsoupStarter<ChapterInfo>() {
             @Override
-            public boolean isDESC() {
+            protected boolean isDESC() {
                 return false;
             }
 
             @Override
-            public void dealInfo(JsoupNode node) {
+            protected void dealInfo(JsoupNode node) {
                 String author = node.attr("div.thumbnail img", "alt");
                 String intro = node.ownText("p#js_desc_content");
                 String updateStatus;
@@ -90,7 +90,7 @@ public class ManHuaTai extends BaseSource {
             }
 
             @Override
-            public ChapterInfo dealElement(JsoupNode node, int elementId) {
+            protected ChapterInfo dealElement(JsoupNode node, int elementId) {
                 String title = node.title("a");
                 String chapterUrl = getIndex() + node.href("a");
                 return new ChapterInfo(elementId, title, chapterUrl);
@@ -180,7 +180,7 @@ public class ManHuaTai extends BaseSource {
         List<ComicInfo> list = new ArrayList<>();
         JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
             @Override
-            public void dealInfo(JsoupNode node) {
+            protected void dealInfo(JsoupNode node) {
                 node.addElement("div.comic-item.top-1");
                 node.addElement("div.comic-item.top-2");
                 node.addElement("div.comic-item.top-3");
@@ -197,7 +197,7 @@ public class ManHuaTai extends BaseSource {
             }
 
             @Override
-            public ComicInfo dealElement(JsoupNode node, int elementId) {
+            protected ComicInfo dealElement(JsoupNode node, int elementId) {
                 String title = node.ownText("div.comic-detail a");
                 String author = node.ownText("div.comic-author");
                 String updateTime = null;
@@ -213,7 +213,7 @@ public class ManHuaTai extends BaseSource {
         } else {
             return new JsoupStarter<ComicInfo>() {
                 @Override
-                public ComicInfo dealElement(JsoupNode node, int elementId) {
+                protected ComicInfo dealElement(JsoupNode node, int elementId) {
                     String title = node.ownText("p.title");
                     String author = null;
                     String updateTime = node.ownText("span.chapter");

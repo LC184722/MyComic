@@ -186,14 +186,14 @@ public class DBUtil {
                     comic.setComicInfo(info);
                 }
                 //更改detailUrl
-//                String url = info.getDetailUrl();
-//                String index = SourceUtil.getSource(info.getSourceId()).getIndex();
-//                if (!url.startsWith(index)) {
-//                    String tmp = url.substring(url.indexOf('/', url.indexOf('.')));
-//                    url = index + tmp;
-//                    info.setDetailUrl(url);
-//                    saveData(info);
-//                }
+                String url = info.getDetailUrl();
+                String index = SourceUtil.getSource(info.getSourceId()).getIndex();
+                if (!url.startsWith(index)) {
+                    String tmp = url.substring(url.indexOf('/', url.indexOf('.')));
+                    url = index + tmp;
+                    info.setDetailUrl(url);
+                    saveComicInfo(info);
+                }
                 //end
             }
             if (comic.getComicInfo() == null) {
