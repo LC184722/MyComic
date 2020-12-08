@@ -105,11 +105,13 @@ public class BiliBili implements Source, ImageLoader {
         JsonStarter<ChapterInfo> starter = new JsonStarter<ChapterInfo>() {
             @Override
             public void dealData(JsonNode node) {
+                String title = node.string("title");
+                String imgUrl = node.string("square_cover");
                 String author = node.arrayToString("author_name");
                 String intro = node.string("classic_lines");
                 String updateStatus = node.string("renewal_time");
                 String updateTime = null;
-                comicInfo.setDetail(author, updateTime, updateStatus, intro);
+                comicInfo.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
             }
 
             @Override

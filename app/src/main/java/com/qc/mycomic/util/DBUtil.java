@@ -16,6 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import the.one.base.util.FileUtils;
@@ -95,6 +96,12 @@ public class DBUtil {
 
     private static void saveComicData(Comic comic) {
         if (comic != null) {
+            if (comic.getTitle() == null) {
+                comic.setTitle(comic.getComicInfo().getTitle());
+                comic.setSourceId(comic.getComicInfo().getSourceId());
+                comic.setDate(new Date());
+                comic.setStatus(STATUS_HIS);
+            }
             comic.saveOrUpdate("title = ?", comic.getTitle());
             Log.i(TAG, "saveComicData: comic --> " + comic.getTitle());
         }
@@ -102,6 +109,7 @@ public class DBUtil {
 
     private static void saveComicInfoData(ComicInfo comicInfo) {
         if (comicInfo != null) {
+            Log.i(TAG, "saveComicInfoData: " + comicInfo.toStringDetail());
             comicInfo.saveOrUpdate("title = ? and sourceId = ?", comicInfo.getTitle(), String.valueOf(comicInfo.getSourceId()));
             Log.i(TAG, "saveComicInfoData: comicInfo --> " + comicInfo.getTitle() + " " + SourceUtil.getSourceName(comicInfo.getSourceId()));
         }

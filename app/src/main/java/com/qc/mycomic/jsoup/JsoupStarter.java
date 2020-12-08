@@ -1,5 +1,7 @@
 package com.qc.mycomic.jsoup;
 
+import com.qc.mycomic.util.StringUtil;
+
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -36,12 +38,11 @@ public class JsoupStarter<T> {
             int chapterId = getId(i++, size);
             T t = dealElement(node, chapterId);
             if (t != null) {
-                if (isDESC()) {
-                    list.add(t);
-                } else {
-                    list.add(0, t);
-                }
+                list.add(t);
             }
+        }
+        if (!isDESC()) {
+            StringUtil.swapList(list);
         }
         return list;
     }

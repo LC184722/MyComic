@@ -67,11 +67,13 @@ public class PuFei extends BaseSource {
         JsoupStarter<ChapterInfo> starter = new JsoupStarter<ChapterInfo>() {
             @Override
             protected void dealInfo(JsoupNode node) {
+                String title = node.ownText("div.main-bar.bar-bg1 h1");
+                String imgUrl = node.src("div.thumb img");
                 String author = node.ownText("div.book-detail dl:eq(3) dd");
                 String intro = node.ownText("div#bookIntro p");
                 String updateStatus = node.ownText("div.thumb i");
                 String updateTime = node.ownText("div.book-detail dl:eq(2) dd");
-                comicInfo.setDetail(author, updateTime, updateStatus, intro);
+                comicInfo.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
             }
 
             @Override

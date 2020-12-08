@@ -1,5 +1,7 @@
 package com.qc.mycomic.ui.presenter;
 
+import android.util.Log;
+
 import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ComicInfo;
 import com.qc.mycomic.util.Codes;
@@ -69,9 +71,11 @@ public class ShelfPresenter extends BasePresenter<ShelfView> {
                             String curUpdateChapter = info.getUpdateChapter();
                             SourceUtil.getSource(info.getSourceId()).setComicDetail(info, html);
                             if (curUpdateChapter == null || !curUpdateChapter.equals(info.getUpdateChapter())) {
-                                comic.setUpdate(comic.changeComicInfo(info.getSourceId()));
-                                comic.setPriority(++priority);
-                                ComicUtil.first(comic);
+                                if (info.getUpdateChapter() != null) {
+                                    comic.setUpdate(comic.changeComicInfo(info.getSourceId()));
+                                    comic.setPriority(++priority);
+                                    ComicUtil.first(comic);
+                                }
                             }
                             DBUtil.saveComic(comic, DBUtil.SAVE_CUR);
                             view.checkUpdateComplete(null);

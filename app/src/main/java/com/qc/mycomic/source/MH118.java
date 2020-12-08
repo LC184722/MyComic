@@ -69,6 +69,8 @@ public class MH118 extends BaseSource {
         JsoupStarter<ChapterInfo> starter = new JsoupStarter<ChapterInfo>() {
             @Override
             protected void dealInfo(JsoupNode node) {
+                String title = node.ownText("div.title h1");
+                String imgUrl = node.src("div#Cover img");
                 String author = node.ownText("p.txtItme:eq(1)");
                 String intro = node.ownText("p.txtDesc");
                 String updateStatus = node.ownText("p.txtItme:eq(2) :eq(3)");
@@ -77,7 +79,7 @@ public class MH118 extends BaseSource {
                     intro = intro.substring(intro.indexOf(':') + 1);
                 } catch (Exception ignored) {
                 }
-                comicInfo.setDetail(author, updateTime, updateStatus, intro);
+                comicInfo.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
             }
 
             @Override

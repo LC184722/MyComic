@@ -3,6 +3,7 @@ package com.qc.mycomic.util;
 import com.qc.mycomic.jsoup.JsoupNode;
 import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ImageInfo;
+import com.qc.mycomic.model.MyMap;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -178,6 +179,21 @@ public class ComicUtil {
             s = String.format(s, name, url);
             System.out.println(s);
         }
+    }
+
+    public static MyMap<String, String> getRankMyMap(List<Map<String, String>> mapList, String s) {
+        MyMap<String, String> myMap = new MyMap<>();
+        return getRankMyMap(myMap, mapList, s);
+    }
+
+    public static MyMap<String, String> getRankMyMap(MyMap<String, String> myMap, List<Map<String, String>> mapList, String s) {
+        for (Map<String, String> map : mapList) {
+            String name = map.get("name");
+            String url = map.get("url");
+            url = String.format(s, url);
+            myMap.put(name, url);
+        }
+        return myMap;
     }
 
 }

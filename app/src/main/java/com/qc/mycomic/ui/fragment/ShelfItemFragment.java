@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.qc.mycomic.R;
 import com.qc.mycomic.model.MyMap;
+import com.qc.mycomic.model.Source;
 import com.qc.mycomic.ui.activity.LauncherActivity;
 import com.qc.mycomic.ui.activity.MainActivity;
 import com.qc.mycomic.ui.adapter.ShelfAdapter;
@@ -23,6 +24,7 @@ import com.qc.mycomic.util.PopupUtil;
 import com.qc.mycomic.util.RestartUtil;
 import com.qc.mycomic.util.SourceUtil;
 import com.qc.mycomic.ui.view.ShelfView;
+import com.qc.mycomic.util.StringUtil;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
@@ -304,6 +306,44 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
                 adapter.notifyDataSetChanged();
             }
         }
+    }
+
+    public void inputMH() {
+        QMUIDialogUtil.showEditTextDialog(getContext(), "导入漫画", "输入漫画url", new QMUIDialogUtil.OnEditTextConfirmClickListener() {
+            @Override
+            public void getEditText(QMUIDialog dialog, String content, int index) {
+                String regex = "//(.*?)\\.(.*?)\\.";
+                String flg = StringUtil.match(regex, content, 2);
+                Source source = null;
+                String cIndex;
+                if (flg != null) {
+                    List<Source> list = SourceUtil.getSourceList();
+                    for (Source s : list) {
+                        String suffix = StringUtil.match(regex, s.getIndex(), 2);
+                        if (flg.equals(suffix)) {
+                            source = s;
+                            break;
+                        }
+                        System.out.println("suffix = " + suffix);
+                    }
+                    if (source != null) {
+                        cIndex = source.getIndex();
+                        content = cIndex.substring(0, cIndex.indexOf('.')) + content.substring(content.indexOf('.'));
+                    }
+                }
+                dialog.dismiss();
+                if (source != null) {
+                    ComicInfo comicInfo = new ComicInfo();
+                    comicInfo.setSourceId(source.getSourceId());
+                    comicInfo.setDetailUrl(content);
+                    Comic comic = new Comic(comicInfo);
+                    comic.setPriority(0);
+                    startFragment(new ChapterFragment(comic));
+                } else {
+                    showFailTips("url解析失败！");
+                }
+            }
+        });
     }
 
 }

@@ -69,6 +69,19 @@ public class ComicInfo extends LitePalSupport {
         this.intro = intro;
     }
 
+    public void setDetail(String title, String imgUrl, String author, String updateTime, String updateStatus, String intro) {
+        if (this.title == null || this.title.trim().equals("")) {
+            this.title = title;
+        }
+        if (this.imgUrl == null || this.imgUrl.trim().equals("")) {
+            this.imgUrl = imgUrl;
+        }
+        this.author = author;
+        this.updateTime = updateTime;
+        this.updateStatus = updateStatus;
+        this.intro = intro;
+    }
+
     public boolean canLoad(boolean isLoadNext) {
         int id;
         if (isLoadNext) {

@@ -76,11 +76,13 @@ public class TengXun extends BaseSource {
 
             @Override
             protected void dealInfo(JsoupNode node) {
+                String title = node.ownText("h2.works-intro-title.ui-left strong");
+                String imgUrl = node.src("div.works-cover.ui-left img");
                 String author = node.ownText("div.works-intro span.first em");
                 String intro = node.ownText("div.works-intro p.works-intro-short");
                 String updateStatus = node.ownText("div.works-intro label.works-intro-status");
                 String updateTime = node.ownText("span.ui-pl10");
-                comicInfo.setDetail(author, updateTime, updateStatus, intro);
+                comicInfo.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
             }
 
             @Override

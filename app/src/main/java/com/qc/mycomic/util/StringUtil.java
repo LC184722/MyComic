@@ -1,9 +1,12 @@
 package com.qc.mycomic.util;
 
+import android.util.Log;
+
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -203,12 +206,14 @@ public class StringUtil {
      * @return void
      */
     public static <T> void swapList(List<T> list) {
-        List<T> nList = new ArrayList<>();
+        Stack<T> stack = new Stack<>();
         for (T t : list) {
-            nList.add(0, t);
+            stack.push(t);
         }
         list.clear();
-        list.addAll(nList);
+        while (!stack.empty()) {
+            list.add(stack.pop());
+        }
     }
 
 //    public static void printHashCode(Object... objects) {

@@ -52,8 +52,10 @@ public class ChapterPresenter extends BasePresenter<ChapterView> {
                 ChapterView view = getView();
                 AndroidSchedulers.mainThread().scheduleDirect(() -> {
                     showErrorPage(e.getMessage(), v -> {
-                        view.showLoadingPage();
-                        load(comic);
+                        if (view != null) {
+                            view.showLoadingPage();
+                            load(comic);
+                        }
                     });
                 });
             }
@@ -87,7 +89,9 @@ public class ChapterPresenter extends BasePresenter<ChapterView> {
                     ChapterView view = getView();
                     Log.e(TAG, "updateSource: get fail url = " + request.url());
                     AndroidSchedulers.mainThread().scheduleDirect(() -> {
-                        view.updateSourceComplete(null);
+                        if (view != null) {
+                            view.updateSourceComplete(null);
+                        }
                     });
                 }
 
@@ -97,7 +101,9 @@ public class ChapterPresenter extends BasePresenter<ChapterView> {
                     String html = ComicUtil.getHtml(response, comic.getSourceId());
                     AndroidSchedulers.mainThread().scheduleDirect(() -> {
                         List<ComicInfo> infoList = source.getComicInfoList(html);
-                        view.updateSourceComplete(infoList);
+                        if (view != null) {
+                            view.updateSourceComplete(infoList);
+                        }
                         Log.i(TAG, "updateSource: infoList = " + infoList);
                     });
                 }

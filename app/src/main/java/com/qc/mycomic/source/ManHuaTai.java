@@ -73,6 +73,8 @@ public class ManHuaTai extends BaseSource {
 
             @Override
             protected void dealInfo(JsoupNode node) {
+                String title = node.title("h1.name");
+                String imgUrl = "https:" + node.attr("div#Cover img", "data-src");
                 String author = node.attr("div.thumbnail img", "alt");
                 String intro = node.ownText("p#js_desc_content");
                 String updateStatus;
@@ -86,7 +88,7 @@ public class ManHuaTai extends BaseSource {
                     updateStatus = null;
                     updateTime = null;
                 }
-                comicInfo.setDetail(author, updateTime, updateStatus, intro);
+                comicInfo.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
             }
 
             @Override

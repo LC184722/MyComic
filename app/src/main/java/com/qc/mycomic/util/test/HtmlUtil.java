@@ -170,6 +170,8 @@ public class HtmlUtil {
         String html = HtmlUtil.getHtmlByFile(fileName);
         ComicInfo info = new ComicInfo();
         source.setComicDetail(info, html);
+        System.out.println("info.getTitle() = " + info.getTitle());
+        System.out.println("info.getImgUrl() = " + info.getImgUrl());
         System.out.println("info.getAuthor() = " + info.getAuthor());
         System.out.println("info.getUpdateTime() = " + info.getUpdateTime());
         System.out.println("info.getUpdateChapter() = " + info.getUpdateChapter());

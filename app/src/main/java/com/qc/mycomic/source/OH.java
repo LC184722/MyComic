@@ -69,11 +69,13 @@ public class OH extends BaseSource {
 
             @Override
             protected void dealInfo(JsoupNode node) {
+                String title = node.ownText("h1.fed-part-eone.fed-font-xvi");
+                String imgUrl = node.attr("a.fed-list-pics.fed-lazy.fed-part-2by3", "data-original");
                 String author = node.ownText("div.fed-part-layout li.fed-col-md6", 1, "a");
                 String intro = node.ownText("p.fed-padding.fed-part-both.fed-text-muted");
                 String updateStatus = node.ownText("div.fed-part-layout li.fed-col-md6", 0, "a");
                 String updateTime = node.ownText("div.fed-part-layout li.fed-col-md6", 2, "a");
-                comicInfo.setDetail(author, updateTime, updateStatus, intro);
+                comicInfo.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
             }
 
             @Override
