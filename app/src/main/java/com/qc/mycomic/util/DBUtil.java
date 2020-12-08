@@ -109,7 +109,6 @@ public class DBUtil {
 
     private static void saveComicInfoData(ComicInfo comicInfo) {
         if (comicInfo != null) {
-            Log.i(TAG, "saveComicInfoData: " + comicInfo.toStringDetail());
             comicInfo.saveOrUpdate("title = ? and sourceId = ?", comicInfo.getTitle(), String.valueOf(comicInfo.getSourceId()));
             Log.i(TAG, "saveComicInfoData: comicInfo --> " + comicInfo.getTitle() + " " + SourceUtil.getSourceName(comicInfo.getSourceId()));
         }

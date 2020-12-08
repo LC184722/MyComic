@@ -1,5 +1,7 @@
 package com.qc.mycomic.util;
 
+import android.util.Log;
+
 import com.qc.mycomic.jsoup.JsoupNode;
 import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ImageInfo;
