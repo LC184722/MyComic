@@ -1,5 +1,7 @@
 package com.qc.mycomic.util;
 
+import the.one.base.util.SdCardUtil;
+
 /**
  * @author LuQiChuang
  * @desc
@@ -9,6 +11,12 @@ package com.qc.mycomic.util;
 public class Codes {
 
     public static final String TAG = "TAG";
+
+    public static final String NORMAL_PATH = SdCardUtil.getNormalSDCardPath();
+
+    public static final String APP_PATH = NORMAL_PATH + "/MyComic";
+
+    public static final String IMG_PATH = APP_PATH + "/ShelfImg";
 
     public static String versionTag = null;
 
