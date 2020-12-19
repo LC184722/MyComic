@@ -1,5 +1,7 @@
 package com.qc.mycomic.ui.fragment;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -24,6 +26,7 @@ import com.qc.mycomic.ui.view.ChapterView;
 import com.qc.mycomic.util.Codes;
 import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DBUtil;
+import com.qc.mycomic.util.ImgUtil;
 import com.qc.mycomic.util.PopupUtil;
 import com.qc.mycomic.util.RestartUtil;
 import com.qc.mycomic.util.SourceUtil;
@@ -238,7 +241,7 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
     }
 
     private void setValue() {
-        GlideEngine.createGlideEngine().loadImage(getContext(), comic.getComicInfo().getImgUrl(), qivImg);
+        ImgUtil.loadImg(getContext(), comic, qivImg);
         tvTitle.setText(comic.getComicInfo().getTitle());
         tvSource.setText(comic.getSourceName());
         tvSourceSize.setText("(" + comic.getSourceSize() + ")");
