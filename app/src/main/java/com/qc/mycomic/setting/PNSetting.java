@@ -23,8 +23,8 @@ public class PNSetting extends Setting {
     @Override
     public void dealMyMap(MyMap<String, String> myMap) {
         myMap.put("0", "关闭预加载");
-        myMap.put("5", "5");
-        myMap.put("10", "10");
+        myMap.put("5", "预加载5页");
+        myMap.put("10", "预加载10页");
         myMap.put("10000", "预加载所有");
     }
 

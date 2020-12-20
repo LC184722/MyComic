@@ -21,6 +21,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.qc.mycomic.R;
 import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ImageInfo;
+import com.qc.mycomic.setting.SettingFactory;
 import com.qmuiteam.qmui.util.QMUIDisplayHelper;
 
 import java.io.BufferedOutputStream;
@@ -134,29 +135,30 @@ public class ImgUtil {
         if (imageView != null) {
             imageView.setTag(key);
             if (isLoadShelfImg) {
-                BitmapFactory.Options newOpts = new BitmapFactory.Options();
-                newOpts.inPreferredConfig = Bitmap.Config.RGB_565;
-                Bitmap bitmap = BitmapFactory.decodeFile(getLocalImgUrl(key), newOpts);
-                if (bitmap != null) {
-                    imageView.setImageBitmap(bitmap);
-                    return;
+                if (isSave) {
+                    BitmapFactory.Options newOpts = new BitmapFactory.Options();
+                    newOpts.inPreferredConfig = Bitmap.Config.RGB_565;
+                    Bitmap bitmap = BitmapFactory.decodeFile(getLocalImgUrl(key), newOpts);
+                    if (bitmap != null) {
+                        imageView.setImageBitmap(bitmap);
+                        return;
+                    }
                 }
+                loadImgNet(context, url, key, imageView, isSave, isLoadShelfImg);
             } else if (map.containsKey(key) && map.get(key) != null) {
                 imageView.setLayoutParams(getLP(context, map.get(key)));
                 imageView.setScaleType(ImageView.ScaleType.CENTER);
                 imageView.setImageBitmap(null);
                 imageView.setBackground(map.get(key));
-                return;
             } else if (map.containsKey(key) && map.get(key) == null) {
                 imageView.setLayoutParams(getLP(context, map.get(key)));
                 imageView.setScaleType(ImageView.ScaleType.CENTER);
                 imageView.setImageBitmap(drawableToBitmap(getDrawable(context, R.drawable.ic_image_reader_loading_foreground)));
                 imageView.setBackground(getDrawable(context, R.drawable.ic_image_reader_background));
-                return;
             } else {
                 map.put(key, null);
+                loadImgNet(context, url, key, imageView, isSave, isLoadShelfImg);
             }
-            loadImgNet(context, url, key, imageView, isSave, isLoadShelfImg);
         }
     }
 
@@ -167,12 +169,14 @@ public class ImgUtil {
                 .into(new CustomTarget<Bitmap>() {
                     @Override
                     public void onLoadStarted(@Nullable Drawable placeholder) {
-                        if (isLoadShelfImg) {
-                            imageView.setImageBitmap(drawableToBitmap(getDrawable(context, R.drawable.ic_image_shelf_loading_foreground)));
-                            imageView.setBackground(getDrawable(context, R.drawable.ic_image_background));
-                        } else {
-                            imageView.setImageBitmap(drawableToBitmap(getDrawable(context, R.drawable.ic_image_reader_loading_foreground)));
-                            imageView.setBackground(getDrawable(context, R.drawable.ic_image_reader_background));
+                        if (Objects.equals(key, imageView.getTag())) {
+                            if (isLoadShelfImg) {
+                                imageView.setImageBitmap(drawableToBitmap(getDrawable(context, R.drawable.ic_image_shelf_loading_foreground)));
+                                imageView.setBackground(getDrawable(context, R.drawable.ic_image_background));
+                            } else {
+                                imageView.setImageBitmap(drawableToBitmap(getDrawable(context, R.drawable.ic_image_reader_loading_foreground)));
+                                imageView.setBackground(getDrawable(context, R.drawable.ic_image_reader_background));
+                            }
                         }
                     }
 
@@ -207,13 +211,16 @@ public class ImgUtil {
 
                     @Override
                     public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                        if (isSave) {
-                            imageView.setImageBitmap(drawableToBitmap(getDrawable(context, R.drawable.ic_image_shelf_error_foreground)));
-                            imageView.setBackground(getDrawable(context, R.drawable.ic_image_background));
-                        } else {
-                            imageView.setImageBitmap(drawableToBitmap(getDrawable(context, R.drawable.ic_image_reader_error_foreground)));
-                            imageView.setBackground(getDrawable(context, R.drawable.ic_image_reader_background));
-                            map.remove(key);
+                        Log.e("TAG", "onLoadFailed: " + url);
+                        if (Objects.equals(key, imageView.getTag())) {
+                            if (isSave) {
+                                imageView.setImageBitmap(drawableToBitmap(getDrawable(context, R.drawable.ic_image_shelf_error_foreground)));
+                                imageView.setBackground(getDrawable(context, R.drawable.ic_image_background));
+                            } else {
+                                imageView.setImageBitmap(drawableToBitmap(getDrawable(context, R.drawable.ic_image_reader_error_foreground)));
+                                imageView.setBackground(getDrawable(context, R.drawable.ic_image_reader_background));
+                                map.remove(key);
+                            }
                         }
                     }
                 });
@@ -280,11 +287,15 @@ public class ImgUtil {
      * @return Bitmap
      */
     private static Bitmap compressBitmap(Bitmap bitmap) {
+        String data = SettingFactory.getInstance().getSetting(SettingFactory.SETTING_COMPRESS_IMAGE).getData();
+        if (data.equals("0")) {
+            return bitmap;
+        }
         int length = bitmap.getByteCount();
         if (length / 1024 > 2000) {
             BitmapFactory.Options newOpts = new BitmapFactory.Options();
             newOpts.inPreferredConfig = Bitmap.Config.RGB_565;
-            if (length / 1024 > 5000) {
+            if (data.equals("2")) {
                 newOpts.inSampleSize = 2;
             }
             ByteArrayOutputStream baos = new ByteArrayOutputStream();

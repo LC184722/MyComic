@@ -10,9 +10,11 @@ public class SettingFactory {
 
     public static final int SETTING_DEFAULT_SOURCE = 0;
     public static final int SETTING_PRELOAD_NUM = 1;
+    public static final int SETTING_COMPRESS_IMAGE = 2;
 
     private DSSetting dsSetting = new DSSetting();
     private PNSetting pnSetting = new PNSetting();
+    private CISetting ciSetting = new CISetting();
 
     private static SettingFactory factory = new SettingFactory();
 
@@ -23,11 +25,13 @@ public class SettingFactory {
     public Setting getSetting(int which) {
         if (which == SETTING_DEFAULT_SOURCE) {
             return dsSetting;
-        }
-        if (which == SETTING_PRELOAD_NUM) {
+        } else if (which == SETTING_PRELOAD_NUM) {
+            return pnSetting;
+        } else if (which == SETTING_COMPRESS_IMAGE) {
+            return ciSetting;
+        } else {
             return pnSetting;
         }
-        return pnSetting;
     }
 
 }

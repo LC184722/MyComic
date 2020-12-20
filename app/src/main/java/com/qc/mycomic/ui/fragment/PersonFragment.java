@@ -32,7 +32,7 @@ import the.one.base.widge.RoundImageView;
  */
 public class PersonFragment extends BaseGroupListFragment implements View.OnClickListener, UpdateView {
 
-    private QMUICommonListItemView web, version, v1, v2, v3, v4;
+    private QMUICommonListItemView web, version, v1, v2, v3, v4, v5;
 
     private UpdatePresenter presenter = new UpdatePresenter();
 
@@ -82,7 +82,8 @@ public class PersonFragment extends BaseGroupListFragment implements View.OnClic
         v2 = CreateDetailItemView("阅读预加载图片数量", SettingFactory.getInstance().getSetting(SettingFactory.SETTING_PRELOAD_NUM).getDetailDesc());
         v3 = CreateDetailItemView("备份数据");
         v4 = CreateDetailItemView("还原数据");
-        addToGroup("设置", v1, v2);
+        v5 = CreateDetailItemView("选择画质", SettingFactory.getInstance().getSetting(SettingFactory.SETTING_COMPRESS_IMAGE).getDetailDesc());
+        addToGroup("设置", v1, v2, v5);
         addToGroup("数据", v3, v4);
         addToGroup("关于", web, version);
     }
@@ -147,6 +148,16 @@ public class PersonFragment extends BaseGroupListFragment implements View.OnClic
                     dialog.dismiss();
                 }
             }).show();
+        } else if (view == v5) {
+            Setting setting = SettingFactory.getInstance().getSetting(SettingFactory.SETTING_COMPRESS_IMAGE);
+            PopupUtil.showSimpleBottomSheetList(getContext(), setting.getMyMap(), "选择画质（如发生卡顿、闪退请选择低画质）", setting.getData(), new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
+                @Override
+                public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
+                    setting.setData(setting.getMyMap().getKeyByValue(tag));
+                    v5.setDetailText(tag);
+                    dialog.dismiss();
+                }
+            });
         }
     }
 
