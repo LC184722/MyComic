@@ -18,7 +18,7 @@
             android:layout_width="120dp"
             android:layout_height="160dp"
             android:layout_marginEnd="5dp"
-            android:background="@drawable/no_image"
+            android:background="@drawable/ic_image_background"
             app:qmui_border_width="0dp"
             app:qmui_corner_radius="@dimen/dp_10" />
 

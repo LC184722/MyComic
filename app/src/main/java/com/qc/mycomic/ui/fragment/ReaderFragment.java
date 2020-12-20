@@ -26,6 +26,7 @@ import com.qc.mycomic.ui.view.ReaderView;
 import com.qc.mycomic.util.Codes;
 import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DBUtil;
+import com.qc.mycomic.util.ImgUtil;
 import com.qc.mycomic.util.RestartUtil;
 import com.qmuiteam.qmui.util.QMUIDisplayHelper;
 import com.qmuiteam.qmui.util.QMUIViewHelper;
@@ -235,7 +236,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
                     String data = SettingFactory.getInstance().getSetting(SettingFactory.SETTING_PRELOAD_NUM).getData();
                     int preloadNum = Integer.parseInt(data);
                     for (int i = bottom; i < imageInfoList.size() && i < bottom + preloadNum; i++) {
-                        readerAdapter.loadImage(getContext(), imageInfoList.get(i));
+                        ImgUtil.preloadReaderImg(getContext(), imageInfoList.get(i));
                     }
                 } else {
                     Log.i(TAG, "onScrolled: is null");
@@ -252,7 +253,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
 
     @Override
     protected BaseQuickAdapter getAdapter() {
-        readerAdapter = new ReaderAdapter(R.layout.item_reader, comic);
+        readerAdapter = new ReaderAdapter(R.layout.item_reader);
         return readerAdapter;
     }
 
@@ -299,11 +300,10 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
         ImageInfo imageInfo = (ImageInfo) adapter.getData().get(position);
         ReaderAdapter readerAdapter = (ReaderAdapter) adapter;
         Log.i(TAG, "onItemLongClick: " + imageInfo.toStringProgress());
-        if (imageInfo.getStatus() == ReaderAdapter.LOAD_FAIL) {
+        if (ImgUtil.getLoadStatus(imageInfo) == ImgUtil.LOAD_FAIL) {
             ImageView imageView = view.findViewById(R.id.imageView);
-            readerAdapter.initImageView(imageView, imageInfo, ReaderAdapter.LOAD_NO);
-            readerAdapter.loadImage(getContext(), imageInfo, imageView);
-        } else if (imageInfo.getStatus() == ReaderAdapter.LOAD_SUCCESS) {
+            ImgUtil.loadReaderImg(getContext(), imageInfo, imageView);
+        } else if (ImgUtil.getLoadStatus(imageInfo) == ImgUtil.LOAD_SUCCESS) {
             startFragment(new ReaderDetailFragment(imageInfo));
         }
         return true;
@@ -362,6 +362,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
     @Override
     public void onDestroy() {
         super.onDestroy();
+        ImgUtil.clearMap();
         comic.setDate(new Date());
         ComicUtil.first(comic);
         DBUtil.saveComic(comic, DBUtil.SAVE_CUR);

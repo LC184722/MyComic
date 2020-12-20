@@ -44,6 +44,6 @@ public class ShelfAdapter extends TheBaseQuickAdapter<Comic> {
             }
         }
         QMUIRadiusImageView qivImg = holder.findView(R.id.qivImg);
-        ImgUtil.loadImg(getContext(), comic, qivImg);
+        ImgUtil.loadShelfImg(getContext(), comic, qivImg);
     }
 }

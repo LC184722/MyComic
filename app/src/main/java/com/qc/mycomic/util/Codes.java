@@ -16,7 +16,9 @@ public class Codes {
 
     public static final String APP_PATH = NORMAL_PATH + "/MyComic";
 
-    public static final String IMG_PATH = APP_PATH + "/ShelfImg";
+    public static final String SHELF_IMG_PATH = APP_PATH + "/ShelfImg";
+
+    public static final String IMG_PATH = APP_PATH + "/Image";
 
     public static String versionTag = null;
 

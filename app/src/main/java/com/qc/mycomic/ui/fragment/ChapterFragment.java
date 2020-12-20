@@ -241,7 +241,7 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
     }
 
     private void setValue() {
-        ImgUtil.loadImg(getContext(), comic, qivImg);
+        ImgUtil.loadShelfImg(getContext(), comic, qivImg);
         tvTitle.setText(comic.getComicInfo().getTitle());
         tvSource.setText(comic.getSourceName());
         tvSourceSize.setText("(" + comic.getSourceSize() + ")");
