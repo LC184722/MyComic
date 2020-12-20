@@ -57,19 +57,19 @@ public class ImgUtil {
     public static final int LOAD_FAIL = 3;
 
     public static void loadShelfImg(Context context, Comic comic, ImageView imageView) {
-        loadShelfImg(context, comic, imageView, true, true);
+        loadShelfImg(context, comic, imageView, true);
     }
 
     public static void loadRankImg(Context context, Comic comic, ImageView imageView) {
-        loadShelfImg(context, comic, imageView, false, true);
+        loadShelfImg(context, comic, imageView, false);
     }
 
     public static void loadReaderImg(Context context, ImageInfo imageInfo, ImageView imageView) {
         loadImg(context, imageInfo.getUrl(), imageInfo.toStringProgressDetail(), imageView, false, false);
     }
 
-    private static void loadShelfImg(Context context, Comic comic, ImageView imageView, boolean isSave, boolean isLoadShelfImg) {
-        loadImg(context, comic.getComicInfo().getImgUrl(), comic.getComicInfo().getId(), imageView, isSave, isLoadShelfImg);
+    private static void loadShelfImg(Context context, Comic comic, ImageView imageView, boolean isSave) {
+        loadImg(context, comic.getComicInfo().getImgUrl(), comic.getComicInfo().getId(), imageView, isSave, true);
     }
 
     public static void preloadReaderImg(Context context, ImageInfo imageInfo) {
@@ -246,7 +246,7 @@ public class ImgUtil {
         return savedFile.getAbsolutePath();
     }
 
-    private static String getLocalImgUrl(Object key) {
+    public static String getLocalImgUrl(Object key) {
         return shelfImgPath + "/img_" + key.toString();
     }
 

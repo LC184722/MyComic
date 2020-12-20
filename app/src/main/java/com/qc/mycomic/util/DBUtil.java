@@ -166,7 +166,16 @@ public class DBUtil {
      */
     public static void deleteData(Comic comic) {
         if (comic != null) {
-            new Thread(comic::delete).start();
+            new Thread(() -> {
+                comic.delete();
+                for (ComicInfo comicInfo : comic.getComicInfoList()) {
+                    File file = new File(ImgUtil.getLocalImgUrl(comicInfo.getId()));
+                    if (file.exists()) {
+                        file.delete();
+                    }
+                }
+            }).start();
+//            new Thread(comic::delete).start();
         }
     }
 

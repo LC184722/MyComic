@@ -10,9 +10,9 @@
     {
       "type": "SINGLE",
       "filters": [],
-      "versionCode": 59,
-      "versionName": "v1.0.23.2",
-      "outputFile": "MyComic-v1.0.23.2.apk"
+      "versionCode": 60,
+      "versionName": "v1.0.24",
+      "outputFile": "MyComic-v1.0.24.apk"
     }
   ]
 }
