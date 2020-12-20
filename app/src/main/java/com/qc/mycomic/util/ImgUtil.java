@@ -56,11 +56,19 @@ public class ImgUtil {
     public static final int LOAD_FAIL = 3;
 
     public static void loadShelfImg(Context context, Comic comic, ImageView imageView) {
-        loadImg(context, comic.getComicInfo().getImgUrl(), comic.getComicInfo().getId(), imageView, true);
+        loadShelfImg(context, comic, imageView, true, true);
+    }
+
+    public static void loadRankImg(Context context, Comic comic, ImageView imageView) {
+        loadShelfImg(context, comic, imageView, false, true);
     }
 
     public static void loadReaderImg(Context context, ImageInfo imageInfo, ImageView imageView) {
-        loadImg(context, imageInfo.getUrl(), imageInfo.toStringProgressDetail(), imageView, false);
+        loadImg(context, imageInfo.getUrl(), imageInfo.toStringProgressDetail(), imageView, false, false);
+    }
+
+    private static void loadShelfImg(Context context, Comic comic, ImageView imageView, boolean isSave, boolean isLoadShelfImg) {
+        loadImg(context, comic.getComicInfo().getImgUrl(), comic.getComicInfo().getId(), imageView, isSave, isLoadShelfImg);
     }
 
     public static void preloadReaderImg(Context context, ImageInfo imageInfo) {
@@ -122,10 +130,10 @@ public class ImgUtil {
         return new LinearLayout.LayoutParams(sWidth, sHeight);
     }
 
-    public static void loadImg(Context context, String url, Object key, ImageView imageView, boolean isSave) {
+    private static void loadImg(Context context, String url, Object key, ImageView imageView, boolean isSave, boolean isLoadShelfImg) {
         if (imageView != null) {
             imageView.setTag(key);
-            if (isSave) {
+            if (isLoadShelfImg) {
                 BitmapFactory.Options newOpts = new BitmapFactory.Options();
                 newOpts.inPreferredConfig = Bitmap.Config.RGB_565;
                 Bitmap bitmap = BitmapFactory.decodeFile(getLocalImgUrl(key), newOpts);
@@ -148,18 +156,18 @@ public class ImgUtil {
             } else {
                 map.put(key, null);
             }
-            loadImgNet(context, url, key, imageView, isSave);
+            loadImgNet(context, url, key, imageView, isSave, isLoadShelfImg);
         }
     }
 
-    private static void loadImgNet(Context context, String url, Object key, ImageView imageView, boolean isSave) {
+    private static void loadImgNet(Context context, String url, Object key, ImageView imageView, boolean isSave, boolean isLoadShelfImg) {
         Glide.with(context)
                 .asBitmap()
                 .load(url)
                 .into(new CustomTarget<Bitmap>() {
                     @Override
                     public void onLoadStarted(@Nullable Drawable placeholder) {
-                        if (isSave) {
+                        if (isLoadShelfImg) {
                             imageView.setImageBitmap(drawableToBitmap(getDrawable(context, R.drawable.ic_image_shelf_loading_foreground)));
                             imageView.setBackground(getDrawable(context, R.drawable.ic_image_background));
                         } else {
@@ -172,12 +180,14 @@ public class ImgUtil {
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                         Log.i("TAG", "onResourceReady: success " + url);
                         if (Objects.equals(key, imageView.getTag())) {
-                            if (isSave) {
+                            if (isLoadShelfImg) {
                                 imageView.setImageBitmap(resource);
-                                try {
-                                    saveBitmapBackPath(resource, key);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
+                                if (isSave) {
+                                    try {
+                                        saveBitmapBackPath(resource, key);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
                             } else {
                                 resource = compressBitmap(resource);
@@ -270,42 +280,23 @@ public class ImgUtil {
      * @return Bitmap
      */
     private static Bitmap compressBitmap(Bitmap bitmap) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        int options = 90;
-        int length = baos.toByteArray().length / 1024;
-
-        if (length > 5000) {
-            //重置baos即清空baos
-            baos.reset();
-            //质量压缩方法，这里100表示不压缩，把压缩后的数据存放到baos中
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 20, baos);
-        } else if (length > 4000) {
-            baos.reset();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
-        } else if (length > 3000) {
-            baos.reset();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 70, baos);
+        int length = bitmap.getByteCount();
+        if (length / 1024 > 2000) {
+            BitmapFactory.Options newOpts = new BitmapFactory.Options();
+            newOpts.inPreferredConfig = Bitmap.Config.RGB_565;
+            if (length / 1024 > 5000) {
+                newOpts.inSampleSize = 2;
+            }
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos);
+            ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());
+            bitmap = BitmapFactory.decodeStream(isBm, null, newOpts);
         }
-        //循环判断如果压缩后图片是否大于2M,大于继续压缩
-        while (baos.toByteArray().length / 1024 > 2048) {
-            //重置baos即清空baos
-            baos.reset();
-            //这里压缩options%，把压缩后的数据存放到baos中
-            bitmap.compress(Bitmap.CompressFormat.JPEG, options, baos);
-            //每次都减少10
-            options -= 10;
-        }
-        //把压缩后的数据baos存放到ByteArrayInputStream中
-        ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());
-        //把ByteArrayInputStream数据生成图片
-        return BitmapFactory.decodeStream(isBm, null, null);
+        return bitmap;
     }
 
     public static int getBitmapSize(Bitmap bitmap) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        return baos.toByteArray().length / 1024;
+        return bitmap.getByteCount();
     }
 
 }

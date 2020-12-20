@@ -5,6 +5,7 @@ import android.widget.TextView;
 
 import com.qc.mycomic.R;
 import com.qc.mycomic.model.Comic;
+import com.qc.mycomic.util.ImgUtil;
 import com.qmuiteam.qmui.widget.QMUIRadiusImageView;
 
 import org.jetbrains.annotations.NotNull;
@@ -41,7 +42,7 @@ public class RankAdapter extends TheBaseQuickAdapter<Comic> {
         holder.setText(R.id.tvIndex, String.valueOf(holder.getAdapterPosition() + 1));
         QMUIRadiusImageView qivImg = holder.findView(R.id.qivImg);
         if (qivImg != null) {
-            GlideEngine.createGlideEngine().loadImage(getContext(), comic.getComicInfo().getImgUrl(), qivImg);
+            ImgUtil.loadRankImg(getContext(), comic, qivImg);
         }
     }
 
