@@ -143,7 +143,7 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
     @Override
     public boolean onItemLongClick(@NonNull BaseQuickAdapter adapter, @NonNull View view, int position) {
         Comic comic = shelfAdapter.getItem(position);
-        Log.i(TAG, "onItemLongClick: info " + comic);
+        //Log.i(TAG, "onItemLongClick: info " + comic);
         String[] items = new String[]{
                 "1、查看信息",
                 "2、切换漫画源",
@@ -242,7 +242,7 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
             showProgressDialog(getPercent(), total);
             progressDialog.setMessage(getMsg());
         }
-        Log.i(TAG, "checkUpdateComplete: " + getLoadProcess());
+        //Log.i(TAG, "checkUpdateComplete: " + getLoadProcess());
     }
 
     private String getLoadProcess() {

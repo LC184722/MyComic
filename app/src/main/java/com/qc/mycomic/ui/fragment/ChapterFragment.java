@@ -209,7 +209,7 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
             tvFav.setText(isFav ? "已收藏" : "未收藏");
             ComicUtil.removeComic(comic);
             comic.setStatus(isFav ? Codes.STATUS_FAV : Codes.STATUS_HIS);
-            Log.i(TAG, "setListener: " + comic);
+            //Log.i(TAG, "setListener: " + comic);
             ComicUtil.first(comic);
             DBUtil.saveComic(comic, DBUtil.SAVE_CUR);
         });
@@ -305,7 +305,7 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
     protected void requestServer() {
         if (comic != null) {
             List<ChapterInfo> chapterInfoList = comic.getComicInfo().getChapterInfoList();
-            Log.i(TAG, "requestServer: Codes.toStatus = " + Codes.toStatus);
+            //Log.i(TAG, "requestServer: Codes.toStatus = " + Codes.toStatus);
             if (chapterInfoList == null || chapterInfoList.size() == 0) {
                 presenter.load(comic);
             } else {
@@ -338,7 +338,7 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
     @Override
     public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view,
                             int position) {
-        Log.i(TAG, "onItemClick: position = " + position);
+        //Log.i(TAG, "onItemClick: position = " + position);
         comic.setDate(new Date());
         ComicUtil.first(comic);
         start(position);

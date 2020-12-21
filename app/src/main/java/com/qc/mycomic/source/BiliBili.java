@@ -143,7 +143,7 @@ public class BiliBili implements Source, ImageLoader {
                 String token = node.string("token");
                 String chapterUrl = url + "?token=" + token;
                 chapterUrl = chapterUrl.replace("\\u0026", "&");
-                Log.i("TAG", "dealDataList: getCur = " + getCur());
+                //Log.i("TAG", "dealDataList: getCur = " + getCur());
                 return new ImageInfo(chapterId, getCur(), getTotal(), chapterUrl);
             }
         };

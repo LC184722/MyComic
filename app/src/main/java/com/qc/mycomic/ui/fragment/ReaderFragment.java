@@ -140,7 +140,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (isSmooth) {
-                    Log.i(TAG, "onProgressChanged: value = " + (first - imageInfoList.get(first).getCur() + progress));
+                    //Log.i(TAG, "onProgressChanged: value = " + (first - imageInfoList.get(first).getCur() + progress));
 //                    recycleView.smoothScrollToPosition(first - imageInfoList.get(first).getCur() + progress);
                     recycleView.scrollToPosition(first - imageInfoList.get(first).getCur() + progress);
                 }
@@ -178,6 +178,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
 
     private int first;
     private int total;
+    private int bottomIndex;
 
     @Override
     protected RecyclerView.OnScrollListener getOnScrollListener() {
@@ -235,11 +236,15 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
                     int bottom = first + count;
                     String data = SettingFactory.getInstance().getSetting(SettingFactory.SETTING_PRELOAD_NUM).getData();
                     int preloadNum = Integer.parseInt(data);
-                    for (int i = bottom; i < imageInfoList.size() && i < bottom + preloadNum; i++) {
-                        ImgUtil.preloadReaderImg(getContext(), imageInfoList.get(i));
+                    int min = Math.min(bottom + preloadNum, imageInfoList.size());
+                    if (bottomIndex < min) {
+                        for (int i = bottomIndex; i < min; i++) {
+                            ImgUtil.preloadReaderImg(getContext(), imageInfoList.get(i));
+                        }
+                        bottomIndex = min;
                     }
                 } else {
-                    Log.i(TAG, "onScrolled: is null");
+                    //Log.i(TAG, "onScrolled: is null");
                 }
             }
         };
@@ -264,7 +269,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
                 presenter.loadImageInfoList(comic);
             } else {
                 comicInfo.initChapterId(imageInfoList.get(imageInfoList.size() - 1).getChapterId());
-                Log.i(TAG, "requestServer: " + comicInfo.getCurChapterId());
+                //Log.i(TAG, "requestServer: " + comicInfo.getCurChapterId());
                 if (comicInfo.canLoad(isLoadNext)) {
                     presenter.loadImageInfoList(comic);
                 } else if (isLoadNext) {
@@ -299,7 +304,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
     public boolean onItemLongClick(@NonNull BaseQuickAdapter adapter, @NonNull View view, int position) {
         ImageInfo imageInfo = (ImageInfo) adapter.getData().get(position);
         ReaderAdapter readerAdapter = (ReaderAdapter) adapter;
-        Log.i(TAG, "onItemLongClick: " + imageInfo.toStringProgress());
+        //Log.i(TAG, "onItemLongClick: " + imageInfo.toStringProgress());
         if (ImgUtil.getLoadStatus(imageInfo) == ImgUtil.LOAD_FAIL) {
             ImageView imageView = view.findViewById(R.id.imageView);
             ImgUtil.loadReaderImg(getContext(), imageInfo, imageView);
@@ -332,7 +337,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
 //                @Override
 //                public void onPageFinished(WebView view, String url) {
 //                    super.onPageFinished(view, url);
-//                    Log.i(TAG, "onPageFinished: " + url);
+//                    //Log.i(TAG, "onPageFinished: " + url);
 //                    Codes.isFirstLoadWebView = false;
 //                    webView.loadUrl("javascript:window.HTMLOUT.processHTML('<head>'+document.getElementsByTagName('html')[0].innerHTML+'</head>');");
 //                    view.onPause();
@@ -340,7 +345,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
 //            });
 //            String chapterUrl = chapterInfoList.get(curPosition).getChapterUrl();
 //            webView.loadUrl(chapterUrl);
-//            Log.i(TAG, "loadImageInfoListComplete: mitui " + chapterUrl);
+//            //Log.i(TAG, "loadImageInfoListComplete: mitui " + chapterUrl);
 //        }
     }
 
@@ -349,13 +354,13 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
 //        @SuppressWarnings("unused")
 //        public void processHTML(String html) {
 //            // 注意啦，此处就是执行了js以后 的网页源码
-//            Log.i(TAG, "processHTML: " + html.length());
+//            //Log.i(TAG, "processHTML: " + html.length());
 //            Document document = Jsoup.parse(html);
 //            String src = document.selectFirst("img#image").attr("src");
 //            if (src != null) {
 //                Codes.miTuiServer = src.substring(0, src.indexOf('/', src.indexOf('.')));
 //            }
-//            Log.i(TAG, "processHTML: server = " + Codes.miTuiServer);
+//            //Log.i(TAG, "processHTML: server = " + Codes.miTuiServer);
 //        }
 //    }
 

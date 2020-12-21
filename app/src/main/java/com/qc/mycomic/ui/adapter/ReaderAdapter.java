@@ -51,12 +51,12 @@ public class ReaderAdapter extends TheBaseQuickAdapter<ImageInfo> {
 
     @Override
     protected void convert(@NotNull TheBaseViewHolder holder, ImageInfo imageInfo) {
-        Log.i(TAG, "convert: " + getData());
+        //Log.i(TAG, "convert: " + getData());
         ImageView imageView = holder.findView(R.id.imageView);
         if (imageView != null) {
             ImgUtil.loadReaderImg(getContext(), imageInfo, imageView);
         }
-        Log.i(TAG, "convert: position = " + holder.getAdapterPosition() + ", status = " + imageInfo.getStatus() + ", count = " + (++count));
+        //Log.i(TAG, "convert: position = " + holder.getAdapterPosition() + ", status = " + imageInfo.getStatus() + ", count = " + (++count));
     }
 
     public void clearMap() {

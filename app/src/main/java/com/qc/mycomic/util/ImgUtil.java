@@ -75,6 +75,7 @@ public class ImgUtil {
     public static void preloadReaderImg(Context context, ImageInfo imageInfo) {
         String url = imageInfo.getUrl();
         String key = imageInfo.toStringProgressDetail();
+        //Log.i("TAG", "preloadReaderImg: " + key);
         if (!set.contains(key)) {
             set.add(key);
             Glide.with(context)
@@ -83,9 +84,9 @@ public class ImgUtil {
                     .into(new CustomTarget<Bitmap>() {
                         @Override
                         public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-//                            Log.i("BmSize", "onResourceReady o: " + getBitmapSize(resource));
+                            //Log.i("BmSize", "onResourceReady o: " + getBitmapSize(resource));
                             resource = compressBitmap(resource);
-//                            Log.i("BmSize", "onResourceReady a: " + getBitmapSize(resource));
+                            //Log.i("BmSize", "onResourceReady a: " + getBitmapSize(resource));
                             map.put(key, bitmapToDrawable(context, resource));
                         }
 
@@ -97,6 +98,7 @@ public class ImgUtil {
     }
 
     public static void clearMap() {
+        //Log.i("TAG", "clearMap: ");
         map.clear();
         set.clear();
     }
@@ -146,16 +148,21 @@ public class ImgUtil {
                 }
                 loadImgNet(context, url, key, imageView, isSave, isLoadShelfImg);
             } else if (map.containsKey(key) && map.get(key) != null) {
+                //加载完毕
                 imageView.setLayoutParams(getLP(context, map.get(key)));
                 imageView.setScaleType(ImageView.ScaleType.CENTER);
                 imageView.setImageBitmap(null);
                 imageView.setBackground(map.get(key));
             } else if (map.containsKey(key) && map.get(key) == null) {
+                //加载中
                 imageView.setLayoutParams(getLP(context, map.get(key)));
                 imageView.setScaleType(ImageView.ScaleType.CENTER);
                 imageView.setImageBitmap(drawableToBitmap(getDrawable(context, R.drawable.ic_image_reader_loading_foreground)));
                 imageView.setBackground(getDrawable(context, R.drawable.ic_image_reader_background));
+//                imageView.setImageBitmap(null);
+//                imageView.setBackground(getDrawable(context, R.drawable.ic_image_reader_background));
             } else {
+                //开始加载
                 map.put(key, null);
                 loadImgNet(context, url, key, imageView, isSave, isLoadShelfImg);
             }
@@ -176,13 +183,15 @@ public class ImgUtil {
                             } else {
                                 imageView.setImageBitmap(drawableToBitmap(getDrawable(context, R.drawable.ic_image_reader_loading_foreground)));
                                 imageView.setBackground(getDrawable(context, R.drawable.ic_image_reader_background));
+//                                imageView.setImageBitmap(null);
+//                                imageView.setBackground(getDrawable(context, R.drawable.ic_image_reader_background));
                             }
                         }
                     }
 
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                        Log.i("TAG", "onResourceReady: success " + url);
+                        //Log.i("TAG", "onResourceReady: success " + url);
                         if (Objects.equals(key, imageView.getTag())) {
                             if (isLoadShelfImg) {
                                 imageView.setImageBitmap(resource);
@@ -211,9 +220,9 @@ public class ImgUtil {
 
                     @Override
                     public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                        Log.e("TAG", "onLoadFailed: " + url);
+                        //Log.e("TAG", "onLoadFailed: " + url);
                         if (Objects.equals(key, imageView.getTag())) {
-                            if (isSave) {
+                            if (isLoadShelfImg) {
                                 imageView.setImageBitmap(drawableToBitmap(getDrawable(context, R.drawable.ic_image_shelf_error_foreground)));
                                 imageView.setBackground(getDrawable(context, R.drawable.ic_image_background));
                             } else {

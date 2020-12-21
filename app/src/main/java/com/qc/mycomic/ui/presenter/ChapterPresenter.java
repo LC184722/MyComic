@@ -43,11 +43,11 @@ public class ChapterPresenter extends BasePresenter<ChapterView> {
         Source source = comic.getSource();
         ComicInfo comicInfo = comic.getComicInfo();
         Request request = source.getDetailRequest(comicInfo.getDetailUrl());
-        Log.i(TAG, "load: url = " + request.url());
+        //Log.i(TAG, "load: url = " + request.url());
         Callback callback = new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.e(TAG, "load: fail url = " + request.url());
+                //Log.e(TAG, "load: fail url = " + request.url());
                 e.printStackTrace();
                 ChapterView view = getView();
                 AndroidSchedulers.mainThread().scheduleDirect(() -> {
@@ -62,16 +62,16 @@ public class ChapterPresenter extends BasePresenter<ChapterView> {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                Log.i(TAG, "load: " + response.toString());
+                //Log.i(TAG, "load: " + response.toString());
                 String html = ComicUtil.getHtml(response, comic.getSourceId());
                 ChapterView view = getView();
                 AndroidSchedulers.mainThread().scheduleDirect(() -> {
                     if (view != null) {
                         comic.setInfoDetail(html);
-                        Log.i(TAG, "onResponse: hashcode html");
+                        //Log.i(TAG, "onResponse: hashcode html");
                         view.loadComplete();
                     }
-                    Log.i(TAG, "run: get html ok...");
+                    //Log.i(TAG, "run: get html ok...");
                 });
             }
         };
@@ -82,12 +82,12 @@ public class ChapterPresenter extends BasePresenter<ChapterView> {
         List<Source> sourceList = SourceUtil.getSourceList();
         for (Source source : sourceList) {
             Request request = source.getSearchRequest(comic.getTitle());
-            Log.i(TAG, "search: url = " + request.url());
+            //Log.i(TAG, "search: url = " + request.url());
             Callback callback = new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     ChapterView view = getView();
-                    Log.e(TAG, "updateSource: get fail url = " + request.url());
+                    //Log.e(TAG, "updateSource: get fail url = " + request.url());
                     AndroidSchedulers.mainThread().scheduleDirect(() -> {
                         if (view != null) {
                             view.updateSourceComplete(null);
@@ -104,7 +104,7 @@ public class ChapterPresenter extends BasePresenter<ChapterView> {
                         if (view != null) {
                             view.updateSourceComplete(infoList);
                         }
-                        Log.i(TAG, "updateSource: infoList = " + infoList);
+                        //Log.i(TAG, "updateSource: infoList = " + infoList);
                     });
                 }
             };

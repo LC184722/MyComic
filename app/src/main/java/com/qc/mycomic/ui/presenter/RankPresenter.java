@@ -55,13 +55,13 @@ public class RankPresenter extends BasePresenter<RankView> {
         Callback callback = new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.e(TAG, "load: fail url = " + request.url());
+                //Log.e(TAG, "load: fail url = " + request.url());
                 AndroidSchedulers.mainThread().scheduleDirect(() -> showErrorPage(e.getMessage(), v -> load(request.url().toString())));
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                Log.i(TAG, "load: " + response.toString());
+                //Log.i(TAG, "load: " + response.toString());
                 String html = ComicUtil.getHtml(response, source.getSourceId());
                 map.put(request.url().toString(), html);
                 RankView view = getView();

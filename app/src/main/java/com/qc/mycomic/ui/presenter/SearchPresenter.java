@@ -37,11 +37,11 @@ public class SearchPresenter extends BasePresenter<SearchView> {
         List<Source> sourceList = SourceUtil.getSourceList();
         for (Source source : sourceList) {
             Request request = source.getSearchRequest(searchString);
-            Log.i(TAG, "search: url = " + request.url());
+            //Log.i(TAG, "search: url = " + request.url());
             Callback callback = new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    Log.e(TAG, "load: fail url = " + request.url());
+                    //Log.e(TAG, "load: fail url = " + request.url());
                     e.printStackTrace();
                     SearchView view = getView();
                     AndroidSchedulers.mainThread().scheduleDirect(() -> {
@@ -53,7 +53,7 @@ public class SearchPresenter extends BasePresenter<SearchView> {
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
-                    Log.i(TAG, "load: " + response.toString());
+                    //Log.i(TAG, "load: " + response.toString());
                     String html = ComicUtil.getHtml(response, source.getSourceId());
                     SearchView view = getView();
                     AndroidSchedulers.mainThread().scheduleDirect(() -> {

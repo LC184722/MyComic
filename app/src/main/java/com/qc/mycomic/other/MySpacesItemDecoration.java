@@ -82,7 +82,7 @@ public class MySpacesItemDecoration extends SpacesItemDecoration {
             if (column > 1) {
                 // 只要不为一列，只考虑最左和最右项的差别
                 int X = column - columnIndex;
-//                Log.i(TAG, "getItemOffsets: position X = " + position + " " + X);
+                //Log.i(TAG, "getItemOffsets: position X = " + position + " " + X);
                 // 如果为多列时，给第一行的加上top.
                 // X != column 这个判断
                 // 当遇到SectionAdapter时，有两列，如果第一行是标题占据一整行，
@@ -102,10 +102,10 @@ public class MySpacesItemDecoration extends SpacesItemDecoration {
                     outRect.right = right / 2;
                 }
             }
-//            Log.i(TAG, "getItemOffsets: top " + outRect.top);
-//            Log.i(TAG, "getItemOffsets: bottom " + outRect.bottom);
-//            Log.i(TAG, "getItemOffsets: left " + outRect.left);
-//            Log.i(TAG, "getItemOffsets: right " + outRect.right);
+            //Log.i(TAG, "getItemOffsets: top " + outRect.top);
+            //Log.i(TAG, "getItemOffsets: bottom " + outRect.bottom);
+            //Log.i(TAG, "getItemOffsets: left " + outRect.left);
+            //Log.i(TAG, "getItemOffsets: right " + outRect.right);
         }
     }
 

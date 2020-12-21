@@ -88,7 +88,7 @@ public class SearchResultFragment extends BaseDataFragment<Comic> implements Sea
     @Override
     public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
         Comic comic = (Comic) adapter.getData().get(position);
-        Log.i(TAG, "onItemClick: " + comic);
+        //Log.i(TAG, "onItemClick: " + comic);
         int index = comicList.indexOf(comic);
         if (index != -1) {
             Comic myComic = comicList.get(index);
@@ -155,7 +155,7 @@ public class SearchResultFragment extends BaseDataFragment<Comic> implements Sea
             showProgressDialog(getPercent(), total);
             progressDialog.setMessage(getMsg());
         }
-        Log.i(TAG, "searchComplete: " + getLoadProcess());
+        //Log.i(TAG, "searchComplete: " + getLoadProcess());
     }
 
     private int getPercent() {

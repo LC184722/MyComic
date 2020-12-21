@@ -225,16 +225,16 @@ public class StringUtil {
 //        for (Object object : objects) {
 //            code.append(object.hashCode()).append(" ");
 //        }
-//        Log.i(TAG, "printHashCode: " + code);
+//        //Log.i(TAG, "printHashCode: " + code);
 //    }
 //
 //    public static void printHashCode(Comic comic) {
 //        if (comic != null) {
-//            Log.i(TAG, "printHashCode: comic = " + comic.hashCode());
+//            //Log.i(TAG, "printHashCode: comic = " + comic.hashCode());
 //            if (comic.getComicInfo() != null) {
-//                Log.i(TAG, "printHashCode: comicInfo = " + comic.getComicInfo().hashCode());
+//                //Log.i(TAG, "printHashCode: comicInfo = " + comic.getComicInfo().hashCode());
 //                if (comic.getComicInfo().getChapterInfoList() != null) {
-//                    Log.i(TAG, "printHashCode: chapterInfoList = " + comic.getComicInfo().getChapterInfoList().hashCode());
+//                    //Log.i(TAG, "printHashCode: chapterInfoList = " + comic.getComicInfo().getChapterInfoList().hashCode());
 //                }
 //            }
 //        }

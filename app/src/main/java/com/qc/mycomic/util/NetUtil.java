@@ -145,14 +145,14 @@ public class NetUtil {
             //请求失败执行的方法
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.e(TAG, "onFailure: ", e);
+                //Log.e(TAG, "onFailure: ", e);
             }
 
             //请求成功执行的方法
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 String data = response.body().string();
-                Log.i(TAG, "onResponse: " + response.toString());
+                //Log.i(TAG, "onResponse: " + response.toString());
                 AndroidSchedulers.mainThread().scheduleDirect(new Runnable() {
                     @Override
                     public void run() {

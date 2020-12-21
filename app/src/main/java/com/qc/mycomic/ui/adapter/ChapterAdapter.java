@@ -52,7 +52,7 @@ public class ChapterAdapter extends TheBaseQuickAdapter<ChapterInfo> {
             QMUIRoundButtonDrawable drawable = (QMUIRoundButtonDrawable) linearLayout.getBackground();
             ColorStateList colorStateList = ColorStateList.valueOf(getColor(R.color.colorPrimary));
             drawable.setBgData(colorStateList);
-            Log.i(TAG, "convert: chapterInfo " + chapterInfo);
+            //Log.i(TAG, "convert: chapterInfo " + chapterInfo);
         } else {
             TextView tvTitle = holder.findView(R.id.tvTitle);
             tvTitle.setTextColor(getColor(R.color.black));

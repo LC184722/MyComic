@@ -103,14 +103,14 @@ public class DBUtil {
                 comic.setStatus(STATUS_HIS);
             }
             comic.saveOrUpdate("title = ?", comic.getTitle());
-            Log.i(TAG, "saveComicData: comic --> " + comic.getTitle());
+            //Log.i(TAG, "saveComicData: comic --> " + comic.getTitle());
         }
     }
 
     private static void saveComicInfoData(ComicInfo comicInfo) {
         if (comicInfo != null) {
             comicInfo.saveOrUpdate("title = ? and sourceId = ?", comicInfo.getTitle(), String.valueOf(comicInfo.getSourceId()));
-            Log.i(TAG, "saveComicInfoData: comicInfo --> " + comicInfo.getTitle() + " " + SourceUtil.getSourceName(comicInfo.getSourceId()));
+            //Log.i(TAG, "saveComicInfoData: comicInfo --> " + comicInfo.getTitle() + " " + SourceUtil.getSourceName(comicInfo.getSourceId()));
         }
     }
 
@@ -135,7 +135,7 @@ public class DBUtil {
 //        if (comic != null) {
 //            new Thread(() -> {
 //                comic.saveOrUpdate("title = ?", comic.getTitle());
-//                Log.i(TAG, "saveComic: " + comic.getTitle() + " p = " + comic.getPriority());
+//                //Log.i(TAG, "saveComic: " + comic.getTitle() + " p = " + comic.getPriority());
 //                if (!comic.getComicInfoList().isEmpty() && needInfo) {
 //                    for (ComicInfo info : comic.getComicInfoList()) {
 //                        DBUtil.saveData(info);
@@ -154,7 +154,7 @@ public class DBUtil {
 //    public static void saveData(ComicInfo comicInfo) {
 //        if (comicInfo != null) {
 //            new Thread(() -> comicInfo.saveOrUpdate("title = ? and sourceId = ?", comicInfo.getTitle(), String.valueOf(comicInfo.getSourceId()))).start();
-//            Log.i(TAG, "saveComicInfo: " + comicInfo.getTitle() + "->" + SourceUtil.getSourceName(comicInfo.getSourceId()));
+//            //Log.i(TAG, "saveComicInfo: " + comicInfo.getTitle() + "->" + SourceUtil.getSourceName(comicInfo.getSourceId()));
 //        }
 //    }
 
@@ -259,11 +259,11 @@ public class DBUtil {
             File backupFile = new File(path + backupFileName);
 
             if (!dbFile.exists()) {
-                Log.i(TAG, "dealData: dbFile not exists");
+                //Log.i(TAG, "dealData: dbFile not exists");
                 dbFile.createNewFile();
             }
             if (!backupFile.exists()) {
-                Log.i(TAG, "dealData: backupFile not exists");
+                //Log.i(TAG, "dealData: backupFile not exists");
                 backupFile.createNewFile();
             }
             if (isBackup) {
@@ -271,7 +271,7 @@ public class DBUtil {
             } else {
                 File tmpFile = new File(path + tmpFileName);
                 if (!tmpFile.exists()) {
-                    Log.i(TAG, "dealData: backupFile not exists");
+                    //Log.i(TAG, "dealData: backupFile not exists");
                     tmpFile.createNewFile();
                 }
                 fileCopy(dbFile, tmpFile);

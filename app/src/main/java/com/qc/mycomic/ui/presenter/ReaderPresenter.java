@@ -44,7 +44,7 @@ public class ReaderPresenter extends BasePresenter<ReaderView> {
     }
 
     private void loadImgInfoList(Comic comic, String url, int chapterId) {
-        Log.i(TAG, "loadImageInfoList: url = " + url);
+        //Log.i(TAG, "loadImageInfoList: url = " + url);
         Callback callback = new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -52,12 +52,12 @@ public class ReaderPresenter extends BasePresenter<ReaderView> {
                 AndroidSchedulers.mainThread().scheduleDirect(() -> {
                     if (view != null) {
                         showErrorPage(e.getMessage(), v -> {
-                            Log.e(TAG, "onClick: getError " + e.getMessage());
+                            //Log.e(TAG, "onClick: getError " + e.getMessage());
                             view.showLoadingPage();
                             loadImageInfoList(comic);
                         });
                     }
-                    Log.i(TAG, "run: get html fail ok...");
+                    //Log.i(TAG, "run: get html fail ok...");
                 });
             }
 
@@ -65,7 +65,7 @@ public class ReaderPresenter extends BasePresenter<ReaderView> {
             public void onResponse(Call call, Response response) throws IOException {
                 String html = ComicUtil.getHtml(response, comic.getSourceId());
                 List<ImageInfo> imageInfoList = comic.getImageInfoList(html, chapterId);
-                Log.i(TAG, "loadImageInfoList: " + imageInfoList);
+                //Log.i(TAG, "loadImageInfoList: " + imageInfoList);
                 ReaderView view = getView();
                 AndroidSchedulers.mainThread().scheduleDirect(() -> {
                     if (view != null) {
@@ -75,7 +75,7 @@ public class ReaderPresenter extends BasePresenter<ReaderView> {
                             view.showErrorPage("解析失败");
                         }
                     }
-                    Log.i(TAG, "run: get html ok...");
+                    //Log.i(TAG, "run: get html ok...");
                 });
             }
         };
