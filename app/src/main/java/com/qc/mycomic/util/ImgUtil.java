@@ -79,19 +79,20 @@ public class ImgUtil {
         if (!set.contains(key)) {
             set.add(key);
             Glide.with(context)
-                    .asBitmap()
+                    .as(byte[].class)
                     .load(url)
-                    .into(new CustomTarget<Bitmap>() {
+                    .into(new CustomTarget<byte[]>() {
                         @Override
-                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        public void onResourceReady(@NonNull byte[] bytes, @Nullable Transition<? super byte[]> transition) {
                             //Log.i("BmSize", "onResourceReady o: " + getBitmapSize(resource));
-                            resource = compressBitmap(resource);
+                            Bitmap resource = bytesToBitmap(bytes);
                             //Log.i("BmSize", "onResourceReady a: " + getBitmapSize(resource));
                             map.put(key, bitmapToDrawable(context, resource));
                         }
 
                         @Override
                         public void onLoadCleared(@Nullable Drawable placeholder) {
+
                         }
                     });
         }
@@ -138,9 +139,9 @@ public class ImgUtil {
             imageView.setTag(key);
             if (isLoadShelfImg) {
                 if (isSave) {
-                    BitmapFactory.Options newOpts = new BitmapFactory.Options();
-                    newOpts.inPreferredConfig = Bitmap.Config.RGB_565;
-                    Bitmap bitmap = BitmapFactory.decodeFile(getLocalImgUrl(key), newOpts);
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inPreferredConfig = Bitmap.Config.RGB_565;
+                    Bitmap bitmap = BitmapFactory.decodeFile(getLocalImgUrl(key), options);
                     if (bitmap != null) {
                         imageView.setImageBitmap(bitmap);
                         return;
@@ -171,9 +172,9 @@ public class ImgUtil {
 
     private static void loadImgNet(Context context, String url, Object key, ImageView imageView, boolean isSave, boolean isLoadShelfImg) {
         Glide.with(context)
-                .asBitmap()
+                .as(byte[].class)
                 .load(url)
-                .into(new CustomTarget<Bitmap>() {
+                .into(new CustomTarget<byte[]>() {
                     @Override
                     public void onLoadStarted(@Nullable Drawable placeholder) {
                         if (Objects.equals(key, imageView.getTag())) {
@@ -190,7 +191,8 @@ public class ImgUtil {
                     }
 
                     @Override
-                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                    public void onResourceReady(@NonNull byte[] bytes, @Nullable Transition<? super byte[]> transition) {
+                        Bitmap resource = bytesToBitmap(bytes);
                         //Log.i("TAG", "onResourceReady: success " + url);
                         if (Objects.equals(key, imageView.getTag())) {
                             if (isLoadShelfImg) {
@@ -203,7 +205,6 @@ public class ImgUtil {
                                     }
                                 }
                             } else {
-                                resource = compressBitmap(resource);
                                 map.put(key, bitmapToDrawable(context, resource));
                                 imageView.setLayoutParams(getLP(context, map.get(key)));
                                 imageView.setScaleType(ImageView.ScaleType.CENTER);
@@ -289,6 +290,21 @@ public class ImgUtil {
         return bitmap;
     }
 
+    private static Bitmap bytesToBitmap(byte[] bytes) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        //Log.i("TAG", "bytesToBitmap: bytes size = " + bytes.length / 1024 + "KB");
+        String data = SettingFactory.getInstance().getSetting(SettingFactory.SETTING_COMPRESS_IMAGE).getData();
+        if (data.equals("1")) {
+            options.inPreferredConfig = Bitmap.Config.RGB_565;
+        } else if (data.equals("2")) {
+            options.inPreferredConfig = Bitmap.Config.RGB_565;
+            options.inSampleSize = 2;
+        }
+        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
+        //Log.i("TAG", "bytesToBitmap: bitmap.size = " + bitmap.getByteCount() / 1024 + "KB");
+        return bitmap;
+    }
+
     /**
      * 图片压缩
      *
@@ -302,15 +318,15 @@ public class ImgUtil {
         }
         int length = bitmap.getByteCount();
         if (length / 1024 > 2000) {
-            BitmapFactory.Options newOpts = new BitmapFactory.Options();
-            newOpts.inPreferredConfig = Bitmap.Config.RGB_565;
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Bitmap.Config.RGB_565;
             if (data.equals("2")) {
-                newOpts.inSampleSize = 2;
+                options.inSampleSize = 2;
             }
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos);
             ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());
-            bitmap = BitmapFactory.decodeStream(isBm, null, newOpts);
+            bitmap = BitmapFactory.decodeStream(isBm, null, options);
         }
         return bitmap;
     }
