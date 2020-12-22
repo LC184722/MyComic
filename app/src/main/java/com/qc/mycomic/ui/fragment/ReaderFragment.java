@@ -307,7 +307,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
         //Log.i(TAG, "onItemLongClick: " + imageInfo.toStringProgress());
         if (ImgUtil.getLoadStatus(imageInfo) == ImgUtil.LOAD_FAIL) {
             ImageView imageView = view.findViewById(R.id.imageView);
-            ImgUtil.loadReaderImg(getContext(), imageInfo, imageView);
+            ImgUtil.loadReaderImgForce(getContext(), imageInfo, imageView);
         } else if (ImgUtil.getLoadStatus(imageInfo) == ImgUtil.LOAD_SUCCESS) {
             startFragment(new ReaderDetailFragment(imageInfo));
         }

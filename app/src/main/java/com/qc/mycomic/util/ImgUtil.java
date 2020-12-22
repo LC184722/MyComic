@@ -50,6 +50,10 @@ public class ImgUtil {
 
     private static Set<Object> set = new HashSet<>();
 
+    private static Map<Object, Integer> errorMap = new HashMap<>();
+
+    private static int maxError = 3;
+
     private static LinearLayout.LayoutParams layoutParams;
 
     public static final int LOAD_ING = 1;
@@ -65,11 +69,15 @@ public class ImgUtil {
     }
 
     public static void loadReaderImg(Context context, ImageInfo imageInfo, ImageView imageView) {
-        loadImg(context, imageInfo.getUrl(), imageInfo.toStringProgressDetail(), imageView, false, false);
+        loadImg(context, imageInfo.getUrl(), imageInfo.toStringProgressDetail(), imageView, false, false, false);
+    }
+
+    public static void loadReaderImgForce(Context context, ImageInfo imageInfo, ImageView imageView) {
+        loadImg(context, imageInfo.getUrl(), imageInfo.toStringProgressDetail(), imageView, false, false, true);
     }
 
     private static void loadShelfImg(Context context, Comic comic, ImageView imageView, boolean isSave) {
-        loadImg(context, comic.getComicInfo().getImgUrl(), comic.getComicInfo().getId(), imageView, isSave, true);
+        loadImg(context, comic.getComicInfo().getImgUrl(), comic.getComicInfo().getId(), imageView, isSave, true, false);
     }
 
     public static void preloadReaderImg(Context context, ImageInfo imageInfo) {
@@ -102,6 +110,7 @@ public class ImgUtil {
         //Log.i("TAG", "clearMap: ");
         map.clear();
         set.clear();
+        errorMap.clear();
     }
 
     public static int getLoadStatus(ImageInfo imageInfo) {
@@ -134,9 +143,20 @@ public class ImgUtil {
         return new LinearLayout.LayoutParams(sWidth, sHeight);
     }
 
-    private static void loadImg(Context context, String url, Object key, ImageView imageView, boolean isSave, boolean isLoadShelfImg) {
+    private static void loadImg(Context context, String url, Object key, ImageView imageView, boolean isSave, boolean isLoadShelfImg, boolean isForce) {
         if (imageView != null) {
             imageView.setTag(key);
+            if (!isForce && errorMap.containsKey(key) && errorMap.get(key) > maxError) {
+                if (isLoadShelfImg) {
+                    imageView.setImageBitmap(drawableToBitmap(getDrawable(context, R.drawable.ic_image_shelf_error_foreground)));
+                } else {
+                    imageView.setLayoutParams(getLP(context, map.get(key)));
+                    imageView.setScaleType(ImageView.ScaleType.CENTER);
+                    imageView.setImageBitmap(drawableToBitmap(getDrawable(context, R.drawable.ic_image_reader_error_foreground)));
+                    imageView.setBackground(getDrawable(context, R.drawable.ic_image_reader_background));
+                }
+                return;
+            }
             if (isLoadShelfImg) {
                 if (isSave) {
                     BitmapFactory.Options options = new BitmapFactory.Options();
@@ -216,12 +236,12 @@ public class ImgUtil {
 
                     @Override
                     public void onLoadCleared(@Nullable Drawable placeholder) {
-
+                        //Log.i("TAG", "onLoadCleared: " + key);
                     }
 
                     @Override
                     public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                        //Log.e("TAG", "onLoadFailed: " + url);
+                        //Log.e("TAG", "onLoadFailed: " + key);
                         if (Objects.equals(key, imageView.getTag())) {
                             if (isLoadShelfImg) {
                                 imageView.setImageBitmap(drawableToBitmap(getDrawable(context, R.drawable.ic_image_shelf_error_foreground)));
@@ -229,11 +249,20 @@ public class ImgUtil {
                             } else {
                                 imageView.setImageBitmap(drawableToBitmap(getDrawable(context, R.drawable.ic_image_reader_error_foreground)));
                                 imageView.setBackground(getDrawable(context, R.drawable.ic_image_reader_background));
-                                map.remove(key);
                             }
                         }
+                        map.remove(key);
+                        addError(key);
                     }
                 });
+    }
+
+    private static void addError(Object key) {
+        if (errorMap.containsKey(key)) {
+            errorMap.put(key, errorMap.get(key) + 1);
+        } else {
+            errorMap.put(key, 1);
+        }
     }
 
     private static String saveBitmapBackPath(Bitmap bm, Object key) throws IOException {
