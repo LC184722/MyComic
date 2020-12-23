@@ -93,7 +93,7 @@ public class ImgUtil {
                         @Override
                         public void onResourceReady(@NonNull byte[] bytes, @Nullable Transition<? super byte[]> transition) {
                             //Log.i("BmSize", "onResourceReady o: " + getBitmapSize(resource));
-                            Bitmap resource = bytesToBitmap(bytes);
+                            Bitmap resource = bytesToBitmap(bytes, true);
                             //Log.i("BmSize", "onResourceReady a: " + getBitmapSize(resource));
                             map.put(key, bitmapToDrawable(context, resource));
                         }
@@ -212,7 +212,7 @@ public class ImgUtil {
 
                     @Override
                     public void onResourceReady(@NonNull byte[] bytes, @Nullable Transition<? super byte[]> transition) {
-                        Bitmap resource = bytesToBitmap(bytes);
+                        Bitmap resource = bytesToBitmap(bytes, !isLoadShelfImg);
                         //Log.i("TAG", "onResourceReady: success " + url);
                         if (Objects.equals(key, imageView.getTag())) {
                             if (isLoadShelfImg) {
@@ -319,17 +319,22 @@ public class ImgUtil {
         return bitmap;
     }
 
-    private static Bitmap bytesToBitmap(byte[] bytes) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        //Log.i("TAG", "bytesToBitmap: bytes size = " + bytes.length / 1024 + "KB");
-        String data = SettingFactory.getInstance().getSetting(SettingFactory.SETTING_COMPRESS_IMAGE).getData();
-        if (data.equals("1")) {
-            options.inPreferredConfig = Bitmap.Config.RGB_565;
-        } else if (data.equals("2")) {
-            options.inPreferredConfig = Bitmap.Config.RGB_565;
-            options.inSampleSize = 2;
+    private static Bitmap bytesToBitmap(byte[] bytes, boolean isCompress) {
+        Bitmap bitmap;
+        if (isCompress) {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            //Log.i("TAG", "bytesToBitmap: bytes size = " + bytes.length / 1024 + "KB");
+            String data = SettingFactory.getInstance().getSetting(SettingFactory.SETTING_COMPRESS_IMAGE).getData();
+            if (data.equals("1")) {
+                options.inPreferredConfig = Bitmap.Config.RGB_565;
+            } else if (data.equals("2")) {
+                options.inPreferredConfig = Bitmap.Config.RGB_565;
+                options.inSampleSize = 2;
+            }
+            bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
+        } else {
+            bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         }
-        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
         //Log.i("TAG", "bytesToBitmap: bitmap.size = " + bitmap.getByteCount() / 1024 + "KB");
         return bitmap;
     }

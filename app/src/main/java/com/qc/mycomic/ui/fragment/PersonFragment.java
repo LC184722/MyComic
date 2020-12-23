@@ -2,6 +2,7 @@ package com.qc.mycomic.ui.fragment;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.text.InputType;
 import android.view.Gravity;
 import android.view.View;
 
@@ -22,6 +23,7 @@ import com.qmuiteam.qmui.widget.grouplist.QMUICommonListItemView;
 
 import the.one.base.ui.fragment.BaseGroupListFragment;
 import the.one.base.util.QMUIDialogUtil;
+import the.one.base.util.StringUtils;
 import the.one.base.widge.RoundImageView;
 
 /**
@@ -32,7 +34,7 @@ import the.one.base.widge.RoundImageView;
  */
 public class PersonFragment extends BaseGroupListFragment implements View.OnClickListener, UpdateView {
 
-    private QMUICommonListItemView web, version, v1, v2, v3, v4, v5;
+    private QMUICommonListItemView web, version, v1, v2, v3, v4, v5, v6;
 
     private UpdatePresenter presenter = new UpdatePresenter();
 
@@ -83,15 +85,16 @@ public class PersonFragment extends BaseGroupListFragment implements View.OnClic
         v3 = CreateDetailItemView("备份数据");
         v4 = CreateDetailItemView("还原数据");
         v5 = CreateDetailItemView("选择画质", SettingFactory.getInstance().getSetting(SettingFactory.SETTING_COMPRESS_IMAGE).getDetailDesc());
+        v6 = CreateDetailItemView("留言反馈", "提出您宝贵的建议", true);
         addToGroup("设置", v1, v2, v5);
         addToGroup("数据", v3, v4);
-        addToGroup("关于", web, version);
+        addToGroup("关于", web, v6, version);
     }
 
     @Override
     public void onClick(View view) {
-        String url = "https://gitee.com/luqichuang/MyComic/releases";
         if (view == web) {
+            String url = "https://gitee.com/luqichuang/MyComic";
             Uri uri = Uri.parse(url);
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(intent);
@@ -158,6 +161,11 @@ public class PersonFragment extends BaseGroupListFragment implements View.OnClic
                     dialog.dismiss();
                 }
             });
+        } else if (view == v6) {
+            String url = "https://gitee.com/luqichuang/MyComic/issues/new";
+            Uri uri = Uri.parse(url);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
         }
     }
 
@@ -165,7 +173,18 @@ public class PersonFragment extends BaseGroupListFragment implements View.OnClic
     public void getVersionTag(String versionTag) {
         hideLoadingDialog();
         if (existUpdate(versionTag, Codes.versionTag)) {
-            showFailTips("存在新版本" + versionTag + "，请访问主页更新");
+            String title = "存在新版本" + versionTag;
+            String content = "是否前往更新页面？";
+            QMUIDialogUtil.showSimpleDialog(getContext(), title, content, new QMUIDialogAction.ActionListener() {
+                @Override
+                public void onClick(QMUIDialog dialog, int index) {
+                    String url = "https://gitee.com/luqichuang/MyComic/releases";
+                    Uri uri = Uri.parse(url);
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);
+                    dialog.dismiss();
+                }
+            }).showWithImmersiveCheck();
         } else {
             showSuccessTips("已是最新版本");
         }
