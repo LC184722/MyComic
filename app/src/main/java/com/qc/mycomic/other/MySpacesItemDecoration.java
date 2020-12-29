@@ -1,6 +1,7 @@
 package com.qc.mycomic.other;
 
 import android.graphics.Rect;
+import android.util.Log;
 import android.view.View;
 
 import androidx.recyclerview.widget.GridLayoutManager;

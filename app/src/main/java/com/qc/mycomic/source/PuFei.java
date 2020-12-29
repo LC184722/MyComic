@@ -96,6 +96,11 @@ public class PuFei extends BaseSource {
             urls = decodeStr(encodeStr);
         }
         String prevUrl = "http://res.img.youzipi.net/";
+        if (urls != null && urls.length > 0) {
+            if (urls[0].startsWith("http")) {
+                prevUrl = "";
+            }
+        }
         return ComicUtil.getImageInfoList(urls, chapterId, prevUrl);
     }
 

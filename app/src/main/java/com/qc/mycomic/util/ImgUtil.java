@@ -92,7 +92,6 @@ public class ImgUtil {
                     .into(new CustomTarget<byte[]>() {
                         @Override
                         public void onResourceReady(@NonNull byte[] bytes, @Nullable Transition<? super byte[]> transition) {
-                            //Log.i("BmSize", "onResourceReady o: " + getBitmapSize(resource));
                             Bitmap resource = bytesToBitmap(bytes, true);
                             //Log.i("BmSize", "onResourceReady a: " + getBitmapSize(resource));
                             map.put(key, bitmapToDrawable(context, resource));
