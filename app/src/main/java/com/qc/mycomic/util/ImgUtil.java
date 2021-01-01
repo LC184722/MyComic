@@ -157,7 +157,7 @@ public class ImgUtil {
                 return;
             }
             if (isLoadShelfImg) {
-                if (isSave) {
+                if (isSave && !Objects.equals(key.toString(), "0")) {
                     BitmapFactory.Options options = new BitmapFactory.Options();
                     options.inPreferredConfig = Bitmap.Config.RGB_565;
                     Bitmap bitmap = BitmapFactory.decodeFile(getLocalImgUrl(key), options);
@@ -216,7 +216,7 @@ public class ImgUtil {
                         if (Objects.equals(key, imageView.getTag())) {
                             if (isLoadShelfImg) {
                                 imageView.setImageBitmap(resource);
-                                if (isSave) {
+                                if (isSave && !Objects.equals(key.toString(), "0")) {
                                     try {
                                         saveBitmapBackPath(resource, key);
                                     } catch (IOException e) {

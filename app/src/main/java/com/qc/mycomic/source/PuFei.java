@@ -89,7 +89,6 @@ public class PuFei extends BaseSource {
 
     @Override
     public List<ImageInfo> getImageInfoList(String html, int chapterId) {
-        List<ImageInfo> list = new ArrayList<>();
         String encodeStr = StringUtil.match("cp=\"(.*?)\"", html);
         String[] urls = null;
         if (encodeStr != null) {
