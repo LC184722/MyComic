@@ -1,12 +1,17 @@
 package com.qc.mycomic.util;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.View;
+import android.widget.Toast;
 
 import com.qc.mycomic.model.ComicInfo;
 import com.qc.mycomic.model.MyMap;
 import com.qc.mycomic.setting.Setting;
+import com.qmuiteam.qmui.skin.QMUISkinManager;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
+import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +48,10 @@ public class PopupUtil {
         List<PopupItem> list = getPopupItemList(myMap);
         int index = myMap.indexOf(key);
         QMUIBottomSheetUtil.showSimpleBottomSheetList(context, list, title, index, listener).show();
+    }
+
+    public static void showNumerousMultiChoiceDialog(Context context, MyMap<?, String> myMap, String title, Object key, QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener listener) {
+
     }
 
 }

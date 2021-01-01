@@ -51,12 +51,10 @@ public class MyMap<K, V> extends LinkedHashMap<K, V> {
 
 
     public K getKeyByValue(V value) {
-        int index = 0;
         for (Entry<K, V> kvEntry : entrySet()) {
             if (Objects.equals(value, kvEntry.getValue())) {
                 return kvEntry.getKey();
             }
-            index++;
         }
         return null;
     }

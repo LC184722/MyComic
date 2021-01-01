@@ -2,28 +2,22 @@ package com.qc.mycomic.ui.fragment;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.text.InputType;
 import android.view.Gravity;
 import android.view.View;
 
 import com.qc.mycomic.R;
-import com.qc.mycomic.setting.Setting;
-import com.qc.mycomic.setting.SettingFactory;
 import com.qc.mycomic.ui.presenter.UpdatePresenter;
 import com.qc.mycomic.ui.view.UpdateView;
 import com.qc.mycomic.util.Codes;
 import com.qc.mycomic.util.DBUtil;
 import com.qc.mycomic.util.PackageUtil;
-import com.qc.mycomic.util.PopupUtil;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
-import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 import com.qmuiteam.qmui.widget.grouplist.QMUICommonListItemView;
 
 import the.one.base.ui.fragment.BaseGroupListFragment;
 import the.one.base.util.QMUIDialogUtil;
-import the.one.base.util.StringUtils;
 import the.one.base.widge.RoundImageView;
 
 /**
@@ -34,7 +28,7 @@ import the.one.base.widge.RoundImageView;
  */
 public class PersonFragment extends BaseGroupListFragment implements View.OnClickListener, UpdateView {
 
-    private QMUICommonListItemView web, version, v1, v2, v3, v4, v5, v6;
+    private QMUICommonListItemView web, version, v1, v2, v3, v4, v5;
 
     private UpdatePresenter presenter = new UpdatePresenter();
 
@@ -74,21 +68,18 @@ public class PersonFragment extends BaseGroupListFragment implements View.OnClic
         imageView.setImageDrawable(getDrawablee(R.drawable.head));
     }
 
-//    private int defaultSourceId = Setting.getDefaultSourceId();
-
     @Override
     protected void addGroupListView() {
         web = CreateNormalItemView("访问主页");
         version = CreateDetailItemView("检查更新", PackageUtil.getVersionName(_mActivity));
-        v1 = CreateDetailItemView("默认漫画源", SettingFactory.getInstance().getSetting(SettingFactory.SETTING_DEFAULT_SOURCE).getDetailDesc());
-        v2 = CreateDetailItemView("阅读预加载图片数量", SettingFactory.getInstance().getSetting(SettingFactory.SETTING_PRELOAD_NUM).getDetailDesc());
+        v1 = CreateDetailItemView("漫画源配置", "", true);
+        v2 = CreateDetailItemView("阅读配置", "", true);
         v3 = CreateDetailItemView("备份数据");
         v4 = CreateDetailItemView("还原数据");
-        v5 = CreateDetailItemView("选择画质", SettingFactory.getInstance().getSetting(SettingFactory.SETTING_COMPRESS_IMAGE).getDetailDesc());
-        v6 = CreateDetailItemView("留言反馈", "提出您宝贵的建议", true);
-        addToGroup("设置", v1, v2, v5);
+        v5 = CreateDetailItemView("留言反馈", "提出您宝贵的建议", true);
+        addToGroup("设置", v1, v2);
         addToGroup("数据", v3, v4);
-        addToGroup("关于", web, v6, version);
+        addToGroup("关于", web, v5, version);
     }
 
     @Override
@@ -102,25 +93,9 @@ public class PersonFragment extends BaseGroupListFragment implements View.OnClic
             showLoadingDialog("正在检查更新");
             presenter.checkUpdate();
         } else if (view == v1) {
-            Setting setting = SettingFactory.getInstance().getSetting(SettingFactory.SETTING_DEFAULT_SOURCE);
-            PopupUtil.showSimpleBottomSheetList(getContext(), setting.getMyMap(), "选择默认漫画源", setting.getData(), new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
-                @Override
-                public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
-                    setting.setData(setting.getMyMap().getKeyByValue(tag));
-                    v1.setDetailText(tag);
-                    dialog.dismiss();
-                }
-            });
+            startFragment(new PersonSourceFragment());
         } else if (view == v2) {
-            Setting setting = SettingFactory.getInstance().getSetting(SettingFactory.SETTING_PRELOAD_NUM);
-            PopupUtil.showSimpleBottomSheetList(getContext(), setting.getMyMap(), "选择预加载图片数量", setting.getData(), new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
-                @Override
-                public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
-                    setting.setData(setting.getMyMap().getKeyByValue(tag));
-                    v2.setDetailText(tag);
-                    dialog.dismiss();
-                }
-            });
+            startFragment(new PersonReaderFragment());
         } else if (view == v3) {
             QMUIDialogUtil.showSimpleDialog(getContext(), "备份漫画", "是否备份漫画数据？", new QMUIDialogAction.ActionListener() {
                 @Override
@@ -152,16 +127,6 @@ public class PersonFragment extends BaseGroupListFragment implements View.OnClic
                 }
             }).show();
         } else if (view == v5) {
-            Setting setting = SettingFactory.getInstance().getSetting(SettingFactory.SETTING_COMPRESS_IMAGE);
-            PopupUtil.showSimpleBottomSheetList(getContext(), setting.getMyMap(), "选择画质（如发生卡顿、闪退请选择低画质）", setting.getData(), new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
-                @Override
-                public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
-                    setting.setData(setting.getMyMap().getKeyByValue(tag));
-                    v5.setDetailText(tag);
-                    dialog.dismiss();
-                }
-            });
-        } else if (view == v6) {
             String url = "https://gitee.com/luqichuang/MyComic/issues/new";
             Uri uri = Uri.parse(url);
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
@@ -172,7 +137,7 @@ public class PersonFragment extends BaseGroupListFragment implements View.OnClic
     @Override
     public void getVersionTag(String versionTag) {
         hideLoadingDialog();
-        if (existUpdate(versionTag, Codes.versionTag)) {
+        if (presenter.existUpdate(versionTag, Codes.versionTag)) {
             String title = "存在新版本" + versionTag;
             String content = "是否前往更新页面？";
             QMUIDialogUtil.showSimpleDialog(getContext(), title, content, new QMUIDialogAction.ActionListener() {
@@ -188,27 +153,6 @@ public class PersonFragment extends BaseGroupListFragment implements View.OnClic
         } else {
             showSuccessTips("已是最新版本");
         }
-    }
-
-    public boolean existUpdate(String updateTag, String localTag) {
-        boolean flag = false;
-        if (updateTag != null && localTag != null && !updateTag.equals(localTag)) {
-            String[] tags = updateTag.replace("v", "").split("\\.");
-            String[] locals = localTag.replace("v", "").split("\\.");
-            try {
-                for (int i = 0; i < tags.length; i++) {
-                    int tag = Integer.parseInt(tags[i]);
-                    int local = Integer.parseInt(locals[i]);
-                    if (tag > local) {
-                        flag = true;
-                        break;
-                    }
-                }
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
-        }
-        return flag;
     }
 
     @Override

@@ -52,6 +52,8 @@ public class TestUtil {
 //        List<Map<String, String>> mapList = starter.startElements(text, "a");
 //        String s = "https://m.imitui.com%sclick/?page=1";
 //        MyMap<String, String> myMap = getRankMyMap(mapList, s);
+//        SourceUtil.reloadSourceList("1010111111");
+//        System.out.println("SourceUtil.getSourceStr() = " + SourceUtil.getSourceStr());
     }
 
     public static void generator(String s) {
