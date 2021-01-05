@@ -113,7 +113,7 @@ public class MiTui extends BaseSource {
         String[] urls = null;
         if (chapterImagesStr != null) {
             urls = chapterImagesStr.split(",");
-            String server = "https://res0818.imitui.com";
+            String server = "https://resnode.yxtun.com";
             for (int i = 0; i < urls.length; i++) {
                 String url = urls[i];
                 url = url.replace("\"", "").replace("\\", "");

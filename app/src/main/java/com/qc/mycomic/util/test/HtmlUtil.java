@@ -26,20 +26,7 @@ import java.util.regex.Pattern;
 public class HtmlUtil {
 
     public static String getHtmlByFile() {
-        try {
-            String filePath = "D:\\Programming\\Files\\MH\\text.html";
-            BufferedReader in = new BufferedReader(new FileReader(new File(filePath)));
-            String line;
-            StringBuilder builder = new StringBuilder();
-            while ((line = in.readLine()) != null) {
-                builder.append(line);
-            }
-            in.close();
-            return builder.toString();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "";
+        return getHtmlByFile("text.html");
     }
 
     public static String getHtmlByFile(String filename) {
@@ -49,7 +36,7 @@ public class HtmlUtil {
             String line;
             StringBuilder builder = new StringBuilder();
             while ((line = in.readLine()) != null) {
-                builder.append(line);
+                builder.append(line).append("\n");
             }
             in.close();
             return builder.toString();
@@ -91,14 +78,15 @@ public class HtmlUtil {
         }
     }
 
-    public static void writeFile(String[] ss, String var, String fileName) {
+    public static void writeFile(String[] ss, String var, String fromFileName, String toFileName) {
         MyMap<String, String> myMap = getMyMap(ss);
-        String html = HtmlUtil.getHtmlByFile();
+        String html = HtmlUtil.getHtmlByFile(fromFileName);
         for (String s : myMap.keySet()) {
             String str = var + "[" + s + "]";
+            System.out.println(str + " --> " + myMap.get(s));
             html = html.replace(str, myMap.get(s));
         }
-        HtmlUtil.writeFile(html, fileName);
+        HtmlUtil.writeFile(html, toFileName);
     }
 
     public static MyMap<String, String> getMyMap(String[] ss) {
@@ -116,12 +104,10 @@ public class HtmlUtil {
             if (s.contains("\\u")) {
                 s = UnicodeToCN(s);
             }
-            System.out.println("s = " + s);
             String key = String.format("0x%x", i++);
             String value = "\"" + s + "\"";
             myMap.put(key, value);
         }
-        System.out.println("myMap = " + myMap);
         return myMap;
     }
 

@@ -93,7 +93,7 @@ public class OH extends BaseSource {
     public List<ImageInfo> getImageInfoList(String html, int chapterId) {
         String[] urls = null;
         String chapterImagesStr = StringUtil.match("C_DATA='(.*?)'", html);
-        String result = DecryptUtil.decryptAES(DecryptUtil.decryptBase64(chapterImagesStr), "fw12558899ertyui");//|SEPARATER|
+        String result = DecryptUtil.decryptAES(DecryptUtil.decryptBase64(chapterImagesStr), "fw122587mkertyui");
         if (result != null) {
             try {
                 String server = "https://img.cocomanhua.com/comic/";
