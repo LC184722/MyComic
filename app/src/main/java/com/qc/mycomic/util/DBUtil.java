@@ -197,23 +197,25 @@ public class DBUtil {
         for (Comic comic : list) {
             List<ComicInfo> infoList = findComicInfoListByTitle(comic.getTitle());
             for (ComicInfo info : infoList) {
-                comic.addComicInfo(info);
-                if (comic.getSourceId() == info.getSourceId()) {
-                    comic.setComicInfo(info);
+                if (SourceUtil.getSource(info.getSourceId()).isValid()) {
+                    comic.addComicInfo(info);
+                    if (comic.getSourceId() == info.getSourceId()) {
+                        comic.setComicInfo(info);
+                    }
+                    //更改detailUrl
+                    String url = info.getDetailUrl();
+                    String index = SourceUtil.getSource(info.getSourceId()).getIndex();
+                    if (!url.startsWith(index)) {
+                        String tmp = url.substring(url.indexOf('/', url.indexOf('.')));
+                        url = index + tmp;
+                        info.setDetailUrl(url);
+                        saveComicInfo(info);
+                    }
+                    //end
                 }
-                //更改detailUrl
-                String url = info.getDetailUrl();
-                String index = SourceUtil.getSource(info.getSourceId()).getIndex();
-                if (!url.startsWith(index)) {
-                    String tmp = url.substring(url.indexOf('/', url.indexOf('.')));
-                    url = index + tmp;
-                    info.setDetailUrl(url);
-                    saveComicInfo(info);
-                }
-                //end
             }
             if (comic.getComicInfo() == null) {
-                if (comic.getComicInfoList().size() == 0) {
+                if (comic.getComicInfoList().isEmpty()) {
                     dList.add(comic);
                 } else {
                     comic.setComicInfo(comic.getComicInfoList().get(0));

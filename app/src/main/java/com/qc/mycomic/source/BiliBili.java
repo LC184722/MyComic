@@ -31,7 +31,7 @@ import okhttp3.Response;
  * @date 2020/8/12 15:25
  * @ver 1.0
  */
-public class BiliBili implements Source, ImageLoader {
+public class BiliBili extends BaseSource implements ImageLoader {
     @Override
     public int getSourceId() {
         return Codes.BILI_BILI;

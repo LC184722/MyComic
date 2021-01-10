@@ -14,6 +14,11 @@ import okhttp3.Request;
 public abstract class BaseSource implements Source {
 
     @Override
+    public boolean isValid() {
+        return true;
+    }
+
+    @Override
     public Request getDetailRequest(String detailUrl) {
         return NetUtil.getRequest(detailUrl);
     }

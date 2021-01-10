@@ -32,6 +32,13 @@ public class HtmlUtil {
     public static String getHtmlByFile(String filename) {
         try {
             String filePath = "D:\\Programming\\Files\\MH\\" + filename;
+            File file = new File(filePath);
+            if (file.getParentFile() != null && !file.getParentFile().exists()) {
+                file.getParentFile().mkdirs();
+            }
+            if (!file.exists()) {
+                file.createNewFile();
+            }
             BufferedReader in = new BufferedReader(new FileReader(new File(filePath)));
             String line;
             StringBuilder builder = new StringBuilder();

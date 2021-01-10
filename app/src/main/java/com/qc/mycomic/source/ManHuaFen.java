@@ -183,4 +183,8 @@ public class ManHuaFen extends BaseSource {
         return DecryptUtil.decryptAES(code, key, iv);
     }
 
+    @Override
+    public boolean isValid() {
+        return false;
+    }
 }

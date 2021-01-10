@@ -34,6 +34,13 @@ public interface Source {
      */
     String getIndex();
 
+    /**
+     * 漫画源是否有效
+     *
+     * @return boolean
+     */
+    boolean isValid();
+
     //获得搜索漫画request
 
     /**
@@ -72,7 +79,7 @@ public interface Source {
      * 设置漫画详情
      *
      * @param comicInfo comicInfo
-     * @param html html
+     * @param html      html
      * @return void
      */
     void setComicDetail(ComicInfo comicInfo, String html);
@@ -80,7 +87,7 @@ public interface Source {
     /**
      * 获得漫画图片信息链表
      *
-     * @param html html
+     * @param html      html
      * @param chapterId chapterId
      * @return List<ImageInfo>
      */
