@@ -15,6 +15,8 @@ import com.qc.mycomic.util.NetUtil;
 import com.qc.mycomic.util.StringUtil;
 import com.qc.mycomic.ui.view.ReaderView;
 
+import org.json.JSONArray;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -235,10 +237,20 @@ public class BiliBili extends BaseSource implements ImageLoader {
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
-                    String html = response.body().string();
-                    JsonNode node = new JsonNode(html, "data", "index");
-                    String pics = node.string("pics");
-                    if (pics != null) {
+                    String json = response.body().string();
+                    JsonStarter<Object> starter = new JsonStarter<Object>() {
+                        @Override
+                        public void dealData(JsonNode node) {
+
+                        }
+
+                        @Override
+                        public Object dealDataList(JsonNode node, int dataId) {
+                            return node.string("path");
+                        }
+                    };
+                    List<Object> list = starter.startDataList(json, "data", "images");
+                    if (!list.isEmpty()) {
                         Callback callback = new Callback() {
                             @Override
                             public void onFailure(Call call, IOException e) {
@@ -262,7 +274,7 @@ public class BiliBili extends BaseSource implements ImageLoader {
                         };
                         String url = "https://manga.bilibili.com/twirp/comic.v1.Comic/ImageToken?device=pc&platform=web";
                         MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
-                        builder.addFormDataPart("urls", pics);
+                        builder.addFormDataPart("urls", new JSONArray(list).toString());
                         Request request = new Request.Builder().addHeader("User-Agent", Codes.USER_AGENT_WEB).url(url).post(builder.build()).build();
                         NetUtil.startLoad(request, callback);
                     } else {

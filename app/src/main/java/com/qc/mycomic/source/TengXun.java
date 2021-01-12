@@ -99,7 +99,7 @@ public class TengXun extends BaseSource {
     @Override
     public List<ImageInfo> getImageInfoList(String html, int chapterId) {
         String raw = StringUtil.match("DATA.*=.*'(.*?)',", html);
-        String nonce = StringUtil.match("window\\[.*?\\] *=(.*?);", html);
+        String nonce = StringUtil.matchLast("window\\[.*?\\] *=(.*?);", html);
         if (nonce != null) {
             String[] docs = nonce.split("\\(\\)");
             for (String doc : docs) {

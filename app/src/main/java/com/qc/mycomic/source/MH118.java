@@ -53,15 +53,15 @@ public class MH118 extends BaseSource {
         JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
             @Override
             protected ComicInfo dealElement(JsoupNode node, int elementId) {
-                String title = node.ownText("a.txtA");
+                String title = node.ownText("li.title a");
                 String author = null;
                 String updateTime = null;
                 String imgUrl = node.src("img");
-                String detailUrl = getIndex() + node.href("a.imgA");
+                String detailUrl = getIndex() + node.href("li.title a");
                 return new ComicInfo(getSourceId(), title, author, detailUrl, imgUrl, updateTime);
             }
         };
-        return starter.startElements(html, "ul#listbody li");
+        return starter.startElements(html, "div.cy_list_mh ul");
     }
 
     @Override
