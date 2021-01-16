@@ -52,7 +52,7 @@ import the.one.base.util.glide.GlideProgressInterceptor;
  */
 public class ImgUtil {
 
-    public static final String TAG = ImgUtil.class.getSimpleName();
+    private static final String TAG = ImgUtil.class.getSimpleName();
 
     private static final String SHELF_IMG_PATH = Codes.SHELF_IMG_PATH;
 

@@ -1,5 +1,6 @@
 package com.qc.mycomic.ui.fragment;
 
+import android.annotation.SuppressLint;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
@@ -38,6 +39,7 @@ import com.qmuiteam.qmui.widget.popup.QMUIPopup;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import the.one.base.ui.fragment.BaseDataFragment;
@@ -148,7 +150,7 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
             if (null == mSettingPopup) {
                 mSettingPopup = QMUIPopupUtil.createListPop(_mActivity, mMenus, (adapter, view, position) -> {
                     if (position == 0) {
-                        showLoadingDialog("正在更新漫画源");
+                        showProgressDialog(0, SourceUtil.size(), "正在更新漫画源");
                         presenter.updateSource(comic);
                     } else if (position == 1) {
                         QMUIDialogUtil.showSimpleDialog(getContext(), "查看信息", comic.toStringView()).show();
@@ -410,11 +412,27 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         }
         if (count == SourceUtil.size()) {
             count = 0;
-            hideLoadingDialog();
+            hideProgressDialog();
             showSuccessTips("搜索完毕");
             setValue();
             DBUtil.saveComic(comic, DBUtil.SAVE_ALL);
+        } else {
+            progressDialog.setMessage(getMsg("正在更新漫画源", count, SourceUtil.size()));
+            progressDialog.setProgress(getValue(count, SourceUtil.size()), 100);
+            tvSourceSize.setText("(" + comic.getSourceSize() + ")");
         }
+    }
+
+    private int getValue(int count, int max) {
+        if (max > 0) {
+            return count * 100 / max;
+        } else {
+            return count;
+        }
+    }
+
+    private String getMsg(String msg, int count, int max) {
+        return String.format(Locale.CHINA, "%s %d/%d", msg, count, max);
     }
 
     private void updateComicInfo(ComicInfo info) {
@@ -423,10 +441,8 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         }
         if (comic.getComicInfoList().contains(info)) {
             comic.getComicInfoList().remove(info);
-            comic.addComicInfo(info);
-        } else {
-            comic.addComicInfo(info);
         }
+        comic.addComicInfo(info);
     }
 
     public void start() {
