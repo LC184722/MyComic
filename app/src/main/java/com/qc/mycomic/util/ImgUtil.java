@@ -7,7 +7,6 @@ import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -27,7 +26,6 @@ import com.bumptech.glide.request.transition.Transition;
 import com.qc.mycomic.R;
 import com.qc.mycomic.en.Codes;
 import com.qc.mycomic.model.ImageInfo;
-import com.qc.mycomic.setting.SettingFactory;
 import com.qmuiteam.qmui.util.QMUIDisplayHelper;
 import com.qmuiteam.qmui.widget.QMUIProgressBar;
 
@@ -347,14 +345,8 @@ public class ImgUtil {
         Bitmap bitmap;
         if (isCompress) {
             BitmapFactory.Options options = new BitmapFactory.Options();
-            //Log.i("TAG", "bytesToBitmap: bytes size = " + bytes.length / 1024 + "KB");
-            String data = SettingFactory.getInstance().getSetting(SettingFactory.SETTING_COMPRESS_IMAGE).getData();
-            if (data.equals("1")) {
-                options.inPreferredConfig = Bitmap.Config.RGB_565;
-            } else if (data.equals("2")) {
-                options.inPreferredConfig = Bitmap.Config.RGB_565;
-                options.inSampleSize = 2;
-            }
+            options.inPreferredConfig = Bitmap.Config.RGB_565;
+            options.inSampleSize = 2;
             bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
         } else {
             bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
@@ -370,17 +362,11 @@ public class ImgUtil {
      * @return Bitmap
      */
     private static Bitmap compressBitmap(Bitmap bitmap) {
-        String data = SettingFactory.getInstance().getSetting(SettingFactory.SETTING_COMPRESS_IMAGE).getData();
-        if (data.equals("0")) {
-            return bitmap;
-        }
         int length = bitmap.getByteCount();
         if (length / 1024 > 2000) {
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inPreferredConfig = Bitmap.Config.RGB_565;
-            if (data.equals("2")) {
-                options.inSampleSize = 2;
-            }
+            options.inSampleSize = 2;
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos);
             ByteArrayInputStream isBm = new ByteArrayInputStream(baos.toByteArray());

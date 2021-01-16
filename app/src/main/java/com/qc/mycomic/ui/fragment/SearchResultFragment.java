@@ -7,16 +7,17 @@ import androidx.annotation.NonNull;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.qc.mycomic.R;
-import com.qc.mycomic.setting.SettingFactory;
-import com.qc.mycomic.ui.adapter.SearchAdapter;
+import com.qc.mycomic.en.Codes;
+import com.qc.mycomic.en.SettingEnum;
 import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ComicInfo;
+import com.qc.mycomic.ui.adapter.SearchAdapter;
 import com.qc.mycomic.ui.presenter.SearchPresenter;
-import com.qc.mycomic.en.Codes;
+import com.qc.mycomic.ui.view.SearchView;
 import com.qc.mycomic.util.DBUtil;
 import com.qc.mycomic.util.RestartUtil;
+import com.qc.mycomic.util.SettingUtil;
 import com.qc.mycomic.util.SourceUtil;
-import com.qc.mycomic.ui.view.SearchView;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
 
 import java.util.ArrayList;
@@ -125,8 +126,9 @@ public class SearchResultFragment extends BaseDataFragment<Comic> implements Sea
             errorList.add(sourceName);
         }
         if (++count == size) {
-            String data = SettingFactory.getInstance().getSetting(SettingFactory.SETTING_DEFAULT_SOURCE).getData();
-            int sourceId = Integer.parseInt(data);
+//            String data = SettingFactory.getInstance().getSetting(SettingFactory.SETTING_DEFAULT_SOURCE).getData();
+//            int sourceId = Integer.parseInt(data);
+            int sourceId = (int) SettingUtil.getSettingKey(SettingEnum.DEFAULT_SOURCE);
             for (Comic comic : comicList) {
                 comic.changeComicInfo(sourceId);
             }

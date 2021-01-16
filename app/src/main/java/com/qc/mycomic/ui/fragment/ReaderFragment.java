@@ -1,7 +1,6 @@
 package com.qc.mycomic.ui.fragment;
 
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -14,18 +13,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.qc.mycomic.R;
+import com.qc.mycomic.en.Codes;
+import com.qc.mycomic.en.SettingEnum;
 import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ComicInfo;
 import com.qc.mycomic.model.ImageInfo;
-import com.qc.mycomic.setting.SettingFactory;
 import com.qc.mycomic.ui.adapter.ReaderAdapter;
 import com.qc.mycomic.ui.presenter.ReaderPresenter;
 import com.qc.mycomic.ui.view.ReaderView;
-import com.qc.mycomic.en.Codes;
 import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DBUtil;
 import com.qc.mycomic.util.ImgUtil;
 import com.qc.mycomic.util.RestartUtil;
+import com.qc.mycomic.util.SettingUtil;
 import com.qmuiteam.qmui.util.QMUIDisplayHelper;
 import com.qmuiteam.qmui.util.QMUIViewHelper;
 
@@ -122,7 +122,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
             tvProgress.setText(imageInfo.toStringProgress());
             seekBar.setMax(imageInfo.getTotal() - 1);
             seekBar.setProgress(imageInfo.getCur());
-            tvInfo.setText(String.format(Locale.CHINA, "%d/%d", imageInfo.getChapterId() + 1, comicInfo.getChapterInfoList().size()));
+            tvInfo.setText(String.format(Locale.CHINA, "%d章/%d章", imageInfo.getChapterId() + 1, comicInfo.getChapterInfoList().size()));
         }
     }
 
@@ -229,8 +229,9 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
                     }
                     //预加载
                     int bottom = first + count;
-                    String data = SettingFactory.getInstance().getSetting(SettingFactory.SETTING_PRELOAD_NUM).getData();
-                    int preloadNum = Integer.parseInt(data);
+//                    String data = SettingFactory.getInstance().getSetting(SettingFactory.SETTING_PRELOAD_NUM).getData();
+//                    int preloadNum = Integer.parseInt(data);
+                    int preloadNum = (int) SettingUtil.getSettingKey(SettingEnum.PRELOAD_NUM);
                     int min = Math.min(bottom + preloadNum, imageInfoList.size());
                     if (bottomIndex < min) {
                         for (int i = bottomIndex; i < min; i++) {

@@ -1,26 +1,22 @@
 package com.qc.mycomic.ui.fragment;
 
-import android.content.DialogInterface;
 import android.view.Gravity;
 import android.view.View;
 
 import com.qc.mycomic.R;
-import com.qc.mycomic.setting.Setting;
-import com.qc.mycomic.setting.SettingFactory;
+import com.qc.mycomic.en.SettingEnum;
+import com.qc.mycomic.util.MapUtil;
 import com.qc.mycomic.util.PopupUtil;
+import com.qc.mycomic.util.SettingItemUtil;
+import com.qc.mycomic.util.SettingUtil;
 import com.qc.mycomic.util.SourceUtil;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
-import com.qmuiteam.qmui.skin.QMUISkinManager;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 import com.qmuiteam.qmui.widget.grouplist.QMUICommonListItemView;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 import the.one.base.ui.fragment.BaseGroupListFragment;
-import the.one.base.util.ToastUtil;
 
 /**
  * @author LuQiChuang
@@ -44,34 +40,30 @@ public class PersonSourceFragment extends BaseGroupListFragment implements View.
 
     @Override
     protected void addGroupListView() {
-        v1 = CreateDetailItemView("默认漫画源", SettingFactory.getInstance().getSetting(SettingFactory.SETTING_DEFAULT_SOURCE).getDetailDesc());
-        v2 = CreateDetailItemView("选用漫画源", String.valueOf(SourceUtil.size()));
+        v1 = CreateDetailItemView("默认漫画源", SettingUtil.getSettingDesc(SettingEnum.DEFAULT_SOURCE));
+//        v2 = CreateDetailItemView("选用漫画源", String.valueOf(SourceUtil.size()));
 //        addToGroup("漫画源设置", v1, v2);
-        addToGroup(v1, v2);
+        addToGroup(v1);
     }
 
     @Override
     public void onClick(View view) {
         if (view == v1) {
-            Setting setting = SettingFactory.getInstance().getSetting(SettingFactory.SETTING_DEFAULT_SOURCE);
-            PopupUtil.showSimpleBottomSheetList(getContext(), setting.getMyMap(), "选择默认漫画源", setting.getData(), new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
+            Object key = SettingUtil.getSettingKey(SettingEnum.DEFAULT_SOURCE);
+            Map<Object, String> map = SettingItemUtil.getMap(SettingEnum.DEFAULT_SOURCE);
+            PopupUtil.showSimpleBottomSheetList(getContext(), map, key, "选择默认漫画源", new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
                 @Override
                 public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
-//                    setting.setData(setting.getMyMap().getKeyByValue(tag));
-//                    String sourceStr = SourceUtil.getSourceStr();
-//                    StringBuilder strBuilder = new StringBuilder(sourceStr);
-//                    strBuilder.setCharAt(position, '1');
-//                    sourceStr = strBuilder.toString();
-//                    SourceUtil.reloadSourceList(sourceStr);
-//                    v1.setDetailText(tag);
-//                    v2.setDetailText(String.valueOf(SourceUtil.getSourceStrSize(sourceStr)));
+                    Object key = MapUtil.getKeyByValue(map, tag);
+                    SettingUtil.putSetting(SettingEnum.DEFAULT_SOURCE, key, tag);
+                    v1.setDetailText(tag);
                     dialog.dismiss();
                 }
             });
-        } else if (view == v2) {
+//        } else if (view == v2) {
 //            String[] items = SourceUtil.getAllSourceNameArray();
 //            int[] checkedItems = SourceUtil.getSourceIntArr();
-//            Setting defaultSetting = SettingFactory.getInstance().getSetting(SettingFactory.SETTING_DEFAULT_SOURCE);
+//            Setting defaultSetting = SettingFactory.getInstance().getSettingKey(SettingFactory.SETTING_DEFAULT_SOURCE);
 //            String sourceName = SourceUtil.getSourceName(Integer.parseInt(defaultSetting.getData()));
 //            int defaultIndex = -1;
 //            for (int i = 0; i < items.length; i++) {

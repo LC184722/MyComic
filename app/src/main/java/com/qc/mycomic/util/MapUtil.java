@@ -33,6 +33,10 @@ public class MapUtil {
         return null;
     }
 
+    public static <K, V> Map.Entry<K, V> getFirst(Map<K, V> map) {
+        return map.entrySet().iterator().next();
+    }
+
     public static <K, V> V getFirstValue(Map<K, V> map) {
         if (map != null && !map.isEmpty()) {
             return map.values().iterator().next();

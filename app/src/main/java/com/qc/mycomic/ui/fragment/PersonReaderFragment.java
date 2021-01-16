@@ -4,13 +4,16 @@ import android.view.Gravity;
 import android.view.View;
 
 import com.qc.mycomic.R;
-import com.qc.mycomic.setting.Setting;
-import com.qc.mycomic.setting.SettingFactory;
+import com.qc.mycomic.en.SettingEnum;
 import com.qc.mycomic.util.MapUtil;
 import com.qc.mycomic.util.PopupUtil;
+import com.qc.mycomic.util.SettingItemUtil;
+import com.qc.mycomic.util.SettingUtil;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 import com.qmuiteam.qmui.widget.grouplist.QMUICommonListItemView;
+
+import java.util.Map;
 
 import the.one.base.ui.fragment.BaseGroupListFragment;
 
@@ -36,34 +39,36 @@ public class PersonReaderFragment extends BaseGroupListFragment implements View.
 
     @Override
     protected void addGroupListView() {
-        v1 = CreateDetailItemView("阅读预加载图片数量", SettingFactory.getInstance().getSetting(SettingFactory.SETTING_PRELOAD_NUM).getDetailDesc());
-        v2 = CreateDetailItemView("选择画质", SettingFactory.getInstance().getSetting(SettingFactory.SETTING_COMPRESS_IMAGE).getDetailDesc());
+        v1 = CreateDetailItemView("阅读预加载图片数量", SettingUtil.getSettingDesc(SettingEnum.PRELOAD_NUM));
+//        v2 = CreateDetailItemView("选择画质", SettingFactory.getInstance().getSetting(SettingFactory.SETTING_COMPRESS_IMAGE).getDetailDesc());
 //        addToGroup("阅读配置", v1, v2);
-        addToGroup(v1, v2);
+        addToGroup(v1);
     }
 
     @Override
     public void onClick(View view) {
         if (view == v1) {
-            Setting setting = SettingFactory.getInstance().getSetting(SettingFactory.SETTING_PRELOAD_NUM);
-            PopupUtil.showSimpleBottomSheetList(getContext(), setting.getMyMap(), "选择预加载图片数量", setting.getData(), new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
+            Object key = SettingUtil.getSettingKey(SettingEnum.PRELOAD_NUM);
+            Map<Object, String> map = SettingItemUtil.getMap(SettingEnum.PRELOAD_NUM);
+            PopupUtil.showSimpleBottomSheetList(getContext(), map, key, "选择预加载图片数量", new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
                 @Override
                 public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
-                    setting.setData(MapUtil.getKeyByValue(setting.getMyMap(), tag));
-                    v2.setDetailText(tag);
+                    Object key = MapUtil.getKeyByValue(map, tag);
+                    SettingUtil.putSetting(SettingEnum.PRELOAD_NUM, key, tag);
+                    v1.setDetailText(tag);
                     dialog.dismiss();
                 }
             });
-        } else if (view == v2) {
-            Setting setting = SettingFactory.getInstance().getSetting(SettingFactory.SETTING_COMPRESS_IMAGE);
-            PopupUtil.showSimpleBottomSheetList(getContext(), setting.getMyMap(), "选择画质（如发生卡顿、闪退请选择低画质）", setting.getData(), new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
-                @Override
-                public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
-                    setting.setData(MapUtil.getKeyByValue(setting.getMyMap(), tag));
-                    v5.setDetailText(tag);
-                    dialog.dismiss();
-                }
-            });
+//        } else if (view == v2) {
+//            Setting setting = SettingFactory.getInstance().getSetting(SettingFactory.SETTING_COMPRESS_IMAGE);
+//            PopupUtil.showSimpleBottomSheetList(getContext(), setting.getMyMap(), setting.getData(), "选择画质（如发生卡顿、闪退请选择低画质）", new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
+//                @Override
+//                public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
+//                    setting.setData(MapUtil.getKeyByValue(setting.getMyMap(), tag));
+//                    v5.setDetailText(tag);
+//                    dialog.dismiss();
+//                }
+//            });
         }
     }
 }

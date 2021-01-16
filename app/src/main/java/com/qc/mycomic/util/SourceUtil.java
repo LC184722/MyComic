@@ -1,27 +1,13 @@
 package com.qc.mycomic.util;
 
-import androidx.annotation.Nullable;
-
-import com.qc.mycomic.en.Codes;
 import com.qc.mycomic.en.SourceEnum;
 import com.qc.mycomic.model.Source;
-import com.qc.mycomic.setting.SettingConstant;
-import com.qc.mycomic.source.BiliBili;
-import com.qc.mycomic.source.MH118;
-import com.qc.mycomic.source.ManHuaFen;
-import com.qc.mycomic.source.ManHuaTai;
-import com.qc.mycomic.source.MiTui;
-import com.qc.mycomic.source.OH;
-import com.qc.mycomic.source.PuFei;
-import com.qc.mycomic.source.TengXun;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.LinkedHashMap;
-
-import the.one.base.util.SpUtil;
+import java.util.function.Predicate;
 
 /**
  * @author LuQiChuang
@@ -36,7 +22,11 @@ public class SourceUtil {
     private static List<Source> sourceList = new ArrayList<>();
 
     static {
-        sourceList.addAll(map.values());
+        for (Source source : map.values()) {
+            if (source.isValid()) {
+                sourceList.add(source);
+            }
+        }
     }
 
     public static Map<Integer, Source> getMap() {

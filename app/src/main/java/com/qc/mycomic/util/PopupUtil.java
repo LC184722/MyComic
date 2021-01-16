@@ -21,30 +21,26 @@ import the.one.base.util.QMUIBottomSheetUtil;
  */
 public class PopupUtil {
 
-    public static List<PopupItem> getPopupItemList(Map<?, String> myMap) {
+    public static List<PopupItem> getPopupItemList(Map<?, String> map) {
         List<PopupItem> itemList = new ArrayList<>();
-        for (Map.Entry<?, String> entry : myMap.entrySet()) {
-            itemList.add(new PopupItem(entry.getValue()));
+        for (String value : map.values()) {
+            itemList.add(new PopupItem(value));
         }
         return itemList;
     }
 
     public static Map<Integer, String> getMyMap(List<ComicInfo> comicInfoList) {
-        Map<Integer, String> myMap = new LinkedHashMap<>();
+        Map<Integer, String> map = new LinkedHashMap<>();
         for (ComicInfo comicInfo : comicInfoList) {
-            myMap.put(comicInfo.getSourceId(), SourceUtil.getSourceName(comicInfo.getSourceId()));
+            map.put(comicInfo.getSourceId(), SourceUtil.getSourceName(comicInfo.getSourceId()));
         }
-        return myMap;
+        return map;
     }
 
-    public static void showSimpleBottomSheetList(Context context, Map<?, String> myMap, String title, Object key, QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener listener) {
-        List<PopupItem> list = getPopupItemList(myMap);
-        int index = MapUtil.indexOf(myMap, key);
+    public static void showSimpleBottomSheetList(Context context, Map<?, String> map, Object key, String title, QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener listener) {
+        List<PopupItem> list = getPopupItemList(map);
+        int index = MapUtil.indexOf(map, key);
         QMUIBottomSheetUtil.showSimpleBottomSheetList(context, list, title, index, listener).show();
-    }
-
-    public static void showNumerousMultiChoiceDialog(Context context, Map<?, String> myMap, String title, Object key, QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener listener) {
-
     }
 
 }

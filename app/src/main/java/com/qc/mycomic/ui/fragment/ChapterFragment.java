@@ -1,6 +1,5 @@
 package com.qc.mycomic.ui.fragment;
 
-import android.annotation.SuppressLint;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
@@ -175,7 +174,7 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         TextView tvSource = headerView.findViewById(R.id.tvSource);
         tvSource.setOnClickListener(v -> {
             Map<Integer, String> myMap = PopupUtil.getMyMap(comic.getComicInfoList());
-            PopupUtil.showSimpleBottomSheetList(getContext(), myMap, "切换漫画源", comic.getSourceId(), new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
+            PopupUtil.showSimpleBottomSheetList(getContext(), myMap, comic.getSourceId(), "切换漫画源", new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
                 @Override
                 public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
                     Integer integer = MapUtil.getKeyByValue(myMap, tag);
@@ -377,7 +376,7 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
             adapter.notifyDataSetChanged();
             if (Codes.toStatus == Codes.RANK_TO_CHAPTER) {
                 Codes.toStatus = Codes.NORMAL;
-                showLoadingDialog("正在更新漫画源");
+                showProgressDialog("正在更新漫画源");
                 presenter.updateSource(comic);
             }
         } catch (Exception e) {

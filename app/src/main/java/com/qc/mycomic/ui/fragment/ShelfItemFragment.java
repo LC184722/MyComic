@@ -145,7 +145,7 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
                     QMUIDialogUtil.showSimpleDialog(getContext(), "查看信息", comic.toStringView()).show();
                 } else if (which == 1) {
                     Map<Integer, String> myMap = PopupUtil.getMyMap(comic.getComicInfoList());
-                    PopupUtil.showSimpleBottomSheetList(getContext(), myMap, "切换漫画源", comic.getSourceId(), new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
+                    PopupUtil.showSimpleBottomSheetList(getContext(), myMap, comic.getSourceId(), "切换漫画源", new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
                         @Override
                         public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
                             Integer integer = MapUtil.getKeyByValue(myMap, tag);
