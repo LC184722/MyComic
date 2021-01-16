@@ -11,32 +11,12 @@
         app:qmui_borderColor="@color/black"
         app:qmui_borderWidth="1dp">
 
-        <RelativeLayout
-            android:id="@+id/imageRelativeLayout"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-            <the.one.base.widge.ScaleImageView
-                android:id="@+id/imageView"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:background="@drawable/bg_image"
-                android:scaleType="center" />
-            <!--                android:src="@drawable/ic_baseline_image_search_24" -->
-
-            <com.qmuiteam.qmui.widget.QMUIProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_centerInParent="true"
-                android:textDirection="firstStrongLtr"
-                app:qmui_background_color="@color/qmui_config_color_10_pure_black"
-                app:qmui_progress_color="@color/colorPrimary"
-                app:qmui_stroke_width="2dp"
-                app:qmui_type="type_circle"
-                app:qmui_value="0" />
-
-        </RelativeLayout>
+            <include layout="@layout/module_image_reader" />
+        </LinearLayout>
 
     </com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>
 

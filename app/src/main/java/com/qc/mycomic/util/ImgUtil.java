@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -64,11 +65,10 @@ public class ImgUtil {
     public static final int LOAD_FAIL = 3;
 
     public static void loadImage(Context context, String url, RelativeLayout layout) {
-        loadImage(context, url, null, layout);
+        loadImage(context, url, layout, null);
     }
 
-
-    public static void loadImage(Context context, String url, Object saveKey, RelativeLayout layout) {
+    public static void loadImage(Context context, String url, RelativeLayout layout, Object saveKey) {
         if (layout != null) {
             ImageView imageView = layout.findViewById(R.id.imageView);
             QMUIProgressBar progressBar = layout.findViewById(R.id.progressBar);
@@ -83,7 +83,8 @@ public class ImgUtil {
     }
 
     private static boolean loadImageLocal(ImageView imageView, Object saveKey) {
-        if (saveKey != null && !Objects.equals(saveKey, "0")) {
+        //Log.i(TAG, "loadImageLocal: saveKey = " + saveKey);
+        if (saveKey != null && !Objects.equals(saveKey, 0)) {
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inPreferredConfig = Bitmap.Config.RGB_565;
             File file = new File(getLocalImgUrl(saveKey));
@@ -164,6 +165,7 @@ public class ImgUtil {
                     public void onLoadFailed(@Nullable Drawable errorDrawable) {
                         if (Objects.equals(url, imageView.getTag())) {
                             Bitmap bitmap = drawableToBitmap(getDrawable(context, R.drawable.ic_image_error_24));
+                            imageView.setLayoutParams(getLP(context));
                             imageView.setScaleType(ImageView.ScaleType.CENTER);
                             imageView.setImageBitmap(bitmap);
                             MAP.put(url, LOAD_FAIL);

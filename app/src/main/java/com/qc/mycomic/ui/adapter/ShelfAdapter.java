@@ -1,16 +1,12 @@
 package com.qc.mycomic.ui.adapter;
 
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.qc.mycomic.R;
 import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.util.ImgUtil;
-import com.qmuiteam.qmui.widget.QMUIProgressBar;
-import com.qmuiteam.qmui.widget.QMUIRadiusImageView;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -52,7 +48,7 @@ public class ShelfAdapter extends TheBaseQuickAdapter<Comic> {
 //        ImgUtil.loadImage(getContext(), comic.getComicInfo().getImgUrl(), imageView, progressBar, comic.getComicInfo().getId());
 
         RelativeLayout layout = holder.findView(R.id.imageRelativeLayout);
-        ImgUtil.loadImage(getContext(), comic.getComicInfo().getImgUrl(), comic.getComicInfo().getId(), layout);
+        ImgUtil.loadImage(getContext(), comic.getComicInfo().getImgUrl(), layout, comic.getComicInfo().getId());
 
 //        ImgUtil.loadShelfImg(getContext(), comic, imageView);
     }

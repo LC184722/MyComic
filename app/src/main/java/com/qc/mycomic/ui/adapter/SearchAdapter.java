@@ -1,14 +1,15 @@
 package com.qc.mycomic.ui.adapter;
 
+import android.widget.RelativeLayout;
+
 import com.qc.mycomic.R;
 import com.qc.mycomic.model.Comic;
-import com.qmuiteam.qmui.widget.QMUIRadiusImageView;
+import com.qc.mycomic.util.ImgUtil;
 
 import org.jetbrains.annotations.NotNull;
 
 import the.one.base.adapter.TheBaseQuickAdapter;
 import the.one.base.adapter.TheBaseViewHolder;
-import the.one.base.util.glide.GlideEngine;
 
 /**
  * @author LuQiChuang
@@ -28,8 +29,8 @@ public class SearchAdapter extends TheBaseQuickAdapter<Comic> {
         holder.setText(R.id.tvSource, "漫画源数量：" + comic.getSourceSize());
         holder.setText(R.id.tvAuthor, comic.getComicInfo().getAuthor());
         holder.setText(R.id.tvUpdateTime, comic.getComicInfo().getUpdateTime());
-        QMUIRadiusImageView imageView = holder.findView(R.id.imageView);
-        GlideEngine.createGlideEngine().loadImage(getContext(), comic.getComicInfo().getImgUrl(), imageView);
+        RelativeLayout layout = holder.findView(R.id.imageRelativeLayout);
+        ImgUtil.loadImage(getContext(), comic.getComicInfo().getImgUrl(), layout);
     }
 
 }
