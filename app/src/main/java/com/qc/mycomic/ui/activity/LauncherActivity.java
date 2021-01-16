@@ -11,9 +11,13 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.qc.mycomic.util.Codes;
+import com.qc.mycomic.en.Codes;
+import com.qc.mycomic.ui.presenter.UpdatePresenter;
+import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.PackageUtil;
 import com.qmuiteam.qmui.arch.QMUILatestVisit;
+
+import org.litepal.LitePal;
 
 /**
  * @author LuQiChuang
@@ -55,18 +59,23 @@ public class LauncherActivity extends AppCompatActivity {
         }
     }
 
-
     private void doAfterPermissionsGranted() {
         Intent intent = QMUILatestVisit.intentOfLatestVisit(this);
         if (intent == null) {
             intent = new Intent(this, MainActivity.class);
         }
-        Codes.versionTag = PackageUtil.getVersionName(this);
-        Codes.versionCode = PackageUtil.getVersionCode(this);
+        doSomeThing();
         startActivity(intent);
         finish();
     }
 
+    private void doSomeThing() {
+        Codes.versionTag = PackageUtil.getVersionName(this);
+        Codes.versionCode = PackageUtil.getVersionCode(this);
+        new UpdatePresenter().checkApkUpdate();
+        LitePal.initialize(this);
+        ComicUtil.initComicList(ComicUtil.STATUS_ALL);
+    }
 
     private boolean allPermissionsGranted() {
         for (String permission : PERMISSIONS_REQUIRED) {

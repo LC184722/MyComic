@@ -1,15 +1,8 @@
 package com.qc.mycomic.setting;
 
-import com.qc.mycomic.model.MyMap;
-import com.qc.mycomic.model.Source;
-import com.qc.mycomic.util.Codes;
-import com.qc.mycomic.util.PopupUtil;
-
-import java.util.List;
 import java.util.Map;
+import java.util.LinkedHashMap;
 
-import the.one.base.model.PopupItem;
-import the.one.base.util.PopupWindowUtil;
 import the.one.base.util.SpUtil;
 
 /**
@@ -20,7 +13,7 @@ import the.one.base.util.SpUtil;
  */
 public abstract class Setting {
 
-    private MyMap<String, String> myMap;
+    private Map<String, String> myMap;
 
     public abstract String getSaveStr();
 
@@ -34,15 +27,15 @@ public abstract class Setting {
         SpUtil.getInstance().putString(getSaveStr(), data);
     }
 
-    public MyMap<String, String> getMyMap() {
+    public Map<String, String> getMyMap() {
         if (myMap == null) {
-            myMap = new MyMap<>();
+            myMap = new LinkedHashMap<>();
             dealMyMap(myMap);
         }
         return myMap;
     }
 
-    public abstract void dealMyMap(MyMap<String, String> myMap);
+    public abstract void dealMyMap(Map<String, String> myMap);
 
     public String getDetailDesc() {
         return getMyMap().get(getData());

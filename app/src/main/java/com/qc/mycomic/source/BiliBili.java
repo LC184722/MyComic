@@ -1,31 +1,21 @@
 package com.qc.mycomic.source;
 
-import android.util.Log;
-
+import com.alibaba.fastjson.JSONArray;
+import com.qc.mycomic.en.SourceEnum;
 import com.qc.mycomic.json.JsonNode;
 import com.qc.mycomic.json.JsonStarter;
 import com.qc.mycomic.model.ChapterInfo;
 import com.qc.mycomic.model.ComicInfo;
 import com.qc.mycomic.model.ImageInfo;
-import com.qc.mycomic.model.ImageLoader;
-import com.qc.mycomic.model.MyMap;
-import com.qc.mycomic.model.Source;
-import com.qc.mycomic.util.Codes;
 import com.qc.mycomic.util.NetUtil;
 import com.qc.mycomic.util.StringUtil;
-import com.qc.mycomic.ui.view.ReaderView;
 
-import org.json.JSONArray;
-
-import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.MultipartBody;
 import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  * @author LuQiChuang
@@ -33,15 +23,10 @@ import okhttp3.Response;
  * @date 2020/8/12 15:25
  * @ver 1.0
  */
-public class BiliBili extends BaseSource implements ImageLoader {
+public class BiliBili extends BaseSource {
     @Override
-    public int getSourceId() {
-        return Codes.BILI_BILI;
-    }
-
-    @Override
-    public String getSourceName() {
-        return Codes.BILI_BILI_STRING;
+    public SourceEnum getSourceEnum() {
+        return SourceEnum.BILI_BILI;
     }
 
     @Override
@@ -52,20 +37,42 @@ public class BiliBili extends BaseSource implements ImageLoader {
     @Override
     public Request getSearchRequest(String searchString) {
         String url = "https://manga.bilibili.com/twirp/comic.v1.Comic/Search?device=pc&platform=web";
-        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
-        builder.addFormDataPart("key_word", searchString);
-        builder.addFormDataPart("page_num", "1");
-        builder.addFormDataPart("page_size", "9");
-        return new Request.Builder().addHeader("User-Agent", Codes.USER_AGENT_WEB).url(url).post(builder.build()).build();
+        Map<String, String> map = new HashMap<>();
+        map.put("key_word", searchString);
+        map.put("page_num", "1");
+        map.put("page_size", "9");
+        return NetUtil.postRequest(url, map);
     }
 
     @Override
     public Request getDetailRequest(String detailUrl) {
         String url = "https://manga.bilibili.com/twirp/comic.v1.Comic/ComicDetail?device=pc&platform=web";
-        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
         String id = StringUtil.match("(\\d+)", detailUrl);
-        builder.addFormDataPart("comic_id", id);
-        return new Request.Builder().addHeader("User-Agent", Codes.USER_AGENT_WEB).url(url).post(builder.build()).build();
+        return NetUtil.postRequest(url, "comic_id", id);
+    }
+
+    @Override
+    public Request getImageRequest(String imageUrl) {
+        String url = "https://manga.bilibili.com/twirp/comic.v1.Comic/GetImageIndex?device=pc&platform=web";
+        String id = StringUtil.matchLast("(\\d+)", imageUrl);
+        return NetUtil.postRequest(url, "ep_id", id);
+    }
+
+    @Override
+    public Request buildRequest(String html, String tag) {
+        if (IMAGE.equals(tag)) {
+            JsonStarter<Object> starter = new JsonStarter<Object>() {
+                @Override
+                public Object dealDataList(JsonNode node, int dataId) {
+                    return node.string("path");
+                }
+            };
+            List<Object> list = starter.startDataList(html, "data", "images");
+            com.alibaba.fastjson.JSONArray array = new JSONArray(list);
+            String url = "https://manga.bilibili.com/twirp/comic.v1.Comic/ImageToken?device=pc&platform=web";
+            return NetUtil.postRequest(url, "urls", array.toString());
+        }
+        return super.buildRequest(html, tag);
     }
 
     @Override
@@ -73,23 +80,18 @@ public class BiliBili extends BaseSource implements ImageLoader {
         String[] attrs = rankUrl.split("#");
         String url = String.format("https://manga.bilibili.com/twirp/comic.v1.Comic/%s?device=pc&platform=web", attrs[0]);
         JsonNode node = new JsonNode(attrs[1]);
-        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        Map<String, String> map = new HashMap<>();
         for (String key : node.keySet()) {
-            builder.addFormDataPart(key, node.string(key));
+            map.put(key, node.string(key));
         }
-        return new Request.Builder().addHeader("User-Agent", Codes.USER_AGENT_WEB).url(url).post(builder.build()).build();
+        return NetUtil.postRequest(url, map);
     }
 
     @Override
     public List<ComicInfo> getComicInfoList(String html) {
         JsonStarter<ComicInfo> starter = new JsonStarter<ComicInfo>() {
             @Override
-            public void dealData(JsonNode node) {
-
-            }
-
-            @Override
-            public ComicInfo dealDataList(JsonNode node, int dataId) {
+            protected ComicInfo dealDataList(JsonNode node, int dataId) {
                 String title = node.string("org_title");
                 String author = node.arrayToString("author_name");
                 String updateTime = null;
@@ -106,7 +108,7 @@ public class BiliBili extends BaseSource implements ImageLoader {
         String id = StringUtil.match("(\\d+)", comicInfo.getDetailUrl());
         JsonStarter<ChapterInfo> starter = new JsonStarter<ChapterInfo>() {
             @Override
-            public void dealData(JsonNode node) {
+            protected void dealData(JsonNode node) {
                 String title = node.string("title");
                 String imgUrl = node.string("square_cover");
                 String author = node.arrayToString("author_name");
@@ -117,7 +119,7 @@ public class BiliBili extends BaseSource implements ImageLoader {
             }
 
             @Override
-            public ChapterInfo dealDataList(JsonNode node, int dataId) {
+            protected ChapterInfo dealDataList(JsonNode node, int dataId) {
                 String title = node.string("short_title");
                 String oTitle = node.string("title");
                 if (oTitle != null) {
@@ -135,12 +137,7 @@ public class BiliBili extends BaseSource implements ImageLoader {
     public List<ImageInfo> getImageInfoList(String html, int chapterId) {
         JsonStarter<ImageInfo> starter = new JsonStarter<ImageInfo>() {
             @Override
-            public void dealData(JsonNode node) {
-
-            }
-
-            @Override
-            public ImageInfo dealDataList(JsonNode node, int dataId) {
+            protected ImageInfo dealDataList(JsonNode node, int dataId) {
                 String url = node.string("url");
                 String token = node.string("token");
                 String chapterUrl = url + "?token=" + token;
@@ -153,8 +150,8 @@ public class BiliBili extends BaseSource implements ImageLoader {
     }
 
     @Override
-    public MyMap<String, String> getRankMap() {
-        MyMap<String, String> map = new MyMap<>();
+    public Map<String, String> getRankMap() {
+        Map<String, String> map = new TreeMap<>();
         //https://manga.bilibili.com/twirp/comic.v1.Comic/HomeHot?device=pc&platform=web {"type":3}
         map.put("日漫榜", "HomeHot#{\"type\":3}");
         map.put("国漫榜", "HomeHot#{\"type\":4}");//{"type":4}
@@ -197,12 +194,7 @@ public class BiliBili extends BaseSource implements ImageLoader {
     public List<ComicInfo> getRankComicInfoList(String html) {
         JsonStarter<ComicInfo> starter = new JsonStarter<ComicInfo>() {
             @Override
-            public void dealData(JsonNode node) {
-
-            }
-
-            @Override
-            public ComicInfo dealDataList(JsonNode node, int dataId) {
+            protected ComicInfo dealDataList(JsonNode node, int dataId) {
                 String title = node.string("title");
                 String author = node.arrayToString("author");
                 String updateTime = null;
@@ -220,80 +212,6 @@ public class BiliBili extends BaseSource implements ImageLoader {
             list = starter.startDataList(html, "data", "comics");
         }
         return list;
-    }
-
-    @Override
-    public void loadImageInfoList(ReaderView view, String chapterUrl, int chapterId) {
-        int index = chapterUrl.lastIndexOf('/');
-        String id = StringUtil.match("(\\d+)", chapterUrl.substring(index));
-        if (id == null) {
-            loadError(view);
-        } else {
-            Callback callback = new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    loadError(view);
-                }
-
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    String json = response.body().string();
-                    JsonStarter<Object> starter = new JsonStarter<Object>() {
-                        @Override
-                        public void dealData(JsonNode node) {
-
-                        }
-
-                        @Override
-                        public Object dealDataList(JsonNode node, int dataId) {
-                            return node.string("path");
-                        }
-                    };
-                    List<Object> list = starter.startDataList(json, "data", "images");
-                    if (!list.isEmpty()) {
-                        Callback callback = new Callback() {
-                            @Override
-                            public void onFailure(Call call, IOException e) {
-                                e.printStackTrace();
-                            }
-
-                            @Override
-                            public void onResponse(Call call, Response response) throws IOException {
-                                String html = response.body().string();
-                                List<ImageInfo> imageInfoList = getImageInfoList(html, chapterId);
-                                AndroidSchedulers.mainThread().scheduleDirect(() -> {
-                                    if (view != null) {
-                                        if (imageInfoList.size() > 0) {
-                                            view.loadImageInfoListComplete(imageInfoList);
-                                        } else {
-                                            loadError(view);
-                                        }
-                                    }
-                                });
-                            }
-                        };
-                        String url = "https://manga.bilibili.com/twirp/comic.v1.Comic/ImageToken?device=pc&platform=web";
-                        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
-                        builder.addFormDataPart("urls", new JSONArray(list).toString());
-                        Request request = new Request.Builder().addHeader("User-Agent", Codes.USER_AGENT_WEB).url(url).post(builder.build()).build();
-                        NetUtil.startLoad(request, callback);
-                    } else {
-                        loadError(view);
-                    }
-                }
-            };
-            String url = "https://manga.bilibili.com/twirp/comic.v1.Comic/GetImageIndex?device=pc&platform=web";
-            MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
-            builder.addFormDataPart("ep_id", id);
-            Request request = new Request.Builder().addHeader("User-Agent", Codes.USER_AGENT_WEB).url(url).post(builder.build()).build();
-            NetUtil.startLoad(request, callback);
-        }
-    }
-
-    private void loadError(ReaderView view) {
-        AndroidSchedulers.mainThread().scheduleDirect(() -> {
-            view.showErrorPage("解析失败");
-        });
     }
 
 

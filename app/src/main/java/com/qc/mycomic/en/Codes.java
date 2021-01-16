@@ -1,4 +1,4 @@
-package com.qc.mycomic.util;
+package com.qc.mycomic.en;
 
 import the.one.base.util.SdCardUtil;
 
@@ -38,8 +38,6 @@ public class Codes {
 
     public static final String USER_AGENT_WEB = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Safari/537.36";
 
-    public static boolean isFirstLoadWebView = true;
-
     public static final int NORMAL = 0;
 
     public static final int READER_TO_CHAPTER = 1;
@@ -49,37 +47,5 @@ public class Codes {
     public static final int RANK_TO_CHAPTER = 3;
 
     public static int toStatus = NORMAL;
-
-    public static final int MI_TUI = 1;
-
-    public static final String MI_TUI_STRING = "米推漫画";
-
-    public static final int MAN_HUA_FEN = 2;
-
-    public static final String MAN_HUA_FEN_STRING = "漫画粉";
-
-    public static final int PU_FEI = 3;
-
-    public static final String PU_FEI_STRING = "扑飞漫画";
-
-    public static final int TENG_XUN = 4;
-
-    public static final String TENG_XUN_STRING = "腾讯动漫";
-
-    public static final int BILI_BILI = 5;
-
-    public static final String BILI_BILI_STRING = "哔哩哔哩";
-
-    public static final int OH = 6;
-
-    public static final String OH_STRING = "oh漫画";
-
-    public static final int MAN_HUA_TAI = 7;
-
-    public static final String MAN_HUA_TAI_STRING = "漫画台";
-
-    public static final int MH_118 = 8;
-
-    public static final String MH_118_STRING = "118漫画";
 
 }

@@ -1,26 +1,15 @@
 package com.qc.mycomic.util.test;
 
 import com.qc.mycomic.jsoup.JsoupNode;
-import com.qc.mycomic.jsoup.JsoupStarter;
-import com.qc.mycomic.model.Comic;
-import com.qc.mycomic.model.MyMap;
-import com.qc.mycomic.model.Source;
-import com.qc.mycomic.util.ComicUtil;
-import com.qc.mycomic.util.DecryptUtil;
-import com.qc.mycomic.util.SourceUtil;
-import com.qc.mycomic.util.StringUtil;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.LinkedHashMap;
 
 /**
  * @author LuQiChuang
@@ -51,7 +40,7 @@ public class TestUtil {
 //        };
 //        List<Map<String, String>> mapList = starter.startElements(text, "a");
 //        String s = "https://m.imitui.com%sclick/?page=1";
-//        MyMap<String, String> myMap = getRankMyMap(mapList, s);
+//        Map<String, String> myMap = getRankMyMap(mapList, s);
 //        SourceUtil.reloadSourceList("1010111111");
 //        System.out.println("SourceUtil.getSourceStr() = " + SourceUtil.getSourceStr());
     }
@@ -88,8 +77,8 @@ public class TestUtil {
         }
     }
 
-    public static MyMap<String, String> getRankMyMap(List<Map<String, String>> mapList, String s) {
-        MyMap<String, String> myMap = new MyMap<>();
+    public static Map<String, String> getRankMyMap(List<Map<String, String>> mapList, String s) {
+        Map<String, String> myMap = new LinkedHashMap<>();
         for (Map<String, String> map : mapList) {
             String name = map.get("name");
             String url = map.get("url");

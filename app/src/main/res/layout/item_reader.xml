@@ -11,39 +11,33 @@
         app:qmui_borderColor="@color/black"
         app:qmui_borderWidth="1dp">
 
-        <the.one.base.widge.ScaleImageView
-            android:id="@+id/imageView"
+        <RelativeLayout
+            android:id="@+id/imageRelativeLayout"
             android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:background="@drawable/bg_image"
-            android:scaleType="center"
-            android:src="@drawable/ic_baseline_image_search_24" />
+            android:layout_height="wrap_content">
+
+            <the.one.base.widge.ScaleImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:background="@drawable/bg_image"
+                android:scaleType="center" />
+            <!--                android:src="@drawable/ic_baseline_image_search_24" -->
+
+            <com.qmuiteam.qmui.widget.QMUIProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerInParent="true"
+                android:textDirection="firstStrongLtr"
+                app:qmui_background_color="@color/qmui_config_color_10_pure_black"
+                app:qmui_progress_color="@color/colorPrimary"
+                app:qmui_stroke_width="2dp"
+                app:qmui_type="type_circle"
+                app:qmui_value="0" />
+
+        </RelativeLayout>
 
     </com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>
-
-    <!--    <WebView-->
-    <!--        android:id="@+id/webView"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="match_parent" />-->
-
-
-    <!--    <com.qmuiteam.qmui.layout.QMUILinearLayout-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:orientation="vertical">-->
-
-    <!--        <com.qmuiteam.qmui.widget.QMUIRadiusImageView-->
-    <!--            android:id="@+id/imageView"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="wrap_content" />-->
-
-    <!--        &lt;!&ndash;        <TextView&ndash;&gt;-->
-    <!--        &lt;!&ndash;            android:id="@+id/textView"&ndash;&gt;-->
-    <!--        &lt;!&ndash;            android:layout_width="match_parent"&ndash;&gt;-->
-    <!--        &lt;!&ndash;            android:layout_height="wrap_content"&ndash;&gt;-->
-    <!--        &lt;!&ndash;            android:text="@string/app_name" />&ndash;&gt;-->
-
-    <!--    </com.qmuiteam.qmui.layout.QMUILinearLayout>-->
-
 
 </LinearLayout>

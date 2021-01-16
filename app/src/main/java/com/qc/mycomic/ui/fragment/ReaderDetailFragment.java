@@ -27,7 +27,7 @@ public class ReaderDetailFragment extends BaseImageSnapFragment<ImageInfo> {
     private List<ImageInfo> imageInfoList;
 
     public ReaderDetailFragment() {
-        this.imageInfo = null;
+        RestartUtil.restart(_mActivity);
     }
 
     public ReaderDetailFragment(ImageInfo imageInfo) {
@@ -69,11 +69,7 @@ public class ReaderDetailFragment extends BaseImageSnapFragment<ImageInfo> {
 
     @Override
     protected void requestServer() {
-        if (imageInfo != null) {
-            onComplete(imageInfoList);
-        } else {
-            RestartUtil.restart(_mActivity);
-        }
+        onComplete(imageInfoList);
     }
 
     @Override

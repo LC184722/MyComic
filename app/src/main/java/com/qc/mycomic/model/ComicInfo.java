@@ -1,6 +1,6 @@
 package com.qc.mycomic.model;
 
-import com.qc.mycomic.util.Codes;
+import com.qc.mycomic.en.Codes;
 
 import org.litepal.crud.LitePalSupport;
 

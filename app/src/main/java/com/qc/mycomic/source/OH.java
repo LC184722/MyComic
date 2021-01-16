@@ -1,13 +1,13 @@
 package com.qc.mycomic.source;
 
 import com.alibaba.fastjson.JSONObject;
+import com.qc.mycomic.en.SourceEnum;
 import com.qc.mycomic.jsoup.JsoupNode;
 import com.qc.mycomic.jsoup.JsoupStarter;
 import com.qc.mycomic.model.ChapterInfo;
 import com.qc.mycomic.model.ComicInfo;
 import com.qc.mycomic.model.ImageInfo;
-import com.qc.mycomic.model.MyMap;
-import com.qc.mycomic.util.Codes;
+import com.qc.mycomic.en.Codes;
 import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DecryptUtil;
 import com.qc.mycomic.util.NetUtil;
@@ -15,6 +15,8 @@ import com.qc.mycomic.util.StringUtil;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.LinkedHashMap;
 
 import okhttp3.Request;
 
@@ -27,13 +29,8 @@ import okhttp3.Request;
 public class OH extends BaseSource {
 
     @Override
-    public int getSourceId() {
-        return Codes.OH;
-    }
-
-    @Override
-    public String getSourceName() {
-        return Codes.OH_STRING;
+    public SourceEnum getSourceEnum() {
+        return SourceEnum.OH;
     }
 
     @Override
@@ -117,8 +114,8 @@ public class OH extends BaseSource {
     }
 
     @Override
-    public MyMap<String, String> getRankMap() {
-        MyMap<String, String> map = new MyMap<>();
+    public Map<String, String> getRankMap() {
+        Map<String, String> map = new LinkedHashMap<>();
         map.put("月点击", "https://www.cocomanhua.com/show?orderBy=monthlyCount&page=1");
         map.put("周点击", "https://www.cocomanhua.com/show?orderBy=weeklyCount&page=1");
         map.put("日点击", "https://www.cocomanhua.com/show?orderBy=dailyCount&page=1");

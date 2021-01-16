@@ -1,26 +1,18 @@
 package com.qc.mycomic.ui.presenter;
 
-import android.util.Log;
-
 import com.qc.mycomic.model.ChapterInfo;
 import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ImageInfo;
-import com.qc.mycomic.model.ImageLoader;
 import com.qc.mycomic.model.Source;
-import com.qc.mycomic.util.Codes;
-import com.qc.mycomic.util.ComicUtil;
+import com.qc.mycomic.self.SourceCallback;
 import com.qc.mycomic.util.NetUtil;
 import com.qc.mycomic.ui.view.ReaderView;
 
-import java.io.IOException;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
+import okhttp3.Request;
 import the.one.base.ui.presenter.BasePresenter;
-import the.one.base.ui.view.BaseView;
 
 /**
  * @author LuQiChuang
@@ -36,49 +28,35 @@ public class ReaderPresenter extends BasePresenter<ReaderView> {
         int chapterId = comic.getComicInfo().getCurChapterId();
         String url = chapterInfoList.get(position).getChapterUrl();
         Source source = comic.getSource();
-        if (!(source instanceof ImageLoader)) {
-            loadImgInfoList(comic, url, chapterId);
-        } else {
-            ((ImageLoader) source).loadImageInfoList(getView(), url, chapterId);
-        }
-    }
-
-    private void loadImgInfoList(Comic comic, String url, int chapterId) {
-        //Log.i(TAG, "loadImageInfoList: url = " + url);
-        Callback callback = new Callback() {
+        Request request = source.getImageRequest(url);
+        NetUtil.startLoad(request, new SourceCallback(request, source, Source.IMAGE) {
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(String errorMsg) {
                 ReaderView view = getView();
                 AndroidSchedulers.mainThread().scheduleDirect(() -> {
                     if (view != null) {
-                        showErrorPage(e.getMessage(), v -> {
-                            //Log.e(TAG, "onClick: getError " + e.getMessage());
+                        showErrorPage(errorMsg, v -> {
                             view.showLoadingPage();
                             loadImageInfoList(comic);
                         });
                     }
-                    //Log.i(TAG, "run: get html fail ok...");
                 });
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String html = ComicUtil.getHtml(response, comic.getSourceId());
-                List<ImageInfo> imageInfoList = comic.getImageInfoList(html, chapterId);
-                //Log.i(TAG, "loadImageInfoList: " + imageInfoList);
+            public void onResponse(String html) {
                 ReaderView view = getView();
-                AndroidSchedulers.mainThread().scheduleDirect(() -> {
-                    if (view != null) {
-                        if (imageInfoList.size() > 0) {
+                List<ImageInfo> imageInfoList = comic.getImageInfoList(html, chapterId);
+                if (imageInfoList.isEmpty()) {
+                    onFailure("解析失败！");
+                } else {
+                    AndroidSchedulers.mainThread().scheduleDirect(() -> {
+                        if (view != null) {
                             view.loadImageInfoListComplete(imageInfoList);
-                        } else {
-                            view.showErrorPage("解析失败");
                         }
-                    }
-                    //Log.i(TAG, "run: get html ok...");
-                });
+                    });
+                }
             }
-        };
-        NetUtil.startLoad(url, callback);
+        });
     }
 }

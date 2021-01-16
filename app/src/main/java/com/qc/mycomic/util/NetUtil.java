@@ -1,16 +1,12 @@
 package com.qc.mycomic.util;
 
-import android.util.Log;
-
-import com.qc.mycomic.R;
-
+import com.qc.mycomic.en.Codes;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Headers;
@@ -38,11 +34,7 @@ public class NetUtil {
      * @return Request
      */
     public static Request getRequest(String url) {
-        if (url.contains("://m.")) {
-            return getRequest(url, Codes.USER_AGENT);
-        } else {
-            return getRequest(url, Codes.USER_AGENT_WEB);
-        }
+        return getRequest(url, getAgent(url));
     }
 
     /**
@@ -68,7 +60,7 @@ public class NetUtil {
             map = new HashMap<>();
         }
         if (!map.containsKey("User-Agent")) {
-            map.put("User-Agent", Codes.USER_AGENT);
+            map.put("User-Agent", getAgent(url));
         }
         Headers.Builder builder = new Headers.Builder();
         for (String key : map.keySet()) {
@@ -79,6 +71,34 @@ public class NetUtil {
         }
         Headers headers = builder.build();
         return new Request.Builder().url(url).headers(headers).method("GET", null).build();
+    }
+
+    /**
+     * 发送post请求
+     *
+     * @param url  url
+     * @param data data
+     * @return Request
+     */
+    public static Request postRequest(String url, String... data) {
+        Map<String, String> map = new HashMap<>();
+        if (data != null && data.length > 0 && data.length % 2 == 0) {
+            for (int i = 0; i < data.length; i = i + 2) {
+                map.put(data[i], data[i + 1]);
+            }
+        }
+        return postRequest(url, getAgent(url), map);
+    }
+
+    /**
+     * 发送post请求
+     *
+     * @param url         url
+     * @param formDataMap formDataMap
+     * @return Request
+     */
+    public static Request postRequest(String url, Map<String, String> formDataMap) {
+        return postRequest(url, getAgent(url), formDataMap);
     }
 
     /**
@@ -97,17 +117,17 @@ public class NetUtil {
         return new Request.Builder().addHeader("User-Agent", userAgent).url(url).post(builder.build()).build();
     }
 
-//    public static Request postRequest(String url, Map<String, String> formDataMap, Map<String, String> headerMap) {
-//        Request.Builder requestBuilder = new Request.Builder();
-//        for (Map.Entry<String, String> entry : headerMap.entrySet()) {
-//            requestBuilder.addHeader(entry.getKey(), entry.getValue());
-//        }
-//        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
-//        for (Map.Entry<String, String> entry : formDataMap.entrySet()) {
-//            builder.addFormDataPart(entry.getKey(), entry.getValue());
-//        }
-//        return requestBuilder.url(url).post(builder.build()).build();
-//    }
+    public static Request postRequest(String url, Map<String, String> formDataMap, Map<String, String> headerMap) {
+        Request.Builder requestBuilder = new Request.Builder();
+        for (Map.Entry<String, String> entry : headerMap.entrySet()) {
+            requestBuilder.addHeader(entry.getKey(), entry.getValue());
+        }
+        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        for (Map.Entry<String, String> entry : formDataMap.entrySet()) {
+            builder.addFormDataPart(entry.getKey(), entry.getValue());
+        }
+        return requestBuilder.url(url).post(builder.build()).build();
+    }
 
     /**
      * 使用特定request开始连接网络
@@ -133,6 +153,14 @@ public class NetUtil {
         call.enqueue(callback);
     }
 
+    private static String getAgent(String url) {
+        if (url.contains("://m.")) {
+            return Codes.USER_AGENT;
+        } else {
+            return Codes.USER_AGENT_WEB;
+        }
+    }
+
     private void demo(String url) {
         //1.创建OkHttpClient对象
         OkHttpClient okHttpClient = new OkHttpClient();
@@ -153,12 +181,12 @@ public class NetUtil {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 String data = response.body().string();
                 //Log.i(TAG, "onResponse: " + response.toString());
-                AndroidSchedulers.mainThread().scheduleDirect(new Runnable() {
-                    @Override
-                    public void run() {
-
-                    }
-                });
+//                AndroidSchedulers.mainThread().scheduleDirect(new Runnable() {
+//                    @Override
+//                    public void run() {
+//
+//                    }
+//                });
             }
         });
     }

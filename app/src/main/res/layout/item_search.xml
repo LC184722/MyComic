@@ -14,7 +14,7 @@
         app:qmui_radius="10dp">
 
         <com.qmuiteam.qmui.widget.QMUIRadiusImageView
-            android:id="@+id/qivImg"
+            android:id="@+id/imageView"
             android:layout_width="120dp"
             android:layout_height="160dp"
             android:layout_marginEnd="5dp"

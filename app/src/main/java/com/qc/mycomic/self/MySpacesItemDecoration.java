@@ -1,4 +1,4 @@
-package com.qc.mycomic.other;
+package com.qc.mycomic.self;
 
 import android.graphics.Rect;
 import android.util.Log;

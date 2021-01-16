@@ -7,22 +7,28 @@ import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.qc.mycomic.R;
-import com.qc.mycomic.model.Comic;
+import com.qc.mycomic.en.Codes;
 import com.qc.mycomic.model.ImageInfo;
 import com.qc.mycomic.setting.SettingFactory;
 import com.qmuiteam.qmui.util.QMUIDisplayHelper;
+import com.qmuiteam.qmui.widget.QMUIProgressBar;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
@@ -31,10 +37,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
+
+import the.one.base.Interface.GlideProgressListener;
+import the.one.base.util.glide.GlideProgressInterceptor;
 
 /**
  * @author LuQiChuang
@@ -44,228 +51,204 @@ import java.util.Set;
  */
 public class ImgUtil {
 
-    private static String shelfImgPath = Codes.SHELF_IMG_PATH;
+    public static final String TAG = ImgUtil.class.getSimpleName();
 
-    private static Map<Object, Drawable> map = new HashMap<>();
+    private static final String SHELF_IMG_PATH = Codes.SHELF_IMG_PATH;
 
-    private static Set<Object> set = new HashSet<>();
+    private static final Map<String, Integer> MAP = new HashMap<>();
 
-    private static Map<Object, Integer> errorMap = new HashMap<>();
-
-    private static int maxError = 3;
-
-    private static LinearLayout.LayoutParams layoutParams;
+    private static int screenWidth;
 
     public static final int LOAD_ING = 1;
     public static final int LOAD_SUCCESS = 2;
     public static final int LOAD_FAIL = 3;
 
-    public static void loadShelfImg(Context context, Comic comic, ImageView imageView) {
-        loadShelfImg(context, comic, imageView, true);
+    public static void loadImage(Context context, String url, RelativeLayout layout) {
+        loadImage(context, url, null, layout);
     }
 
-    public static void loadRankImg(Context context, Comic comic, ImageView imageView) {
-        loadShelfImg(context, comic, imageView, false);
-    }
 
-    public static void loadReaderImg(Context context, ImageInfo imageInfo, ImageView imageView) {
-        loadImg(context, imageInfo.getUrl(), imageInfo.toStringProgressDetail(), imageView, false, false, false);
-    }
-
-    public static void loadReaderImgForce(Context context, ImageInfo imageInfo, ImageView imageView) {
-        loadImg(context, imageInfo.getUrl(), imageInfo.toStringProgressDetail(), imageView, false, false, true);
-    }
-
-    private static void loadShelfImg(Context context, Comic comic, ImageView imageView, boolean isSave) {
-        loadImg(context, comic.getComicInfo().getImgUrl(), comic.getComicInfo().getId(), imageView, isSave, true, false);
-    }
-
-    public static void preloadReaderImg(Context context, ImageInfo imageInfo) {
-        String url = imageInfo.getUrl();
-        String key = imageInfo.toStringProgressDetail();
-        //Log.i("TAG", "preloadReaderImg: " + key);
-        if (!set.contains(key)) {
-            set.add(key);
-            Glide.with(context)
-                    .as(byte[].class)
-                    .load(url)
-                    .into(new CustomTarget<byte[]>() {
-                        @Override
-                        public void onResourceReady(@NonNull byte[] bytes, @Nullable Transition<? super byte[]> transition) {
-                            Bitmap resource = bytesToBitmap(bytes, true);
-                            //Log.i("BmSize", "onResourceReady a: " + getBitmapSize(resource));
-                            map.put(key, bitmapToDrawable(context, resource));
-                        }
-
-                        @Override
-                        public void onLoadCleared(@Nullable Drawable placeholder) {
-
-                        }
-                    });
-        }
-    }
-
-    public static void clearMap() {
-        //Log.i("TAG", "clearMap: ");
-        map.clear();
-        set.clear();
-        errorMap.clear();
-    }
-
-    public static int getLoadStatus(ImageInfo imageInfo) {
-        if (imageInfo == null) {
-            return LOAD_ING;
-        }
-        Object key = imageInfo.toStringProgressDetail();
-        if (!map.containsKey(key)) {
-            return LOAD_FAIL;
-        } else if (map.get(key) == null) {
-            return LOAD_ING;
-        } else {
-            return LOAD_SUCCESS;
-        }
-    }
-
-    private static LinearLayout.LayoutParams getLP(Context context, Drawable drawable) {
-        if (drawable == null) {
-            if (layoutParams == null) {
-                int sWidth = QMUIDisplayHelper.getScreenWidth(context);
-                int sHeight = QMUIDisplayHelper.dp2px(context, 300);
-                layoutParams = new LinearLayout.LayoutParams(sWidth, sHeight);
-            }
-            return layoutParams;
-        }
-        int sWidth = QMUIDisplayHelper.getScreenWidth(context);
-        int bWidth = drawable.getIntrinsicWidth();
-        int bHeight = drawable.getIntrinsicHeight();
-        int sHeight = bHeight * sWidth / bWidth;
-        return new LinearLayout.LayoutParams(sWidth, sHeight);
-    }
-
-    private static void loadImg(Context context, String url, Object key, ImageView imageView, boolean isSave, boolean isLoadShelfImg, boolean isForce) {
-        if (imageView != null) {
-            imageView.setTag(key);
-            if (!isForce && errorMap.containsKey(key) && errorMap.get(key) > maxError) {
-                if (isLoadShelfImg) {
-                    imageView.setImageBitmap(drawableToBitmap(getDrawable(context, R.drawable.ic_image_shelf_error_foreground)));
-                } else {
-                    imageView.setLayoutParams(getLP(context, map.get(key)));
-                    imageView.setScaleType(ImageView.ScaleType.CENTER);
-                    imageView.setImageBitmap(drawableToBitmap(getDrawable(context, R.drawable.ic_image_reader_error_foreground)));
-                    imageView.setBackground(getDrawable(context, R.drawable.ic_image_reader_background));
+    public static void loadImage(Context context, String url, Object saveKey, RelativeLayout layout) {
+        if (layout != null) {
+            ImageView imageView = layout.findViewById(R.id.imageView);
+            QMUIProgressBar progressBar = layout.findViewById(R.id.progressBar);
+            if (imageView != null && progressBar != null) {
+                if (!loadImageLocal(imageView, saveKey)) {
+                    imageView.setTag(url);
+                    progressBar.setTag(url);
+                    loadImageNet(context, url, imageView, progressBar, saveKey);
                 }
-                return;
-            }
-            if (isLoadShelfImg) {
-                if (isSave && !Objects.equals(key.toString(), "0")) {
-                    BitmapFactory.Options options = new BitmapFactory.Options();
-                    options.inPreferredConfig = Bitmap.Config.RGB_565;
-                    Bitmap bitmap = BitmapFactory.decodeFile(getLocalImgUrl(key), options);
-                    if (bitmap != null) {
-                        imageView.setImageBitmap(bitmap);
-                        return;
-                    }
-                }
-                loadImgNet(context, url, key, imageView, isSave, isLoadShelfImg);
-            } else if (map.containsKey(key) && map.get(key) != null) {
-                //加载完毕
-                imageView.setLayoutParams(getLP(context, map.get(key)));
-                imageView.setScaleType(ImageView.ScaleType.CENTER);
-                imageView.setImageBitmap(null);
-                imageView.setBackground(map.get(key));
-            } else if (map.containsKey(key) && map.get(key) == null) {
-                //加载中
-                imageView.setLayoutParams(getLP(context, map.get(key)));
-                imageView.setScaleType(ImageView.ScaleType.CENTER);
-                imageView.setImageBitmap(drawableToBitmap(getDrawable(context, R.drawable.ic_image_reader_loading_foreground)));
-                imageView.setBackground(getDrawable(context, R.drawable.ic_image_reader_background));
-//                imageView.setImageBitmap(null);
-//                imageView.setBackground(getDrawable(context, R.drawable.ic_image_reader_background));
-            } else {
-                //开始加载
-                map.put(key, null);
-                loadImgNet(context, url, key, imageView, isSave, isLoadShelfImg);
             }
         }
     }
 
-    private static void loadImgNet(Context context, String url, Object key, ImageView imageView, boolean isSave, boolean isLoadShelfImg) {
+    private static boolean loadImageLocal(ImageView imageView, Object saveKey) {
+        if (saveKey != null && !Objects.equals(saveKey, "0")) {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Bitmap.Config.RGB_565;
+            File file = new File(getLocalImgUrl(saveKey));
+            if (file.exists()) {
+                Bitmap bitmap = BitmapFactory.decodeFile(file.getPath(), options);
+                if (bitmap != null) {
+                    imageView.setImageBitmap(bitmap);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private static void loadImageNet(Context context, String url, ImageView imageView, QMUIProgressBar progressBar, Object saveKey) {
+        GlideProgressListener listener = (progress, success) -> {
+            //Log.i(TAG, "onProgress: url = " + url.substring(url.length() - 10) + ", progress = " + progress);
+            if (Objects.equals(url, progressBar.getTag())) {
+                progressBar.setProgress(progress);
+                if (!success) {
+                    progressBar.setVisibility(View.GONE);
+                }
+            }
+        };
+        //Log.i(TAG, "loadImageNet: with url = " + url.substring(url.length() - 10));
+        GlideProgressInterceptor.addListener(url, listener);
         Glide.with(context)
-                .as(byte[].class)
+                .asBitmap()
                 .load(url)
-                .into(new CustomTarget<byte[]>() {
+                .transition(new BitmapTransitionOptions().crossFade())
+                .listener(new RequestListener<Bitmap>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                        GlideProgressInterceptor.removeListener(url);
+                        listener.onProgress(0, false);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                        GlideProgressInterceptor.removeListener(url);
+                        listener.onProgress(100, false);
+                        return false;
+                    }
+                })
+                .into(new CustomTarget<Bitmap>() {
                     @Override
                     public void onLoadStarted(@Nullable Drawable placeholder) {
-                        if (Objects.equals(key, imageView.getTag())) {
-                            if (isLoadShelfImg) {
-                                imageView.setImageBitmap(drawableToBitmap(getDrawable(context, R.drawable.ic_image_shelf_loading_foreground)));
-                                imageView.setBackground(getDrawable(context, R.drawable.ic_image_background));
-                            } else {
-                                imageView.setImageBitmap(drawableToBitmap(getDrawable(context, R.drawable.ic_image_reader_loading_foreground)));
-                                imageView.setBackground(getDrawable(context, R.drawable.ic_image_reader_background));
-//                                imageView.setImageBitmap(null);
-//                                imageView.setBackground(getDrawable(context, R.drawable.ic_image_reader_background));
+                        if (Objects.equals(url, imageView.getTag())) {
+                            imageView.setImageBitmap(null);
+                            setLP(context, (RelativeLayout.LayoutParams) imageView.getLayoutParams());
+                        }
+                        if (Objects.equals(url, progressBar.getTag())) {
+                            progressBar.setProgress(0, false);
+                            progressBar.setVisibility(View.VISIBLE);
+                        }
+                        MAP.put(url, LOAD_ING);
+                    }
+
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        if (Objects.equals(url, imageView.getTag())) {
+                            imageView.setLayoutParams(getLP(context, resource));
+                            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                            imageView.setImageBitmap(resource);
+                            MAP.put(url, LOAD_SUCCESS);
+                        }
+                        if (saveKey != null) {
+                            try {
+                                saveBitmapBackPath(resource, saveKey);
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
                         }
                     }
 
                     @Override
-                    public void onResourceReady(@NonNull byte[] bytes, @Nullable Transition<? super byte[]> transition) {
-                        Bitmap resource = bytesToBitmap(bytes, !isLoadShelfImg);
-                        //Log.i("TAG", "onResourceReady: success " + url);
-                        if (Objects.equals(key, imageView.getTag())) {
-                            if (isLoadShelfImg) {
-                                imageView.setImageBitmap(resource);
-                                if (isSave && !Objects.equals(key.toString(), "0")) {
-                                    try {
-                                        saveBitmapBackPath(resource, key);
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            } else {
-                                map.put(key, bitmapToDrawable(context, resource));
-                                imageView.setLayoutParams(getLP(context, map.get(key)));
-                                imageView.setScaleType(ImageView.ScaleType.CENTER);
-                                imageView.setImageBitmap(null);
-                                imageView.setBackground(map.get(key));
-                            }
+                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                        if (Objects.equals(url, imageView.getTag())) {
+                            Bitmap bitmap = drawableToBitmap(getDrawable(context, R.drawable.ic_image_error_24));
+                            imageView.setScaleType(ImageView.ScaleType.CENTER);
+                            imageView.setImageBitmap(bitmap);
+                            MAP.put(url, LOAD_FAIL);
                         }
                     }
 
                     @Override
                     public void onLoadCleared(@Nullable Drawable placeholder) {
-                        //Log.i("TAG", "onLoadCleared: " + key);
-                    }
 
-                    @Override
-                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                        //Log.e("TAG", "onLoadFailed: " + key);
-                        if (Objects.equals(key, imageView.getTag())) {
-                            if (isLoadShelfImg) {
-                                imageView.setImageBitmap(drawableToBitmap(getDrawable(context, R.drawable.ic_image_shelf_error_foreground)));
-                                imageView.setBackground(getDrawable(context, R.drawable.ic_image_background));
-                            } else {
-                                imageView.setImageBitmap(drawableToBitmap(getDrawable(context, R.drawable.ic_image_reader_error_foreground)));
-                                imageView.setBackground(getDrawable(context, R.drawable.ic_image_reader_background));
-                            }
-                        }
-                        map.remove(key);
-                        addError(key);
                     }
                 });
     }
 
-    private static void addError(Object key) {
-        if (errorMap.containsKey(key)) {
-            errorMap.put(key, errorMap.get(key) + 1);
-        } else {
-            errorMap.put(key, 1);
+    private static RelativeLayout.LayoutParams getLP(Context context, Bitmap bitmap) {
+        int sWidth = getScreenWidth(context);
+        int bWidth = bitmap.getWidth();
+        int bHeight = bitmap.getHeight();
+        int sHeight = bHeight * sWidth / bWidth;
+        return new RelativeLayout.LayoutParams(sWidth, sHeight);
+    }
+
+    private static void setLP(Context context, RelativeLayout.LayoutParams lp) {
+        lp.width = getScreenWidth(context);
+        lp.height = QMUIDisplayHelper.dp2px(context, 300);
+    }
+
+    private static RelativeLayout.LayoutParams getLP(Context context) {
+        int width = getScreenWidth(context);
+        int height = QMUIDisplayHelper.dp2px(context, 300);
+        return new RelativeLayout.LayoutParams(width, height);
+    }
+
+    private static int getScreenWidth(Context context) {
+        if (screenWidth == 0) {
+            screenWidth = QMUIDisplayHelper.getScreenWidth(context);
+        }
+        return screenWidth;
+    }
+
+    public static void preloadReaderImg(Context context, ImageInfo imageInfo) {
+        if (imageInfo != null) {
+            String url = imageInfo.getUrl();
+            Glide.with(context)
+                    .load(url)
+                    .preload();
         }
     }
 
+    /**
+     * 清理MAP
+     *
+     * @return void
+     */
+    public static void clearMap() {
+        MAP.clear();
+    }
+
+    /**
+     * 根据url获得图片加载状态
+     *
+     * @param imageInfo imageInfo
+     * @return int
+     */
+    public static int getLoadStatus(ImageInfo imageInfo) {
+        if (imageInfo != null) {
+            String url = imageInfo.getUrl();
+            Integer status = MAP.get(url);
+            if (status != null) {
+                return status;
+            }
+        }
+        return LOAD_ING;
+    }
+
+    /*=============================================================================*/
+
+    /**
+     * 保存bitmap到本地并返回地址
+     *
+     * @param bm  bm
+     * @param key key
+     * @return String
+     */
     private static String saveBitmapBackPath(Bitmap bm, Object key) throws IOException {
-        File targetDir = new File(shelfImgPath);
+        File targetDir = new File(SHELF_IMG_PATH);
         if (!targetDir.exists()) {
             try {
                 targetDir.mkdirs();
@@ -284,14 +267,34 @@ public class ImgUtil {
         return savedFile.getAbsolutePath();
     }
 
+    /**
+     * 根据key获得本地图片地址
+     *
+     * @param key key
+     * @return String
+     */
     public static String getLocalImgUrl(Object key) {
-        return shelfImgPath + "/img_" + key.toString();
+        return SHELF_IMG_PATH + "/img_" + key.toString();
     }
 
+    /**
+     * 根据id获得drawable
+     *
+     * @param context    context
+     * @param context    context
+     * @param drawableId drawableId
+     * @return Drawable
+     */
     public static Drawable getDrawable(Context context, int drawableId) {
         return ContextCompat.getDrawable(context, drawableId);
     }
 
+    /**
+     * Drawable -> Bitmap
+     *
+     * @param drawable drawable
+     * @return Bitmap
+     */
     public static Bitmap drawableToBitmap(Drawable drawable) {
         if (drawable instanceof BitmapDrawable) {
             return ((BitmapDrawable) drawable).getBitmap();
@@ -300,10 +303,23 @@ public class ImgUtil {
         }
     }
 
+    /**
+     * Bitmap -> Drawable
+     *
+     * @param context context
+     * @param bitmap  bitmap
+     * @return Drawable
+     */
     public static Drawable bitmapToDrawable(Context context, Bitmap bitmap) {
         return new BitmapDrawable(context.getResources(), bitmap);
     }
 
+    /**
+     * Drawable -> Bitmap
+     *
+     * @param drawable drawable
+     * @return Bitmap
+     */
     public static Bitmap drawableToBitmapByCanvas(Drawable drawable) {
         Bitmap bitmap = Bitmap
                 .createBitmap(
@@ -318,6 +334,13 @@ public class ImgUtil {
         return bitmap;
     }
 
+    /**
+     * byte[] -> Bitmap
+     *
+     * @param bytes      bytes
+     * @param isCompress isCompress
+     * @return Bitmap
+     */
     private static Bitmap bytesToBitmap(byte[] bytes, boolean isCompress) {
         Bitmap bitmap;
         if (isCompress) {
@@ -364,6 +387,12 @@ public class ImgUtil {
         return bitmap;
     }
 
+    /**
+     * 计算bitmap大小
+     *
+     * @param bitmap bitmap
+     * @return int
+     */
     public static int getBitmapSize(Bitmap bitmap) {
         return bitmap.getByteCount();
     }

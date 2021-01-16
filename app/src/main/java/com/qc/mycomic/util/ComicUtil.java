@@ -1,20 +1,19 @@
 package com.qc.mycomic.util;
 
-import android.util.Log;
-
+import com.qc.mycomic.en.Codes;
+import com.qc.mycomic.en.SourceEnum;
 import com.qc.mycomic.jsoup.JsoupNode;
 import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ImageInfo;
-import com.qc.mycomic.model.MyMap;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.LinkedHashMap;
 
 import okhttp3.Response;
 
@@ -139,7 +138,7 @@ public class ComicUtil {
     public static String getHtml(Response response, int sourceId) {
         String html;
         try {
-            if (sourceId == Codes.PU_FEI) {
+            if (sourceId == SourceEnum.PU_FEI.ID) {
                 byte[] b = response.body().bytes(); //获取数据的bytes
                 html = new String(b, "GB2312"); //然后将其转为gb2312
             } else {
@@ -183,12 +182,12 @@ public class ComicUtil {
         }
     }
 
-    public static MyMap<String, String> getRankMyMap(List<Map<String, String>> mapList, String s) {
-        MyMap<String, String> myMap = new MyMap<>();
+    public static Map<String, String> getRankMyMap(List<Map<String, String>> mapList, String s) {
+        Map<String, String> myMap = new LinkedHashMap<>();
         return getRankMyMap(myMap, mapList, s);
     }
 
-    public static MyMap<String, String> getRankMyMap(MyMap<String, String> myMap, List<Map<String, String>> mapList, String s) {
+    public static Map<String, String> getRankMyMap(Map<String, String> myMap, List<Map<String, String>> mapList, String s) {
         for (Map<String, String> map : mapList) {
             String name = map.get("name");
             String url = map.get("url");

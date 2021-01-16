@@ -1,36 +1,20 @@
 package com.qc.mycomic.ui.fragment;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Handler;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 
 import com.qc.mycomic.R;
-import com.qc.mycomic.model.Comic;
-import com.qc.mycomic.ui.activity.LauncherActivity;
-import com.qc.mycomic.util.Codes;
-import com.qc.mycomic.util.DBUtil;
-import com.qc.mycomic.util.RestartUtil;
+import com.qc.mycomic.en.Codes;
 import com.qmuiteam.qmui.alpha.QMUIAlphaImageButton;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
 import com.qmuiteam.qmui.util.QMUIColorHelper;
-import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 import com.qmuiteam.qmui.widget.popup.QMUIPopup;
 
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 import the.one.base.ui.fragment.BaseFragment;
 import the.one.base.ui.fragment.BaseTitleTabFragment;
 import the.one.base.util.QMUIPopupUtil;
-import the.one.base.util.crash.CrashConfig;
-import the.one.base.util.crash.CrashUtil;
 
 /**
  * @author LuQiChuang
@@ -100,7 +84,7 @@ public class ShelfFragment extends BaseTitleTabFragment {
                 } else if (position == 2) {
                     fragment.screen(false);
                 } else if (position == 3) {
-                    fragment.inputMH();
+                    fragment.importMH();
                 } else if (position == 4) {
                 }
                 mSettingPopup.dismiss();

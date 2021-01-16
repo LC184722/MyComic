@@ -1,26 +1,19 @@
 package com.qc.mycomic.ui.presenter;
 
-import android.util.Log;
-
 import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ComicInfo;
 import com.qc.mycomic.model.Source;
-import com.qc.mycomic.util.Codes;
-import com.qc.mycomic.util.ComicUtil;
+import com.qc.mycomic.self.SourceCallback;
 import com.qc.mycomic.util.NetUtil;
 import com.qc.mycomic.ui.view.RankView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.Request;
-import okhttp3.Response;
 import the.one.base.ui.presenter.BasePresenter;
 
 /**
@@ -52,23 +45,31 @@ public class RankPresenter extends BasePresenter<RankView> {
     }
 
     private void loadWithNet(Request request) {
-        Callback callback = new Callback() {
+        NetUtil.startLoad(request, new SourceCallback(request, source, Source.RANK) {
             @Override
-            public void onFailure(Call call, IOException e) {
-                //Log.e(TAG, "load: fail url = " + request.url());
-                AndroidSchedulers.mainThread().scheduleDirect(() -> showErrorPage(e.getMessage(), v -> load(request.url().toString())));
+            public void onFailure(String errorMsg) {
+                RankView view = getView();
+                AndroidSchedulers.mainThread().scheduleDirect(() -> {
+                    if (view != null) {
+                        showErrorPage(errorMsg, v -> {
+                            view.showLoadingPage();
+                            load(request.url().toString());
+                        });
+                    }
+                });
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                //Log.i(TAG, "load: " + response.toString());
-                String html = ComicUtil.getHtml(response, source.getSourceId());
-                map.put(request.url().toString(), html);
+            public void onResponse(String html) {
                 RankView view = getView();
-                AndroidSchedulers.mainThread().scheduleDirect(() -> dealHtml(view, html));
+                AndroidSchedulers.mainThread().scheduleDirect(() -> {
+                    if (view != null) {
+                        map.put(request.url().toString(), html);
+                        dealHtml(view, html);
+                    }
+                });
             }
-        };
-        NetUtil.startLoad(request, callback);
+        });
     }
 
     private void dealHtml(RankView view, String html) {

@@ -1,9 +1,9 @@
 package com.qc.mycomic.model;
 
+import okhttp3.Request;
+
 import java.util.List;
 import java.util.Map;
-
-import okhttp3.Request;
 
 /**
  * @author LuQiChuang
@@ -12,6 +12,11 @@ import okhttp3.Request;
  * @ver 1.0
  */
 public interface Source {
+
+    String SEARCH = "search";
+    String DETAIL = "detail";
+    String IMAGE = "image";
+    String RANK = "rank";
 
     /**
      * 获得漫画源ID
@@ -41,6 +46,13 @@ public interface Source {
      */
     boolean isValid();
 
+    /**
+     * 网页编码格式
+     *
+     * @return String
+     */
+    String getCharsetName();
+
     //获得搜索漫画request
 
     /**
@@ -58,6 +70,24 @@ public interface Source {
      * @return Request
      */
     Request getDetailRequest(String detailUrl);
+
+    /**
+     * 获得漫画阅读页request
+     *
+     * @param imageUrl imageUrl
+     * @return Request
+     */
+    Request getImageRequest(String imageUrl);
+
+    /**
+     * 用于发送二次Request
+     *
+     * @param html html
+     * @param tag  表明阶段
+     * @return Request
+     */
+    Request buildRequest(String html, String tag);
+
 
     /**
      * 获得漫画排行榜request
@@ -98,7 +128,7 @@ public interface Source {
      *
      * @return MyMap<String, String>
      */
-    MyMap<String, String> getRankMap();
+    Map<String, String> getRankMap();
 
     /**
      * 获得排行榜的漫画信息链表

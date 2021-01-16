@@ -1,25 +1,20 @@
 package com.qc.mycomic.ui.fragment;
 
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 
 import androidx.annotation.NonNull;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.qc.mycomic.R;
-import com.qc.mycomic.model.MyMap;
 import com.qc.mycomic.model.Source;
-import com.qc.mycomic.ui.activity.LauncherActivity;
-import com.qc.mycomic.ui.activity.MainActivity;
 import com.qc.mycomic.ui.adapter.ShelfAdapter;
 import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ComicInfo;
 import com.qc.mycomic.ui.presenter.ShelfPresenter;
 import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DBUtil;
+import com.qc.mycomic.util.MapUtil;
 import com.qc.mycomic.util.PopupUtil;
 import com.qc.mycomic.util.RestartUtil;
 import com.qc.mycomic.util.SourceUtil;
@@ -32,14 +27,11 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
-import the.one.base.model.PopupItem;
-import the.one.base.ui.activity.BaseCrashActivity;
 import the.one.base.ui.fragment.BaseDataFragment;
 import the.one.base.ui.presenter.BasePresenter;
-import the.one.base.util.QMUIBottomSheetUtil;
 import the.one.base.util.QMUIDialogUtil;
-import the.one.base.util.crash.CrashUtil;
 
 /**
  * @author LuQiChuang
@@ -58,7 +50,7 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
     private int status;
 
     public ShelfItemFragment() {
-        this.status = -1;
+        RestartUtil.restart(_mActivity);
     }
 
     public ShelfItemFragment(int status) {
@@ -106,25 +98,21 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
 
     @Override
     protected void requestServer() {
-        if (status != -1) {
-            if (comicList == null) {
-                comicList = ComicUtil.getComicList(status);
-                if (ComicUtil.getComicList().isEmpty() && status == ComicUtil.STATUS_FAV) {
-                    showToast("快去搜索漫画吧！");
-                }
-                onFirstComplete(comicList);
-            } else if (sList == shelfAdapter.getData()) {
-                onFirstComplete(sList);
-            } else if (comicList != ComicUtil.getComicList(status)) {
-                comicList = ComicUtil.getComicList(status);
-                onFirstComplete(comicList);
-            } else {
-                onFirstComplete(comicList);
+        if (comicList == null) {
+            comicList = ComicUtil.getComicList(status);
+            if (ComicUtil.getComicList().isEmpty() && status == ComicUtil.STATUS_FAV) {
+                showToast("快去搜索漫画吧！");
             }
-            adapter.notifyDataSetChanged();
+            onFirstComplete(comicList);
+        } else if (sList == shelfAdapter.getData()) {
+            onFirstComplete(sList);
+        } else if (comicList != ComicUtil.getComicList(status)) {
+            comicList = ComicUtil.getComicList(status);
+            onFirstComplete(comicList);
         } else {
-            RestartUtil.restart(_mActivity);
+            onFirstComplete(comicList);
         }
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -156,11 +144,15 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
                 if (which == 0) {
                     QMUIDialogUtil.showSimpleDialog(getContext(), "查看信息", comic.toStringView()).show();
                 } else if (which == 1) {
-                    MyMap<Integer, String> myMap = PopupUtil.getMyMap(comic.getComicInfoList());
+                    Map<Integer, String> myMap = PopupUtil.getMyMap(comic.getComicInfoList());
                     PopupUtil.showSimpleBottomSheetList(getContext(), myMap, "切换漫画源", comic.getSourceId(), new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
                         @Override
                         public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
-                            int sourceId = myMap.getKeyByValue(tag);
+                            Integer integer = MapUtil.getKeyByValue(myMap, tag);
+                            int sourceId = position;
+                            if (integer != null) {
+                                sourceId = integer;
+                            }
                             comic.setSourceId(sourceId);
                             if (comic.changeComicInfo()) {
                                 adapter.notifyDataSetChanged();
@@ -308,7 +300,7 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
         }
     }
 
-    public void inputMH() {
+    public void importMH() {
         QMUIDialogUtil.showEditTextDialog(getContext(), "导入漫画", "输入漫画url", new QMUIDialogUtil.OnEditTextConfirmClickListener() {
             @Override
             public void getEditText(QMUIDialog dialog, String content, int index) {
@@ -324,7 +316,6 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
                             source = s;
                             break;
                         }
-                        System.out.println("suffix = " + suffix);
                     }
                     if (source != null) {
                         cIndex = source.getIndex();

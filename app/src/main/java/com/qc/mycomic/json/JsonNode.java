@@ -32,6 +32,13 @@ public class JsonNode {
         initConditions(conditions);
     }
 
+    @Override
+    public String toString() {
+        return "JsonNode{" +
+                "jsonObject=" + jsonObject +
+                '}';
+    }
+
     private JSONObject parse(String json) {
         return JSONObject.parseObject(json);
     }
@@ -99,6 +106,5 @@ public class JsonNode {
             return null;
         }
     }
-
 
 }

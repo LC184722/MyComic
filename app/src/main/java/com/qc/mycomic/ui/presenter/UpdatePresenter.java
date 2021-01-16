@@ -1,23 +1,16 @@
 package com.qc.mycomic.ui.presenter;
 
-import android.content.Intent;
-import android.net.Uri;
-import android.util.Log;
-
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 import the.one.base.ui.presenter.BasePresenter;
-import the.one.base.util.QMUIDialogUtil;
 import the.one.base.util.ToastUtil;
 
 import com.qc.mycomic.jsoup.JsoupNode;
-import com.qc.mycomic.util.Codes;
+import com.qc.mycomic.en.Codes;
 import com.qc.mycomic.util.NetUtil;
 import com.qc.mycomic.ui.view.UpdateView;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import java.io.IOException;
 
@@ -33,16 +26,13 @@ public class UpdatePresenter extends BasePresenter<UpdateView> {
     private String url = "https://gitee.com/luqichuang/MyComic/releases";
 
     public void checkUpdate() {
-        UpdateView view = getView();
-        Callback callback = new Callback() {
+        NetUtil.startLoad(url, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                AndroidSchedulers.mainThread().scheduleDirect(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (view != null) {
-                            view.getVersionTag(null);
-                        }
+                UpdateView view = getView();
+                AndroidSchedulers.mainThread().scheduleDirect(() -> {
+                    if (view != null) {
+                        view.getVersionTag(null);
                     }
                 });
             }
@@ -50,23 +40,20 @@ public class UpdatePresenter extends BasePresenter<UpdateView> {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String html = response.body().string();
-                JsoupNode node = new JsoupNode(html);
-                String versionTag = node.ownText("div.tag-name span");
-                AndroidSchedulers.mainThread().scheduleDirect(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (view != null) {
-                            view.getVersionTag(versionTag);
-                        }
+                UpdateView view = getView();
+                AndroidSchedulers.mainThread().scheduleDirect(() -> {
+                    if (view != null) {
+                        JsoupNode node = new JsoupNode(html);
+                        String versionTag = node.ownText("div.tag-name span");
+                        view.getVersionTag(versionTag);
                     }
                 });
             }
-        };
-        NetUtil.startLoad(url, callback);
+        });
     }
 
     public void checkApkUpdate() {
-        Callback callback = new Callback() {
+        NetUtil.startLoad(url, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
             }
@@ -74,12 +61,11 @@ public class UpdatePresenter extends BasePresenter<UpdateView> {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String html = response.body().string();
-                JsoupNode node = new JsoupNode(html);
-                String versionTag = node.ownText("div.tag-name span");
-
                 AndroidSchedulers.mainThread().scheduleDirect(new Runnable() {
                     @Override
                     public void run() {
+                        JsoupNode node = new JsoupNode(html);
+                        String versionTag = node.ownText("div.tag-name span");
                         if (existUpdate(versionTag, Codes.versionTag)) {
                             String title = "存在新版本" + versionTag + "，快去更新吧！";
                             ToastUtil.show(title);
@@ -87,8 +73,7 @@ public class UpdatePresenter extends BasePresenter<UpdateView> {
                     }
                 });
             }
-        };
-        NetUtil.startLoad(url, callback);
+        });
     }
 
     public boolean existUpdate(String updateTag, String localTag) {

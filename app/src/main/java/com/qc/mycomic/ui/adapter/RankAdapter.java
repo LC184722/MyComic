@@ -1,6 +1,7 @@
 package com.qc.mycomic.ui.adapter;
 
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.qc.mycomic.R;
@@ -40,10 +41,8 @@ public class RankAdapter extends TheBaseQuickAdapter<Comic> {
             goneView(tvUpdateTime);
         }
         holder.setText(R.id.tvIndex, String.valueOf(holder.getAdapterPosition() + 1));
-        QMUIRadiusImageView qivImg = holder.findView(R.id.qivImg);
-        if (qivImg != null) {
-            ImgUtil.loadRankImg(getContext(), comic, qivImg);
-        }
+        RelativeLayout relativeLayout = holder.findView(R.id.imageRelativeLayout);
+        ImgUtil.loadImage(getContext(), comic.getComicInfo().getImgUrl(), relativeLayout);
     }
 
     @Override

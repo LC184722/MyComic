@@ -1,23 +1,18 @@
 package com.qc.mycomic.ui.presenter;
 
-import android.util.Log;
-
 import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ComicInfo;
-import com.qc.mycomic.util.Codes;
+import com.qc.mycomic.model.Source;
+import com.qc.mycomic.self.SourceCallback;
 import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DBUtil;
 import com.qc.mycomic.util.NetUtil;
-import com.qc.mycomic.util.SourceUtil;
 import com.qc.mycomic.ui.view.ShelfView;
 
-import java.io.IOException;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
+import okhttp3.Request;
 import the.one.base.ui.presenter.BasePresenter;
 
 /**
@@ -48,10 +43,11 @@ public class ShelfPresenter extends BasePresenter<ShelfView> {
     }
 
     private void checkUpdate(Comic comic, ComicInfo info) {
-        String url = info.getDetailUrl();
-        Callback callback = new Callback() {
+        Source source = comic.getSource();
+        Request request = source.getDetailRequest(info.getDetailUrl());
+        NetUtil.startLoad(request, new SourceCallback(request, source, Source.DETAIL) {
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(String errorMsg) {
                 ShelfView view = getView();
                 AndroidSchedulers.mainThread().scheduleDirect(() -> {
                     if (view != null) {
@@ -61,30 +57,25 @@ public class ShelfPresenter extends BasePresenter<ShelfView> {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String html = ComicUtil.getHtml(response, comic.getSourceId());
+            public void onResponse(String html) {
                 ShelfView view = getView();
-                AndroidSchedulers.mainThread().scheduleDirect(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (view != null) {
-                            String curUpdateChapter = info.getUpdateChapter();
-                            SourceUtil.getSource(info.getSourceId()).setComicDetail(info, html);
-                            if (curUpdateChapter == null || !curUpdateChapter.equals(info.getUpdateChapter())) {
-                                if (info.getUpdateChapter() != null) {
-                                    comic.setUpdate(comic.changeComicInfo(info.getSourceId()));
-                                    comic.setPriority(++priority);
-                                    ComicUtil.first(comic);
-                                }
+                AndroidSchedulers.mainThread().scheduleDirect(() -> {
+                    if (view != null) {
+                        String curUpdateChapter = info.getUpdateChapter();
+                        source.setComicDetail(info, html);
+                        if (curUpdateChapter == null || !curUpdateChapter.equals(info.getUpdateChapter())) {
+                            if (info.getUpdateChapter() != null) {
+                                comic.setUpdate(comic.changeComicInfo(info.getSourceId()));
+                                comic.setPriority(++priority);
+                                ComicUtil.first(comic);
                             }
-                            DBUtil.saveComic(comic, DBUtil.SAVE_CUR);
-                            view.checkUpdateComplete(null);
                         }
+                        DBUtil.saveComic(comic, DBUtil.SAVE_CUR);
+                        view.checkUpdateComplete(null);
                     }
                 });
             }
-        };
-        NetUtil.startLoad(url, callback);
+        });
     }
 
     public void initPriority() {

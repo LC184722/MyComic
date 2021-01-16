@@ -6,6 +6,7 @@ import android.view.View;
 import com.qc.mycomic.R;
 import com.qc.mycomic.setting.Setting;
 import com.qc.mycomic.setting.SettingFactory;
+import com.qc.mycomic.util.MapUtil;
 import com.qc.mycomic.util.PopupUtil;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
@@ -48,7 +49,7 @@ public class PersonReaderFragment extends BaseGroupListFragment implements View.
             PopupUtil.showSimpleBottomSheetList(getContext(), setting.getMyMap(), "选择预加载图片数量", setting.getData(), new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
                 @Override
                 public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
-                    setting.setData(setting.getMyMap().getKeyByValue(tag));
+                    setting.setData(MapUtil.getKeyByValue(setting.getMyMap(), tag));
                     v2.setDetailText(tag);
                     dialog.dismiss();
                 }
@@ -58,7 +59,7 @@ public class PersonReaderFragment extends BaseGroupListFragment implements View.
             PopupUtil.showSimpleBottomSheetList(getContext(), setting.getMyMap(), "选择画质（如发生卡顿、闪退请选择低画质）", setting.getData(), new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
                 @Override
                 public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
-                    setting.setData(setting.getMyMap().getKeyByValue(tag));
+                    setting.setData(MapUtil.getKeyByValue(setting.getMyMap(), tag));
                     v5.setDetailText(tag);
                     dialog.dismiss();
                 }

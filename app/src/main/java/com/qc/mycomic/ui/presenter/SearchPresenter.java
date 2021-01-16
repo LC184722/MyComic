@@ -1,25 +1,18 @@
 package com.qc.mycomic.ui.presenter;
 
-import android.util.Log;
-
 import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ComicInfo;
 import com.qc.mycomic.model.Source;
-import com.qc.mycomic.util.Codes;
-import com.qc.mycomic.util.ComicUtil;
+import com.qc.mycomic.self.SourceCallback;
 import com.qc.mycomic.util.NetUtil;
 import com.qc.mycomic.util.SourceUtil;
 import com.qc.mycomic.ui.view.SearchView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.Request;
-import okhttp3.Response;
 import the.one.base.ui.presenter.BasePresenter;
 
 /**
@@ -37,12 +30,9 @@ public class SearchPresenter extends BasePresenter<SearchView> {
         List<Source> sourceList = SourceUtil.getSourceList();
         for (Source source : sourceList) {
             Request request = source.getSearchRequest(searchString);
-            //Log.i(TAG, "search: url = " + request.url());
-            Callback callback = new Callback() {
+            NetUtil.startLoad(request, new SourceCallback(request, source, Source.SEARCH) {
                 @Override
-                public void onFailure(Call call, IOException e) {
-                    //Log.e(TAG, "load: fail url = " + request.url());
-                    e.printStackTrace();
+                public void onFailure(String errorMsg) {
                     SearchView view = getView();
                     AndroidSchedulers.mainThread().scheduleDirect(() -> {
                         if (view != null) {
@@ -52,9 +42,7 @@ public class SearchPresenter extends BasePresenter<SearchView> {
                 }
 
                 @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    //Log.i(TAG, "load: " + response.toString());
-                    String html = ComicUtil.getHtml(response, source.getSourceId());
+                public void onResponse(String html) {
                     SearchView view = getView();
                     AndroidSchedulers.mainThread().scheduleDirect(() -> {
                         if (view != null) {
@@ -64,8 +52,7 @@ public class SearchPresenter extends BasePresenter<SearchView> {
                         }
                     });
                 }
-            };
-            NetUtil.startLoad(request, callback);
+            });
         }
     }
 

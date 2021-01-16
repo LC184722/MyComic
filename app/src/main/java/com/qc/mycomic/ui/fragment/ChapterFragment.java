@@ -1,14 +1,12 @@
 package com.qc.mycomic.ui.fragment;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,15 +16,15 @@ import com.qc.mycomic.R;
 import com.qc.mycomic.model.ChapterInfo;
 import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ComicInfo;
-import com.qc.mycomic.model.MyMap;
-import com.qc.mycomic.other.MySpacesItemDecoration;
+import com.qc.mycomic.self.MySpacesItemDecoration;
 import com.qc.mycomic.ui.adapter.ChapterAdapter;
 import com.qc.mycomic.ui.presenter.ChapterPresenter;
 import com.qc.mycomic.ui.view.ChapterView;
-import com.qc.mycomic.util.Codes;
+import com.qc.mycomic.en.Codes;
 import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DBUtil;
 import com.qc.mycomic.util.ImgUtil;
+import com.qc.mycomic.util.MapUtil;
 import com.qc.mycomic.util.PopupUtil;
 import com.qc.mycomic.util.RestartUtil;
 import com.qc.mycomic.util.SourceUtil;
@@ -40,12 +38,12 @@ import com.qmuiteam.qmui.widget.popup.QMUIPopup;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import the.one.base.ui.fragment.BaseDataFragment;
 import the.one.base.ui.presenter.BasePresenter;
 import the.one.base.util.QMUIDialogUtil;
 import the.one.base.util.QMUIPopupUtil;
-import the.one.base.util.glide.GlideEngine;
 import the.one.base.widge.decoration.SpacesItemDecoration;
 
 /**
@@ -65,7 +63,7 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
     private ChapterPresenter presenter = new ChapterPresenter();
 
     public ChapterFragment() {
-        this.comic = null;
+        RestartUtil.restart(_mActivity);
     }
 
     public ChapterFragment(Comic comic) {
@@ -108,7 +106,8 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
     private View headerView;
     private View bottomView;
 
-    private QMUIRadiusImageView qivImg;
+    private QMUIRadiusImageView imageView;
+    private RelativeLayout relativeLayout;
     private TextView tvTitle;
     private TextView tvSource;
     private TextView tvSourceSize;
@@ -129,7 +128,8 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         addTopBarBackBtn();
         headerView = getView(R.layout.fragment_chapter);
         bottomView = getView(R.layout.bottom_chapter);
-        qivImg = headerView.findViewById(R.id.qivImg);
+        relativeLayout = headerView.findViewById(R.id.imageRelativeLayout);
+        imageView = headerView.findViewById(R.id.imageView);
         tvTitle = headerView.findViewById(R.id.tvTitle);
         tvSource = headerView.findViewById(R.id.tvSource);
         tvSourceSize = headerView.findViewById(R.id.tvSourceSize);
@@ -172,11 +172,15 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         //改变漫画源
         TextView tvSource = headerView.findViewById(R.id.tvSource);
         tvSource.setOnClickListener(v -> {
-            MyMap<Integer, String> myMap = PopupUtil.getMyMap(comic.getComicInfoList());
+            Map<Integer, String> myMap = PopupUtil.getMyMap(comic.getComicInfoList());
             PopupUtil.showSimpleBottomSheetList(getContext(), myMap, "切换漫画源", comic.getSourceId(), new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
                 @Override
                 public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
-                    int sourceId = myMap.getKeyByValue(tag);
+                    Integer integer = MapUtil.getKeyByValue(myMap, tag);
+                    int sourceId = position;
+                    if (integer != null) {
+                        sourceId = integer;
+                    }
                     comic.setSourceId(sourceId);
                     if (comic.changeComicInfo()) {
                         showLoadingPage();
@@ -241,7 +245,7 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
     }
 
     private void setValue() {
-        ImgUtil.loadShelfImg(getContext(), comic, qivImg);
+        ImgUtil.loadImage(getContext(), comic.getComicInfo().getImgUrl(), comic.getComicInfo().getId(), relativeLayout);
         tvTitle.setText(comic.getComicInfo().getTitle());
         tvSource.setText(comic.getSourceName());
         tvSourceSize.setText("(" + comic.getSourceSize() + ")");
@@ -303,16 +307,12 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
 
     @Override
     protected void requestServer() {
-        if (comic != null) {
-            List<ChapterInfo> chapterInfoList = comic.getComicInfo().getChapterInfoList();
-            //Log.i(TAG, "requestServer: Codes.toStatus = " + Codes.toStatus);
-            if (chapterInfoList == null || chapterInfoList.size() == 0) {
-                presenter.load(comic);
-            } else {
-                loadComplete();
-            }
+        List<ChapterInfo> chapterInfoList = comic.getComicInfo().getChapterInfoList();
+        //Log.i(TAG, "requestServer: Codes.toStatus = " + Codes.toStatus);
+        if (chapterInfoList == null || chapterInfoList.size() == 0) {
+            presenter.load(comic);
         } else {
-            RestartUtil.restart(_mActivity);
+            loadComplete();
         }
     }
 

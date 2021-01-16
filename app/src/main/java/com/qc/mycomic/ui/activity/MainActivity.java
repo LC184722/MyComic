@@ -16,12 +16,8 @@ import the.one.base.ui.fragment.BaseFragment;
  */
 public class MainActivity extends BaseFragmentActivity {
 
-    private UpdatePresenter presenter = new UpdatePresenter();
-
     @Override
     protected BaseFragment getFirstFragment() {
-        LitePal.initialize(this);
-        presenter.checkApkUpdate();
         return new MyHomeFragment();
     }
 

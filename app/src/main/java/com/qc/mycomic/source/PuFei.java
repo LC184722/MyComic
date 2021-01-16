@@ -1,19 +1,20 @@
 package com.qc.mycomic.source;
 
+import com.qc.mycomic.en.SourceEnum;
 import com.qc.mycomic.jsoup.JsoupNode;
 import com.qc.mycomic.jsoup.JsoupStarter;
 import com.qc.mycomic.model.ChapterInfo;
 import com.qc.mycomic.model.ComicInfo;
 import com.qc.mycomic.model.ImageInfo;
-import com.qc.mycomic.model.MyMap;
-import com.qc.mycomic.util.Codes;
+import com.qc.mycomic.en.Codes;
 import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DecryptUtil;
 import com.qc.mycomic.util.NetUtil;
 import com.qc.mycomic.util.StringUtil;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.LinkedHashMap;
 
 import okhttp3.Request;
 
@@ -26,13 +27,13 @@ import okhttp3.Request;
 public class PuFei extends BaseSource {
 
     @Override
-    public int getSourceId() {
-        return Codes.PU_FEI;
+    public SourceEnum getSourceEnum() {
+        return SourceEnum.PU_FEI;
     }
 
     @Override
-    public String getSourceName() {
-        return Codes.PU_FEI_STRING;
+    public String getCharsetName() {
+        return "GB2312";
     }
 
     @Override
@@ -104,8 +105,8 @@ public class PuFei extends BaseSource {
     }
 
     @Override
-    public MyMap<String, String> getRankMap() {
-        MyMap<String, String> map = new MyMap<>();
+    public Map<String, String> getRankMap() {
+        Map<String, String> map = new LinkedHashMap<>();
         map.put("风云榜", "http://m.pufei8.com/manhua/paihang.html");
         map.put("刚刚更新", "http://m.pufei8.com/manhua/update.html");
         map.put("少年热血", "http://m.pufei8.com/shaonianrexue/");

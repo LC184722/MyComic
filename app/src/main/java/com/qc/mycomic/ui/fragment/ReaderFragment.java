@@ -1,11 +1,9 @@
 package com.qc.mycomic.ui.fragment;
 
-import android.util.Log;
 import android.view.View;
-import android.webkit.JavascriptInterface;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -23,16 +21,13 @@ import com.qc.mycomic.setting.SettingFactory;
 import com.qc.mycomic.ui.adapter.ReaderAdapter;
 import com.qc.mycomic.ui.presenter.ReaderPresenter;
 import com.qc.mycomic.ui.view.ReaderView;
-import com.qc.mycomic.util.Codes;
+import com.qc.mycomic.en.Codes;
 import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DBUtil;
 import com.qc.mycomic.util.ImgUtil;
 import com.qc.mycomic.util.RestartUtil;
 import com.qmuiteam.qmui.util.QMUIDisplayHelper;
 import com.qmuiteam.qmui.util.QMUIViewHelper;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
 import java.util.Date;
 import java.util.List;
@@ -71,7 +66,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
     private boolean firstLoad = true;
 
     public ReaderFragment() {
-        this.comic = null;
+        RestartUtil.restart(_mActivity);
     }
 
     public ReaderFragment(Comic comic) {
@@ -264,24 +259,20 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
 
     @Override
     protected void requestServer() {
-        if (comic != null) {
-            if (imageInfoList == null) {
-                presenter.loadImageInfoList(comic);
-            } else {
-                comicInfo.initChapterId(imageInfoList.get(imageInfoList.size() - 1).getChapterId());
-                //Log.i(TAG, "requestServer: " + comicInfo.getCurChapterId());
-                if (comicInfo.canLoad(isLoadNext)) {
-                    presenter.loadImageInfoList(comic);
-                } else if (isLoadNext) {
-                    onComplete(null);
-                } else {
-                    isLoadNext = true;
-                    showFailTips("没有上一章");
-                    setPullLayoutEnabled(false);
-                }
-            }
+        if (imageInfoList == null) {
+            presenter.loadImageInfoList(comic);
         } else {
-            RestartUtil.restart(_mActivity);
+            comicInfo.initChapterId(imageInfoList.get(imageInfoList.size() - 1).getChapterId());
+            //Log.i(TAG, "requestServer: " + comicInfo.getCurChapterId());
+            if (comicInfo.canLoad(isLoadNext)) {
+                presenter.loadImageInfoList(comic);
+            } else if (isLoadNext) {
+                onComplete(null);
+            } else {
+                isLoadNext = true;
+                showFailTips("没有上一章");
+                setPullLayoutEnabled(false);
+            }
         }
     }
 
@@ -306,8 +297,8 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
         ReaderAdapter readerAdapter = (ReaderAdapter) adapter;
         //Log.i(TAG, "onItemLongClick: " + imageInfo.toStringProgress());
         if (ImgUtil.getLoadStatus(imageInfo) == ImgUtil.LOAD_FAIL) {
-            ImageView imageView = view.findViewById(R.id.imageView);
-            ImgUtil.loadReaderImgForce(getContext(), imageInfo, imageView);
+            RelativeLayout layout = view.findViewById(R.id.imageRelativeLayout);
+            ImgUtil.loadImage(getContext(), imageInfo.getUrl(), layout);
         } else if (ImgUtil.getLoadStatus(imageInfo) == ImgUtil.LOAD_SUCCESS) {
             startFragment(new ReaderDetailFragment(imageInfo));
         }

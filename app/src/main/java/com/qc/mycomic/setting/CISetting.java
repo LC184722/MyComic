@@ -1,6 +1,6 @@
 package com.qc.mycomic.setting;
 
-import com.qc.mycomic.model.MyMap;
+import java.util.Map;
 
 /**
  * @author LuQiChuang
@@ -20,7 +20,7 @@ public class CISetting extends Setting {
     }
 
     @Override
-    public void dealMyMap(MyMap<String, String> myMap) {
+    public void dealMyMap(Map<String, String> myMap) {
         myMap.put("0", "高清画质(高内存占用)");
         myMap.put("1", "标清画质(中内存占用)");
         myMap.put("2", "流畅画质(低内存占用)");

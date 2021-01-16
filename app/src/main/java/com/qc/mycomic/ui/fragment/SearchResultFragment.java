@@ -1,6 +1,5 @@
 package com.qc.mycomic.ui.fragment;
 
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 
@@ -13,7 +12,7 @@ import com.qc.mycomic.ui.adapter.SearchAdapter;
 import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ComicInfo;
 import com.qc.mycomic.ui.presenter.SearchPresenter;
-import com.qc.mycomic.util.Codes;
+import com.qc.mycomic.en.Codes;
 import com.qc.mycomic.util.DBUtil;
 import com.qc.mycomic.util.RestartUtil;
 import com.qc.mycomic.util.SourceUtil;
@@ -42,7 +41,7 @@ public class SearchResultFragment extends BaseDataFragment<Comic> implements Sea
     private String searchString;
 
     public SearchResultFragment() {
-        this.searchString = null;
+        RestartUtil.restart(_mActivity);
     }
 
     public SearchResultFragment(String searchString) {
@@ -66,22 +65,18 @@ public class SearchResultFragment extends BaseDataFragment<Comic> implements Sea
 
     @Override
     protected void requestServer() {
-        if (searchString != null) {
-            count = 0;
-            presenter.search(searchString);
-            showContentPage();
-            if (progressDialog == null) {
-                showProgressDialog(getPercent(), total, getMsg());
-            } else {
-                progressDialog.setProgress(getPercent(), total);
-                progressDialog.setMessage(getMsg());
-                progressDialog.show();
-            }
-            if (comicList == null) {
-                comicList = DBUtil.findComicListByStatus(Codes.STATUS_ALL);
-            }
+        count = 0;
+        presenter.search(searchString);
+        showContentPage();
+        if (progressDialog == null) {
+            showProgressDialog(getPercent(), total, getMsg());
         } else {
-            RestartUtil.restart(_mActivity);
+            progressDialog.setProgress(getPercent(), total);
+            progressDialog.setMessage(getMsg());
+            progressDialog.show();
+        }
+        if (comicList == null) {
+            comicList = DBUtil.findComicListByStatus(Codes.STATUS_ALL);
         }
     }
 

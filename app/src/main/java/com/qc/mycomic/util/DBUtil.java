@@ -1,10 +1,8 @@
 package com.qc.mycomic.util;
 
 import android.content.Context;
-import android.util.Log;
 
-import androidx.annotation.NonNull;
-
+import com.qc.mycomic.en.Codes;
 import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ComicInfo;
 
@@ -110,7 +108,7 @@ public class DBUtil {
     private static void saveComicInfoData(ComicInfo comicInfo) {
         if (comicInfo != null) {
             comicInfo.saveOrUpdate("title = ? and sourceId = ?", comicInfo.getTitle(), String.valueOf(comicInfo.getSourceId()));
-            //Log.i(TAG, "saveComicInfoData: comicInfo --> " + comicInfo.getTitle() + " " + SourceUtil.getSourceName(comicInfo.getSourceId()));
+            //Log.i(TAG, "saveComicInfoData: comicInfo --> " + comicInfo.getTitle() + " " + SourceUtil.getSOURCE_NAME(comicInfo.getSourceId()));
         }
     }
 
@@ -154,7 +152,7 @@ public class DBUtil {
 //    public static void saveData(ComicInfo comicInfo) {
 //        if (comicInfo != null) {
 //            new Thread(() -> comicInfo.saveOrUpdate("title = ? and sourceId = ?", comicInfo.getTitle(), String.valueOf(comicInfo.getSourceId()))).start();
-//            //Log.i(TAG, "saveComicInfo: " + comicInfo.getTitle() + "->" + SourceUtil.getSourceName(comicInfo.getSourceId()));
+//            //Log.i(TAG, "saveComicInfo: " + comicInfo.getTitle() + "->" + SourceUtil.getSOURCE_NAME(comicInfo.getSourceId()));
 //        }
 //    }
 

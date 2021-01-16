@@ -1,6 +1,6 @@
 package com.qc.mycomic.setting;
 
-import com.qc.mycomic.model.MyMap;
+import java.util.Map;
 
 /**
  * @author LuQiChuang
@@ -21,7 +21,7 @@ public class PNSetting extends Setting {
     }
 
     @Override
-    public void dealMyMap(MyMap<String, String> myMap) {
+    public void dealMyMap(Map<String, String> myMap) {
         myMap.put("0", "关闭预加载");
         myMap.put("5", "预加载5页");
         myMap.put("10", "预加载10页");

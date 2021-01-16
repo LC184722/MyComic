@@ -1,5 +1,6 @@
 package com.qc.mycomic.model;
 
+import com.qc.mycomic.service.ComicService;
 import com.qc.mycomic.util.DateUtil;
 import com.qc.mycomic.util.SourceUtil;
 
@@ -74,28 +75,18 @@ public class Comic extends LitePalSupport {
     }
 
     public boolean changeComicInfo() {
-        boolean flag = false;
-        for (ComicInfo info : comicInfoList) {
-            if (info.getSourceId() == sourceId) {
-                comicInfo = info;
-                flag = true;
-                break;
-            }
-        }
-        return flag;
+        return changeComicInfo(this.sourceId);
     }
 
     public boolean changeComicInfo(int sourceId) {
-        boolean flag = false;
         for (ComicInfo info : comicInfoList) {
             if (info.getSourceId() == sourceId) {
                 this.comicInfo = info;
                 this.sourceId = sourceId;
-                flag = true;
-                break;
+                return true;
             }
         }
-        return flag;
+        return false;
     }
 
     @Override

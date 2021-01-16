@@ -8,7 +8,7 @@ import android.view.View;
 import com.qc.mycomic.R;
 import com.qc.mycomic.ui.presenter.UpdatePresenter;
 import com.qc.mycomic.ui.view.UpdateView;
-import com.qc.mycomic.util.Codes;
+import com.qc.mycomic.en.Codes;
 import com.qc.mycomic.util.DBUtil;
 import com.qc.mycomic.util.PackageUtil;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;

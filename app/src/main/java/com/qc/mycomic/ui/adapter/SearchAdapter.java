@@ -28,8 +28,8 @@ public class SearchAdapter extends TheBaseQuickAdapter<Comic> {
         holder.setText(R.id.tvSource, "漫画源数量：" + comic.getSourceSize());
         holder.setText(R.id.tvAuthor, comic.getComicInfo().getAuthor());
         holder.setText(R.id.tvUpdateTime, comic.getComicInfo().getUpdateTime());
-        QMUIRadiusImageView qivImg = holder.findView(R.id.qivImg);
-        GlideEngine.createGlideEngine().loadImage(getContext(), comic.getComicInfo().getImgUrl(), qivImg);
+        QMUIRadiusImageView imageView = holder.findView(R.id.imageView);
+        GlideEngine.createGlideEngine().loadImage(getContext(), comic.getComicInfo().getImgUrl(), imageView);
     }
 
 }

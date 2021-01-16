@@ -14,18 +14,38 @@
         app:qmui_borderWidth="2dp"
         app:qmui_radius="10dp">
 
-        <com.qmuiteam.qmui.widget.QMUIRadiusImageView
-            android:id="@+id/qivImg"
+
+        <RelativeLayout
+            android:id="@+id/imageRelativeLayout"
             android:layout_width="120dp"
-            android:layout_height="160dp"
-            android:layout_marginEnd="5dp"
-            android:background="@drawable/ic_image_background"
-            app:qmui_border_width="0dp"
-            app:qmui_corner_radius="@dimen/dp_10" />
+            android:layout_height="160dp">
+
+            <com.qmuiteam.qmui.widget.QMUIRadiusImageView
+                android:id="@+id/imageView"
+                android:layout_width="120dp"
+                android:layout_height="160dp"
+                android:background="@drawable/ic_image_background"
+                app:qmui_border_width="0dp"
+                app:qmui_corner_radius="@dimen/dp_10" />
+
+            <com.qmuiteam.qmui.widget.QMUIProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerInParent="true"
+                android:textDirection="firstStrongLtr"
+                app:qmui_background_color="@color/qmui_config_color_10_pure_black"
+                app:qmui_progress_color="@color/colorPrimary"
+                app:qmui_stroke_width="2dp"
+                app:qmui_type="type_circle"
+                app:qmui_value="0" />
+
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
             android:orientation="vertical">
 
             <LinearLayout

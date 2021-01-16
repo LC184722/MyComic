@@ -2,6 +2,7 @@ package com.qc.mycomic.json;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.qc.mycomic.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,11 +67,10 @@ public abstract class JsonStarter<T> {
                 T t = dealDataList(node, chapterId);
                 cur++;
                 if (t != null) {
-                    if (isDESC()) {
-                        list.add(t);
-                    } else {
-                        list.add(0, t);
-                    }
+                    list.add(t);
+                }
+                if (!isDESC()) {
+                    StringUtil.swapList(list);
                 }
             }
         }
@@ -83,8 +83,12 @@ public abstract class JsonStarter<T> {
         dealData(node);
     }
 
-    public abstract void dealData(JsonNode node);
+    protected void dealData(JsonNode node) {
 
-    public abstract T dealDataList(JsonNode node, int dataId);
+    }
+
+    protected T dealDataList(JsonNode node, int dataId) {
+        return null;
+    }
 
 }

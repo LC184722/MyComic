@@ -1,39 +1,18 @@
 package com.qc.mycomic.ui.adapter;
 
-import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.model.GlideUrl;
-import com.bumptech.glide.load.model.Headers;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.qc.mycomic.R;
-import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ImageInfo;
-import com.qc.mycomic.other.MyHeaders;
-import com.qc.mycomic.util.Codes;
 import com.qc.mycomic.util.ImgUtil;
-import com.qmuiteam.qmui.util.QMUIDisplayHelper;
+import com.qmuiteam.qmui.widget.QMUIProgressBar;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import the.one.base.adapter.TheBaseQuickAdapter;
 import the.one.base.adapter.TheBaseViewHolder;
-import the.one.base.util.glide.GlideUtil;
 
 /**
  * @author LuQiChuang
@@ -52,11 +31,12 @@ public class ReaderAdapter extends TheBaseQuickAdapter<ImageInfo> {
     @Override
     protected void convert(@NotNull TheBaseViewHolder holder, ImageInfo imageInfo) {
         //Log.i(TAG, "convert: " + getData());
-        ImageView imageView = holder.findView(R.id.imageView);
-        if (imageView != null) {
-            ImgUtil.loadReaderImg(getContext(), imageInfo, imageView);
-        }
+//        ImageView imageView = holder.findView(R.id.imageView);
+//        QMUIProgressBar progressBar = holder.findView(R.id.progressBar);
+//        ImgUtil.loadImage(getContext(), imageInfo.getUrl(), imageView, progressBar);
         //Log.i(TAG, "convert: position = " + holder.getAdapterPosition() + ", status = " + imageInfo.getStatus() + ", count = " + (++count));
+        RelativeLayout layout = holder.findView(R.id.imageRelativeLayout);
+        ImgUtil.loadImage(getContext(), imageInfo.getUrl(), layout);
     }
 
     public void clearMap() {

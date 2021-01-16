@@ -1,8 +1,8 @@
 package com.qc.mycomic.setting;
 
-import com.qc.mycomic.model.MyMap;
+import com.qc.mycomic.en.SourceEnum;
 import com.qc.mycomic.model.Source;
-import com.qc.mycomic.util.Codes;
+import com.qc.mycomic.en.Codes;
 import com.qc.mycomic.util.SourceUtil;
 
 import java.util.Map;
@@ -22,12 +22,12 @@ public class DSSetting extends Setting {
 
     @Override
     public String getDefaultValue() {
-        return String.valueOf(Codes.MI_TUI);
+        return String.valueOf(SourceEnum.MI_TUI.ID);
     }
 
     @Override
-    public void dealMyMap(MyMap<String, String> myMap) {
-        MyMap<Integer, Source> sourceMyMap = SourceUtil.getMap();
+    public void dealMyMap(Map<String, String> myMap) {
+        Map<Integer, Source> sourceMyMap = SourceUtil.getMap();
         for (Map.Entry<Integer, Source> entry : sourceMyMap.entrySet()) {
             myMap.put(String.valueOf(entry.getValue().getSourceId()), entry.getValue().getSourceName());
         }

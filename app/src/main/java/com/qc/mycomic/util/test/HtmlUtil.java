@@ -2,7 +2,6 @@ package com.qc.mycomic.util.test;
 
 import com.qc.mycomic.model.ComicInfo;
 import com.qc.mycomic.model.ImageInfo;
-import com.qc.mycomic.model.MyMap;
 import com.qc.mycomic.model.Source;
 
 import java.io.BufferedReader;
@@ -14,6 +13,8 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.List;
+import java.util.Map;
+import java.util.LinkedHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -86,7 +87,7 @@ public class HtmlUtil {
     }
 
     public static void writeFile(String[] ss, String var, String fromFileName, String toFileName) {
-        MyMap<String, String> myMap = getMyMap(ss);
+        Map<String, String> myMap = getMyMap(ss);
         String html = HtmlUtil.getHtmlByFile(fromFileName);
         for (String s : myMap.keySet()) {
             String str = var + "[" + s + "]";
@@ -96,8 +97,8 @@ public class HtmlUtil {
         HtmlUtil.writeFile(html, toFileName);
     }
 
-    public static MyMap<String, String> getMyMap(String[] ss) {
-        MyMap<String, String> myMap = new MyMap<>();
+    public static Map<String, String> getMyMap(String[] ss) {
+        Map<String, String> myMap = new LinkedHashMap<>();
         int i = 0;
         for (String s : ss) {
             if (s.contains("\\x")) {

@@ -13,18 +13,19 @@ import com.qc.mycomic.ui.adapter.RankAdapter;
 import com.qc.mycomic.ui.adapter.RankLeftAdapter;
 import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.model.ComicInfo;
-import com.qc.mycomic.model.MyMap;
 import com.qc.mycomic.model.Source;
 import com.qc.mycomic.ui.presenter.RankPresenter;
-import com.qc.mycomic.util.Codes;
+import com.qc.mycomic.en.Codes;
 import com.qc.mycomic.util.DBUtil;
+import com.qc.mycomic.util.MapUtil;
 import com.qc.mycomic.util.RestartUtil;
 import com.qc.mycomic.util.StringUtil;
 import com.qc.mycomic.ui.view.RankView;
 
 import java.util.List;
+import java.util.Map;
+import java.util.LinkedHashMap;
 
-import okhttp3.Request;
 import the.one.base.ui.fragment.BaseDataFragment;
 import the.one.base.ui.presenter.BasePresenter;
 
@@ -42,14 +43,14 @@ public class RankFragment extends BaseDataFragment<Comic> implements RankView {
 
     private Source source;
 
-    private MyMap<String, String> map;
+    private Map<String, String> map;
 
     private String url;
 
     private List<Comic> comicList;
 
     public RankFragment() {
-        this.source = null;
+        RestartUtil.restart(_mActivity);
     }
 
     public RankFragment(Source source) {
@@ -59,10 +60,10 @@ public class RankFragment extends BaseDataFragment<Comic> implements RankView {
         if (source.getRankMap() != null) {
             this.map = source.getRankMap();
             if (!map.isEmpty()) {
-                url = map.getFirstValue();
+                url = MapUtil.getFirstValue(map);
             }
         } else {
-            this.map = new MyMap<>();
+            this.map = new LinkedHashMap<>();
         }
     }
 
@@ -82,7 +83,7 @@ public class RankFragment extends BaseDataFragment<Comic> implements RankView {
         mTopLayout.setVisibility(View.GONE);
         if (!map.isEmpty()) {
             View leftView = getView(R.layout.fragment_rank_left);
-            List<String> items = map.getKeyList();
+            List<String> items = MapUtil.getKeyList(map);
             RankLeftAdapter rankLeftAdapter = new RankLeftAdapter(R.layout.item_rank_left, items);
             RecyclerView leftRecyclerView = leftView.findViewById(R.id.recycleView);
             initRecycleView(leftRecyclerView, TYPE_LIST, rankLeftAdapter);
@@ -94,7 +95,7 @@ public class RankFragment extends BaseDataFragment<Comic> implements RankView {
                     showLoadingPage();
                     isLoadMore = false;
                     pageNum = 1;
-                    url = map.getByIndex(position).getValue();
+                    url = MapUtil.getValueByIndex(map, position);
                     requestServer();
                 }
             });
@@ -114,18 +115,14 @@ public class RankFragment extends BaseDataFragment<Comic> implements RankView {
 
     @Override
     protected void requestServer() {
-        if (source != null) {
-            if (url != null) {
-                if (!isLoadMore) {
-                    presenter.load(url);
-                } else {
-                    presenter.load(checkUrl(url, ++pageNum));
-                }
+        if (url != null) {
+            if (!isLoadMore) {
+                presenter.load(url);
             } else {
-                showEmptyPage("暂无数据");
+                presenter.load(checkUrl(url, ++pageNum));
             }
         } else {
-            RestartUtil.restart(_mActivity);
+            showEmptyPage("暂无数据");
         }
     }
 
