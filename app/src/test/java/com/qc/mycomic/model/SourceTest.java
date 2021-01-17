@@ -2,11 +2,13 @@ package com.qc.mycomic.model;
 
 import com.qc.mycomic.self.SourceCallback;
 import com.qc.mycomic.util.FileUtil;
+import com.qc.mycomic.util.MapUtil;
 import com.qc.mycomic.util.NetUtil;
 
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.Request;
 
@@ -90,6 +92,14 @@ public abstract class SourceTest {
     }
 
     @Test
+    public void getRankMap() {
+        Map<String, String> map = getSource().getRankMap();
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            System.out.println(entry.getKey() + "\t-->\t" + entry.getValue());
+        }
+    }
+
+    @Test
     public void getRankComicInfoList() {
         String html = FileUtil.readFile(formatFileName(RANK));
         List<ComicInfo> comicInfoList = getSource().getRankComicInfoList(html);
@@ -131,9 +141,21 @@ public abstract class SourceTest {
         getRankComicInfoList();
     }
 
-    protected final void testRequest(String url, String fileName) {
-        Request request = NetUtil.getRequest(url);
-        testRequest(request, fileName);
+    protected final void testRankRequest(int index) {
+        Map<String, String> map = getSource().getRankMap();
+        int size = map.size();
+        if (size > 0) {
+            if (index < 0) {
+                index = 0;
+            }
+            if (index >= size) {
+                index = size - 1;
+            }
+            String url = MapUtil.getValueByIndex(map, index);
+            testRankRequest(url);
+        } else {
+            System.out.println("map.size() == 0");
+        }
     }
 
     protected final void testRequest(Request request, String fileName) {

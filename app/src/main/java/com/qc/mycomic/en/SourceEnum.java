@@ -2,6 +2,7 @@ package com.qc.mycomic.en;
 
 import com.qc.mycomic.model.Source;
 import com.qc.mycomic.source.BiliBili;
+import com.qc.mycomic.source.Du;
 import com.qc.mycomic.source.MH118;
 import com.qc.mycomic.source.ManHuaFen;
 import com.qc.mycomic.source.ManHuaTai;
@@ -30,6 +31,7 @@ public enum SourceEnum {
     OH(6, "OH漫画"),
     MAN_HUA_TAI(7, "漫画台"),
     MH_118(8, "118漫画"),
+    DU(9, "独漫画"),
     ;
 
     private static final Map<Integer, Source> MAP;
@@ -44,6 +46,7 @@ public enum SourceEnum {
         MAP.put(OH.ID, new OH());
         MAP.put(MAN_HUA_TAI.ID, new ManHuaTai());
         MAP.put(MH_118.ID, new MH118());
+        MAP.put(DU.ID, new Du());
     }
 
     public static Map<Integer, Source> getMAP() {

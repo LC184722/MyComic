@@ -102,6 +102,14 @@ public class JsoupNode {
         return null;
     }
 
+    public String html(String cssQuery) {
+        try {
+            return element.selectFirst(cssQuery).html();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public String text(String cssQuery) {
         try {
             return element.selectFirst(cssQuery).text();

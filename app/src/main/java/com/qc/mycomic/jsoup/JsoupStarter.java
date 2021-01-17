@@ -27,10 +27,19 @@ public class JsoupStarter<T> {
         dealInfo(node);
     }
 
-    public final List<T> startElements(String html, String cssQuery) {
+    public final List<T> startElements(String html, String... cssQuery) {
         node.init(html);
-        Elements elements = node.getElements(cssQuery);
         List<T> list = new ArrayList<>();
+        Elements elements = null;
+        for (String s : cssQuery) {
+            elements = node.getElements(s);
+            if (!elements.isEmpty()) {
+                break;
+            }
+        }
+        if (elements == null) {
+            return list;
+        }
         int i = 0;
         int size = elements.size();
         for (Element element : elements) {
