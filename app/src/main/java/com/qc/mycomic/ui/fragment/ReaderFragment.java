@@ -1,5 +1,6 @@
 package com.qc.mycomic.ui.fragment;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -206,8 +207,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
                     //图片id和当前id是否相等，相等则清除adapter中map数据
                     if (curChapterId != imageInfo.getChapterId()) {
                         curChapterId = imageInfo.getChapterId();
-                        tvInfo.setText(String.format(Locale.CHINA, "%d/%d", imageInfo.getChapterId() + 1, comicInfo.getChapterInfoList().size()));
-                        readerAdapter.clearMap();
+                        tvInfo.setText(String.format(Locale.CHINA, "%d章/%d章", imageInfo.getChapterId() + 1, comicInfo.getChapterInfoList().size()));
                     }
                     //设置数据
                     tvChapter.setText(comicInfo.getCurChapterTitle());
@@ -220,6 +220,9 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
                         //改变bottomView visible
                         if (bottomView.getTag() != "GONE") {
                             changeVisibility(bottomView, false);
+                        }
+                        if (bottomView.getVisibility() != View.GONE) {
+                            bottomView.setVisibility(View.GONE);
                         }
                     }
                     //设置seekBar最大值
@@ -321,40 +324,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
             isFresh = false;
             recycleView.scrollToPosition(0);
         }
-//        if (Codes.isFirstLoadWebView && comic.getSourceId() == Codes.MI_TUI) {
-//            WebView webView = new WebView(getContext());
-//            webView.addJavascriptInterface(new MyJavaScriptInterface(), "HTMLOUT");
-//            webView.getSettings().setJavaScriptEnabled(true);
-//            webView.setWebViewClient(new WebViewClient() {
-//                @Override
-//                public void onPageFinished(WebView view, String url) {
-//                    super.onPageFinished(view, url);
-//                    //Log.i(TAG, "onPageFinished: " + url);
-//                    Codes.isFirstLoadWebView = false;
-//                    webView.loadUrl("javascript:window.HTMLOUT.processHTML('<head>'+document.getElementsByTagName('html')[0].innerHTML+'</head>');");
-//                    view.onPause();
-//                }
-//            });
-//            String chapterUrl = chapterInfoList.get(curPosition).getChapterUrl();
-//            webView.loadUrl(chapterUrl);
-//            //Log.i(TAG, "loadImageInfoListComplete: mitui " + chapterUrl);
-//        }
     }
-
-//    class MyJavaScriptInterface {
-//        @JavascriptInterface
-//        @SuppressWarnings("unused")
-//        public void processHTML(String html) {
-//            // 注意啦，此处就是执行了js以后 的网页源码
-//            //Log.i(TAG, "processHTML: " + html.length());
-//            Document document = Jsoup.parse(html);
-//            String src = document.selectFirst("img#image").attr("src");
-//            if (src != null) {
-//                Codes.miTuiServer = src.substring(0, src.indexOf('/', src.indexOf('.')));
-//            }
-//            //Log.i(TAG, "processHTML: server = " + Codes.miTuiServer);
-//        }
-//    }
 
     @Override
     public void onDestroy() {

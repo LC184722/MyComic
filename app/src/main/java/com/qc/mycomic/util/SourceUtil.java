@@ -17,28 +17,24 @@ import java.util.function.Predicate;
  */
 public class SourceUtil {
 
-    private static Map<Integer, Source> map = SourceEnum.getMAP();
+    private static final Map<Integer, Source> MAP = SourceEnum.getMAP();
 
-    private static List<Source> sourceList = new ArrayList<>();
+    private static final List<Source> SOURCE_LIST = new ArrayList<>();
 
     static {
-        for (Source source : map.values()) {
+        for (Source source : MAP.values()) {
             if (source.isValid()) {
-                sourceList.add(source);
+                SOURCE_LIST.add(source);
             }
         }
     }
 
-    public static Map<Integer, Source> getMap() {
-        return map;
-    }
-
     public static Source getSource(int sourceId) {
-        return map.get(sourceId);
+        return MAP.get(sourceId);
     }
 
     public static String getSourceName(int sourceId) {
-        Source source = map.get(sourceId);
+        Source source = MAP.get(sourceId);
         if (source != null) {
             return source.getSourceName();
         }
@@ -46,10 +42,10 @@ public class SourceUtil {
     }
 
     public static List<Source> getSourceList() {
-        return sourceList;
+        return SOURCE_LIST;
     }
 
     public static int size() {
-        return sourceList.size();
+        return SOURCE_LIST.size();
     }
 }

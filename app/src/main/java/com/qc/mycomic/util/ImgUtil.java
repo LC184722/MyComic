@@ -71,7 +71,7 @@ public class ImgUtil {
             ImageView imageView = layout.findViewById(R.id.imageView);
             QMUIProgressBar progressBar = layout.findViewById(R.id.progressBar);
             if (imageView != null && progressBar != null) {
-                if (!loadImageLocal(imageView, saveKey)) {
+                if (!loadImageLocal(context, imageView, saveKey)) {
                     imageView.setTag(url);
                     progressBar.setTag(url);
                     loadImageNet(context, url, imageView, progressBar, saveKey);
@@ -80,7 +80,7 @@ public class ImgUtil {
         }
     }
 
-    private static boolean loadImageLocal(ImageView imageView, Object saveKey) {
+    private static boolean loadImageLocal(Context context, ImageView imageView, Object saveKey) {
         //Log.i(TAG, "loadImageLocal: saveKey = " + saveKey);
         if (saveKey != null && !Objects.equals(saveKey, 0)) {
             BitmapFactory.Options options = new BitmapFactory.Options();
@@ -90,6 +90,8 @@ public class ImgUtil {
                 Bitmap bitmap = BitmapFactory.decodeFile(file.getPath(), options);
                 if (bitmap != null) {
                     imageView.setImageBitmap(bitmap);
+                    imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                    imageView.setLayoutParams(getLP(context, bitmap));
                     return true;
                 }
             }
