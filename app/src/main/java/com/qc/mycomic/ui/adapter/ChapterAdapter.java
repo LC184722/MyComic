@@ -45,8 +45,8 @@ public class ChapterAdapter extends TheBaseQuickAdapter<ChapterInfo> {
     @Override
     protected void convert(@NotNull TheBaseViewHolder holder, ChapterInfo chapterInfo) {
         holder.setText(R.id.tvTitle, chapterInfo.getTitle());
-        if (comic.getComicInfo().getPosition() == holder.getAdapterPosition() - 1) {
-            TextView tvTitle = holder.findView(R.id.tvTitle);
+        TextView tvTitle = holder.findView(R.id.tvTitle);
+        if (chapterInfo.getTitle().equals(comic.getComicInfo().getCurChapterTitle())) {
             tvTitle.setTextColor(getColor(R.color.white));
             QMUIRoundLinearLayout linearLayout = holder.findView(R.id.linearLayout);
             QMUIRoundButtonDrawable drawable = (QMUIRoundButtonDrawable) linearLayout.getBackground();
@@ -54,7 +54,6 @@ public class ChapterAdapter extends TheBaseQuickAdapter<ChapterInfo> {
             drawable.setBgData(colorStateList);
             //Log.i(TAG, "convert: chapterInfo " + chapterInfo);
         } else {
-            TextView tvTitle = holder.findView(R.id.tvTitle);
             tvTitle.setTextColor(getColor(R.color.black));
             QMUIRoundLinearLayout linearLayout = holder.findView(R.id.linearLayout);
             QMUIRoundButtonDrawable drawable = (QMUIRoundButtonDrawable) linearLayout.getBackground();

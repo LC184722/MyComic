@@ -71,9 +71,9 @@ public class ImgUtil {
             ImageView imageView = layout.findViewById(R.id.imageView);
             QMUIProgressBar progressBar = layout.findViewById(R.id.progressBar);
             if (imageView != null && progressBar != null) {
+                imageView.setTag(url);
+                progressBar.setTag(url);
                 if (!loadImageLocal(context, imageView, saveKey)) {
-                    imageView.setTag(url);
-                    progressBar.setTag(url);
                     loadImageNet(context, url, imageView, progressBar, saveKey);
                 }
             }
