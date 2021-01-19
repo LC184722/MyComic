@@ -223,7 +223,9 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         TextView tvRead = bottomView.findViewById(R.id.tvRead);
         tvRead.setOnClickListener(v -> {
             if (checkNotEmpty()) {
-                if (comic.getComicInfo().checkChapterId(comic.getComicInfo().getCurChapterId())) {
+                int chapterId = ((ChapterAdapter) adapter).getChapterId();
+                if (comic.getComicInfo().checkChapterId(chapterId)) {
+                    comic.getComicInfo().initChapterId(chapterId);
                     start();
                 } else {
                     start(comic.getComicInfo().getPosition(0));

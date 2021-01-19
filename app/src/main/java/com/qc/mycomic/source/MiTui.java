@@ -11,6 +11,7 @@ import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.NetUtil;
 import com.qc.mycomic.util.StringUtil;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -105,15 +106,20 @@ public class MiTui extends BaseSource {
     public List<ImageInfo> getImageInfoList(String html, int chapterId) {
         String chapterImagesStr = StringUtil.match("chapterImages = \\[(.*?)\\]", html);
         String chapterPath = StringUtil.match("var chapterPath = \"(.*?)\";", html);
+        chapterPath = "";
+        String chapterImageHost = StringUtil.match("var chapterImageHost = \"(.*?)\";", html);
         String[] urls = null;
         if (chapterImagesStr != null && !chapterImagesStr.equals("")) {
             urls = chapterImagesStr.split(",");
-            String server = "https://resnode.yxtun.com";
+            String server = "https://resnode.yxtun.com/";
+            if (chapterImageHost != null && !chapterImageHost.equals("")) {
+                server = chapterImageHost;
+            }
             for (int i = 0; i < urls.length; i++) {
                 String url = urls[i];
                 url = url.replace("\"", "").replace("\\", "");
                 if (!url.startsWith("http")) {
-                    urls[i] = server + "/" + chapterPath + url;
+                    urls[i] = server + chapterPath + url;
                 } else {
                     urls[i] = url;
                 }

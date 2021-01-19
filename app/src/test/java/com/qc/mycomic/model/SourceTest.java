@@ -32,8 +32,12 @@ public abstract class SourceTest {
         return getSource().getSourceName();
     }
 
-    private String formatFileName(String name) {
-        return String.format("%s/test-%s.html", getFileName(), name);
+    private String formatFileName(String tag) {
+        return String.format("%s/test-%s.html", getFileName(), tag);
+    }
+
+    private String formatFileName(String name, String tag) {
+        return String.format("%s/%s-%s.html", getFileName(), name, tag);
     }
 
     @Test
@@ -123,21 +127,25 @@ public abstract class SourceTest {
     }
 
     protected final void autoTest(String searchString) {
+        autoTest(searchString, 0);
+    }
+
+    protected final void autoTest(String searchString, int index) {
         Source source = getSource();
 
         Request searchRequest = source.getSearchRequest(searchString);
-        testRequest(searchRequest, SEARCH);
-        String search = FileUtil.readFile(formatFileName(SEARCH));
+        String search = testRequest(searchRequest, SEARCH);
+        FileUtil.writeFile(search, formatFileName(searchString, SEARCH));
         List<ComicInfo> searchList = source.getComicInfoList(search);
         System.out.println("searchList.size() = " + searchList.size());
         Assert.assertFalse("未搜索到漫画", searchList.isEmpty());
 
-        ComicInfo comicInfo = searchList.get(0);
+        ComicInfo comicInfo = searchList.get(index);
         System.out.println("comicInfo.getTitle() = " + comicInfo.getTitle());
         String detailUrl = comicInfo.getDetailUrl();
         Request detailRequest = source.getDetailRequest(detailUrl);
-        testRequest(detailRequest, DETAIL);
-        String detail = FileUtil.readFile(formatFileName(DETAIL));
+        String detail = testRequest(detailRequest, DETAIL);
+        FileUtil.writeFile(detail, formatFileName(comicInfo.getTitle(), DETAIL));
         source.setComicDetail(comicInfo, detail);
         System.out.println("chapterList.size() = " + comicInfo.getChapterInfoList().size());
         Assert.assertFalse("未搜索到漫画章节", comicInfo.getChapterInfoList().isEmpty());
@@ -145,8 +153,8 @@ public abstract class SourceTest {
         ChapterInfo chapterInfo = comicInfo.getChapterInfoList().get(0);
         String imageUrl = chapterInfo.getChapterUrl();
         Request imageRequest = source.getImageRequest(imageUrl);
-        testRequest(imageRequest, IMAGE);
-        String image = FileUtil.readFile(formatFileName(IMAGE));
+        String image = testRequest(imageRequest, IMAGE);
+        FileUtil.writeFile(image, formatFileName(comicInfo.getTitle(), IMAGE));
         List<ImageInfo> imageInfoList = source.getImageInfoList(image, 100);
         System.out.println("imageList.size() = " + imageInfoList.size());
         Assert.assertFalse("未搜索到漫画图片", imageInfoList.isEmpty());
@@ -197,7 +205,8 @@ public abstract class SourceTest {
         }
     }
 
-    protected final void testRequest(Request request, String fileName) {
+    protected final String testRequest(Request request, String fileName) {
+        String[] strings = new String[1];
         boolean[] flag = new boolean[1];
         NetUtil.startLoad(request, new SourceCallback(request, getSource(), fileName) {
             @Override
@@ -208,6 +217,7 @@ public abstract class SourceTest {
 
             @Override
             public void onResponse(String html) {
+                strings[0] = html;
                 FileUtil.writeFile(html, formatFileName(fileName));
                 flag[0] = true;
             }
@@ -220,5 +230,6 @@ public abstract class SourceTest {
                 e.printStackTrace();
             }
         }
+        return strings[0];
     }
 }

@@ -27,7 +27,9 @@ import the.one.base.adapter.TheBaseViewHolder;
  */
 public class ChapterAdapter extends TheBaseQuickAdapter<ChapterInfo> {
 
-    Comic comic;
+    private Comic comic;
+
+    private int chapterId = -1;
 
     public ChapterAdapter(int layoutResId) {
         super(layoutResId);
@@ -52,6 +54,7 @@ public class ChapterAdapter extends TheBaseQuickAdapter<ChapterInfo> {
             QMUIRoundButtonDrawable drawable = (QMUIRoundButtonDrawable) linearLayout.getBackground();
             ColorStateList colorStateList = ColorStateList.valueOf(getColor(R.color.colorPrimary));
             drawable.setBgData(colorStateList);
+            chapterId = chapterInfo.getId();
             //Log.i(TAG, "convert: chapterInfo " + chapterInfo);
         } else {
             tvTitle.setTextColor(getColor(R.color.black));
@@ -60,5 +63,9 @@ public class ChapterAdapter extends TheBaseQuickAdapter<ChapterInfo> {
             ColorStateList colorStateList = ColorStateList.valueOf(getColor(R.color.white));
             drawable.setBgData(colorStateList);
         }
+    }
+
+    public int getChapterId() {
+        return chapterId;
     }
 }

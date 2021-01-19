@@ -42,6 +42,11 @@ public class FileUtil {
         }
     }
 
+    public static boolean exists(String filePath){
+        File file = new File(filePath);
+        return file.exists();
+    }
+
     private static File getFile(String filePath) throws IOException {
         File file = new File(filePath);
         if (file.getParentFile() != null && !file.getParentFile().exists()) {
