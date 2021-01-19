@@ -142,7 +142,6 @@ public class BiliBili extends BaseSource {
                 String token = node.string("token");
                 String chapterUrl = url + "?token=" + token;
                 chapterUrl = chapterUrl.replace("\\u0026", "&");
-                //Log.i("TAG", "dealDataList: getCur = " + getCur());
                 return new ImageInfo(chapterId, getCur(), getTotal(), chapterUrl);
             }
         };

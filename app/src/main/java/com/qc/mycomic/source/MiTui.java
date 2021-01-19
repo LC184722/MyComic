@@ -68,8 +68,8 @@ public class MiTui extends BaseSource {
 
             @Override
             protected void dealInfo(JsoupNode node) {
-                String title = node.ownText("div.book-title span");
-                String imgUrl = node.src("p.cover img");
+                String title = node.ownText("div#comicName");
+                String imgUrl = node.src("div#Cover img");
                 String author = node.ownText("p.txtItme");
                 String intro = node.ownText("p#full-des", "p#simple-des");
                 String updateStatus = node.ownText("p.txtItme:eq(2) :eq(3)");
@@ -106,16 +106,17 @@ public class MiTui extends BaseSource {
         String chapterImagesStr = StringUtil.match("chapterImages = \\[(.*?)\\]", html);
         String chapterPath = StringUtil.match("var chapterPath = \"(.*?)\";", html);
         String[] urls = null;
-        if (chapterImagesStr != null) {
+        if (chapterImagesStr != null && !chapterImagesStr.equals("")) {
             urls = chapterImagesStr.split(",");
             String server = "https://resnode.yxtun.com";
             for (int i = 0; i < urls.length; i++) {
                 String url = urls[i];
                 url = url.replace("\"", "").replace("\\", "");
-                if (!url.startsWith("/")) {
-                    url = "/" + chapterPath + url;
+                if (!url.startsWith("http")) {
+                    urls[i] = server + "/" + chapterPath + url;
+                } else {
+                    urls[i] = url;
                 }
-                urls[i] = server + url;
             }
         }
         return ComicUtil.getImageInfoList(urls, chapterId);

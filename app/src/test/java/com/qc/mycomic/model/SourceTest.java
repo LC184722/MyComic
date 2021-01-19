@@ -5,6 +5,7 @@ import com.qc.mycomic.util.FileUtil;
 import com.qc.mycomic.util.MapUtil;
 import com.qc.mycomic.util.NetUtil;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.List;
@@ -117,6 +118,44 @@ public abstract class SourceTest {
         }
     }
 
+    protected final void autoTest() {
+        autoTest("我的");
+    }
+
+    protected final void autoTest(String searchString) {
+        Source source = getSource();
+
+        Request searchRequest = source.getSearchRequest(searchString);
+        testRequest(searchRequest, SEARCH);
+        String search = FileUtil.readFile(formatFileName(SEARCH));
+        List<ComicInfo> searchList = source.getComicInfoList(search);
+        System.out.println("searchList.size() = " + searchList.size());
+        Assert.assertFalse("未搜索到漫画", searchList.isEmpty());
+
+        ComicInfo comicInfo = searchList.get(0);
+        System.out.println("comicInfo.getTitle() = " + comicInfo.getTitle());
+        String detailUrl = comicInfo.getDetailUrl();
+        Request detailRequest = source.getDetailRequest(detailUrl);
+        testRequest(detailRequest, DETAIL);
+        String detail = FileUtil.readFile(formatFileName(DETAIL));
+        source.setComicDetail(comicInfo, detail);
+        System.out.println("chapterList.size() = " + comicInfo.getChapterInfoList().size());
+        Assert.assertFalse("未搜索到漫画章节", comicInfo.getChapterInfoList().isEmpty());
+
+        ChapterInfo chapterInfo = comicInfo.getChapterInfoList().get(0);
+        String imageUrl = chapterInfo.getChapterUrl();
+        Request imageRequest = source.getImageRequest(imageUrl);
+        testRequest(imageRequest, IMAGE);
+        String image = FileUtil.readFile(formatFileName(IMAGE));
+        List<ImageInfo> imageInfoList = source.getImageInfoList(image, 100);
+        System.out.println("imageList.size() = " + imageInfoList.size());
+        Assert.assertFalse("未搜索到漫画图片", imageInfoList.isEmpty());
+
+        for (ImageInfo imageInfo : imageInfoList) {
+            System.out.println("imageInfo = " + imageInfo.getImageUrl());
+        }
+    }
+
     protected final void testSearchRequest() {
         testSearchRequest("我的");
     }
@@ -173,7 +212,6 @@ public abstract class SourceTest {
                 flag[0] = true;
             }
         });
-        System.out.println("start...");
         int num = 0;
         while (!flag[0] && num++ < 10) {
             try {
@@ -182,6 +220,5 @@ public abstract class SourceTest {
                 e.printStackTrace();
             }
         }
-        System.out.println("end...");
     }
 }
