@@ -42,6 +42,7 @@ public class ChapterAdapter extends TheBaseQuickAdapter<ChapterInfo> {
     public ChapterAdapter(int layoutResId, Comic comic) {
         super(layoutResId);
         this.comic = comic;
+        this.chapterId = comic.getComicInfo().getCurChapterId();
     }
 
     @Override
