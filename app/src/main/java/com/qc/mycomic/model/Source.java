@@ -82,11 +82,12 @@ public interface Source {
     /**
      * 用于发送二次Request
      *
-     * @param html html
-     * @param tag  表明阶段
+     * @param requestUrl requestUrl
+     * @param html       html
+     * @param tag        表明阶段
      * @return Request
      */
-    Request buildRequest(String html, String tag);
+    Request buildRequest(String requestUrl, String html, String tag);
 
 
     /**

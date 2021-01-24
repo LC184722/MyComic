@@ -57,7 +57,7 @@ public abstract class BaseSource implements Source {
     }
 
     @Override
-    public Request buildRequest(String html, String tag) {
+    public Request buildRequest(String requestUrl, String html, String tag) {
         return null;
     }
 }

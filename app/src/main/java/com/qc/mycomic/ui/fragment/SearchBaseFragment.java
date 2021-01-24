@@ -42,7 +42,7 @@ public class SearchBaseFragment extends BaseTitleTabFragment {
     protected void addTabs() {
         List<Source> sourceList = SourceUtil.getSourceList();
         for (Source source : sourceList) {
-            if (source.isValid()) {
+            if (source.isValid() && source.getRankMap() != null) {
                 addTab(source.getSourceName());
             }
         }
@@ -52,7 +52,7 @@ public class SearchBaseFragment extends BaseTitleTabFragment {
     protected void addFragment(ArrayList<BaseFragment> fragments) {
         List<Source> sourceList = SourceUtil.getSourceList();
         for (Source source : sourceList) {
-            if (source.isValid()) {
+            if (source.isValid() && source.getRankMap() != null) {
                 fragments.add(new RankFragment(source));
             }
         }

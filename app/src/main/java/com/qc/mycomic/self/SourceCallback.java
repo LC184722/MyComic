@@ -43,7 +43,7 @@ public abstract class SourceCallback implements Callback {
     @Override
     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
         String html = getHtml(response, source.getCharsetName());
-        Request req = source.buildRequest(html, tag);
+        Request req = source.buildRequest(request.url().toString(), html, tag);
         if (req != null && !request.toString().equals(req.toString())) {
             request = req;
             NetUtil.startLoad(req, this);

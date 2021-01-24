@@ -59,7 +59,7 @@ public class BiliBili extends BaseSource {
     }
 
     @Override
-    public Request buildRequest(String html, String tag) {
+    public Request buildRequest(String requestUrl, String html, String tag) {
         if (IMAGE.equals(tag)) {
             JsonStarter<Object> starter = new JsonStarter<Object>() {
                 @Override
@@ -72,7 +72,7 @@ public class BiliBili extends BaseSource {
             String url = "https://manga.bilibili.com/twirp/comic.v1.Comic/ImageToken?device=pc&platform=web";
             return NetUtil.postRequest(url, "urls", array.toString());
         }
-        return super.buildRequest(html, tag);
+        return super.buildRequest(requestUrl, html, tag);
     }
 
     @Override
