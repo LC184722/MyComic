@@ -4,7 +4,7 @@ import android.view.Gravity;
 import android.view.View;
 
 import com.qc.mycomic.R;
-import com.qc.mycomic.en.Codes;
+import com.qc.mycomic.constant.Constant;
 import com.qmuiteam.qmui.alpha.QMUIAlphaImageButton;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
 import com.qmuiteam.qmui.util.QMUIColorHelper;
@@ -101,8 +101,8 @@ public class ShelfFragment extends BaseTitleTabFragment {
 
     @Override
     protected void addFragment(ArrayList<BaseFragment> fragments) {
-        fragments.add(new ShelfItemFragment(Codes.STATUS_FAV));
-        fragments.add(new ShelfItemFragment(Codes.STATUS_HIS));
+        fragments.add(new ShelfItemFragment(Constant.STATUS_FAV));
+        fragments.add(new ShelfItemFragment(Constant.STATUS_HIS));
     }
 
 }

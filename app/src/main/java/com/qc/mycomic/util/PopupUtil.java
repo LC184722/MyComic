@@ -2,7 +2,6 @@ package com.qc.mycomic.util;
 
 import android.content.Context;
 
-import com.qc.mycomic.model.ComicInfo;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 
 import java.util.ArrayList;
@@ -12,6 +11,9 @@ import java.util.LinkedHashMap;
 
 import the.one.base.model.PopupItem;
 import the.one.base.util.QMUIBottomSheetUtil;
+import top.luqichuang.common.mycomic.model.ComicInfo;
+import top.luqichuang.common.mycomic.util.MapUtil;
+import top.luqichuang.common.mycomic.util.SourceUtil;
 
 /**
  * @author LuQiChuang

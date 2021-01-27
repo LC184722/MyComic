@@ -9,17 +9,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.qc.mycomic.R;
+import com.qc.mycomic.constant.Constant;
+import com.qc.mycomic.constant.TmpData;
 import com.qc.mycomic.ui.adapter.RankAdapter;
 import com.qc.mycomic.ui.adapter.RankLeftAdapter;
-import com.qc.mycomic.model.Comic;
-import com.qc.mycomic.model.ComicInfo;
-import com.qc.mycomic.model.Source;
 import com.qc.mycomic.ui.presenter.RankPresenter;
-import com.qc.mycomic.en.Codes;
 import com.qc.mycomic.util.DBUtil;
-import com.qc.mycomic.util.MapUtil;
+import top.luqichuang.common.mycomic.util.MapUtil;
 import com.qc.mycomic.util.RestartUtil;
-import com.qc.mycomic.util.StringUtil;
 import com.qc.mycomic.ui.view.RankView;
 
 import java.util.List;
@@ -28,6 +25,10 @@ import java.util.LinkedHashMap;
 
 import the.one.base.ui.fragment.BaseDataFragment;
 import the.one.base.ui.presenter.BasePresenter;
+import top.luqichuang.common.mycomic.model.Comic;
+import top.luqichuang.common.mycomic.model.ComicInfo;
+import top.luqichuang.common.mycomic.model.Source;
+import top.luqichuang.common.mycomic.util.StringUtil;
 
 /**
  * @author LuQiChuang
@@ -145,7 +146,7 @@ public class RankFragment extends BaseDataFragment<Comic> implements RankView {
     @Override
     public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
         Comic comic = (Comic) adapter.getData().get(position);
-        comicList = DBUtil.findComicListByStatus(Codes.STATUS_ALL);
+        comicList = DBUtil.findComicListByStatus(Constant.STATUS_ALL);
         int index = comicList.indexOf(comic);
         if (index != -1) {
             Comic myComic = comicList.get(index);
@@ -156,7 +157,7 @@ public class RankFragment extends BaseDataFragment<Comic> implements RankView {
             }
             startFragment(new ChapterFragment(myComic));
         } else {
-            Codes.toStatus = Codes.RANK_TO_CHAPTER;
+            TmpData.toStatus = Constant.RANK_TO_CHAPTER;
             startFragment(new ChapterFragment(comic));
         }
     }

@@ -24,8 +24,8 @@ import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.qc.mycomic.R;
-import com.qc.mycomic.en.Codes;
-import com.qc.mycomic.model.ImageInfo;
+import com.qc.mycomic.constant.AppConstant;
+import com.qc.mycomic.constant.Constant;
 import com.qmuiteam.qmui.util.QMUIDisplayHelper;
 import com.qmuiteam.qmui.widget.QMUIProgressBar;
 
@@ -41,6 +41,7 @@ import java.util.Objects;
 
 import the.one.base.Interface.GlideProgressListener;
 import the.one.base.util.glide.GlideProgressInterceptor;
+import top.luqichuang.common.mycomic.model.ImageInfo;
 
 /**
  * @author LuQiChuang
@@ -52,7 +53,7 @@ public class ImgUtil {
 
     private static final String TAG = ImgUtil.class.getSimpleName();
 
-    private static final String SHELF_IMG_PATH = Codes.SHELF_IMG_PATH;
+    private static final String SHELF_IMG_PATH = AppConstant.SHELF_IMG_PATH;
 
     private static final Map<String, Integer> MAP = new HashMap<>();
 

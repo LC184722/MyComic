@@ -5,9 +5,6 @@ import android.content.Intent;
 
 import com.qc.mycomic.ui.activity.LauncherActivity;
 
-import the.one.base.ui.activity.BaseCrashActivity;
-import the.one.base.util.crash.CrashUtil;
-
 /**
  * @author LuQiChuang
  * @desc 重启工具

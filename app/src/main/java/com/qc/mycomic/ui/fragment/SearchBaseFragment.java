@@ -4,8 +4,6 @@ import android.view.Gravity;
 import android.view.View;
 
 import com.qc.mycomic.R;
-import com.qc.mycomic.model.Source;
-import com.qc.mycomic.util.SourceUtil;
 import com.qmuiteam.qmui.alpha.QMUIAlphaImageButton;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
 
@@ -14,6 +12,8 @@ import java.util.List;
 
 import the.one.base.ui.fragment.BaseFragment;
 import the.one.base.ui.fragment.BaseTitleTabFragment;
+import top.luqichuang.common.mycomic.model.Source;
+import top.luqichuang.common.mycomic.util.SourceUtil;
 
 /**
  * @author LuQiChuang

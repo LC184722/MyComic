@@ -5,15 +5,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.qc.mycomic.R;
-import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.util.ImgUtil;
-import com.qmuiteam.qmui.widget.QMUIRadiusImageView;
 
 import org.jetbrains.annotations.NotNull;
 
 import the.one.base.adapter.TheBaseQuickAdapter;
 import the.one.base.adapter.TheBaseViewHolder;
-import the.one.base.util.glide.GlideEngine;
+import top.luqichuang.common.mycomic.model.Comic;
 
 /**
  * @author LuQiChuang

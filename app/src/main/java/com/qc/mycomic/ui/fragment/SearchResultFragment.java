@@ -7,17 +7,14 @@ import androidx.annotation.NonNull;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.qc.mycomic.R;
-import com.qc.mycomic.en.Codes;
+import com.qc.mycomic.constant.Constant;
 import com.qc.mycomic.en.SettingEnum;
-import com.qc.mycomic.model.Comic;
-import com.qc.mycomic.model.ComicInfo;
 import com.qc.mycomic.ui.adapter.SearchAdapter;
 import com.qc.mycomic.ui.presenter.SearchPresenter;
 import com.qc.mycomic.ui.view.SearchView;
 import com.qc.mycomic.util.DBUtil;
 import com.qc.mycomic.util.RestartUtil;
 import com.qc.mycomic.util.SettingUtil;
-import com.qc.mycomic.util.SourceUtil;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
 
 import java.util.ArrayList;
@@ -26,6 +23,9 @@ import java.util.List;
 import the.one.base.ui.fragment.BaseDataFragment;
 import the.one.base.ui.presenter.BasePresenter;
 import the.one.base.util.QMUIDialogUtil;
+import top.luqichuang.common.mycomic.model.Comic;
+import top.luqichuang.common.mycomic.model.ComicInfo;
+import top.luqichuang.common.mycomic.util.SourceUtil;
 
 /**
  * @author LuQiChuang
@@ -77,7 +77,7 @@ public class SearchResultFragment extends BaseDataFragment<Comic> implements Sea
             progressDialog.show();
         }
         if (comicList == null) {
-            comicList = DBUtil.findComicListByStatus(Codes.STATUS_ALL);
+            comicList = DBUtil.findComicListByStatus(Constant.STATUS_ALL);
         }
     }
 

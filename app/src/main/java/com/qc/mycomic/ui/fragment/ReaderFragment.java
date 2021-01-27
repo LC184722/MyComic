@@ -1,6 +1,5 @@
 package com.qc.mycomic.ui.fragment;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -14,11 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.qc.mycomic.R;
-import com.qc.mycomic.en.Codes;
+import com.qc.mycomic.constant.Constant;
+import com.qc.mycomic.constant.TmpData;
 import com.qc.mycomic.en.SettingEnum;
-import com.qc.mycomic.model.Comic;
-import com.qc.mycomic.model.ComicInfo;
-import com.qc.mycomic.model.ImageInfo;
 import com.qc.mycomic.ui.adapter.ReaderAdapter;
 import com.qc.mycomic.ui.presenter.ReaderPresenter;
 import com.qc.mycomic.ui.view.ReaderView;
@@ -36,6 +33,9 @@ import java.util.Locale;
 
 import the.one.base.ui.fragment.BaseDataFragment;
 import the.one.base.ui.presenter.BasePresenter;
+import top.luqichuang.common.mycomic.model.Comic;
+import top.luqichuang.common.mycomic.model.ComicInfo;
+import top.luqichuang.common.mycomic.model.ImageInfo;
 
 import static android.view.View.VISIBLE;
 import static androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE;
@@ -75,7 +75,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
         this.comicInfo = comic.getComicInfo();
         this.curChapterId = comicInfo.getCurChapterId();
         this.isLoadNext = true;
-        Codes.toStatus = Codes.READER_TO_CHAPTER;
+        TmpData.toStatus = Constant.READER_TO_CHAPTER;
     }
 
     @Override

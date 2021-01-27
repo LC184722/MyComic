@@ -1,12 +1,5 @@
 package com.qc.mycomic.ui.presenter;
 
-import com.qc.mycomic.model.Comic;
-import com.qc.mycomic.model.ComicInfo;
-import com.qc.mycomic.model.DetailLoader;
-import com.qc.mycomic.model.Source;
-import com.qc.mycomic.self.SourceCallback;
-import com.qc.mycomic.util.NetUtil;
-import com.qc.mycomic.util.SourceUtil;
 import com.qc.mycomic.ui.view.ChapterView;
 
 import java.util.List;
@@ -14,6 +7,12 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import okhttp3.Request;
 import the.one.base.ui.presenter.BasePresenter;
+import top.luqichuang.common.mycomic.model.Comic;
+import top.luqichuang.common.mycomic.model.ComicInfo;
+import top.luqichuang.common.mycomic.model.Source;
+import top.luqichuang.common.mycomic.self.SourceCallback;
+import top.luqichuang.common.mycomic.util.NetUtil;
+import top.luqichuang.common.mycomic.util.SourceUtil;
 
 /**
  * @author LuQiChuang
@@ -24,15 +23,6 @@ import the.one.base.ui.presenter.BasePresenter;
 public class ChapterPresenter extends BasePresenter<ChapterView> {
 
     public void load(Comic comic) {
-        Source source = comic.getSource();
-        if (!(source instanceof DetailLoader)) {
-            loadInfoDetail(comic);
-        } else {
-            ((DetailLoader) source).loadInfoDetail(getView(), comic);
-        }
-    }
-
-    private void loadInfoDetail(Comic comic) {
         Source source = comic.getSource();
         ComicInfo comicInfo = comic.getComicInfo();
         Request request = source.getDetailRequest(comicInfo.getDetailUrl());

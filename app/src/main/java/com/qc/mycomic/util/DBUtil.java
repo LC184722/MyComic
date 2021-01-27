@@ -2,9 +2,8 @@ package com.qc.mycomic.util;
 
 import android.content.Context;
 
-import com.qc.mycomic.en.Codes;
-import com.qc.mycomic.model.Comic;
-import com.qc.mycomic.model.ComicInfo;
+import com.qc.mycomic.constant.AppConstant;
+import com.qc.mycomic.constant.Constant;
 
 import org.litepal.LitePal;
 
@@ -17,7 +16,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import the.one.base.util.FileUtils;
+import top.luqichuang.common.mycomic.model.Comic;
+import top.luqichuang.common.mycomic.model.ComicInfo;
+import top.luqichuang.common.mycomic.util.SourceUtil;
 
 /**
  * @author LuQiChuang
@@ -186,7 +187,7 @@ public class DBUtil {
     public static List<Comic> findComicListByStatus(int status) {
         List<Comic> list;
         String order = "priority DESC, date DESC";
-        if (status == Codes.STATUS_ALL) {
+        if (status == Constant.STATUS_ALL) {
             list = LitePal.order(order).find(Comic.class);
         } else {
             list = LitePal.where("status = ?", String.valueOf(status)).order(order).find(Comic.class);
@@ -253,10 +254,10 @@ public class DBUtil {
         String dbFileName = "comic.db";
         String backupFileName = "backup_comic.db";
         String tmpFileName = "tmp.db";
-        String path = FileUtils.gainSDCardPath() + "/MyComic/";
+        String path = AppConstant.APP_PATH;
         try {
             File dbFile = context.getDatabasePath(dbFileName);
-            File backupFile = new File(path + backupFileName);
+            File backupFile = new File(path, backupFileName);
 
             if (!dbFile.exists()) {
                 //Log.i(TAG, "dealData: dbFile not exists");
@@ -269,7 +270,7 @@ public class DBUtil {
             if (isBackup) {
                 fileCopy(dbFile, backupFile);
             } else {
-                File tmpFile = new File(path + tmpFileName);
+                File tmpFile = new File(path, tmpFileName);
                 if (!tmpFile.exists()) {
                     //Log.i(TAG, "dealData: backupFile not exists");
                     tmpFile.createNewFile();
@@ -284,7 +285,7 @@ public class DBUtil {
             e.printStackTrace();
             try {
                 if (!isBackup) {
-                    File tmpFile = new File(path + tmpFileName);
+                    File tmpFile = new File(path, tmpFileName);
                     File dbFile = context.getDatabasePath(dbFileName);
                     if (tmpFile.exists()) {
                         fileCopy(tmpFile, dbFile);

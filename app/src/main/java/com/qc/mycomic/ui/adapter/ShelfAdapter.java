@@ -5,13 +5,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.qc.mycomic.R;
-import com.qc.mycomic.model.Comic;
 import com.qc.mycomic.util.ImgUtil;
 
 import org.jetbrains.annotations.NotNull;
 
 import the.one.base.adapter.TheBaseQuickAdapter;
 import the.one.base.adapter.TheBaseViewHolder;
+import top.luqichuang.common.mycomic.model.Comic;
 
 /**
  * @author LuQiChuang

@@ -5,11 +5,10 @@ import android.view.View;
 
 import com.qc.mycomic.R;
 import com.qc.mycomic.en.SettingEnum;
-import com.qc.mycomic.util.MapUtil;
+import top.luqichuang.common.mycomic.util.MapUtil;
 import com.qc.mycomic.util.PopupUtil;
 import com.qc.mycomic.util.SettingItemUtil;
 import com.qc.mycomic.util.SettingUtil;
-import com.qc.mycomic.util.SourceUtil;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 import com.qmuiteam.qmui.widget.grouplist.QMUICommonListItemView;

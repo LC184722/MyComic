@@ -13,22 +13,18 @@ import androidx.annotation.NonNull;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.qc.mycomic.R;
-import com.qc.mycomic.model.ChapterInfo;
-import com.qc.mycomic.model.Comic;
-import com.qc.mycomic.model.ComicInfo;
+import com.qc.mycomic.constant.Constant;
+import com.qc.mycomic.constant.TmpData;
 import com.qc.mycomic.self.MySpacesItemDecoration;
 import com.qc.mycomic.ui.adapter.ChapterAdapter;
 import com.qc.mycomic.ui.presenter.ChapterPresenter;
 import com.qc.mycomic.ui.view.ChapterView;
-import com.qc.mycomic.en.Codes;
 import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DBUtil;
 import com.qc.mycomic.util.ImgUtil;
-import com.qc.mycomic.util.MapUtil;
+import top.luqichuang.common.mycomic.util.MapUtil;
 import com.qc.mycomic.util.PopupUtil;
 import com.qc.mycomic.util.RestartUtil;
-import com.qc.mycomic.util.SourceUtil;
-import com.qc.mycomic.util.StringUtil;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
 import com.qmuiteam.qmui.util.QMUIDisplayHelper;
 import com.qmuiteam.qmui.util.QMUIViewHelper;
@@ -46,6 +42,11 @@ import the.one.base.ui.presenter.BasePresenter;
 import the.one.base.util.QMUIDialogUtil;
 import the.one.base.util.QMUIPopupUtil;
 import the.one.base.widge.decoration.SpacesItemDecoration;
+import top.luqichuang.common.mycomic.model.ChapterInfo;
+import top.luqichuang.common.mycomic.model.Comic;
+import top.luqichuang.common.mycomic.model.ComicInfo;
+import top.luqichuang.common.mycomic.util.SourceUtil;
+import top.luqichuang.common.mycomic.util.StringUtil;
 
 /**
  * @author LuQiChuang
@@ -209,11 +210,11 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         //收藏漫画
         LinearLayout favLayout = bottomView.findViewById(R.id.favLayout);
         favLayout.setOnClickListener(v -> {
-            boolean isFav = comic.getStatus() != Codes.STATUS_FAV;
+            boolean isFav = comic.getStatus() != Constant.STATUS_FAV;
             startAnimation(isFav);
             tvFav.setText(isFav ? "已收藏" : "未收藏");
             ComicUtil.removeComic(comic);
-            comic.setStatus(isFav ? Codes.STATUS_FAV : Codes.STATUS_HIS);
+            comic.setStatus(isFav ? Constant.STATUS_FAV : Constant.STATUS_HIS);
             //Log.i(TAG, "setListener: " + comic);
             ComicUtil.first(comic);
             DBUtil.saveComic(comic, DBUtil.SAVE_CUR);
@@ -254,7 +255,7 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         tvSourceSize.setText("(" + comic.getSourceSize() + ")");
         tvUpdateChapter.setText(comic.getComicInfo().getUpdateChapter());
         tvUpdateTime.setText(comic.getComicInfo().getUpdateTime());
-        setFavLayout(comic.getStatus() == Codes.STATUS_FAV);
+        setFavLayout(comic.getStatus() == Constant.STATUS_FAV);
     }
 
     @Override
@@ -311,7 +312,7 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
     @Override
     protected void requestServer() {
         List<ChapterInfo> chapterInfoList = comic.getComicInfo().getChapterInfoList();
-        //Log.i(TAG, "requestServer: Codes.toStatus = " + Codes.toStatus);
+        //Log.i(TAG, "requestServer: Constant.toStatus = " + Constant.toStatus);
         if (chapterInfoList == null || chapterInfoList.size() == 0) {
             presenter.load(comic);
         } else {
@@ -325,7 +326,7 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
             isChangeOrder = false;
             ComicInfo comicInfo = comic.getComicInfo();
             StringUtil.swapList(comicInfo.getChapterInfoList());
-            comicInfo.setOrder(comicInfo.getOrder() == Codes.ASC ? Codes.DESC : Codes.ASC);
+            comicInfo.setOrder(comicInfo.getOrder() == ComicInfo.ASC ? ComicInfo.DESC : ComicInfo.ASC);
             adapter.notifyDataSetChanged();
             DBUtil.saveComicInfo(comicInfo);
         }
@@ -376,8 +377,8 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
             setValue();
             onFirstComplete(list);
             adapter.notifyDataSetChanged();
-            if (Codes.toStatus == Codes.RANK_TO_CHAPTER) {
-                Codes.toStatus = Codes.NORMAL;
+            if (TmpData.toStatus == Constant.RANK_TO_CHAPTER) {
+                TmpData.toStatus = Constant.NORMAL;
                 showProgressDialog("正在更新漫画源");
                 presenter.updateSource(comic);
             }
@@ -391,9 +392,9 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
             int firstId = list.get(0).getId();
             int lastId = list.get(list.size() - 1).getId();
             if (firstId > lastId) {
-                return order != Codes.DESC;
+                return order != ComicInfo.DESC;
             } else if (firstId < lastId) {
-                return order != Codes.ASC;
+                return order != ComicInfo.ASC;
             } else {
                 return false;
             }

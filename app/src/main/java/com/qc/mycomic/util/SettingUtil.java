@@ -1,7 +1,5 @@
 package com.qc.mycomic.util;
 
-import android.util.Log;
-
 import com.alibaba.fastjson.JSONObject;
 import com.qc.mycomic.en.SettingEnum;
 

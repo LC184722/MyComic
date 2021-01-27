@@ -6,11 +6,12 @@ import okhttp3.Callback;
 import okhttp3.Response;
 import the.one.base.ui.presenter.BasePresenter;
 import the.one.base.util.ToastUtil;
+import top.luqichuang.common.mycomic.jsoup.JsoupNode;
+import top.luqichuang.common.mycomic.util.NetUtil;
 
-import com.qc.mycomic.jsoup.JsoupNode;
-import com.qc.mycomic.en.Codes;
-import com.qc.mycomic.util.NetUtil;
+import com.qc.mycomic.constant.Constant;
 import com.qc.mycomic.ui.view.UpdateView;
+import com.qc.mycomic.util.VersionUtil;
 
 import java.io.IOException;
 
@@ -66,7 +67,7 @@ public class UpdatePresenter extends BasePresenter<UpdateView> {
                     public void run() {
                         JsoupNode node = new JsoupNode(html);
                         String versionTag = node.ownText("div.tag-name span");
-                        if (existUpdate(versionTag, Codes.versionTag)) {
+                        if (existUpdate(versionTag, VersionUtil.versionName)) {
                             String title = "存在新版本" + versionTag + "，快去更新吧！";
                             ToastUtil.show(title);
                         }

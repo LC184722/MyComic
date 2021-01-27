@@ -11,10 +11,10 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.qc.mycomic.en.Codes;
+import com.qc.mycomic.constant.Constant;
 import com.qc.mycomic.ui.presenter.UpdatePresenter;
 import com.qc.mycomic.util.ComicUtil;
-import com.qc.mycomic.util.PackageUtil;
+import com.qc.mycomic.util.VersionUtil;
 import com.qmuiteam.qmui.arch.QMUILatestVisit;
 
 import org.litepal.LitePal;
@@ -70,8 +70,7 @@ public class LauncherActivity extends AppCompatActivity {
     }
 
     private void doSomeThing() {
-        Codes.versionTag = PackageUtil.getVersionName(this);
-        Codes.versionCode = PackageUtil.getVersionCode(this);
+        VersionUtil.initVersion(this);
         new UpdatePresenter().checkApkUpdate();
         LitePal.initialize(this);
         ComicUtil.initComicList(ComicUtil.STATUS_ALL);

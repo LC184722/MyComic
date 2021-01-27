@@ -1,10 +1,9 @@
 package com.qc.mycomic.ui.view;
 
-import com.qc.mycomic.model.Comic;
-
 import java.util.List;
 
 import the.one.base.ui.view.BaseView;
+import top.luqichuang.common.mycomic.model.Comic;
 
 /**
  * @author LuQiChuang

@@ -1,10 +1,13 @@
 package com.qc.mycomic.util;
 
 import com.qc.mycomic.en.SettingEnum;
-import com.qc.mycomic.model.Source;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import top.luqichuang.common.mycomic.model.Source;
+import top.luqichuang.common.mycomic.util.MapUtil;
+import top.luqichuang.common.mycomic.util.SourceUtil;
 
 /**
  * @author LuQiChuang

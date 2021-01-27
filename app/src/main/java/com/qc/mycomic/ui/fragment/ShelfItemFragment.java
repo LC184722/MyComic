@@ -7,19 +7,14 @@ import android.view.animation.Animation;
 import androidx.annotation.NonNull;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.qc.mycomic.model.Source;
 import com.qc.mycomic.ui.adapter.ShelfAdapter;
-import com.qc.mycomic.model.Comic;
-import com.qc.mycomic.model.ComicInfo;
 import com.qc.mycomic.ui.presenter.ShelfPresenter;
 import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DBUtil;
-import com.qc.mycomic.util.MapUtil;
+import top.luqichuang.common.mycomic.util.MapUtil;
 import com.qc.mycomic.util.PopupUtil;
 import com.qc.mycomic.util.RestartUtil;
-import com.qc.mycomic.util.SourceUtil;
 import com.qc.mycomic.ui.view.ShelfView;
-import com.qc.mycomic.util.StringUtil;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
@@ -32,6 +27,11 @@ import java.util.Map;
 import the.one.base.ui.fragment.BaseDataFragment;
 import the.one.base.ui.presenter.BasePresenter;
 import the.one.base.util.QMUIDialogUtil;
+import top.luqichuang.common.mycomic.model.Comic;
+import top.luqichuang.common.mycomic.model.ComicInfo;
+import top.luqichuang.common.mycomic.model.Source;
+import top.luqichuang.common.mycomic.util.SourceUtil;
+import top.luqichuang.common.mycomic.util.StringUtil;
 
 /**
  * @author LuQiChuang

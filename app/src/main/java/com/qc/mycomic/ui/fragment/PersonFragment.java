@@ -8,9 +8,9 @@ import android.view.View;
 import com.qc.mycomic.R;
 import com.qc.mycomic.ui.presenter.UpdatePresenter;
 import com.qc.mycomic.ui.view.UpdateView;
-import com.qc.mycomic.en.Codes;
+import com.qc.mycomic.constant.Constant;
 import com.qc.mycomic.util.DBUtil;
-import com.qc.mycomic.util.PackageUtil;
+import com.qc.mycomic.util.VersionUtil;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
@@ -71,7 +71,7 @@ public class PersonFragment extends BaseGroupListFragment implements View.OnClic
     @Override
     protected void addGroupListView() {
         web = CreateNormalItemView("访问主页");
-        version = CreateDetailItemView("检查更新", PackageUtil.getVersionName(_mActivity));
+        version = CreateDetailItemView("检查更新", VersionUtil.getVersionName(_mActivity));
         v1 = CreateDetailItemView("漫画源配置", "", true);
         v2 = CreateDetailItemView("阅读配置", "", true);
         v3 = CreateDetailItemView("备份数据");
@@ -137,7 +137,7 @@ public class PersonFragment extends BaseGroupListFragment implements View.OnClic
     @Override
     public void getVersionTag(String versionTag) {
         hideLoadingDialog();
-        if (presenter.existUpdate(versionTag, Codes.versionTag)) {
+        if (presenter.existUpdate(versionTag, VersionUtil.versionName)) {
             String title = "存在新版本" + versionTag;
             String content = "是否前往更新页面？";
             QMUIDialogUtil.showSimpleDialog(getContext(), title, content, new QMUIDialogAction.ActionListener() {

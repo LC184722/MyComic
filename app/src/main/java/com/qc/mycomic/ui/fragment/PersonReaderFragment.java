@@ -5,7 +5,7 @@ import android.view.View;
 
 import com.qc.mycomic.R;
 import com.qc.mycomic.en.SettingEnum;
-import com.qc.mycomic.util.MapUtil;
+import top.luqichuang.common.mycomic.util.MapUtil;
 import com.qc.mycomic.util.PopupUtil;
 import com.qc.mycomic.util.SettingItemUtil;
 import com.qc.mycomic.util.SettingUtil;

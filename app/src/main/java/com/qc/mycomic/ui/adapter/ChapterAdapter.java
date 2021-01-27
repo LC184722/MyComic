@@ -7,8 +7,6 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 
 import com.qc.mycomic.R;
-import com.qc.mycomic.model.ChapterInfo;
-import com.qc.mycomic.model.Comic;
 import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButtonDrawable;
 import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout;
 
@@ -18,6 +16,8 @@ import java.util.List;
 
 import the.one.base.adapter.TheBaseQuickAdapter;
 import the.one.base.adapter.TheBaseViewHolder;
+import top.luqichuang.common.mycomic.model.ChapterInfo;
+import top.luqichuang.common.mycomic.model.Comic;
 
 /**
  * @author LuQiChuang
