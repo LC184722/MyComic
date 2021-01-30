@@ -15,7 +15,10 @@ import com.qc.mycomic.ui.adapter.RankAdapter;
 import com.qc.mycomic.ui.adapter.RankLeftAdapter;
 import com.qc.mycomic.ui.presenter.RankPresenter;
 import com.qc.mycomic.util.DBUtil;
+
+import com.qc.mycomic.util.ComicHelper;
 import top.luqichuang.common.mycomic.util.MapUtil;
+
 import com.qc.mycomic.util.RestartUtil;
 import com.qc.mycomic.ui.view.RankView;
 
@@ -152,7 +155,7 @@ public class RankFragment extends BaseDataFragment<Comic> implements RankView {
             Comic myComic = comicList.get(index);
             for (ComicInfo comicInfo : comic.getComicInfoList()) {
                 if (!myComic.getComicInfoList().contains(comicInfo)) {
-                    myComic.addComicInfo(comicInfo);
+                    ComicHelper.addComicInfo(comic, comicInfo);
                 }
             }
             startFragment(new ChapterFragment(myComic));

@@ -84,7 +84,7 @@ public class MH118 extends BaseSource {
             }
         };
         starter.startInfo(html);
-        comicInfo.initChapterInfoList(starter.startElements(html, "ul#mh-chapter-list-ol-0 li"));
+        SourceHelper.initChapterInfoList(comicInfo, starter.startElements(html, "ul#mh-chapter-list-ol-0 li"));
     }
 
     @Override

@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import the.one.base.adapter.TheBaseQuickAdapter;
 import the.one.base.adapter.TheBaseViewHolder;
 import top.luqichuang.common.mycomic.model.Comic;
+import com.qc.mycomic.util.ComicHelper;
 
 /**
  * @author LuQiChuang
@@ -26,7 +27,7 @@ public class SearchAdapter extends TheBaseQuickAdapter<Comic> {
     @Override
     protected void convert(@NotNull TheBaseViewHolder holder, Comic comic) {
         holder.setText(R.id.tvTitle, comic.getComicInfo().getTitle());
-        holder.setText(R.id.tvSource, "漫画源数量：" + comic.getSourceSize());
+        holder.setText(R.id.tvSource, "漫画源数量：" + ComicHelper.sourceSize(comic));
         holder.setText(R.id.tvAuthor, comic.getComicInfo().getAuthor());
         holder.setText(R.id.tvUpdateTime, comic.getComicInfo().getUpdateTime());
         RelativeLayout layout = holder.findView(R.id.imageRelativeLayout);

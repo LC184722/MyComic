@@ -1,6 +1,7 @@
 package top.luqichuang.common.mycomic.source;
 
 import com.alibaba.fastjson.JSONArray;
+
 import top.luqichuang.common.mycomic.en.SourceEnum;
 import top.luqichuang.common.mycomic.json.JsonNode;
 import top.luqichuang.common.mycomic.json.JsonStarter;
@@ -8,6 +9,7 @@ import top.luqichuang.common.mycomic.model.ChapterInfo;
 import top.luqichuang.common.mycomic.model.ComicInfo;
 import top.luqichuang.common.mycomic.model.ImageInfo;
 import top.luqichuang.common.mycomic.util.NetUtil;
+import top.luqichuang.common.mycomic.util.SourceHelper;
 import top.luqichuang.common.mycomic.util.StringUtil;
 
 import java.util.HashMap;
@@ -130,7 +132,7 @@ public class BiliBili extends BaseSource {
             }
         };
         starter.startData(html, "data");
-        comicInfo.initChapterInfoList(starter.startDataList(html, "data", "ep_list"));
+        SourceHelper.initChapterInfoList(comicInfo, starter.startDataList(html, "data", "ep_list"));
     }
 
     @Override

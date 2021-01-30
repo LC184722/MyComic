@@ -12,6 +12,7 @@ import top.luqichuang.common.mycomic.model.Comic;
 import top.luqichuang.common.mycomic.model.ImageInfo;
 import top.luqichuang.common.mycomic.model.Source;
 import top.luqichuang.common.mycomic.self.SourceCallback;
+import com.qc.mycomic.util.ComicHelper;
 import top.luqichuang.common.mycomic.util.NetUtil;
 
 /**
@@ -24,10 +25,10 @@ public class ReaderPresenter extends BasePresenter<ReaderView> {
 
     public void loadImageInfoList(Comic comic) {
         List<ChapterInfo> chapterInfoList = comic.getComicInfo().getChapterInfoList();
-        int position = comic.getComicInfo().getPosition();
+        int position = ComicHelper.getPosition(comic.getComicInfo());
         int chapterId = comic.getComicInfo().getCurChapterId();
         String url = chapterInfoList.get(position).getChapterUrl();
-        Source source = comic.getSource();
+        Source source = ComicHelper.source(comic);
         Request request = source.getImageRequest(url);
         NetUtil.startLoad(request, new SourceCallback(request, source, Source.IMAGE) {
             @Override
@@ -46,7 +47,7 @@ public class ReaderPresenter extends BasePresenter<ReaderView> {
             @Override
             public void onResponse(String html) {
                 ReaderView view = getView();
-                List<ImageInfo> imageInfoList = comic.getImageInfoList(html, chapterId);
+                List<ImageInfo> imageInfoList = ComicHelper.getImageInfoList(comic, html, chapterId);
                 if (imageInfoList.isEmpty()) {
                     onFailure("解析失败！");
                 } else {

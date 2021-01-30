@@ -7,9 +7,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-import top.luqichuang.common.mycomic.util.DateUtil;
-import top.luqichuang.common.mycomic.util.SourceUtil;
-
 /**
  * @author LuQiChuang
  * @desc
@@ -43,46 +40,7 @@ public class Comic extends LitePalSupport {
         this.sourceId = comicInfo.getSourceId();
         this.title = comicInfo.getTitle();
         this.comicInfo = comicInfo;
-        addComicInfo(comicInfo);
-    }
-
-    public void addComicInfo(ComicInfo comicInfo) {
-        comicInfoList.add(comicInfo);
-    }
-
-    public int getSourceSize() {
-        return comicInfoList.size();
-    }
-
-    public Source getSource() {
-        return SourceUtil.getSource(comicInfo.getSourceId());
-    }
-
-    public String getSourceName() {
-        return getSource().getSourceName();
-    }
-
-    public void setInfoDetail(String html) {
-        getSource().setComicDetail(comicInfo, html);
-    }
-
-    public List<ImageInfo> getImageInfoList(String html, int chapterId) {
-        return getSource().getImageInfoList(html, chapterId);
-    }
-
-    public boolean changeComicInfo() {
-        return changeComicInfo(this.sourceId);
-    }
-
-    public boolean changeComicInfo(int sourceId) {
-        for (ComicInfo info : comicInfoList) {
-            if (info.getSourceId() == sourceId) {
-                this.comicInfo = info;
-                this.sourceId = sourceId;
-                return true;
-            }
-        }
-        return false;
+        this.comicInfoList.add(comicInfo);
     }
 
     @Override
@@ -98,20 +56,6 @@ public class Comic extends LitePalSupport {
                 ", isUpdate=" + isUpdate +
                 ", date=" + date +
                 '}';
-    }
-
-    public String toStringView() {
-        if (getComicInfo() != null) {
-            return "标题：" + title +
-                    "\n漫画源：" + getSourceName() +
-                    "\n作者：" + getComicInfo().getAuthor() +
-                    "\n上次阅读：" + DateUtil.format(getDate()) +
-                    "\n状态：" + getComicInfo().getUpdateStatus() +
-                    "\n简介：" + getComicInfo().getIntro();
-        } else {
-            return "标题：" + title +
-                    "\n漫画源：" + getSourceName();
-        }
     }
 
     @Override

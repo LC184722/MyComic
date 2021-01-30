@@ -16,6 +16,9 @@ public class ChapterInfo {
 
     private int status;
 
+    public ChapterInfo() {
+    }
+
     public ChapterInfo(int id, String title, String chapterUrl) {
         this.id = id;
         this.title = title;

@@ -13,6 +13,7 @@ import top.luqichuang.common.mycomic.model.Comic;
 import top.luqichuang.common.mycomic.model.ComicInfo;
 import top.luqichuang.common.mycomic.model.Source;
 import top.luqichuang.common.mycomic.self.SourceCallback;
+import com.qc.mycomic.util.ComicHelper;
 import top.luqichuang.common.mycomic.util.NetUtil;
 
 /**
@@ -43,7 +44,7 @@ public class ShelfPresenter extends BasePresenter<ShelfView> {
     }
 
     private void checkUpdate(Comic comic, ComicInfo info) {
-        Source source = comic.getSource();
+        Source source = ComicHelper.source(comic);
         Request request = source.getDetailRequest(info.getDetailUrl());
         NetUtil.startLoad(request, new SourceCallback(request, source, Source.DETAIL) {
             @Override
@@ -65,7 +66,7 @@ public class ShelfPresenter extends BasePresenter<ShelfView> {
                         source.setComicDetail(info, html);
                         if (curUpdateChapter == null || !curUpdateChapter.equals(info.getUpdateChapter())) {
                             if (info.getUpdateChapter() != null) {
-                                comic.setUpdate(comic.changeComicInfo(info.getSourceId()));
+                                comic.setUpdate(ComicHelper.changeComicInfo(comic, info.getSourceId()));
                                 comic.setPriority(++priority);
                                 ComicUtil.first(comic);
                             }

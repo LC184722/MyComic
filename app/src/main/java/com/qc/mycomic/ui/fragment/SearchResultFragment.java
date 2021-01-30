@@ -25,6 +25,7 @@ import the.one.base.ui.presenter.BasePresenter;
 import the.one.base.util.QMUIDialogUtil;
 import top.luqichuang.common.mycomic.model.Comic;
 import top.luqichuang.common.mycomic.model.ComicInfo;
+import com.qc.mycomic.util.ComicHelper;
 import top.luqichuang.common.mycomic.util.SourceUtil;
 
 /**
@@ -90,7 +91,7 @@ public class SearchResultFragment extends BaseDataFragment<Comic> implements Sea
             Comic myComic = comicList.get(index);
             for (ComicInfo comicInfo : comic.getComicInfoList()) {
                 if (!myComic.getComicInfoList().contains(comicInfo)) {
-                    myComic.addComicInfo(comicInfo);
+                    ComicHelper.addComicInfo(comic, comicInfo);
                 }
             }
             startFragment(new ChapterFragment(myComic));
@@ -130,7 +131,7 @@ public class SearchResultFragment extends BaseDataFragment<Comic> implements Sea
 //            int sourceId = Integer.parseInt(data);
             int sourceId = (int) SettingUtil.getSettingKey(SettingEnum.DEFAULT_SOURCE);
             for (Comic comic : comicList) {
-                comic.changeComicInfo(sourceId);
+                ComicHelper.changeComicInfo(comic, sourceId);
             }
             onFirstComplete(comicList);
             adapter.notifyDataSetChanged();

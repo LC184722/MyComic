@@ -87,7 +87,7 @@ public class Du extends BaseSource {
             }
         };
         starter.startInfo(html);
-        comicInfo.initChapterInfoList(starter.startElements(html, "ul#chapter-list-10 li", "ul#chapter-list-1 li"));
+        SourceHelper.initChapterInfoList(comicInfo, starter.startElements(html, "ul#chapter-list-10 li", "ul#chapter-list-1 li"));
     }
 
     @Override

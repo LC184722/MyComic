@@ -12,6 +12,7 @@ import top.luqichuang.common.mycomic.model.Comic;
 import top.luqichuang.common.mycomic.model.ComicInfo;
 import top.luqichuang.common.mycomic.model.Source;
 import top.luqichuang.common.mycomic.self.SourceCallback;
+import com.qc.mycomic.util.ComicHelper;
 import top.luqichuang.common.mycomic.util.NetUtil;
 import top.luqichuang.common.mycomic.util.SourceUtil;
 
@@ -62,7 +63,7 @@ public class SearchPresenter extends BasePresenter<SearchView> {
             for (Comic comic : comicList) {
                 if (comic.getTitle().equals(comicInfo.getTitle())) {
                     isExists = true;
-                    comic.addComicInfo(comicInfo);
+                    ComicHelper.addComicInfo(comic, comicInfo);
                 }
             }
             if (!isExists) {

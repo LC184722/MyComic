@@ -26,7 +26,34 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    lintOptions {
+        abortOnError false
+    }
 }
+
+//task makeJar(type: Copy) {
+//    delete 'build/libs/MyComic.jar'
+//    from('build/intermediates/aar_main_jar/release/')
+////    from(project.zipTree(''))
+//    into('build/libs/')
+//    include('classes.jar')
+//    include(project.zipTree('libs-build\\litepal-core-3.0.0.jar'))
+//    rename('classes.jar', 'MyReader.jar')
+//}
+////执行
+//makeJar.dependsOn(build)
+
+task makeJar(type: Jar) {
+    archiveName('MyReader.jar')
+    from(project.zipTree('build/intermediates/aar_main_jar/release/classes.jar'))
+    from(project.zipTree('libs-build\\litepal-core-3.0.0.jar'))
+    from(project.zipTree('libs-build\\okhttp-3.14.4.jar'))
+    from(project.zipTree('libs-build\\rhino-1.7.13.jar'))
+    from(project.zipTree('libs-build\\okio-2.5.0.jar'))
+    from(project.zipTree('libs-build\\kotlin-stdlib-1.3.72.jar'))
+    destinationDir(file('libs-build\\libs'))
+}
+makeJar.dependsOn(build)
 
 dependencies {
     api fileTree(dir: "libs", include: ["*.jar"])

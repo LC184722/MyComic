@@ -89,7 +89,7 @@ public class TengXun extends BaseSource {
             }
         };
         starter.startInfo(html);
-        comicInfo.initChapterInfoList(starter.startElements(html, "ol.chapter-page-all span"));
+        SourceHelper.initChapterInfoList(comicInfo, starter.startElements(html, "ol.chapter-page-all span"));
     }
 
     @Override

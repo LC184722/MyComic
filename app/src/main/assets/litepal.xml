@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <litepal>
     <dbname value="comic" />   <!-- 数据库的名字 -->
-    <version value="14" />  <!-- 数据库的版本号 -->
+    <version value="16" />  <!-- 数据库的版本号 -->
 
     <list>
         <!-- 配置模型类 -->

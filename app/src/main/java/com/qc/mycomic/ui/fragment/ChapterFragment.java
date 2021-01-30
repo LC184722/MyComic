@@ -22,7 +22,10 @@ import com.qc.mycomic.ui.view.ChapterView;
 import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DBUtil;
 import com.qc.mycomic.util.ImgUtil;
+
+import com.qc.mycomic.util.ComicHelper;
 import top.luqichuang.common.mycomic.util.MapUtil;
+
 import com.qc.mycomic.util.PopupUtil;
 import com.qc.mycomic.util.RestartUtil;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
@@ -153,7 +156,7 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
                         showProgressDialog(0, SourceUtil.size(), "正在更新漫画源");
                         presenter.updateSource(comic);
                     } else if (position == 1) {
-                        QMUIDialogUtil.showSimpleDialog(getContext(), "查看信息", comic.toStringView()).show();
+                        QMUIDialogUtil.showSimpleDialog(getContext(), "查看信息", ComicHelper.toStringView(comic)).show();
                     }
                     mSettingPopup.dismiss();
                 });
@@ -184,7 +187,7 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
                         sourceId = integer;
                     }
                     comic.setSourceId(sourceId);
-                    if (comic.changeComicInfo()) {
+                    if (ComicHelper.changeComicInfo(comic)) {
                         showLoadingPage();
                         isChangeSource = true;
                         requestServer();
@@ -199,7 +202,7 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         TextView tvUpdateChapter = headerView.findViewById(R.id.tvUpdateChapter);
         tvUpdateChapter.setOnClickListener(v -> {
             if (checkNotEmpty()) {
-                comic.getComicInfo().newestChapter();
+                ComicHelper.newestChapter(comic.getComicInfo());
                 start();
                 DBUtil.saveComic(comic, DBUtil.SAVE_CUR);
             } else {
@@ -225,11 +228,11 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         tvRead.setOnClickListener(v -> {
             if (checkNotEmpty()) {
                 int chapterId = ((ChapterAdapter) adapter).getChapterId();
-                if (comic.getComicInfo().checkChapterId(chapterId)) {
-                    comic.getComicInfo().initChapterId(chapterId);
+                if (ComicHelper.checkChapterId(comic.getComicInfo(), chapterId)) {
+                    ComicHelper.initChapterId(comic.getComicInfo(), chapterId);
                     start();
                 } else {
-                    start(comic.getComicInfo().getPosition(0));
+                    start(ComicHelper.getPosition(comic.getComicInfo(), 0));
                 }
             } else {
                 showFailTips("暂无漫画章节");
@@ -251,8 +254,8 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
     private void setValue() {
         ImgUtil.loadImage(getContext(), comic.getComicInfo().getImgUrl(), relativeLayout, comic.getComicInfo().getId());
         tvTitle.setText(comic.getComicInfo().getTitle());
-        tvSource.setText(comic.getSourceName());
-        tvSourceSize.setText("(" + comic.getSourceSize() + ")");
+        tvSource.setText(ComicHelper.sourceName(comic));
+        tvSourceSize.setText(String.format(Locale.CHINA, "(%d)", ComicHelper.sourceSize(comic)));
         tvUpdateChapter.setText(comic.getComicInfo().getUpdateChapter());
         tvUpdateTime.setText(comic.getComicInfo().getUpdateTime());
         setFavLayout(comic.getStatus() == Constant.STATUS_FAV);
@@ -421,7 +424,7 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         } else {
             progressDialog.setMessage(getMsg("正在更新漫画源", count, SourceUtil.size()));
             progressDialog.setProgress(getValue(count, SourceUtil.size()), 100);
-            tvSourceSize.setText("(" + comic.getSourceSize() + ")");
+            tvSourceSize.setText(String.format(Locale.CHINA, "(%d)", ComicHelper.sourceSize(comic)));
         }
     }
 
@@ -444,7 +447,7 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         if (comic.getComicInfoList().contains(info)) {
             comic.getComicInfoList().remove(info);
         }
-        comic.addComicInfo(info);
+        ComicHelper.addComicInfo(comic, info);
     }
 
     public void start() {
@@ -453,7 +456,7 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
     }
 
     public void start(int position) {
-        comic.getComicInfo().setPosition(position);
+        ComicHelper.setPosition(comic.getComicInfo(), position);
         start();
     }
 

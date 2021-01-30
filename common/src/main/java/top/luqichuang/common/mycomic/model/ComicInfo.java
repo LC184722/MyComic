@@ -51,7 +51,6 @@ public class ComicInfo extends LitePalSupport {
     private List<ChapterInfo> chapterInfoList = new ArrayList<>();
 
     public ComicInfo() {
-
     }
 
     public ComicInfo(int sourceId, String title, String author, String detailUrl, String imgUrl, String updateTime) {
@@ -62,7 +61,6 @@ public class ComicInfo extends LitePalSupport {
         this.imgUrl = imgUrl;
         this.updateTime = updateTime;
     }
-
 
     public void setDetail(String author, String updateTime, String updateStatus, String intro) {
         this.author = author;
@@ -82,112 +80,6 @@ public class ComicInfo extends LitePalSupport {
         this.updateTime = updateTime;
         this.updateStatus = updateStatus;
         this.intro = intro;
-    }
-
-    public boolean canLoad(boolean isLoadNext) {
-        int id;
-        if (isLoadNext) {
-            id = curChapterId + 1;
-        } else {
-            id = curChapterId - 1;
-        }
-        boolean flag = checkChapterId(id);
-        if (flag) {
-            curChapterId = id;
-        }
-        return flag;
-    }
-
-    public boolean checkChapterId(int chapterId) {
-        return chapterId >= 0 && chapterId < chapterInfoList.size();
-    }
-
-    /**
-     * 获得当前章节id的chapterList position
-     *
-     * @return int
-     */
-    public int getPosition() {
-        return chapterIdToPosition(curChapterId);
-    }
-
-    /**
-     * 获得指定章节id的chapterList position
-     *
-     * @param chapterId chapterId
-     * @return int
-     */
-    public int getPosition(int chapterId) {
-        return chapterIdToPosition(chapterId);
-    }
-
-    /**
-     * 设置chapterList章节position
-     *
-     * @param position position
-     * @return void
-     */
-    public void setPosition(int position) {
-        curChapterId = positionToChapterId(position);
-        initChapterTitle(position);
-    }
-
-    public void newestChapter() {
-        initChapterId(chapterInfoList.size() - 1);
-    }
-
-    public void initChapterId(int chapterId) {
-        this.curChapterId = chapterId;
-        initChapterTitle(chapterIdToPosition(chapterId));
-    }
-
-    private void initChapterTitle(int position) {
-        if (checkChapterId(position)) {
-            curChapterTitle = chapterInfoList.get(position).getTitle();
-        }
-    }
-
-    /**
-     * 章节position 转 curChapterId
-     *
-     * @param position position
-     * @return int
-     */
-    public int positionToChapterId(int position) {
-        return chapterInfoList.get(position).getId();
-    }
-
-    /**
-     * curChapterId 转 章节position
-     *
-     * @param chapterId chapterId
-     * @return int
-     */
-    public int chapterIdToPosition(int chapterId) {
-        int position;
-        if (order == ComicInfo.DESC) {
-            position = chapterInfoList.size() - chapterId - 1;
-        } else {
-            position = chapterId;
-        }
-        return position;
-    }
-
-    /**
-     * 获得当前的chapterInfo
-     *
-     * @return ChapterInfo
-     */
-    public ChapterInfo getChapterInfo() {
-        return chapterInfoList.get(getPosition());
-    }
-
-    public int getNextChapterId() {
-        return curChapterId + 1;
-    }
-
-    public int getPrevChapterId() {
-        return curChapterId - 1;
     }
 
     @Override
@@ -220,22 +112,6 @@ public class ComicInfo extends LitePalSupport {
                 ", chapterInfoList=" + chapterInfoList +
                 '}';
     }
-
-    public void initChapterInfoList(List<ChapterInfo> list) {
-        initChapterInfoList(list, ComicInfo.DESC);
-    }
-
-    public void initChapterInfoList(List<ChapterInfo> list, int order) {
-        this.chapterInfoList = list;
-        if (!list.isEmpty()) {
-            if (order == ComicInfo.DESC) {
-                this.updateChapter = list.get(0).getTitle();
-            } else if (order == ComicInfo.ASC) {
-                this.updateChapter = list.get(list.size() - 1).getTitle();
-            }
-        }
-    }
-
 
     @Override
     public boolean equals(Object o) {

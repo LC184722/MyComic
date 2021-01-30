@@ -197,7 +197,7 @@ public class DBUtil {
             List<ComicInfo> infoList = findComicInfoListByTitle(comic.getTitle());
             for (ComicInfo info : infoList) {
                 if (SourceUtil.getSource(info.getSourceId()).isValid()) {
-                    comic.addComicInfo(info);
+                    ComicHelper.addComicInfo(comic, info);
                     if (comic.getSourceId() == info.getSourceId()) {
                         comic.setComicInfo(info);
                     }

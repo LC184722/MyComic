@@ -11,6 +11,7 @@ import top.luqichuang.common.mycomic.model.Comic;
 import top.luqichuang.common.mycomic.model.ComicInfo;
 import top.luqichuang.common.mycomic.model.Source;
 import top.luqichuang.common.mycomic.self.SourceCallback;
+import com.qc.mycomic.util.ComicHelper;
 import top.luqichuang.common.mycomic.util.NetUtil;
 import top.luqichuang.common.mycomic.util.SourceUtil;
 
@@ -23,7 +24,7 @@ import top.luqichuang.common.mycomic.util.SourceUtil;
 public class ChapterPresenter extends BasePresenter<ChapterView> {
 
     public void load(Comic comic) {
-        Source source = comic.getSource();
+        Source source = ComicHelper.source(comic);
         ComicInfo comicInfo = comic.getComicInfo();
         Request request = source.getDetailRequest(comicInfo.getDetailUrl());
         NetUtil.startLoad(request, new SourceCallback(request, source, Source.DETAIL) {
@@ -45,7 +46,7 @@ public class ChapterPresenter extends BasePresenter<ChapterView> {
                 ChapterView view = getView();
                 AndroidSchedulers.mainThread().scheduleDirect(() -> {
                     if (view != null) {
-                        comic.setInfoDetail(html);
+                        ComicHelper.setInfoDetail(comic, html);
                         view.loadComplete();
                     }
                 });

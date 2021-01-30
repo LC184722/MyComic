@@ -83,7 +83,7 @@ public class OH extends BaseSource {
             }
         };
         starter.startInfo(html);
-        comicInfo.initChapterInfoList(starter.startElements(html, "ul.fed-part-rows li.fed-col-lg3"));
+        SourceHelper.initChapterInfoList(comicInfo, starter.startElements(html, "ul.fed-part-rows li.fed-col-lg3"));
     }
 
     @Override

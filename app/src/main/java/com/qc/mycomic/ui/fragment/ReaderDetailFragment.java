@@ -14,6 +14,7 @@ import java.util.List;
 import the.one.base.ui.fragment.BaseImageSnapFragment;
 import the.one.base.ui.presenter.BasePresenter;
 import top.luqichuang.common.mycomic.model.ImageInfo;
+import com.qc.mycomic.util.ComicHelper;
 
 /**
  * @author LuQiChuang
@@ -45,7 +46,7 @@ public class ReaderDetailFragment extends BaseImageSnapFragment<SnapImageInfo> {
     @Override
     protected void initView(View rootView) {
         super.initView(rootView);
-        String title = snapImageInfo.INFO.toStringProgress();
+        String title = ComicHelper.toStringProgress(snapImageInfo.INFO);
         QMUIQQFaceView mTitle = mTopLayout.setTitle(title);
         mTopLayout.setTitleGravity(Gravity.CENTER);
         mTitle.setTextColor(getColorr(R.color.qmui_config_color_gray_1));

@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 import top.luqichuang.common.mycomic.jsoup.JsoupNode;
+import top.luqichuang.common.mycomic.model.ChapterInfo;
+import top.luqichuang.common.mycomic.model.ComicInfo;
 import top.luqichuang.common.mycomic.model.ImageInfo;
 
 /**
@@ -19,6 +21,21 @@ import top.luqichuang.common.mycomic.model.ImageInfo;
  * @ver 1.0
  */
 public class SourceHelper {
+
+    public static void initChapterInfoList(ComicInfo comicInfo, List<ChapterInfo> list) {
+        initChapterInfoList(comicInfo, list, ComicInfo.DESC);
+    }
+
+    public static void initChapterInfoList(ComicInfo comicInfo, List<ChapterInfo> list, int order) {
+        comicInfo.setChapterInfoList(list);
+        if (!list.isEmpty()) {
+            if (order == ComicInfo.DESC) {
+                comicInfo.setUpdateChapter(list.get(0).getTitle());
+            } else if (order == ComicInfo.ASC) {
+                comicInfo.setUpdateChapter(list.get(list.size() - 1).getTitle());
+            }
+        }
+    }
 
     public static List<ImageInfo> getImageInfoList(String[] urls, int chapterId) {
         return getImageInfoList(urls, chapterId, "");

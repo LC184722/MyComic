@@ -20,19 +20,14 @@ public class ImageInfo {
 
     private int status;
 
+    public ImageInfo() {
+    }
+
     public ImageInfo(int chapterId, int cur, int total, String url) {
         this.chapterId = chapterId;
         this.cur = cur;
         this.total = total;
         this.url = url;
-    }
-
-    public String toStringProgress() {
-        return (cur + 1) + "/" + total;
-    }
-
-    public String toStringProgressDetail() {
-        return chapterId + "-" + (cur + 1) + "/" + total;
     }
 
     @Override

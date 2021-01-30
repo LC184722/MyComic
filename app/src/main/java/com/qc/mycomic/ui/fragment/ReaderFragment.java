@@ -36,6 +36,7 @@ import the.one.base.ui.presenter.BasePresenter;
 import top.luqichuang.common.mycomic.model.Comic;
 import top.luqichuang.common.mycomic.model.ComicInfo;
 import top.luqichuang.common.mycomic.model.ImageInfo;
+import com.qc.mycomic.util.ComicHelper;
 
 import static android.view.View.VISIBLE;
 import static androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE;
@@ -120,7 +121,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
             }
             ImageInfo imageInfo = imageInfoList.get(first);
             tvChapter.setText(comicInfo.getCurChapterTitle());
-            tvProgress.setText(imageInfo.toStringProgress());
+            tvProgress.setText(ComicHelper.toStringProgress(imageInfo));
             seekBar.setMax(imageInfo.getTotal() - 1);
             seekBar.setProgress(imageInfo.getCur());
             tvInfo.setText(String.format(Locale.CHINA, "%d章/%d章", imageInfo.getChapterId() + 1, comicInfo.getChapterInfoList().size()));
@@ -154,7 +155,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
         });
 
         llLeft.setOnClickListener(v -> {
-            if (comicInfo.checkChapterId(comicInfo.getPrevChapterId())) {
+            if (ComicHelper.checkChapterId(comicInfo, ComicHelper.getPrevChapterId(comicInfo))) {
                 isFresh = true;
                 onRefresh();
             } else {
@@ -163,7 +164,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
         });
 
         llRight.setOnClickListener(v -> {
-            if (comicInfo.checkChapterId(comicInfo.getNextChapterId())) {
+            if (ComicHelper.checkChapterId(comicInfo, ComicHelper.getNextChapterId(comicInfo))) {
                 isFresh = true;
                 super.onRefresh();
             } else {
@@ -203,7 +204,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
                     first = manager.findFirstVisibleItemPosition();//得到显示屏内的第一个list的位置数position
                     ImageInfo imageInfo = imageInfoList.get(first);
                     //设置chapterId,chapterTitle
-                    comicInfo.initChapterId(imageInfo.getChapterId());
+                    ComicHelper.initChapterId(comicInfo, imageInfo.getChapterId());
                     //图片id和当前id是否相等，相等则清除adapter中map数据
                     if (curChapterId != imageInfo.getChapterId()) {
                         curChapterId = imageInfo.getChapterId();
@@ -211,7 +212,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
                     }
                     //设置数据
                     tvChapter.setText(comicInfo.getCurChapterTitle());
-                    tvProgress.setText(imageInfo.toStringProgress());
+                    tvProgress.setText(ComicHelper.toStringProgress(imageInfo));
 
                     //防止滑动seekBar与onScrolled发生冲突
                     if (!isSmooth) {
@@ -266,9 +267,9 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
         if (imageInfoList == null) {
             presenter.loadImageInfoList(comic);
         } else {
-            comicInfo.initChapterId(imageInfoList.get(imageInfoList.size() - 1).getChapterId());
+            ComicHelper.initChapterId(comicInfo, imageInfoList.get(imageInfoList.size() - 1).getChapterId());
             //Log.i(TAG, "requestServer: " + comicInfo.getCurChapterId());
-            if (comicInfo.canLoad(isLoadNext)) {
+            if (ComicHelper.canLoad(comicInfo, isLoadNext)) {
                 presenter.loadImageInfoList(comic);
             } else if (isLoadNext) {
                 onComplete(null);

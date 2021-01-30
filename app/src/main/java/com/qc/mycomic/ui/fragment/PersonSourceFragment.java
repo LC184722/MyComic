@@ -63,7 +63,7 @@ public class PersonSourceFragment extends BaseGroupListFragment implements View.
 //            String[] items = SourceUtil.getAllSourceNameArray();
 //            int[] checkedItems = SourceUtil.getSourceIntArr();
 //            Setting defaultSetting = SettingFactory.getInstance().getSettingKey(SettingFactory.SETTING_DEFAULT_SOURCE);
-//            String sourceName = SourceUtil.getSourceName(Integer.parseInt(defaultSetting.getData()));
+//            String sourceName = SourceUtil.sourceName(Integer.parseInt(defaultSetting.getData()));
 //            int defaultIndex = -1;
 //            for (int i = 0; i < items.length; i++) {
 //                if (items[i].equals(sourceName)) {

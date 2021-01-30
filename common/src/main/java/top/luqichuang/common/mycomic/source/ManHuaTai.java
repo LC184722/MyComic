@@ -95,7 +95,7 @@ public class ManHuaTai extends BaseSource {
             }
         };
         starter.startInfo(html);
-        comicInfo.initChapterInfoList(starter.startElements(html, "ul#js_chapter_list li"));
+        SourceHelper.initChapterInfoList(comicInfo, starter.startElements(html, "ul#js_chapter_list li"));
     }
 
     @Override

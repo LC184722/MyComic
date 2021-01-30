@@ -97,7 +97,7 @@ public class BL extends BaseSource {
             }
         };
         starter.startInfo(html);
-        comicInfo.initChapterInfoList(starter.startElements(html, "ul#chapterList li"));
+        SourceHelper.initChapterInfoList(comicInfo, starter.startElements(html, "ul#chapterList li"));
     }
 
     @Override

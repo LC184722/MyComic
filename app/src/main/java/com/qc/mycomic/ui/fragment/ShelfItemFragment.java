@@ -11,7 +11,10 @@ import com.qc.mycomic.ui.adapter.ShelfAdapter;
 import com.qc.mycomic.ui.presenter.ShelfPresenter;
 import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DBUtil;
+
+import com.qc.mycomic.util.ComicHelper;
 import top.luqichuang.common.mycomic.util.MapUtil;
+
 import com.qc.mycomic.util.PopupUtil;
 import com.qc.mycomic.util.RestartUtil;
 import com.qc.mycomic.ui.view.ShelfView;
@@ -142,7 +145,7 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 if (which == 0) {
-                    QMUIDialogUtil.showSimpleDialog(getContext(), "查看信息", comic.toStringView()).show();
+                    QMUIDialogUtil.showSimpleDialog(getContext(), "查看信息", ComicHelper.toStringView(comic)).show();
                 } else if (which == 1) {
                     Map<Integer, String> myMap = PopupUtil.getMyMap(comic.getComicInfoList());
                     PopupUtil.showSimpleBottomSheetList(getContext(), myMap, comic.getSourceId(), "切换漫画源", new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
@@ -154,7 +157,7 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
                                 sourceId = integer;
                             }
                             comic.setSourceId(sourceId);
-                            if (comic.changeComicInfo()) {
+                            if (ComicHelper.changeComicInfo(comic)) {
                                 adapter.notifyDataSetChanged();
                                 DBUtil.saveComic(comic, DBUtil.SAVE_ONLY);
                             }
