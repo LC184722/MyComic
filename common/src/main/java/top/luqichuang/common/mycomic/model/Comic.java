@@ -19,13 +19,13 @@ public class Comic extends LitePalSupport {
 
     private int sourceId;
 
-    private ComicInfo comicInfo;
-
     private String title;
 
-    private List<ComicInfo> comicInfoList = new ArrayList<>();
-
     private int status;
+
+    private ComicInfo comicInfo;
+
+    private List<ComicInfo> comicInfoList = new ArrayList<>();
 
     private int priority;
 
@@ -87,14 +87,6 @@ public class Comic extends LitePalSupport {
         this.sourceId = sourceId;
     }
 
-    public ComicInfo getComicInfo() {
-        return comicInfo;
-    }
-
-    public void setComicInfo(ComicInfo comicInfo) {
-        this.comicInfo = comicInfo;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -103,20 +95,28 @@ public class Comic extends LitePalSupport {
         this.title = title;
     }
 
-    public List<ComicInfo> getComicInfoList() {
-        return comicInfoList;
-    }
-
-    public void setComicInfoList(List<ComicInfo> comicInfoList) {
-        this.comicInfoList = comicInfoList;
-    }
-
     public int getStatus() {
         return status;
     }
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public ComicInfo getComicInfo() {
+        return comicInfo;
+    }
+
+    public void setComicInfo(ComicInfo comicInfo) {
+        this.comicInfo = comicInfo;
+    }
+
+    public List<ComicInfo> getComicInfoList() {
+        return comicInfoList;
+    }
+
+    public void setComicInfoList(List<ComicInfo> comicInfoList) {
+        this.comicInfoList = comicInfoList;
     }
 
     public int getPriority() {

@@ -22,12 +22,6 @@ public class ComicInfo extends LitePalSupport {
 
     private int sourceId;
 
-    private int curChapterId;
-
-    private int chapterNum;
-
-    private int order;
-
     private String title;
 
     private String author;
@@ -47,6 +41,12 @@ public class ComicInfo extends LitePalSupport {
     private String curChapterTitle;
 
     private String intro;
+
+    private int curChapterId;
+
+    private int chapterNum;
+
+    private int order;
 
     private List<ChapterInfo> chapterInfoList = new ArrayList<>();
 
@@ -96,9 +96,6 @@ public class ComicInfo extends LitePalSupport {
         return "ComicInfo{" +
                 "id=" + id +
                 ", sourceId=" + sourceId +
-                ", curChapterId=" + curChapterId +
-                ", chapterNum=" + chapterNum +
-                ", order=" + order +
                 ", title='" + title + '\'' +
                 ", author='" + author + '\'' +
                 ", detailUrl='" + detailUrl + '\'' +
@@ -109,6 +106,9 @@ public class ComicInfo extends LitePalSupport {
                 ", updateStatus='" + updateStatus + '\'' +
                 ", curChapterTitle='" + curChapterTitle + '\'' +
                 ", intro='" + intro + '\'' +
+                ", curChapterId=" + curChapterId +
+                ", chapterNum=" + chapterNum +
+                ", order=" + order +
                 ", chapterInfoList=" + chapterInfoList +
                 '}';
     }
@@ -143,30 +143,6 @@ public class ComicInfo extends LitePalSupport {
 
     public void setSourceId(int sourceId) {
         this.sourceId = sourceId;
-    }
-
-    public int getCurChapterId() {
-        return curChapterId;
-    }
-
-    public void setCurChapterId(int curChapterId) {
-        this.curChapterId = curChapterId;
-    }
-
-    public int getChapterNum() {
-        return chapterNum;
-    }
-
-    public void setChapterNum(int chapterNum) {
-        this.chapterNum = chapterNum;
-    }
-
-    public int getOrder() {
-        return order;
-    }
-
-    public void setOrder(int order) {
-        this.order = order;
     }
 
     public String getTitle() {
@@ -247,6 +223,30 @@ public class ComicInfo extends LitePalSupport {
 
     public void setIntro(String intro) {
         this.intro = intro;
+    }
+
+    public int getCurChapterId() {
+        return curChapterId;
+    }
+
+    public void setCurChapterId(int curChapterId) {
+        this.curChapterId = curChapterId;
+    }
+
+    public int getChapterNum() {
+        return chapterNum;
+    }
+
+    public void setChapterNum(int chapterNum) {
+        this.chapterNum = chapterNum;
+    }
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
     }
 
     public List<ChapterInfo> getChapterInfoList() {
