@@ -91,7 +91,7 @@ public class SearchResultFragment extends BaseDataFragment<Comic> implements Sea
             Comic myComic = comicList.get(index);
             for (ComicInfo comicInfo : comic.getComicInfoList()) {
                 if (!myComic.getComicInfoList().contains(comicInfo)) {
-                    ComicHelper.addComicInfo(comic, comicInfo);
+                    ComicHelper.addComicInfo(myComic, comicInfo);
                 }
             }
             startFragment(new ChapterFragment(myComic));
