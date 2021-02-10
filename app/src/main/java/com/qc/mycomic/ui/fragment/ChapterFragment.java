@@ -444,8 +444,11 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         if (!comic.getTitle().equals(info.getTitle())) {
             return;
         }
-        if (comic.getComicInfoList().contains(info)) {
-            comic.getComicInfoList().remove(info);
+        int index = comic.getComicInfoList().indexOf(info);
+        if (index > -1) {
+            ComicInfo oInfo = comic.getComicInfoList().remove(index);
+            info.setCurChapterId(oInfo.getCurChapterId());
+            info.setCurChapterTitle(oInfo.getCurChapterTitle());
         }
         ComicHelper.addComicInfo(comic, info);
     }

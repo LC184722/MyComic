@@ -36,10 +36,9 @@ public enum SourceEnum {
     BL(10, "BL漫画"),
     ;
 
-    private static final Map<Integer, Source> MAP;
+    private static final Map<Integer, Source> MAP = new LinkedHashMap<>();
 
     static {
-        MAP = new LinkedHashMap<>();
         MAP.put(MI_TUI.ID, new MiTui());
         MAP.put(MAN_HUA_FEN.ID, new ManHuaFen());
         MAP.put(PU_FEI.ID, new PuFei());
