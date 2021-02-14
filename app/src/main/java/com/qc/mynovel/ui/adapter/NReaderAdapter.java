@@ -40,9 +40,4 @@ public class NReaderAdapter extends TheBaseQuickAdapter<ContentInfo> {
 //        holder.setText(R.id.tvTitle, novelInfo.getCurChapterTitle());
         holder.setText(R.id.tvContent, contentInfo.getContent());
     }
-
-    public void clearMap() {
-        ImgUtil.clearMap();
-    }
-
 }

@@ -250,7 +250,8 @@ public class NChapterFragment extends BaseDataFragment<ChapterInfo> implements N
     }
 
     private void setValue() {
-        ImgUtil.loadImage(getContext(), novel.getNovelInfo().getImgUrl(), relativeLayout, novel.getNovelInfo().getId());
+        String saveKey = novel.getNovelInfo().getId() != 0 ? "N" + novel.getNovelInfo().getId() : null;
+        ImgUtil.loadImage(getContext(), novel.getNovelInfo().getImgUrl(), relativeLayout, saveKey);
         tvTitle.setText(novel.getNovelInfo().getTitle());
         tvSource.setText(NovelHelper.nSourceName(novel));
         tvSourceSize.setText(String.format(Locale.CHINA, "(%d)", NovelHelper.nSourceSize(novel)));

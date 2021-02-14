@@ -220,7 +220,7 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
         if (contentInfoList == null) {
             presenter.loadContentInfoList(novel);
         } else {
-            //Log.i(TAG, "requestServer: " + novelInfo.getCurChapterId());
+            NovelHelper.initChapterId(novelInfo, contentInfoList.get(contentInfoList.size() - 1).getChapterId());
             if (NovelHelper.canLoad(novelInfo, isLoadNext)) {
                 presenter.loadContentInfoList(novel);
             } else if (isLoadNext) {
