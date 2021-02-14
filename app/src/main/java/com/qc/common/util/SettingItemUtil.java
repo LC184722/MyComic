@@ -6,9 +6,11 @@ import com.qc.common.en.SettingEnum;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import top.luqichuang.common.util.NSourceUtil;
 import top.luqichuang.mycomic.model.Source;
 import top.luqichuang.common.util.MapUtil;
 import top.luqichuang.common.util.SourceUtil;
+import top.luqichuang.mynovel.model.NSource;
 
 /**
  * @author LuQiChuang
@@ -23,6 +25,10 @@ public class SettingItemUtil {
         if (settingEnum == SettingEnum.DEFAULT_SOURCE) {
             for (Source source : SourceUtil.getSourceList()) {
                 map.put(source.getSourceId(), source.getSourceName());
+            }
+        } else if (settingEnum == SettingEnum.DEFAULT_NOVEL_SOURCE) {
+            for (NSource nSource : NSourceUtil.getNSourceList()) {
+                map.put(nSource.getNSourceId(), nSource.getNSourceName());
             }
         } else if (settingEnum == SettingEnum.PRELOAD_NUM) {
             map.put(0, "关闭预加载");

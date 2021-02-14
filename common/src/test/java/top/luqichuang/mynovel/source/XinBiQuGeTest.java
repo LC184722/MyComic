@@ -26,25 +26,7 @@ public class XinBiQuGeTest extends NBaseSourceTest {
 //        testContentRequest("https://www.vbiquge.com/96_96267/59146.html");
 //        testRankMap();
 //        testRankRequest(0);
-    }
-
-    @Override
-    public void testSearch() {
-        super.testSearch();
-    }
-
-    @Override
-    public void testDetail() {
-        super.testDetail();
-    }
-
-    @Override
-    public void testContent() {
-        super.testContent();
-    }
-
-    @Override
-    public void testRank() {
-        super.testRank();
+//        testContent();
+//        autoTest("元尊");
     }
 }

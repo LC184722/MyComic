@@ -27,6 +27,6 @@ public class QuanShuTest extends NBaseSourceTest {
 //        testContent();
 //        testRankMap();
 //        testRankRequest(1);
-        testRank();
+//        testRank();
     }
 }

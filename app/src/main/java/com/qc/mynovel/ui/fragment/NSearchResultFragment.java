@@ -129,7 +129,7 @@ public class NSearchResultFragment extends BaseDataFragment<Novel> implements NS
         if (++count == size) {
 //            String data = SettingFactory.getInstance().getSetting(SettingFactory.SETTING_DEFAULT_SOURCE).getData();
 //            int sourceId = Integer.parseInt(data);
-            int sourceId = (int) SettingUtil.getSettingKey(SettingEnum.DEFAULT_SOURCE);
+            int sourceId = (int) SettingUtil.getSettingKey(SettingEnum.DEFAULT_NOVEL_SOURCE);
             for (Novel novel : novelList) {
                 NovelHelper.changeNovelInfo(novel, sourceId);
             }

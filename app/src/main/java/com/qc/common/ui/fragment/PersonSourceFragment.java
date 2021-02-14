@@ -42,9 +42,10 @@ public class PersonSourceFragment extends BaseGroupListFragment implements View.
     @Override
     protected void addGroupListView() {
         v1 = CreateDetailItemView("默认漫画源", SettingUtil.getSettingDesc(SettingEnum.DEFAULT_SOURCE));
-//        v2 = CreateDetailItemView("选用漫画源", String.valueOf(SourceUtil.size()));
+        v2 = CreateDetailItemView("默认小说源", SettingUtil.getSettingDesc(SettingEnum.DEFAULT_NOVEL_SOURCE));
 //        addToGroup("漫画源设置", v1, v2);
         addToGroup("漫画", v1);
+        addToGroup("小说", v2);
     }
 
     @Override
@@ -58,6 +59,18 @@ public class PersonSourceFragment extends BaseGroupListFragment implements View.
                     Object key = MapUtil.getKeyByValue(map, tag);
                     SettingUtil.putSetting(SettingEnum.DEFAULT_SOURCE, key, tag);
                     v1.setDetailText(tag);
+                    dialog.dismiss();
+                }
+            });
+        } else if (view == v2) {
+            Object key = SettingUtil.getSettingKey(SettingEnum.DEFAULT_NOVEL_SOURCE);
+            Map<Object, String> map = SettingItemUtil.getMap(SettingEnum.DEFAULT_NOVEL_SOURCE);
+            PopupUtil.showSimpleBottomSheetList(getContext(), map, key, "选择默认小说源", new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
+                @Override
+                public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
+                    Object key = MapUtil.getKeyByValue(map, tag);
+                    SettingUtil.putSetting(SettingEnum.DEFAULT_NOVEL_SOURCE, key, tag);
+                    v2.setDetailText(tag);
                     dialog.dismiss();
                 }
             });
