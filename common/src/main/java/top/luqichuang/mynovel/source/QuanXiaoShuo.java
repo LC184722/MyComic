@@ -107,9 +107,11 @@ public class QuanXiaoShuo extends NBaseSource {
             node.remove("div");
             content = node.html("body");
             content = content.replace(" ", "");
+            content = content.replace("　", "");
             content = content.replace("\n", "");
             content = content.replace("<br><br>", "<br>");
             content = content.replace("<br>", "\n    ");
+            content = content.replace("www.TXTXiaZai.ORG", "");
             content = content.replace("小说网手机问：httpp电脑访问：", "");
             content = content.trim();
             content = "    " + content;

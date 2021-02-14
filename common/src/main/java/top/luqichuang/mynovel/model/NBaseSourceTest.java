@@ -155,7 +155,8 @@ public abstract class NBaseSourceTest {
         String image = testRequest(imageRequest, CONTENT);
         ContentInfo contentInfo = source.getContentInfo(image, 100);
         Assert.assertNotNull("未搜索到小说内容", contentInfo);
-        System.out.println("contentInfo = " + contentInfo.getContent());
+        System.out.println("======================");
+        System.out.println(contentInfo.getContent());
     }
 
     protected final void testSearchRequest() {
