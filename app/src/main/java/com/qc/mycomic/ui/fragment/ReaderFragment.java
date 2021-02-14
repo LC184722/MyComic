@@ -13,17 +13,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.qc.mycomic.R;
-import com.qc.mycomic.constant.Constant;
-import com.qc.mycomic.constant.TmpData;
-import com.qc.mycomic.en.SettingEnum;
+import com.qc.common.constant.Constant;
+import com.qc.common.constant.TmpData;
+import com.qc.common.en.SettingEnum;
 import com.qc.mycomic.ui.adapter.ReaderAdapter;
 import com.qc.mycomic.ui.presenter.ReaderPresenter;
 import com.qc.mycomic.ui.view.ReaderView;
 import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DBUtil;
-import com.qc.mycomic.util.ImgUtil;
-import com.qc.mycomic.util.RestartUtil;
-import com.qc.mycomic.util.SettingUtil;
+import com.qc.common.util.ImgUtil;
+import com.qc.common.util.RestartUtil;
+import com.qc.common.util.SettingUtil;
 import com.qmuiteam.qmui.util.QMUIDisplayHelper;
 import com.qmuiteam.qmui.util.QMUIViewHelper;
 
@@ -33,9 +33,9 @@ import java.util.Locale;
 
 import the.one.base.ui.fragment.BaseDataFragment;
 import the.one.base.ui.presenter.BasePresenter;
-import top.luqichuang.common.mycomic.model.Comic;
-import top.luqichuang.common.mycomic.model.ComicInfo;
-import top.luqichuang.common.mycomic.model.ImageInfo;
+import top.luqichuang.mycomic.model.Comic;
+import top.luqichuang.mycomic.model.ComicInfo;
+import top.luqichuang.mycomic.model.ImageInfo;
 import com.qc.mycomic.util.ComicHelper;
 
 import static android.view.View.VISIBLE;
@@ -325,6 +325,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
             isFresh = false;
             recycleView.scrollToPosition(0);
         }
+        bottomView.setVisibility(View.GONE);
     }
 
     @Override

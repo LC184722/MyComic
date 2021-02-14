@@ -3,7 +3,7 @@ package com.qc.mycomic.ui.view;
 import java.util.List;
 
 import the.one.base.ui.view.BaseView;
-import top.luqichuang.common.mycomic.model.ComicInfo;
+import top.luqichuang.mycomic.model.ComicInfo;
 
 /**
  * @author LuQiChuang

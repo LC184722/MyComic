@@ -10,11 +10,11 @@ import java.util.Map;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import okhttp3.Request;
 import the.one.base.ui.presenter.BasePresenter;
-import top.luqichuang.common.mycomic.model.Comic;
-import top.luqichuang.common.mycomic.model.ComicInfo;
-import top.luqichuang.common.mycomic.model.Source;
-import top.luqichuang.common.mycomic.self.SourceCallback;
-import top.luqichuang.common.mycomic.util.NetUtil;
+import top.luqichuang.mycomic.model.Comic;
+import top.luqichuang.mycomic.model.ComicInfo;
+import top.luqichuang.mycomic.model.Source;
+import top.luqichuang.common.self.SourceCallback;
+import top.luqichuang.common.util.NetUtil;
 
 /**
  * @author LuQiChuang

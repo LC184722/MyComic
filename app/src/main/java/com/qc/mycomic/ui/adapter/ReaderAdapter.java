@@ -3,13 +3,13 @@ package com.qc.mycomic.ui.adapter;
 import android.widget.RelativeLayout;
 
 import com.qc.mycomic.R;
-import com.qc.mycomic.util.ImgUtil;
+import com.qc.common.util.ImgUtil;
 
 import org.jetbrains.annotations.NotNull;
 
 import the.one.base.adapter.TheBaseQuickAdapter;
 import the.one.base.adapter.TheBaseViewHolder;
-import top.luqichuang.common.mycomic.model.ImageInfo;
+import top.luqichuang.mycomic.model.ImageInfo;
 
 /**
  * @author LuQiChuang

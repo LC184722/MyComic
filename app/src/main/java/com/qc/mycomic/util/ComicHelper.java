@@ -3,13 +3,12 @@ package com.qc.mycomic.util;
 import java.util.List;
 import java.util.Locale;
 
-import top.luqichuang.common.mycomic.model.ChapterInfo;
-import top.luqichuang.common.mycomic.model.Comic;
-import top.luqichuang.common.mycomic.model.ComicInfo;
-import top.luqichuang.common.mycomic.model.ImageInfo;
-import top.luqichuang.common.mycomic.model.Source;
-import top.luqichuang.common.mycomic.util.DateUtil;
-import top.luqichuang.common.mycomic.util.SourceUtil;
+import top.luqichuang.mycomic.model.Comic;
+import top.luqichuang.mycomic.model.ComicInfo;
+import top.luqichuang.mycomic.model.ImageInfo;
+import top.luqichuang.mycomic.model.Source;
+import top.luqichuang.common.util.DateUtil;
+import top.luqichuang.common.util.SourceUtil;
 
 /**
  * @author LuQiChuang

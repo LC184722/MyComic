@@ -18,9 +18,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="n">
-        <activity android:name=".ui.activity.MainActivity" />
+        <activity android:name="com.qc.common.ui.activity.MainActivity" />
         <activity
-            android:name=".ui.activity.LauncherActivity"
+            android:name="com.qc.common.ui.activity.LauncherActivity"
             android:theme="@style/MyBaseTheme.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

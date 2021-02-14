@@ -2,8 +2,9 @@ package com.qc.mycomic.util;
 
 import android.content.Context;
 
-import com.qc.mycomic.constant.AppConstant;
-import com.qc.mycomic.constant.Constant;
+import com.qc.common.constant.AppConstant;
+import com.qc.common.constant.Constant;
+import com.qc.common.util.ImgUtil;
 
 import org.litepal.LitePal;
 
@@ -16,9 +17,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import top.luqichuang.common.mycomic.model.Comic;
-import top.luqichuang.common.mycomic.model.ComicInfo;
-import top.luqichuang.common.mycomic.util.SourceUtil;
+import top.luqichuang.mycomic.model.Comic;
+import top.luqichuang.mycomic.model.ComicInfo;
+import top.luqichuang.common.util.SourceUtil;
 
 /**
  * @author LuQiChuang

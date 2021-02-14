@@ -3,7 +3,7 @@ package com.qc.mycomic.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import top.luqichuang.common.mycomic.model.Comic;
+import top.luqichuang.mycomic.model.Comic;
 
 /**
  * @author LuQiChuang

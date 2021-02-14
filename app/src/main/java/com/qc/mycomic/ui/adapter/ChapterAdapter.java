@@ -1,7 +1,6 @@
 package com.qc.mycomic.ui.adapter;
 
 import android.content.res.ColorStateList;
-import android.util.Log;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -16,8 +15,8 @@ import java.util.List;
 
 import the.one.base.adapter.TheBaseQuickAdapter;
 import the.one.base.adapter.TheBaseViewHolder;
-import top.luqichuang.common.mycomic.model.ChapterInfo;
-import top.luqichuang.common.mycomic.model.Comic;
+import top.luqichuang.common.model.ChapterInfo;
+import top.luqichuang.mycomic.model.Comic;
 
 /**
  * @author LuQiChuang

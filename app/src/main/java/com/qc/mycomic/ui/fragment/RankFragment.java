@@ -9,17 +9,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.qc.mycomic.R;
-import com.qc.mycomic.constant.Constant;
-import com.qc.mycomic.constant.TmpData;
+import com.qc.common.constant.Constant;
+import com.qc.common.constant.TmpData;
 import com.qc.mycomic.ui.adapter.RankAdapter;
 import com.qc.mycomic.ui.adapter.RankLeftAdapter;
 import com.qc.mycomic.ui.presenter.RankPresenter;
 import com.qc.mycomic.util.DBUtil;
 
 import com.qc.mycomic.util.ComicHelper;
-import top.luqichuang.common.mycomic.util.MapUtil;
+import top.luqichuang.common.util.MapUtil;
 
-import com.qc.mycomic.util.RestartUtil;
+import com.qc.common.util.RestartUtil;
 import com.qc.mycomic.ui.view.RankView;
 
 import java.util.List;
@@ -28,10 +28,10 @@ import java.util.LinkedHashMap;
 
 import the.one.base.ui.fragment.BaseDataFragment;
 import the.one.base.ui.presenter.BasePresenter;
-import top.luqichuang.common.mycomic.model.Comic;
-import top.luqichuang.common.mycomic.model.ComicInfo;
-import top.luqichuang.common.mycomic.model.Source;
-import top.luqichuang.common.mycomic.util.StringUtil;
+import top.luqichuang.mycomic.model.Comic;
+import top.luqichuang.mycomic.model.ComicInfo;
+import top.luqichuang.mycomic.model.Source;
+import top.luqichuang.common.util.StringUtil;
 
 /**
  * @author LuQiChuang

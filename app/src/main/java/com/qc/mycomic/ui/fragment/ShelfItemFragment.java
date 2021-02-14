@@ -13,10 +13,10 @@ import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DBUtil;
 
 import com.qc.mycomic.util.ComicHelper;
-import top.luqichuang.common.mycomic.util.MapUtil;
+import top.luqichuang.common.util.MapUtil;
 
-import com.qc.mycomic.util.PopupUtil;
-import com.qc.mycomic.util.RestartUtil;
+import com.qc.common.util.PopupUtil;
+import com.qc.common.util.RestartUtil;
 import com.qc.mycomic.ui.view.ShelfView;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
@@ -30,11 +30,11 @@ import java.util.Map;
 import the.one.base.ui.fragment.BaseDataFragment;
 import the.one.base.ui.presenter.BasePresenter;
 import the.one.base.util.QMUIDialogUtil;
-import top.luqichuang.common.mycomic.model.Comic;
-import top.luqichuang.common.mycomic.model.ComicInfo;
-import top.luqichuang.common.mycomic.model.Source;
-import top.luqichuang.common.mycomic.util.SourceUtil;
-import top.luqichuang.common.mycomic.util.StringUtil;
+import top.luqichuang.mycomic.model.Comic;
+import top.luqichuang.mycomic.model.ComicInfo;
+import top.luqichuang.mycomic.model.Source;
+import top.luqichuang.common.util.SourceUtil;
+import top.luqichuang.common.util.StringUtil;
 
 /**
  * @author LuQiChuang
@@ -147,11 +147,11 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
                 if (which == 0) {
                     QMUIDialogUtil.showSimpleDialog(getContext(), "查看信息", ComicHelper.toStringView(comic)).show();
                 } else if (which == 1) {
-                    Map<Integer, String> myMap = PopupUtil.getMyMap(comic.getComicInfoList());
-                    PopupUtil.showSimpleBottomSheetList(getContext(), myMap, comic.getSourceId(), "切换漫画源", new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
+                    Map<Integer, String> map = PopupUtil.getMap(comic.getComicInfoList());
+                    PopupUtil.showSimpleBottomSheetList(getContext(), map, comic.getSourceId(), "切换漫画源", new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
                         @Override
                         public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
-                            Integer integer = MapUtil.getKeyByValue(myMap, tag);
+                            Integer integer = MapUtil.getKeyByValue(map, tag);
                             int sourceId = position;
                             if (integer != null) {
                                 sourceId = integer;

@@ -4,8 +4,8 @@ import android.view.Gravity;
 import android.view.View;
 
 import com.qc.mycomic.R;
-import com.qc.mycomic.self.SnapImageInfo;
-import com.qc.mycomic.util.RestartUtil;
+import com.qc.common.self.SnapImageInfo;
+import com.qc.common.util.RestartUtil;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
 
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import java.util.List;
 
 import the.one.base.ui.fragment.BaseImageSnapFragment;
 import the.one.base.ui.presenter.BasePresenter;
-import top.luqichuang.common.mycomic.model.ImageInfo;
+import top.luqichuang.mycomic.model.ImageInfo;
 import com.qc.mycomic.util.ComicHelper;
 
 /**

@@ -13,21 +13,21 @@ import androidx.annotation.NonNull;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.qc.mycomic.R;
-import com.qc.mycomic.constant.Constant;
-import com.qc.mycomic.constant.TmpData;
-import com.qc.mycomic.self.MySpacesItemDecoration;
+import com.qc.common.constant.Constant;
+import com.qc.common.constant.TmpData;
+import com.qc.common.self.MySpacesItemDecoration;
 import com.qc.mycomic.ui.adapter.ChapterAdapter;
 import com.qc.mycomic.ui.presenter.ChapterPresenter;
 import com.qc.mycomic.ui.view.ChapterView;
 import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DBUtil;
-import com.qc.mycomic.util.ImgUtil;
+import com.qc.common.util.ImgUtil;
 
 import com.qc.mycomic.util.ComicHelper;
-import top.luqichuang.common.mycomic.util.MapUtil;
+import top.luqichuang.common.util.MapUtil;
 
-import com.qc.mycomic.util.PopupUtil;
-import com.qc.mycomic.util.RestartUtil;
+import com.qc.common.util.PopupUtil;
+import com.qc.common.util.RestartUtil;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
 import com.qmuiteam.qmui.util.QMUIDisplayHelper;
 import com.qmuiteam.qmui.util.QMUIViewHelper;
@@ -45,11 +45,11 @@ import the.one.base.ui.presenter.BasePresenter;
 import the.one.base.util.QMUIDialogUtil;
 import the.one.base.util.QMUIPopupUtil;
 import the.one.base.widge.decoration.SpacesItemDecoration;
-import top.luqichuang.common.mycomic.model.ChapterInfo;
-import top.luqichuang.common.mycomic.model.Comic;
-import top.luqichuang.common.mycomic.model.ComicInfo;
-import top.luqichuang.common.mycomic.util.SourceUtil;
-import top.luqichuang.common.mycomic.util.StringUtil;
+import top.luqichuang.common.model.ChapterInfo;
+import top.luqichuang.mycomic.model.Comic;
+import top.luqichuang.mycomic.model.ComicInfo;
+import top.luqichuang.common.util.SourceUtil;
+import top.luqichuang.common.util.StringUtil;
 
 /**
  * @author LuQiChuang
@@ -177,11 +177,11 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         //改变漫画源
         TextView tvSource = headerView.findViewById(R.id.tvSource);
         tvSource.setOnClickListener(v -> {
-            Map<Integer, String> myMap = PopupUtil.getMyMap(comic.getComicInfoList());
-            PopupUtil.showSimpleBottomSheetList(getContext(), myMap, comic.getSourceId(), "切换漫画源", new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
+            Map<Integer, String> map = PopupUtil.getMap(comic.getComicInfoList());
+            PopupUtil.showSimpleBottomSheetList(getContext(), map, comic.getSourceId(), "切换漫画源", new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
                 @Override
                 public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
-                    Integer integer = MapUtil.getKeyByValue(myMap, tag);
+                    Integer integer = MapUtil.getKeyByValue(map, tag);
                     int sourceId = position;
                     if (integer != null) {
                         sourceId = integer;
