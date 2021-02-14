@@ -54,8 +54,6 @@ public class QuanShu extends NBaseSource {
     @Override
     public Request getSearchRequest(String searchString) {
         String url = String.format("http://www.quanshuwang.com/modules/article/search.php?searchkey=%s&searchtype=articlename&searchbuttom.x=0&searchbuttom.y=0", StringUtil.getGBKDecodedStr(searchString));
-//        Request request = new Request.Builder().url(url).addHeader("User-Agent", NetUtil.USER_AGENT_WEB).method("GET", null).build();
-//        return request;
         return NetUtil.getRequest(url);
     }
 
