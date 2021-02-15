@@ -67,6 +67,7 @@ public abstract class BaseSourceTest {
     @Test
     public void testDetail() {
         String html = FileUtil.readFile(formatFileName(DETAIL));
+        System.out.println("html.length() = " + html.length());
         ComicInfo info = new ComicInfo();
         getSource().setComicDetail(info, html);
         System.out.println("info.getTitle() = " + info.getTitle());

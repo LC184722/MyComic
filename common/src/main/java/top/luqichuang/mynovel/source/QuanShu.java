@@ -110,12 +110,12 @@ public class QuanShu extends NBaseSource {
         try {
             content = node.remove("script").html("div#content");
             content = content.replace(" ", "");
-            content = content.replace("&nbsp;", " ");
-            content = content.trim();
+            content = content.replace("&nbsp;", "  ");
             content = content.replace("\n", "");
             content = content.replace("<br><br>", "<br>");
             content = content.replace("<br>", "\n");
-            content = "    " + content;
+            content = content.trim();
+            content = "        " + content;
         } catch (Exception e) {
             e.printStackTrace();
             content = node.ownText("div#content");

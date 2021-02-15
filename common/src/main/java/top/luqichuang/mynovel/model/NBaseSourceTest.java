@@ -67,6 +67,7 @@ public abstract class NBaseSourceTest {
     @Test
     public void testDetail() {
         String html = FileUtil.readFile(formatFileName(DETAIL));
+        System.out.println("html.length() = " + html.length());
         NovelInfo info = new NovelInfo();
         getNSource().setNovelDetail(info, html);
         System.out.println("info.getTitle() = " + info.getTitle());
