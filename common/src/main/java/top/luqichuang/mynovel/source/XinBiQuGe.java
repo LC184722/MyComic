@@ -97,21 +97,8 @@ public class XinBiQuGe extends NBaseSource {
     @Override
     public ContentInfo getContentInfo(String html, int chapterId) {
         JsoupNode node = new JsoupNode(html);
-        String content;
-        try {
-            content = node.html("div#content");
-            content = content.replace(" ", "");
-            content = content.replace("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", "&nbsp;&nbsp;&nbsp;&nbsp;");
-            content = content.replace("&nbsp;", "  ");
-            content = content.replace("\n", "");
-            content = content.replace("<br><br>", "<br>");
-            content = content.replace("<br>", "\n");
-            content = content.trim();
-            content = "        " + content;
-        } catch (Exception e) {
-            e.printStackTrace();
-            content = node.ownText("div#content");
-        }
+        String content = node.html("div#content");
+        content = SourceHelper.getCommonContent(content, "<br>");
         return new ContentInfo(chapterId, content);
     }
 

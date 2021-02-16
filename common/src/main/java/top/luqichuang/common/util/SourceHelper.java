@@ -132,4 +132,23 @@ public class SourceHelper {
         return myMap;
     }
 
+    public static String getCommonContent(String content) {
+        return getCommonContent(content, "&nbsp;&nbsp;&nbsp;&nbsp;");
+    }
+
+    public static String getCommonContent(String content, String tag) {
+        try {
+            content = content.replace(" ", "");
+            content = content.replace("　", "");
+            content = content.replace("\n", "");
+            content = content.replace(tag, "\n        ");
+            content = content.replace("<br>", "");
+            content = content.replace("&nbsp;", "");
+            content = content.trim();
+            content = "        " + content;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return content;
+    }
 }

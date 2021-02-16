@@ -104,21 +104,8 @@ public class AiYue extends NBaseSource {
     @Override
     public ContentInfo getContentInfo(String html, int chapterId) {
         JsoupNode node = new JsoupNode(html);
-        String content;
-        try {
-            content = node.html("div.content");
-            content = content.replace(" ", "");
-            content = content.replace("　", "");
-            content = content.replace("\n", "");
-            content = content.replace("<br>", "");
-            content = content.replace("&nbsp;&nbsp;&nbsp;&nbsp;", "\n        ");
-            content = content.replace("&nbsp;", "");
-            content = content.trim();
-            content = "        " + content;
-        } catch (Exception e) {
-            e.printStackTrace();
-            content = node.ownText("div.content");
-        }
+        String content = node.remove("p").html("div.content");
+        content = SourceHelper.getCommonContent(content);
         return new ContentInfo(chapterId, content);
     }
 

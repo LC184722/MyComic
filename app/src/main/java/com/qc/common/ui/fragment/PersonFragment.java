@@ -119,7 +119,7 @@ public class PersonFragment extends BaseGroupListFragment implements View.OnClic
         } else if (view == v2) {
             startFragment(new PersonReaderFragment());
         } else if (view == v3) {
-            QMUIDialogUtil.showSimpleDialog(getContext(), "备份漫画", "是否备份漫画数据？", new QMUIDialogAction.ActionListener() {
+            QMUIDialogUtil.showSimpleDialog(getContext(), "备份数据", "是否备份阅读数据？", new QMUIDialogAction.ActionListener() {
                 @Override
                 public void onClick(QMUIDialog dialog, int index) {
                     showLoadingDialog("正在备份");
@@ -134,7 +134,7 @@ public class PersonFragment extends BaseGroupListFragment implements View.OnClic
                 }
             }).show();
         } else if (view == v4) {
-            QMUIDialogUtil.showSimpleDialog(getContext(), "还原漫画", "是否还原漫画数据？", new QMUIDialogAction.ActionListener() {
+            QMUIDialogUtil.showSimpleDialog(getContext(), "还原数据", "是否还原阅读数据？", new QMUIDialogAction.ActionListener() {
                 @Override
                 public void onClick(QMUIDialog dialog, int index) {
                     showLoadingDialog("正在还原");

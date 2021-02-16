@@ -18,8 +18,14 @@ public class JsoupStarter<T> {
 
     private JsoupNode node = new JsoupNode();
 
+    private int size;
+
     protected boolean isDESC() {
         return true;
+    }
+
+    protected int getSize() {
+        return size;
     }
 
     public final void startInfo(String html) {
@@ -41,7 +47,7 @@ public class JsoupStarter<T> {
             return list;
         }
         int i = 0;
-        int size = elements.size();
+        size = elements.size();
         for (Element element : elements) {
             node.init(element);
             int chapterId = getId(i++, size);
