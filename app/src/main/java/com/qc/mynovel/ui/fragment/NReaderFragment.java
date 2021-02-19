@@ -231,6 +231,7 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
                 setPullLayoutEnabled(false);
             }
         }
+        DBUtil.saveNovel(novel, DBUtil.SAVE_CUR);
     }
 
     @Override
@@ -276,8 +277,6 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ImgUtil.clearMap();
-        novel.setDate(new Date());
         NovelUtil.first(novel);
         DBUtil.saveNovel(novel, DBUtil.SAVE_CUR);
     }

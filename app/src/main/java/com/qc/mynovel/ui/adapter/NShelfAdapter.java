@@ -1,6 +1,8 @@
 package com.qc.mynovel.ui.adapter;
 
+import android.graphics.Bitmap;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -45,6 +47,13 @@ public class NShelfAdapter extends TheBaseQuickAdapter<Novel> {
         }
         RelativeLayout layout = holder.findView(R.id.imageRelativeLayout);
         String saveKey = novel.getNovelInfo().getId() != 0 ? "N" + novel.getNovelInfo().getId() : null;
-        ImgUtil.loadImage(getContext(), novel.getNovelInfo().getImgUrl(), layout, saveKey);
+        if (novel.getNovelInfo().getImgUrl() != null) {
+            ImgUtil.loadImage(getContext(), novel.getNovelInfo().getImgUrl(), layout, saveKey);
+        } else {
+            ImageView imageView = layout.findViewById(R.id.imageView);
+            Bitmap bitmap = ImgUtil.drawableToBitmap(getDrawable(R.drawable.ic_image_none));
+            imageView.setImageBitmap(bitmap);
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+        }
     }
 }

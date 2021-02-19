@@ -26,7 +26,8 @@ public class XinBiQuGeTest extends NBaseSourceTest {
 //        testContentRequest("https://www.vbiquge.com/96_96267/59146.html");
 //        testRankMap();
 //        testRankRequest(0);
-//        testContent();
+        testContent();
 //        autoTest("元尊");
+//        autoTest("苟到天下无敌");
     }
 }

@@ -1,5 +1,6 @@
 package com.qc.mynovel.ui.fragment;
 
+import android.graphics.Bitmap;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
@@ -218,7 +219,7 @@ public class NChapterFragment extends BaseDataFragment<ChapterInfo> implements N
             novel.setStatus(isFav ? Constant.STATUS_FAV : Constant.STATUS_HIS);
             //Log.i(TAG, "setListener: " + novel);
             NovelUtil.first(novel);
-            DBUtil.saveNovel(novel, DBUtil.SAVE_CUR);
+            DBUtil.saveNovel(novel, DBUtil.SAVE_ALL);
         });
 
         //开始阅读
@@ -251,7 +252,14 @@ public class NChapterFragment extends BaseDataFragment<ChapterInfo> implements N
 
     private void setValue() {
         String saveKey = novel.getNovelInfo().getId() != 0 ? "N" + novel.getNovelInfo().getId() : null;
-        ImgUtil.loadImage(getContext(), novel.getNovelInfo().getImgUrl(), relativeLayout, saveKey);
+        if (novel.getNovelInfo().getImgUrl() != null) {
+            ImgUtil.loadImage(getContext(), novel.getNovelInfo().getImgUrl(), relativeLayout, saveKey);
+        } else {
+            ImageView imageView = relativeLayout.findViewById(R.id.imageView);
+            Bitmap bitmap = ImgUtil.drawableToBitmap(getDrawablee(R.drawable.ic_image_none));
+            imageView.setImageBitmap(bitmap);
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+        }
         tvTitle.setText(novel.getNovelInfo().getTitle());
         tvSource.setText(NovelHelper.nSourceName(novel));
         tvSourceSize.setText(String.format(Locale.CHINA, "(%d)", NovelHelper.nSourceSize(novel)));
@@ -345,7 +353,6 @@ public class NChapterFragment extends BaseDataFragment<ChapterInfo> implements N
     public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view,
                             int position) {
         //Log.i(TAG, "onItemClick: position = " + position);
-        novel.setDate(new Date());
         NovelUtil.first(novel);
         start(position);
         DBUtil.saveNovel(novel, DBUtil.SAVE_ONLY);

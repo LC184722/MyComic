@@ -121,7 +121,6 @@ public class NShelfItemFragment extends BaseDataFragment<Novel> implements NShel
         Novel novel = shelfAdapter.getItem(position);
         if (novel.isUpdate()) {
             novel.setUpdate(false);
-            novel.setDate(new Date());
             NovelUtil.first(novel);
         }
         novel.setPriority(0);

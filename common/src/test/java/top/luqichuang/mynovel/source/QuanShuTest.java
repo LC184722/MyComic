@@ -22,7 +22,7 @@ public class QuanShuTest extends NBaseSourceTest {
     public void testRequest() {
 //        testSearch();
 //        testDetailRequest("http://www.quanshuwang.com/book_162527.html");
-//        testDetail();
+        testDetail();
 //        testContentRequest("http://www.quanshuwang.com/book/162/162527/51465244.html");
 //        testContent();
 //        testRankMap();

@@ -1,5 +1,7 @@
 package com.qc.mynovel.ui.adapter;
 
+import android.graphics.Bitmap;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.qc.mycomic.R;
@@ -32,7 +34,14 @@ public class NSearchAdapter extends TheBaseQuickAdapter<Novel> {
         holder.setText(R.id.tvAuthor, novel.getNovelInfo().getAuthor());
         holder.setText(R.id.tvUpdateTime, novel.getNovelInfo().getUpdateTime());
         RelativeLayout layout = holder.findView(R.id.imageRelativeLayout);
-        ImgUtil.loadImage(getContext(), novel.getNovelInfo().getImgUrl(), layout);
+        if (novel.getNovelInfo().getImgUrl() != null) {
+            ImgUtil.loadImage(getContext(), novel.getNovelInfo().getImgUrl(), layout);
+        } else {
+            ImageView imageView = layout.findViewById(R.id.imageView);
+            Bitmap bitmap = ImgUtil.drawableToBitmap(getDrawable(R.drawable.ic_image_none));
+            imageView.setImageBitmap(bitmap);
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+        }
     }
 
 }

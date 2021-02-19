@@ -62,6 +62,7 @@ public class DBUtil {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
+                    novel.setDate(new Date());
                     if (mode == SAVE_ONLY) {
                         saveNovelData(novel);
                     } else if (mode == SAVE_CUR) {
@@ -100,7 +101,6 @@ public class DBUtil {
             if (novel.getTitle() == null) {
                 novel.setTitle(novel.getNovelInfo().getTitle());
                 novel.setNSourceId(novel.getNovelInfo().getNSourceId());
-                novel.setDate(new Date());
                 novel.setStatus(STATUS_HIS);
             }
             novel.saveOrUpdate("title = ?", novel.getTitle());
@@ -113,49 +113,6 @@ public class DBUtil {
             novelInfo.saveOrUpdate("title = ? and nSourceId = ?", novelInfo.getTitle(), String.valueOf(novelInfo.getNSourceId()));
         }
     }
-
-//    /**
-//     * 保存该小说信息及所有小说源信息
-//     *
-//     * @param novel 保存小说
-//     * @return void
-//     */
-//    public static void saveData(Novel novel) {
-//        saveData(novel, true);
-//    }
-//
-//    /**
-//     * 保存小说信息
-//     *
-//     * @param novel    当前小说
-//     * @param needInfo 是否保存所有小说源信息
-//     * @return void
-//     */
-//    public static void saveData(Novel novel, boolean needInfo) {
-//        if (novel != null) {
-//            new Thread(() -> {
-//                novel.saveOrUpdate("title = ?", novel.getTitle());
-//                //Log.i(TAG, "saveNovel: " + novel.getTitle() + " p = " + novel.getPriority());
-//                if (!novel.getNovelInfoList().isEmpty() && needInfo) {
-//                    for (NovelInfo info : novel.getNovelInfoList()) {
-//                        DBUtil.saveData(info);
-//                    }
-//                }
-//            }).start();
-//        }
-//    }
-//
-//    /**
-//     * 保存小说源信息
-//     *
-//     * @param novelInfo 当前小说源
-//     * @return void
-//     */
-//    public static void saveData(NovelInfo novelInfo) {
-//        if (novelInfo != null) {
-//            new Thread(() -> novelInfo.saveOrUpdate("title = ? and sourceId = ?", novelInfo.getTitle(), String.valueOf(novelInfo.getNSourceId()))).start();
-//        }
-//    }
 
     /**
      * 删除小说
@@ -239,72 +196,6 @@ public class DBUtil {
 
     public static <T> List<T> findAll(Class<T> clazz) {
         return LitePal.findAll(clazz);
-    }
-
-
-    public static boolean backupData(Context context) {
-        return dealData(context, true);
-    }
-
-    public static boolean restoreData(Context context) {
-        return dealData(context, false);
-    }
-
-    private static boolean dealData(Context context, boolean isBackup) {
-        String dbFileName = "novel.db";
-        String backupFileName = "backup_novel.db";
-        String tmpFileName = "tmp.db";
-        String path = AppConstant.APP_PATH;
-        try {
-            File dbFile = context.getDatabasePath(dbFileName);
-            File backupFile = new File(path, backupFileName);
-
-            if (!dbFile.exists()) {
-                //Log.i(TAG, "dealData: dbFile not exists");
-                dbFile.createNewFile();
-            }
-            if (!backupFile.exists()) {
-                //Log.i(TAG, "dealData: backupFile not exists");
-                backupFile.createNewFile();
-            }
-            if (isBackup) {
-                fileCopy(dbFile, backupFile);
-            } else {
-                File tmpFile = new File(path, tmpFileName);
-                if (!tmpFile.exists()) {
-                    //Log.i(TAG, "dealData: backupFile not exists");
-                    tmpFile.createNewFile();
-                }
-                fileCopy(dbFile, tmpFile);
-                fileCopy(backupFile, dbFile);
-                NovelUtil.initNovelList(STATUS_ALL);
-                tmpFile.delete();
-            }
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            try {
-                if (!isBackup) {
-                    File tmpFile = new File(path, tmpFileName);
-                    File dbFile = context.getDatabasePath(dbFileName);
-                    if (tmpFile.exists()) {
-                        fileCopy(tmpFile, dbFile);
-                        tmpFile.delete();
-                    }
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-        return false;
-    }
-
-    private static void fileCopy(File oFile, File toFile) {
-        try (FileChannel inChannel = new FileInputStream(oFile).getChannel(); FileChannel outChannel = new FileOutputStream(toFile).getChannel()) {
-            inChannel.transferTo(0, inChannel.size(), outChannel);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
 }

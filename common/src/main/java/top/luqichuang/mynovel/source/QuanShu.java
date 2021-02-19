@@ -89,6 +89,10 @@ public class QuanShu extends NBaseSource {
                 String intro = null;
                 String updateStatus = null;
                 String updateTime = null;
+                try {
+                    author = author.replace("作者：", "");
+                } catch (Exception ignored) {
+                }
                 novelInfo.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
             }
 

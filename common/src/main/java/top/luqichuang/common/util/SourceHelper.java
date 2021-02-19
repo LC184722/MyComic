@@ -141,6 +141,7 @@ public class SourceHelper {
             content = content.replace(" ", "");
             content = content.replace("　", "");
             content = content.replace("\n", "");
+            content = content.replace("<br><br>", "<br>");
             content = content.replace(tag, "\n        ");
             content = content.replace("<br>", "");
             content = content.replace("&nbsp;", "");
