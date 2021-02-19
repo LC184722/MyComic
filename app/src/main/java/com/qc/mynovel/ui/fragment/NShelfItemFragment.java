@@ -144,17 +144,16 @@ public class NShelfItemFragment extends BaseDataFragment<Novel> implements NShel
                 if (which == 0) {
                     QMUIDialogUtil.showSimpleDialog(getContext(), "查看信息", NovelHelper.toStringView(novel)).show();
                 } else if (which == 1) {
-                    Map<Integer, String> map = PopupUtil.getNMap(novel.getNovelInfoList());
-                    PopupUtil.showSimpleBottomSheetList(getContext(), map, novel.getNSourceId(), "切换小说源", new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
+                    Map<String, String> map = PopupUtil.getNMap(novel.getNovelInfoList());
+                    String key = PopupUtil.getNMapKey(novel);
+                    PopupUtil.showSimpleBottomSheetList(getContext(), map, key, "切换小说源", new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
                         @Override
                         public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
-                            Integer integer = MapUtil.getKeyByValue(map, tag);
-                            int sourceId = position;
-                            if (integer != null) {
-                                sourceId = integer;
-                            }
-                            novel.setNSourceId(sourceId);
-                            if (NovelHelper.changeNovelInfo(novel)) {
+                            String key = MapUtil.getKeyByValue(map, tag);
+                            String[] ss = key.split("-", 2);
+                            int sourceId = Integer.parseInt(ss[0]);
+                            String author = ss[1];
+                            if (NovelHelper.changeNovelInfo(novel, sourceId, author)) {
                                 adapter.notifyDataSetChanged();
                                 DBUtil.saveNovel(novel, DBUtil.SAVE_ONLY);
                             }

@@ -165,7 +165,7 @@ public class PersonFragment extends BaseGroupListFragment implements View.OnClic
             QMUIDialogUtil.showSimpleDialog(getContext(), title, content, new QMUIDialogAction.ActionListener() {
                 @Override
                 public void onClick(QMUIDialog dialog, int index) {
-                    String url = "https://gitee.com/luqichuang/MyComic/releases";
+                    String url = "https://gitee.com/luqichuang/MyComic/releases/" + versionTag;
                     Uri uri = Uri.parse(url);
                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                     startActivity(intent);

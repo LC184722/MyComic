@@ -15,6 +15,7 @@ import top.luqichuang.common.util.NSourceUtil;
 import top.luqichuang.mycomic.model.ComicInfo;
 import top.luqichuang.common.util.MapUtil;
 import top.luqichuang.common.util.SourceUtil;
+import top.luqichuang.mynovel.model.Novel;
 import top.luqichuang.mynovel.model.NovelInfo;
 
 /**
@@ -41,12 +42,16 @@ public class PopupUtil {
         return map;
     }
 
-    public static Map<Integer, String> getNMap(List<NovelInfo> novelInfoList) {
-        Map<Integer, String> map = new LinkedHashMap<>();
+    public static Map<String, String> getNMap(List<NovelInfo> novelInfoList) {
+        Map<String, String> map = new LinkedHashMap<>();
         for (NovelInfo novelInfo : novelInfoList) {
-            map.put(novelInfo.getNSourceId(), NSourceUtil.getNSourceName(novelInfo.getNSourceId()));
+            map.put(novelInfo.getNSourceId() + "-" + novelInfo.getAuthor(), NSourceUtil.getNSourceName(novelInfo.getNSourceId()) + "-" + novelInfo.getAuthor());
         }
         return map;
+    }
+
+    public static String getNMapKey(Novel novel) {
+        return novel.getNSourceId() + "-" + novel.getAuthor();
     }
 
     public static void showSimpleBottomSheetList(Context context, Map<?, String> map, Object key, String title, QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener listener) {

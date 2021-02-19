@@ -39,16 +39,25 @@ public class NovelHelper {
         return nSource(novel).getContentInfo(html, chapterId);
     }
 
-    public static boolean changeNovelInfo(Novel novel) {
-        return changeNovelInfo(novel, novel.getNSourceId());
+    public static boolean changeNovelInfo(Novel novel, int nSourceId) {
+        return changeNovelInfo(novel, nSourceId, null);
     }
 
-    public static boolean changeNovelInfo(Novel novel, int nNSourceId) {
+    public static boolean changeNovelInfo(Novel novel, int nSourceId, String author) {
         for (NovelInfo info : novel.getNovelInfoList()) {
-            if (info.getNSourceId() == nNSourceId) {
-                novel.setNovelInfo(info);
-                novel.setNSourceId(nNSourceId);
-                return true;
+            if (info.getNSourceId() == nSourceId) {
+                if (author != null) {
+                    if (author.equals(info.getAuthor())) {
+                        novel.setAuthor(author);
+                        novel.setNovelInfo(info);
+                        novel.setNSourceId(nSourceId);
+                        return true;
+                    }
+                } else {
+                    novel.setNovelInfo(info);
+                    novel.setNSourceId(nSourceId);
+                    return true;
+                }
             }
         }
         return false;

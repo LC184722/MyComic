@@ -121,13 +121,15 @@ public class NovelInfo extends LitePalSupport {
         if (o == null || getClass() != o.getClass()) return false;
         NovelInfo info = (NovelInfo) o;
         if (nSourceId != info.nSourceId) return false;
-        return Objects.equals(title, info.title);
+        if (!Objects.equals(title, info.title)) return false;
+        return Objects.equals(author, info.author);
     }
 
     @Override
     public int hashCode() {
         int result = nSourceId;
         result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (author != null ? author.hashCode() : 0);
         return result;
     }
 

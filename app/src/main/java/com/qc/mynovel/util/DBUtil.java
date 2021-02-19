@@ -110,7 +110,7 @@ public class DBUtil {
 
     private static void saveNovelInfoData(NovelInfo novelInfo) {
         if (novelInfo != null) {
-            novelInfo.saveOrUpdate("title = ? and nSourceId = ?", novelInfo.getTitle(), String.valueOf(novelInfo.getNSourceId()));
+            novelInfo.saveOrUpdate("title = ? and nSourceId = ? and author = ?", novelInfo.getTitle(), String.valueOf(novelInfo.getNSourceId()), novelInfo.getAuthor());
         }
     }
 
@@ -151,25 +151,7 @@ public class DBUtil {
         }
         List<Novel> dList = new ArrayList<>();
         for (Novel novel : list) {
-            List<NovelInfo> infoList = findNovelInfoListByTitle(novel.getTitle());
-            for (NovelInfo info : infoList) {
-                if (NSourceUtil.getNSource(info.getNSourceId()).isValid()) {
-                    NovelHelper.addNovelInfo(novel, info);
-                    if (novel.getNSourceId() == info.getNSourceId()) {
-                        novel.setNovelInfo(info);
-                    }
-                    //更改detailUrl
-                    String url = info.getDetailUrl();
-                    String index = NSourceUtil.getNSource(info.getNSourceId()).getIndex();
-                    if (!url.startsWith(index)) {
-                        String tmp = url.substring(url.indexOf('/', url.indexOf('.')));
-                        url = index + tmp;
-                        info.setDetailUrl(url);
-                        saveNovelInfo(info);
-                    }
-                    //end
-                }
-            }
+            setList(novel);
             if (novel.getNovelInfo() == null) {
                 if (novel.getNovelInfoList().isEmpty()) {
                     dList.add(novel);
@@ -182,6 +164,33 @@ public class DBUtil {
             list.removeAll(dList);
         }
         return list;
+    }
+
+    public static void setList(Novel novel) {
+        List<NovelInfo> infoList = findNovelInfoListByTitle(novel.getTitle());
+        for (NovelInfo info : infoList) {
+            if (NSourceUtil.getNSource(info.getNSourceId()).isValid()) {
+                NovelHelper.addNovelInfo(novel, info);
+                if (novel.getAuthor() != null) {
+                    if (novel.getNSourceId() == info.getNSourceId() && novel.getAuthor().equals(info.getAuthor())) {
+                        novel.setNovelInfo(info);
+                    }
+                } else if (novel.getNSourceId() == info.getNSourceId()) {
+                    novel.setAuthor(info.getAuthor());
+                    novel.setNovelInfo(info);
+                }
+                //更改detailUrl
+                String url = info.getDetailUrl();
+                String index = NSourceUtil.getNSource(info.getNSourceId()).getIndex();
+                if (!url.startsWith(index)) {
+                    String tmp = url.substring(url.indexOf('/', url.indexOf('.')));
+                    url = index + tmp;
+                    info.setDetailUrl(url);
+                    saveNovelInfo(info);
+                }
+                //end
+            }
+        }
     }
 
     /**

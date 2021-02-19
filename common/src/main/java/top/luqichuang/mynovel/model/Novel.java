@@ -25,6 +25,8 @@ public class Novel extends LitePalSupport {
 
     private int status;
 
+    private String author;
+
     private NovelInfo novelInfo;
 
     private List<NovelInfo> novelInfoList = new ArrayList<>();
@@ -103,6 +105,14 @@ public class Novel extends LitePalSupport {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     public NovelInfo getNovelInfo() {
