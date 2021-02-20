@@ -53,7 +53,7 @@ public class NSearchBaseFragment extends BaseTitleTabFragment {
         List<NSource> nSourceList = NSourceUtil.getNSourceList();
         for (NSource nSource : nSourceList) {
             if (nSource.isValid() && nSource.getRankMap() != null) {
-                fragments.add(new NRankFragment(nSource));
+                fragments.add(NRankFragment.getInstance(nSource.getNSourceId()));
             }
         }
     }

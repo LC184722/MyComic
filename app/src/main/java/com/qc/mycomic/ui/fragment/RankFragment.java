@@ -1,8 +1,10 @@
 package com.qc.mycomic.ui.fragment;
 
+import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,9 +19,9 @@ import com.qc.mycomic.ui.presenter.RankPresenter;
 import com.qc.mycomic.util.DBUtil;
 
 import com.qc.mycomic.util.ComicHelper;
+
 import top.luqichuang.common.util.MapUtil;
 
-import com.qc.common.util.RestartUtil;
 import com.qc.mycomic.ui.view.RankView;
 
 import java.util.List;
@@ -28,8 +30,10 @@ import java.util.LinkedHashMap;
 
 import the.one.base.ui.fragment.BaseDataFragment;
 import the.one.base.ui.presenter.BasePresenter;
+import top.luqichuang.common.util.SourceUtil;
 import top.luqichuang.mycomic.model.Comic;
 import top.luqichuang.mycomic.model.ComicInfo;
+import top.luqichuang.mycomic.model.ImageInfo;
 import top.luqichuang.mycomic.model.Source;
 import top.luqichuang.common.util.StringUtil;
 
@@ -53,12 +57,18 @@ public class RankFragment extends BaseDataFragment<Comic> implements RankView {
 
     private List<Comic> comicList;
 
-    public RankFragment() {
-        RestartUtil.restart(_mActivity);
+    public static RankFragment getInstance(int sourceId) {
+        RankFragment fragment = new RankFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("sourceId", sourceId);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
-    public RankFragment(Source source) {
-        this.source = source;
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        int sourceId = (int) getArguments().get("sourceId");
+        this.source = SourceUtil.getSource(sourceId);
         this.rankAdapter = new RankAdapter(R.layout.item_rank_right);
         this.presenter = new RankPresenter(source);
         if (source.getRankMap() != null) {
@@ -69,6 +79,7 @@ public class RankFragment extends BaseDataFragment<Comic> implements RankView {
         } else {
             this.map = new LinkedHashMap<>();
         }
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -158,10 +169,10 @@ public class RankFragment extends BaseDataFragment<Comic> implements RankView {
                     ComicHelper.addComicInfo(comic, comicInfo);
                 }
             }
-            startFragment(new ChapterFragment(myComic));
+            startFragment(ChapterFragment.getInstance(myComic));
         } else {
             TmpData.toStatus = Constant.RANK_TO_CHAPTER;
-            startFragment(new ChapterFragment(comic));
+            startFragment(ChapterFragment.getInstance(comic));
         }
     }
 

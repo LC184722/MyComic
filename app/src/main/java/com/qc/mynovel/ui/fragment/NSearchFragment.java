@@ -47,7 +47,7 @@ public class NSearchFragment extends BaseFragment {
                 if (isEmpty) {
                     showFailTips("请输入搜索内容");
                 } else {
-                    startFragment(new NSearchResultFragment(content));
+                    startFragment(NSearchResultFragment.getInstance(content));
                 }
             }
         });
@@ -59,7 +59,7 @@ public class NSearchFragment extends BaseFragment {
             if (searchString.trim().equals("")) {
                 showFailTips("请输入搜索内容");
             } else {
-                startFragment(new NSearchResultFragment(searchString));
+                startFragment(NSearchResultFragment.getInstance(searchString));
             }
         });
     }

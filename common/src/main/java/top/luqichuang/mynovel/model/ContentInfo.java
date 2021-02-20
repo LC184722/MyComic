@@ -1,12 +1,14 @@
 package top.luqichuang.mynovel.model;
 
+import java.io.Serializable;
+
 /**
  * @author LuQiChuang
  * @desc
  * @date 2020/8/12 15:25
  * @ver 1.0
  */
-public class ContentInfo {
+public class ContentInfo implements Serializable {
 
     private int id;
 

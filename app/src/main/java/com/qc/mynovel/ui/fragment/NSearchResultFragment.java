@@ -1,13 +1,14 @@
 package com.qc.mynovel.ui.fragment;
 
+import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.qc.common.constant.Constant;
-import com.qc.common.util.RestartUtil;
 import com.qc.common.util.SettingUtil;
 import com.qc.mycomic.R;
 import com.qc.common.en.SettingEnum;
@@ -42,12 +43,18 @@ public class NSearchResultFragment extends BaseDataFragment<Novel> implements NS
 
     private String searchString;
 
-    public NSearchResultFragment() {
-        RestartUtil.restart(_mActivity);
+    public static NSearchResultFragment getInstance(String searchString) {
+        NSearchResultFragment fragment = new NSearchResultFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("searchString", searchString);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
-    public NSearchResultFragment(String searchString) {
-        this.searchString = searchString;
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        this.searchString = (String) getArguments().get("searchString");
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -94,9 +101,9 @@ public class NSearchResultFragment extends BaseDataFragment<Novel> implements NS
                     NovelHelper.addNovelInfo(myNovel, novelInfo);
                 }
             }
-            startFragment(new NChapterFragment(myNovel));
+            startFragment(NChapterFragment.getInstance(myNovel));
         } else {
-            startFragment(new NChapterFragment(novel));
+            startFragment(NChapterFragment.getInstance(novel));
         }
     }
 

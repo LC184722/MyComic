@@ -1,23 +1,24 @@
 package com.qc.mynovel.ui.fragment;
 
+import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.qc.common.constant.Constant;
-import com.qc.common.util.RestartUtil;
 import com.qc.common.constant.TmpData;
 import com.qc.mycomic.R;
 import com.qc.mynovel.ui.adapter.NRankAdapter;
 import com.qc.mynovel.ui.adapter.NRankLeftAdapter;
 import com.qc.mynovel.ui.presenter.NRankPresenter;
 import com.qc.mynovel.ui.view.NRankView;
-import com.qc.mynovel.util.NovelHelper;
 import com.qc.mynovel.util.DBUtil;
+import com.qc.mynovel.util.NovelHelper;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -26,10 +27,11 @@ import java.util.Map;
 import the.one.base.ui.fragment.BaseDataFragment;
 import the.one.base.ui.presenter.BasePresenter;
 import top.luqichuang.common.util.MapUtil;
+import top.luqichuang.common.util.NSourceUtil;
 import top.luqichuang.common.util.StringUtil;
+import top.luqichuang.mynovel.model.NSource;
 import top.luqichuang.mynovel.model.Novel;
 import top.luqichuang.mynovel.model.NovelInfo;
-import top.luqichuang.mynovel.model.NSource;
 
 /**
  * @author LuQiChuang
@@ -51,12 +53,18 @@ public class NRankFragment extends BaseDataFragment<Novel> implements NRankView 
 
     private List<Novel> novelList;
 
-    public NRankFragment() {
-        RestartUtil.restart(_mActivity);
+    public static NRankFragment getInstance(int nSourceId) {
+        NRankFragment fragment = new NRankFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("nSourceId", nSourceId);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
-    public NRankFragment(NSource nSource) {
-        this.nSource = nSource;
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        int nSourceId = (int) getArguments().get("nSourceId");
+        this.nSource = NSourceUtil.getNSource(nSourceId);
         this.rankAdapter = new NRankAdapter(R.layout.item_rank_right);
         this.presenter = new NRankPresenter(nSource);
         if (nSource.getRankMap() != null) {
@@ -67,6 +75,7 @@ public class NRankFragment extends BaseDataFragment<Novel> implements NRankView 
         } else {
             this.map = new LinkedHashMap<>();
         }
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -156,10 +165,10 @@ public class NRankFragment extends BaseDataFragment<Novel> implements NRankView 
                     NovelHelper.addNovelInfo(novel, novelInfo);
                 }
             }
-            startFragment(new NChapterFragment(myNovel));
+            startFragment(NChapterFragment.getInstance(myNovel));
         } else {
             TmpData.toStatus = Constant.RANK_TO_CHAPTER;
-            startFragment(new NChapterFragment(novel));
+            startFragment(NChapterFragment.getInstance(novel));
         }
     }
 

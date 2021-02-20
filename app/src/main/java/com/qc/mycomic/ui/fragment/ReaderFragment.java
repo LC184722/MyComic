@@ -1,5 +1,6 @@
 package com.qc.mycomic.ui.fragment;
 
+import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -7,6 +8,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,7 +24,6 @@ import com.qc.mycomic.ui.view.ReaderView;
 import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DBUtil;
 import com.qc.common.util.ImgUtil;
-import com.qc.common.util.RestartUtil;
 import com.qc.common.util.SettingUtil;
 import com.qmuiteam.qmui.util.QMUIDisplayHelper;
 import com.qmuiteam.qmui.util.QMUIViewHelper;
@@ -67,16 +68,22 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
     private SeekBar seekBar;
     private boolean firstLoad = true;
 
-    public ReaderFragment() {
-        RestartUtil.restart(_mActivity);
+    public static ReaderFragment getInstance(Comic comic) {
+        ReaderFragment fragment = new ReaderFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("comic", comic);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
-    public ReaderFragment(Comic comic) {
-        this.comic = comic;
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        this.comic = (Comic) getArguments().get("comic");
         this.comicInfo = comic.getComicInfo();
         this.curChapterId = comicInfo.getCurChapterId();
         this.isLoadNext = true;
         TmpData.toStatus = Constant.READER_TO_CHAPTER;
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -157,6 +164,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
         llLeft.setOnClickListener(v -> {
             if (ComicHelper.checkChapterId(comicInfo, ComicHelper.getPrevChapterId(comicInfo))) {
                 isFresh = true;
+                changeVisibility(bottomView, false);
                 onRefresh();
             } else {
                 showFailTips("没有上一章");
@@ -166,6 +174,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
         llRight.setOnClickListener(v -> {
             if (ComicHelper.checkChapterId(comicInfo, ComicHelper.getNextChapterId(comicInfo))) {
                 isFresh = true;
+                changeVisibility(bottomView, false);
                 super.onRefresh();
             } else {
                 showFailTips("没有下一章");
@@ -209,6 +218,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
                     if (curChapterId != imageInfo.getChapterId()) {
                         curChapterId = imageInfo.getChapterId();
                         tvInfo.setText(String.format(Locale.CHINA, "%d章/%d章", imageInfo.getChapterId() + 1, comicInfo.getChapterInfoList().size()));
+                        DBUtil.saveComicInfo(comicInfo);
                     }
                     //设置数据
                     tvChapter.setText(comicInfo.getCurChapterTitle());
@@ -252,6 +262,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
 
     @Override
     public void onRefresh() {
+        bottomView.setVisibility(View.GONE);
         isLoadNext = false;
         super.onRefresh();
     }
@@ -267,7 +278,9 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
         if (imageInfoList == null) {
             presenter.loadImageInfoList(comic);
         } else {
-            ComicHelper.initChapterId(comicInfo, imageInfoList.get(imageInfoList.size() - 1).getChapterId());
+            if (isLoadNext) {
+                ComicHelper.initChapterId(comicInfo, imageInfoList.get(imageInfoList.size() - 1).getChapterId());
+            }
             //Log.i(TAG, "requestServer: " + comicInfo.getCurChapterId());
             if (ComicHelper.canLoad(comicInfo, isLoadNext)) {
                 presenter.loadImageInfoList(comic);
@@ -305,7 +318,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
             RelativeLayout layout = view.findViewById(R.id.imageRelativeLayout);
             ImgUtil.loadImage(getContext(), imageInfo.getUrl(), layout);
         } else if (ImgUtil.getLoadStatus(imageInfo) == ImgUtil.LOAD_SUCCESS) {
-            startFragment(new ReaderDetailFragment(imageInfo));
+            startFragment(ReaderDetailFragment.getInstance(imageInfo));
         }
         return true;
     }

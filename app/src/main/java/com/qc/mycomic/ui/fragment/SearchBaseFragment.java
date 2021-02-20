@@ -55,7 +55,7 @@ public class SearchBaseFragment extends BaseTitleTabFragment {
         List<Source> sourceList = SourceUtil.getSourceList();
         for (Source source : sourceList) {
             if (source.isValid() && source.getRankMap() != null) {
-                fragments.add(new RankFragment(source));
+                fragments.add(RankFragment.getInstance(source.getSourceId()));
             }
         }
     }

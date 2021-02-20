@@ -1,22 +1,25 @@
 package com.qc.mycomic.ui.fragment;
 
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.qc.common.constant.TmpData;
 import com.qc.mycomic.ui.adapter.ShelfAdapter;
 import com.qc.mycomic.ui.presenter.ShelfPresenter;
 import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DBUtil;
 
 import com.qc.mycomic.util.ComicHelper;
+
 import top.luqichuang.common.util.MapUtil;
 
 import com.qc.common.util.PopupUtil;
-import com.qc.common.util.RestartUtil;
 import com.qc.mycomic.ui.view.ShelfView;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
@@ -52,12 +55,20 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
 
     private int status;
 
-    public ShelfItemFragment() {
-        RestartUtil.restart(_mActivity);
+    public static ShelfItemFragment getInstance(int status) {
+        ShelfItemFragment fragment = new ShelfItemFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("status", status);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
-    public ShelfItemFragment(int status) {
-        this.status = status;
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        this.status = (int) getArguments().get("status");
+        System.out.println("savedInstanceState = " + savedInstanceState);
+        System.out.println("status = " + status);
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -128,7 +139,7 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
         }
         comic.setPriority(0);
         DBUtil.saveComic(comic, DBUtil.SAVE_ONLY);
-        startFragment(new ChapterFragment(comic));
+        startFragment(ChapterFragment.getInstance(comic));
     }
 
     @Override
@@ -332,7 +343,7 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
                     comicInfo.setDetailUrl(content);
                     Comic comic = new Comic(comicInfo);
                     comic.setPriority(0);
-                    startFragment(new ChapterFragment(comic));
+                    startFragment(ChapterFragment.getInstance(comic));
                 } else {
                     showFailTips("url解析失败！");
                 }

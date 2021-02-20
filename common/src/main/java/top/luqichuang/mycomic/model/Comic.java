@@ -2,6 +2,7 @@ package top.luqichuang.mycomic.model;
 
 import org.litepal.crud.LitePalSupport;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.Objects;
  * @date 2020/8/12 15:27
  * @ver 1.0
  */
-public class Comic extends LitePalSupport {
+public class Comic extends LitePalSupport implements Serializable {
 
     private int id;
 

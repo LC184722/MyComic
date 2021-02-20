@@ -1,14 +1,15 @@
 package com.qc.mynovel.ui.fragment;
 
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.qc.common.util.PopupUtil;
-import com.qc.common.util.RestartUtil;
 import com.qc.mynovel.ui.adapter.NShelfAdapter;
 import com.qc.mynovel.ui.presenter.NShelfPresenter;
 import com.qc.mynovel.ui.view.NShelfView;
@@ -50,12 +51,18 @@ public class NShelfItemFragment extends BaseDataFragment<Novel> implements NShel
 
     private int status;
 
-    public NShelfItemFragment() {
-        RestartUtil.restart(_mActivity);
+    public static NShelfItemFragment getInstance(int status) {
+        NShelfItemFragment fragment = new NShelfItemFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("status", status);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
-    public NShelfItemFragment(int status) {
-        this.status = status;
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        this.status = (int) getArguments().get("status");
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -125,7 +132,7 @@ public class NShelfItemFragment extends BaseDataFragment<Novel> implements NShel
         }
         novel.setPriority(0);
         DBUtil.saveNovel(novel, DBUtil.SAVE_ONLY);
-        startFragment(new NChapterFragment(novel));
+        startFragment(NChapterFragment.getInstance(novel));
     }
 
     @Override
@@ -328,7 +335,7 @@ public class NShelfItemFragment extends BaseDataFragment<Novel> implements NShel
                     novelInfo.setDetailUrl(content);
                     Novel novel = new Novel(novelInfo);
                     novel.setPriority(0);
-                    startFragment(new NChapterFragment(novel));
+                    startFragment(NChapterFragment.getInstance(novel));
                 } else {
                     showFailTips("url解析失败！");
                 }

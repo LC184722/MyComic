@@ -1,11 +1,13 @@
 package com.qc.mycomic.ui.fragment;
 
+import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 
+import androidx.annotation.Nullable;
+
 import com.qc.mycomic.R;
 import com.qc.common.self.SnapImageInfo;
-import com.qc.common.util.RestartUtil;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
 
 import java.util.ArrayList;
@@ -28,13 +30,20 @@ public class ReaderDetailFragment extends BaseImageSnapFragment<SnapImageInfo> {
 
     private final List<SnapImageInfo> LIST = new ArrayList<>();
 
-    public ReaderDetailFragment() {
-        RestartUtil.restart(_mActivity);
+    public static ReaderDetailFragment getInstance(ImageInfo imageInfo) {
+        ReaderDetailFragment fragment = new ReaderDetailFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("imageInfo", imageInfo);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
-    public ReaderDetailFragment(ImageInfo imageInfo) {
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        ImageInfo imageInfo = (ImageInfo) getArguments().get("imageInfo");
         this.snapImageInfo = new SnapImageInfo(imageInfo);
         this.LIST.add(snapImageInfo);
+        super.onCreate(savedInstanceState);
     }
 
     @Override

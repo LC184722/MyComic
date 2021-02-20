@@ -1,5 +1,6 @@
 package com.qc.mycomic.ui.fragment;
 
+import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
@@ -10,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.qc.mycomic.R;
@@ -24,10 +26,10 @@ import com.qc.mycomic.util.DBUtil;
 import com.qc.common.util.ImgUtil;
 
 import com.qc.mycomic.util.ComicHelper;
+
 import top.luqichuang.common.util.MapUtil;
 
 import com.qc.common.util.PopupUtil;
-import com.qc.common.util.RestartUtil;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
 import com.qmuiteam.qmui.util.QMUIDisplayHelper;
 import com.qmuiteam.qmui.util.QMUIViewHelper;
@@ -67,12 +69,18 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
 
     private ChapterPresenter presenter = new ChapterPresenter();
 
-    public ChapterFragment() {
-        RestartUtil.restart(_mActivity);
+    public static ChapterFragment getInstance(Comic comic) {
+        ChapterFragment fragment = new ChapterFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("comic", comic);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
-    public ChapterFragment(Comic comic) {
-        this.comic = comic;
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        this.comic = (Comic) getArguments().get("comic");
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -455,7 +463,7 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
 
     public void start() {
         adapter.notifyDataSetChanged();
-        startFragment(new ReaderFragment(comic));
+        startFragment(ReaderFragment.getInstance(comic));
     }
 
     public void start(int position) {

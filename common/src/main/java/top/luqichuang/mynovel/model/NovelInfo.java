@@ -2,6 +2,7 @@ package top.luqichuang.mynovel.model;
 
 import org.litepal.crud.LitePalSupport;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -14,7 +15,7 @@ import top.luqichuang.common.model.ChapterInfo;
  * @date 2020/8/12 15:25
  * @ver 1.0
  */
-public class NovelInfo extends LitePalSupport {
+public class NovelInfo extends LitePalSupport implements Serializable {
 
     public static final int DESC = 0;
 

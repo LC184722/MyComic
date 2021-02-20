@@ -2,6 +2,7 @@ package top.luqichuang.mynovel.model;
 
 import org.litepal.crud.LitePalSupport;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,7 +16,7 @@ import top.luqichuang.mynovel.model.NovelInfo;
  * @date 2020/8/12 15:27
  * @ver 1.0
  */
-public class Novel extends LitePalSupport {
+public class Novel extends LitePalSupport implements Serializable {
 
     private int id;
 

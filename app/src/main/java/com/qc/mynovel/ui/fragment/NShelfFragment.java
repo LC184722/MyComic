@@ -101,8 +101,8 @@ public class NShelfFragment extends BaseTitleTabFragment {
 
     @Override
     protected void addFragment(ArrayList<BaseFragment> fragments) {
-        fragments.add(new NShelfItemFragment(Constant.STATUS_FAV));
-        fragments.add(new NShelfItemFragment(Constant.STATUS_HIS));
+        fragments.add(NShelfItemFragment.getInstance(Constant.STATUS_FAV));
+        fragments.add(NShelfItemFragment.getInstance(Constant.STATUS_HIS));
     }
 
 }

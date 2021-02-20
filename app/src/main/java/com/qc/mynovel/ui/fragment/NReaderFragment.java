@@ -1,5 +1,6 @@
 package com.qc.mynovel.ui.fragment;
 
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -7,6 +8,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,8 +16,6 @@ import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.qc.common.constant.Constant;
 import com.qc.common.constant.TmpData;
-import com.qc.common.util.ImgUtil;
-import com.qc.common.util.RestartUtil;
 import com.qc.mycomic.R;
 import com.qc.mynovel.ui.adapter.NReaderAdapter;
 import com.qc.mynovel.ui.presenter.NReaderPresenter;
@@ -66,16 +66,22 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
     private SeekBar seekBar;
     private boolean firstLoad = true;
 
-    public NReaderFragment() {
-        RestartUtil.restart(_mActivity);
+    public static NReaderFragment getInstance(Novel novel) {
+        NReaderFragment fragment = new NReaderFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("novel", novel);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
-    public NReaderFragment(Novel novel) {
-        this.novel = novel;
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        this.novel = (Novel) getArguments().get("novel");
         this.novelInfo = novel.getNovelInfo();
         this.curChapterId = novelInfo.getCurChapterId();
         this.isLoadNext = true;
         TmpData.toStatus = Constant.READER_TO_CHAPTER;
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -133,6 +139,7 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
         llLeft.setOnClickListener(v -> {
             if (NovelHelper.checkChapterId(novelInfo, NovelHelper.getPrevChapterId(novelInfo))) {
                 isFresh = true;
+                changeVisibility(bottomView, false);
                 onRefresh();
             } else {
                 showFailTips("没有上一章");
@@ -142,6 +149,7 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
         llRight.setOnClickListener(v -> {
             if (NovelHelper.checkChapterId(novelInfo, NovelHelper.getNextChapterId(novelInfo))) {
                 isFresh = true;
+                changeVisibility(bottomView, false);
                 super.onRefresh();
             } else {
                 showFailTips("没有下一章");
@@ -181,6 +189,7 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
                     if (curChapterId != contentInfo.getChapterId()) {
                         curChapterId = contentInfo.getChapterId();
                         tvInfo.setText(String.format(Locale.CHINA, "%d章/%d章", contentInfo.getChapterId() + 1, novelInfo.getChapterInfoList().size()));
+                        DBUtil.saveNovelInfo(novelInfo);
                     }
                     //设置数据
                     tvChapter.setText(novelInfo.getCurChapterTitle());
@@ -205,6 +214,7 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
 
     @Override
     public void onRefresh() {
+        bottomView.setVisibility(View.GONE);
         isLoadNext = false;
         super.onRefresh();
     }
@@ -220,7 +230,9 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
         if (contentInfoList == null) {
             presenter.loadContentInfoList(novel);
         } else {
-            NovelHelper.initChapterId(novelInfo, contentInfoList.get(contentInfoList.size() - 1).getChapterId());
+            if (isLoadNext) {
+                NovelHelper.initChapterId(novelInfo, contentInfoList.get(contentInfoList.size() - 1).getChapterId());
+            }
             if (NovelHelper.canLoad(novelInfo, isLoadNext)) {
                 presenter.loadContentInfoList(novel);
             } else if (isLoadNext) {

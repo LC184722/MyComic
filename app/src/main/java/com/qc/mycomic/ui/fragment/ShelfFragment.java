@@ -101,8 +101,8 @@ public class ShelfFragment extends BaseTitleTabFragment {
 
     @Override
     protected void addFragment(ArrayList<BaseFragment> fragments) {
-        fragments.add(new ShelfItemFragment(Constant.STATUS_FAV));
-        fragments.add(new ShelfItemFragment(Constant.STATUS_HIS));
+        fragments.add(ShelfItemFragment.getInstance(Constant.STATUS_FAV));
+        fragments.add(ShelfItemFragment.getInstance(Constant.STATUS_HIS));
     }
 
 }

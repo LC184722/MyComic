@@ -1,9 +1,11 @@
 package com.qc.mycomic.ui.fragment;
 
+import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.qc.mycomic.R;
@@ -13,7 +15,6 @@ import com.qc.mycomic.ui.adapter.SearchAdapter;
 import com.qc.mycomic.ui.presenter.SearchPresenter;
 import com.qc.mycomic.ui.view.SearchView;
 import com.qc.mycomic.util.DBUtil;
-import com.qc.common.util.RestartUtil;
 import com.qc.common.util.SettingUtil;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
 
@@ -25,7 +26,9 @@ import the.one.base.ui.presenter.BasePresenter;
 import the.one.base.util.QMUIDialogUtil;
 import top.luqichuang.mycomic.model.Comic;
 import top.luqichuang.mycomic.model.ComicInfo;
+
 import com.qc.mycomic.util.ComicHelper;
+
 import top.luqichuang.common.util.SourceUtil;
 
 /**
@@ -42,12 +45,18 @@ public class SearchResultFragment extends BaseDataFragment<Comic> implements Sea
 
     private String searchString;
 
-    public SearchResultFragment() {
-        RestartUtil.restart(_mActivity);
+    public static SearchResultFragment getInstance(String searchString) {
+        SearchResultFragment fragment = new SearchResultFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("searchString", searchString);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
-    public SearchResultFragment(String searchString) {
-        this.searchString = searchString;
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        this.searchString = (String) getArguments().get("searchString");
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -94,9 +103,9 @@ public class SearchResultFragment extends BaseDataFragment<Comic> implements Sea
                     ComicHelper.addComicInfo(myComic, comicInfo);
                 }
             }
-            startFragment(new ChapterFragment(myComic));
+            startFragment(ChapterFragment.getInstance(myComic));
         } else {
-            startFragment(new ChapterFragment(comic));
+            startFragment(ChapterFragment.getInstance(comic));
         }
     }
 

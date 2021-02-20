@@ -1,6 +1,7 @@
 package com.qc.mynovel.ui.fragment;
 
 import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
@@ -11,13 +12,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.qc.common.constant.Constant;
 import com.qc.common.constant.TmpData;
 import com.qc.common.self.MySpacesItemDecoration;
 import com.qc.common.util.PopupUtil;
-import com.qc.common.util.RestartUtil;
 import com.qc.mycomic.R;
 import com.qc.mynovel.ui.adapter.NChapterAdapter;
 import com.qc.mynovel.ui.presenter.NChapterPresenter;
@@ -66,12 +67,18 @@ public class NChapterFragment extends BaseDataFragment<ChapterInfo> implements N
 
     private NChapterPresenter presenter = new NChapterPresenter();
 
-    public NChapterFragment() {
-        RestartUtil.restart(_mActivity);
+    public static NChapterFragment getInstance(Novel novel) {
+        NChapterFragment fragment = new NChapterFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("novel", novel);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
-    public NChapterFragment(Novel novel) {
-        this.novel = novel;
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        this.novel = (Novel) getArguments().get("novel");
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -460,7 +467,7 @@ public class NChapterFragment extends BaseDataFragment<ChapterInfo> implements N
 
     public void start() {
         adapter.notifyDataSetChanged();
-        startFragment(new NReaderFragment(novel));
+        startFragment(NReaderFragment.getInstance(novel));
     }
 
     public void start(int position) {
