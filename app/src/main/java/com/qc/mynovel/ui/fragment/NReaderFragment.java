@@ -129,6 +129,7 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
             ContentInfo contentInfo = contentInfoList.get(first);
             tvChapter.setText(novelInfo.getCurChapterTitle());
             tvInfo.setText(String.format(Locale.CHINA, "%d章/%d章", contentInfo.getChapterId() + 1, novelInfo.getChapterInfoList().size()));
+            DBUtil.saveNovelInfo(novelInfo);
         }
     }
 
@@ -243,7 +244,6 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
                 setPullLayoutEnabled(false);
             }
         }
-        DBUtil.saveNovel(novel, DBUtil.SAVE_CUR);
     }
 
     @Override
@@ -284,12 +284,5 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
             recycleView.scrollToPosition(0);
         }
         bottomView.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        NovelUtil.first(novel);
-        DBUtil.saveNovel(novel, DBUtil.SAVE_CUR);
     }
 }
