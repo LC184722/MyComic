@@ -111,7 +111,7 @@ public class PersonFragment extends BaseGroupListFragment implements View.OnClic
                     SettingUtil.putSetting(SettingEnum.READ_CONTENT, key, tag);
                     change.setDetailText(tag);
                     dialog.dismiss();
-                    RestartUtil.restart(_mActivity);
+                    RestartUtil.restart();
                 }
             });
         } else if (view == v1) {

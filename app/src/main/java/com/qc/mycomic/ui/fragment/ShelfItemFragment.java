@@ -66,8 +66,6 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         this.status = (int) getArguments().get("status");
-        System.out.println("savedInstanceState = " + savedInstanceState);
-        System.out.println("status = " + status);
         super.onCreate(savedInstanceState);
     }
 

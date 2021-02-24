@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 
 import com.qc.common.ui.activity.LauncherActivity;
+import com.qc.common.ui.activity.MainActivity;
 
 /**
  * @author LuQiChuang
@@ -13,7 +14,7 @@ import com.qc.common.ui.activity.LauncherActivity;
  */
 public class RestartUtil {
 
-    public static void restart(Activity activity) {
+    private static void restart(Activity activity) {
         Intent intent = new Intent(activity, LauncherActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.setAction(Intent.ACTION_MAIN);
@@ -21,6 +22,10 @@ public class RestartUtil {
         activity.finish();
         activity.startActivity(intent);
 //        android.os.Process.killProcess(android.os.Process.myPid());
+    }
+
+    public static void restart() {
+        restart(MainActivity.getInstance());
     }
 
 }

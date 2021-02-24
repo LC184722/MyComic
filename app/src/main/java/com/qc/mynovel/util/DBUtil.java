@@ -1,19 +1,13 @@
 package com.qc.mynovel.util;
 
-import android.content.Context;
-import android.util.Log;
-
-import com.qc.common.constant.AppConstant;
 import com.qc.common.constant.Constant;
+import com.qc.common.ui.activity.MainActivity;
 import com.qc.common.util.ImgUtil;
 
 import org.litepal.LitePal;
+import org.litepal.LitePalApplication;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -39,6 +33,15 @@ public class DBUtil {
     public static final int STATUS_HIS = 0;
     public static final int STATUS_FAV = 1;
     public static final int STATUS_ALL = 2;
+
+    private static void init() {
+        try {
+            LitePalApplication.getContext();
+        } catch (Exception e) {
+            e.printStackTrace();
+            LitePal.initialize(MainActivity.getInstance());
+        }
+    }
 
     /**
      * 保存小说信息，默认保存所有小说信息
@@ -98,6 +101,7 @@ public class DBUtil {
 
     private static void saveNovelData(Novel novel) {
         if (novel != null) {
+            init();
             if (novel.getTitle() == null) {
                 novel.setTitle(novel.getNovelInfo().getTitle());
                 novel.setNSourceId(novel.getNovelInfo().getNSourceId());
@@ -110,6 +114,7 @@ public class DBUtil {
 
     private static void saveNovelInfoData(NovelInfo novelInfo) {
         if (novelInfo != null) {
+            init();
             novelInfo.saveOrUpdate("title = ? and nSourceId = ? and author = ?", novelInfo.getTitle(), String.valueOf(novelInfo.getNSourceId()), novelInfo.getAuthor());
         }
     }
@@ -122,6 +127,7 @@ public class DBUtil {
      */
     public static void deleteData(Novel novel) {
         if (novel != null) {
+            init();
             new Thread(() -> {
                 novel.delete();
                 for (NovelInfo novelInfo : novel.getNovelInfoList()) {
@@ -144,6 +150,7 @@ public class DBUtil {
     public static List<Novel> findNovelListByStatus(int status) {
         List<Novel> list;
         String order = "priority DESC, date DESC";
+        init();
         if (status == Constant.STATUS_ALL) {
             list = LitePal.order(order).find(Novel.class);
         } else {
@@ -167,6 +174,7 @@ public class DBUtil {
     }
 
     public static void setList(Novel novel) {
+        init();
         List<NovelInfo> infoList = findNovelInfoListByTitle(novel.getTitle());
         for (NovelInfo info : infoList) {
             if (NSourceUtil.getNSource(info.getNSourceId()).isValid()) {
@@ -200,10 +208,12 @@ public class DBUtil {
      * @return List<NovelInfo>
      */
     public static List<NovelInfo> findNovelInfoListByTitle(String title) {
+        init();
         return LitePal.where("title = ?", title).find(NovelInfo.class);
     }
 
     public static <T> List<T> findAll(Class<T> clazz) {
+        init();
         return LitePal.findAll(clazz);
     }
 

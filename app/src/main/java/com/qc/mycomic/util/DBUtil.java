@@ -4,9 +4,11 @@ import android.content.Context;
 
 import com.qc.common.constant.AppConstant;
 import com.qc.common.constant.Constant;
+import com.qc.common.ui.activity.MainActivity;
 import com.qc.common.util.ImgUtil;
 
 import org.litepal.LitePal;
+import org.litepal.LitePalApplication;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,6 +40,15 @@ public class DBUtil {
     public static final int STATUS_HIS = 0;
     public static final int STATUS_FAV = 1;
     public static final int STATUS_ALL = 2;
+
+    private static void init() {
+        try {
+            LitePalApplication.getContext();
+        } catch (Exception e) {
+            e.printStackTrace();
+            LitePal.initialize(MainActivity.getInstance());
+        }
+    }
 
     /**
      * 保存漫画信息，默认保存所有漫画信息
@@ -96,6 +107,7 @@ public class DBUtil {
 
     private static void saveComicData(Comic comic) {
         if (comic != null) {
+            init();
             if (comic.getTitle() == null) {
                 comic.setTitle(comic.getComicInfo().getTitle());
                 comic.setSourceId(comic.getComicInfo().getSourceId());
@@ -109,54 +121,11 @@ public class DBUtil {
 
     private static void saveComicInfoData(ComicInfo comicInfo) {
         if (comicInfo != null) {
+            init();
             comicInfo.saveOrUpdate("title = ? and sourceId = ?", comicInfo.getTitle(), String.valueOf(comicInfo.getSourceId()));
             //Log.i(TAG, "saveComicInfoData: comicInfo --> " + comicInfo.getTitle() + " " + SourceUtil.getSOURCE_NAME(comicInfo.getSourceId()));
         }
     }
-
-//    /**
-//     * 保存该漫画信息及所有漫画源信息
-//     *
-//     * @param comic 保存漫画
-//     * @return void
-//     */
-//    public static void saveData(Comic comic) {
-//        saveData(comic, true);
-//    }
-//
-//    /**
-//     * 保存漫画信息
-//     *
-//     * @param comic    当前漫画
-//     * @param needInfo 是否保存所有漫画源信息
-//     * @return void
-//     */
-//    public static void saveData(Comic comic, boolean needInfo) {
-//        if (comic != null) {
-//            new Thread(() -> {
-//                comic.saveOrUpdate("title = ?", comic.getTitle());
-//                //Log.i(TAG, "saveComic: " + comic.getTitle() + " p = " + comic.getPriority());
-//                if (!comic.getComicInfoList().isEmpty() && needInfo) {
-//                    for (ComicInfo info : comic.getComicInfoList()) {
-//                        DBUtil.saveData(info);
-//                    }
-//                }
-//            }).start();
-//        }
-//    }
-//
-//    /**
-//     * 保存漫画源信息
-//     *
-//     * @param comicInfo 当前漫画源
-//     * @return void
-//     */
-//    public static void saveData(ComicInfo comicInfo) {
-//        if (comicInfo != null) {
-//            new Thread(() -> comicInfo.saveOrUpdate("title = ? and sourceId = ?", comicInfo.getTitle(), String.valueOf(comicInfo.getSourceId()))).start();
-//            //Log.i(TAG, "saveComicInfo: " + comicInfo.getTitle() + "->" + SourceUtil.getSOURCE_NAME(comicInfo.getSourceId()));
-//        }
-//    }
 
     /**
      * 删除漫画
@@ -166,6 +135,7 @@ public class DBUtil {
      */
     public static void deleteData(Comic comic) {
         if (comic != null) {
+            init();
             new Thread(() -> {
                 comic.delete();
                 for (ComicInfo comicInfo : comic.getComicInfoList()) {
@@ -188,6 +158,7 @@ public class DBUtil {
     public static List<Comic> findComicListByStatus(int status) {
         List<Comic> list;
         String order = "priority DESC, date DESC";
+        init();
         if (status == Constant.STATUS_ALL) {
             list = LitePal.order(order).find(Comic.class);
         } else {
@@ -234,14 +205,14 @@ public class DBUtil {
      * @param title 漫画标题
      * @return List<ComicInfo>
      */
-    public static List<ComicInfo> findComicInfoListByTitle(String title) {
+    private static List<ComicInfo> findComicInfoListByTitle(String title) {
         return LitePal.where("title = ?", title).find(ComicInfo.class);
     }
 
     public static <T> List<T> findAll(Class<T> clazz) {
+        init();
         return LitePal.findAll(clazz);
     }
-
 
     public static boolean backupData(Context context) {
         return dealData(context, true);
