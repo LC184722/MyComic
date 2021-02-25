@@ -29,7 +29,7 @@ public class ReaderAdapter extends TheBaseQuickAdapter<ImageInfo> {
     protected void convert(@NotNull TheBaseViewHolder holder, ImageInfo imageInfo) {
         RelativeLayout layout = holder.findView(R.id.imageRelativeLayout);
         ImageConfig config = ImgUtil.getDefaultConfig(getContext(), imageInfo.getUrl(), layout);
-        config.setErrorBitmap(ImgUtil.drawableToBitmap(getDrawable(R.drawable.ic_image_error_24)));
+        config.setErrorBitmapId(R.drawable.ic_image_error_24);
         config.setScaleType(ImageView.ScaleType.CENTER);
         ImgUtil.loadImage(getContext(), config);
     }

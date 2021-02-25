@@ -23,15 +23,13 @@ public class ImageConfig {
 
     private boolean isForce;
 
-    private Bitmap defaultBitmap;
+    private int defaultBitmapId;
 
-    private Bitmap errorBitmap;
+    private int errorBitmapId;
 
-    private Drawable drawable;
+    private int drawableId;
 
     private ImageView.ScaleType scaleType;
-
-    private RelativeLayout.LayoutParams layoutParams;
 
     public ImageConfig(String url, RelativeLayout layout) {
         this.url = url;
@@ -82,28 +80,28 @@ public class ImageConfig {
         isForce = force;
     }
 
-    public Bitmap getDefaultBitmap() {
-        return defaultBitmap;
+    public int getDefaultBitmapId() {
+        return defaultBitmapId;
     }
 
-    public void setDefaultBitmap(Bitmap defaultBitmap) {
-        this.defaultBitmap = defaultBitmap;
+    public void setDefaultBitmapId(int defaultBitmapId) {
+        this.defaultBitmapId = defaultBitmapId;
     }
 
-    public Bitmap getErrorBitmap() {
-        return errorBitmap;
+    public int getErrorBitmapId() {
+        return errorBitmapId;
     }
 
-    public void setErrorBitmap(Bitmap errorBitmap) {
-        this.errorBitmap = errorBitmap;
+    public void setErrorBitmapId(int errorBitmapId) {
+        this.errorBitmapId = errorBitmapId;
     }
 
-    public Drawable getDrawable() {
-        return drawable;
+    public int getDrawableId() {
+        return drawableId;
     }
 
-    public void setDrawable(Drawable drawable) {
-        this.drawable = drawable;
+    public void setDrawableId(int drawableId) {
+        this.drawableId = drawableId;
     }
 
     public ImageView.ScaleType getScaleType() {
@@ -112,13 +110,5 @@ public class ImageConfig {
 
     public void setScaleType(ImageView.ScaleType scaleType) {
         this.scaleType = scaleType;
-    }
-
-    public RelativeLayout.LayoutParams getLayoutParams() {
-        return layoutParams;
-    }
-
-    public void setLayoutParams(RelativeLayout.LayoutParams layoutParams) {
-        this.layoutParams = layoutParams;
     }
 }

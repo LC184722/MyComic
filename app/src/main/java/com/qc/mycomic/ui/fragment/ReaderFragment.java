@@ -198,12 +198,16 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (null == _mActivity) return;
-                if (newState == SCROLL_STATE_IDLE) {
-                    isGlidePause = false;
-                    Glide.with(_mActivity).resumeRequests();
-                } else if (!isGlidePause) {
-                    isGlidePause = true;
-                    Glide.with(_mActivity).pauseRequests();
+                try {
+                    if (newState == SCROLL_STATE_IDLE) {
+                        isGlidePause = false;
+                        Glide.with(_mActivity).resumeRequests();
+                    } else if (!isGlidePause) {
+                        isGlidePause = true;
+                        Glide.with(_mActivity).pauseRequests();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
 
@@ -322,7 +326,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
             RelativeLayout layout = view.findViewById(R.id.imageRelativeLayout);
             ImageConfig config = ImgUtil.getDefaultConfig(getContext(), imageInfo.getUrl(), layout);
             config.setForce(true);
-            config.setErrorBitmap(ImgUtil.drawableToBitmap(getDrawablee(R.drawable.ic_image_error_24)));
+            config.setErrorBitmapId(R.drawable.ic_image_error_24);
             config.setScaleType(ImageView.ScaleType.CENTER);
             ImgUtil.loadImage(getContext(), config);
         } else if (ImgUtil.getLoadStatus(imageInfo) == ImgUtil.LOAD_SUCCESS) {

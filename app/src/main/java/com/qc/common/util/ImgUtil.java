@@ -60,27 +60,23 @@ public class ImgUtil {
 
     private static final Map<String, Integer> PROGRESS_MAP = new HashMap<>();
 
-    private static int screenWidth;
-
     public static final int LOAD_ING = 1;
     public static final int LOAD_SUCCESS = 2;
     public static final int LOAD_FAIL = 3;
 
     public static ImageConfig getDefaultConfig(Context context, String url, RelativeLayout layout) {
         ImageConfig config = new ImageConfig(url, layout);
-        config.setDefaultBitmap(null);
-        config.setErrorBitmap(drawableToBitmap(getDrawable(context, R.drawable.ic_image_none)));
-        config.setDrawable(getDrawable(context, R.drawable.ic_image_background));
+        config.setErrorBitmapId(R.drawable.ic_image_none);
+        config.setDrawableId(R.drawable.ic_image_background);
         config.setScaleType(ImageView.ScaleType.FIT_XY);
-        config.setLayoutParams(getLP(context));
         return config;
     }
 
     private static void initLayout(ImageConfig config, ImageView imageView, QMUIProgressBar progressBar) {
-        imageView.setLayoutParams(config.getLayoutParams());
-        imageView.setImageBitmap(config.getDefaultBitmap());
-        imageView.setImageDrawable(config.getDrawable());
-        imageView.setScaleType(config.getScaleType());
+//        imageView.setLayoutParams(config.getLayoutParams());
+//        imageView.setImageBitmap(config.getDefaultBitmap());
+//        imageView.setImageDrawable(config.getDrawable());
+//        imageView.setScaleType(config.getScaleType());
         imageView.setTag(config.getUrl());
         progressBar.setTag(config.getUrl());
     }
@@ -93,9 +89,11 @@ public class ImgUtil {
             if (config.isForce()) {
                 loadImageNet(context, config, imageView, progressBar);
             } else if (Objects.equals(MAP.get(config.getUrl()), LOAD_FAIL) || config.getUrl() == null) {
-                imageView.setImageBitmap(config.getErrorBitmap());
-            } else if (config.isSave() && !loadImageLocal(config, imageView)) {
-                loadImageNet(context, config, imageView, progressBar);
+                imageView.setImageBitmap(drawableToBitmap(getDrawable(context, config.getErrorBitmapId())));
+            } else if (config.isSave()) {
+                if (!loadImageLocal(config, imageView)) {
+                    loadImageNet(context, config, imageView, progressBar);
+                }
             } else {
                 loadImageNet(context, config, imageView, progressBar);
             }
@@ -135,7 +133,6 @@ public class ImgUtil {
                     }
                     if (!success) {
                         PROGRESS_MAP.remove(url);
-                        progressBar.setVisibility(View.GONE);
                     }
                 }
             }
@@ -170,8 +167,8 @@ public class ImgUtil {
                     @Override
                     public void onLoadStarted(@Nullable Drawable placeholder) {
                         if (Objects.equals(url, imageView.getTag())) {
-                            imageView.setImageBitmap(config.getDefaultBitmap());
-                            imageView.setLayoutParams(config.getLayoutParams());
+                            imageView.setImageBitmap(null);
+                            setLP(context, (RelativeLayout.LayoutParams) imageView.getLayoutParams());
                         }
                         if (Objects.equals(url, progressBar.getTag())) {
                             Integer integer = PROGRESS_MAP.get(url);
@@ -190,6 +187,9 @@ public class ImgUtil {
                             imageView.setImageBitmap(resource);
                             MAP.put(url, LOAD_SUCCESS);
                         }
+                        if (Objects.equals(url, progressBar.getTag())) {
+                            progressBar.setVisibility(View.GONE);
+                        }
                         if (config.isSave() && config.getSaveKey() != null) {
                             try {
                                 saveBitmapBackPath(resource, config.getSaveKey());
@@ -202,8 +202,12 @@ public class ImgUtil {
                     @Override
                     public void onLoadFailed(@Nullable Drawable errorDrawable) {
                         if (Objects.equals(url, imageView.getTag())) {
-                            imageView.setImageBitmap(config.getErrorBitmap());
+                            imageView.setImageBitmap(drawableToBitmap(getDrawable(context, config.getErrorBitmapId())));
+                            imageView.setScaleType(config.getScaleType());
                             MAP.put(url, LOAD_FAIL);
+                        }
+                        if (Objects.equals(url, progressBar.getTag())) {
+                            progressBar.setVisibility(View.GONE);
                         }
                     }
 
@@ -234,10 +238,7 @@ public class ImgUtil {
     }
 
     private static int getScreenWidth(Context context) {
-        if (screenWidth == 0) {
-            screenWidth = QMUIDisplayHelper.getScreenWidth(context);
-        }
-        return screenWidth;
+        return QMUIDisplayHelper.getScreenWidth(context);
     }
 
     public static void preloadReaderImg(Context context, ImageInfo imageInfo) {
