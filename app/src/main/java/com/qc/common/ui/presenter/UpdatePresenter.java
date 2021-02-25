@@ -32,7 +32,7 @@ public class UpdatePresenter extends BasePresenter<UpdateView> {
                 UpdateView view = getView();
                 AndroidSchedulers.mainThread().scheduleDirect(() -> {
                     if (view != null) {
-                        view.getVersionTag(null);
+                        view.getVersionTag(null, null);
                     }
                 });
             }
@@ -45,7 +45,8 @@ public class UpdatePresenter extends BasePresenter<UpdateView> {
                     if (view != null) {
                         JsoupNode node = new JsoupNode(html);
                         String versionTag = node.ownText("div.tag-name span");
-                        view.getVersionTag(versionTag);
+                        String href = node.href("div.release-tag-item div.item a");
+                        view.getVersionTag(versionTag, href);
                     }
                 });
             }

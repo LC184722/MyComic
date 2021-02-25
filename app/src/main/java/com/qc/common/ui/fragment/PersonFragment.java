@@ -22,6 +22,7 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 import com.qmuiteam.qmui.widget.grouplist.QMUICommonListItemView;
 
 import java.util.Map;
+import java.util.Objects;
 
 import the.one.base.ui.fragment.BaseGroupListFragment;
 import the.one.base.util.QMUIDialogUtil;
@@ -107,11 +108,15 @@ public class PersonFragment extends BaseGroupListFragment implements View.OnClic
             PopupUtil.showSimpleBottomSheetList(getContext(), map, key, "切换阅读内容", new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
                 @Override
                 public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
-                    Object key = MapUtil.getKeyByValue(map, tag);
-                    SettingUtil.putSetting(SettingEnum.READ_CONTENT, key, tag);
-                    change.setDetailText(tag);
-                    dialog.dismiss();
-                    RestartUtil.restart();
+                    Object nKey = MapUtil.getKeyByValue(map, tag);
+                    if (!Objects.equals(key, nKey)) {
+                        SettingUtil.putSetting(SettingEnum.READ_CONTENT, nKey, tag);
+                        change.setDetailText(tag);
+                        dialog.dismiss();
+                        RestartUtil.restart();
+                    } else {
+                        dialog.dismiss();
+                    }
                 }
             });
         } else if (view == v1) {
@@ -141,11 +146,12 @@ public class PersonFragment extends BaseGroupListFragment implements View.OnClic
                     boolean flag = DBUtil.restoreData(_mActivity);
                     hideLoadingDialog();
                     if (flag) {
-                        showSuccessTips("还原成功");
+                        dialog.dismiss();
+                        RestartUtil.restart();
                     } else {
                         showFailTips("还原失败");
+                        dialog.dismiss();
                     }
-                    dialog.dismiss();
                 }
             }).show();
         } else if (view == v5) {
@@ -157,21 +163,36 @@ public class PersonFragment extends BaseGroupListFragment implements View.OnClic
     }
 
     @Override
-    public void getVersionTag(String versionTag) {
+    public void getVersionTag(String versionTag, String href) {
         hideLoadingDialog();
         if (presenter.existUpdate(versionTag, VersionUtil.versionName)) {
-            String title = "存在新版本" + versionTag;
-            String content = "是否前往更新页面？";
-            QMUIDialogUtil.showSimpleDialog(getContext(), title, content, new QMUIDialogAction.ActionListener() {
-                @Override
-                public void onClick(QMUIDialog dialog, int index) {
-                    String url = "https://gitee.com/luqichuang/MyComic/releases/" + versionTag;
-                    Uri uri = Uri.parse(url);
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    startActivity(intent);
-                    dialog.dismiss();
-                }
-            }).showWithImmersiveCheck();
+            if (href == null) {
+                String title = "存在新版本" + versionTag;
+                String content = "是否前往更新页面？";
+                QMUIDialogUtil.showSimpleDialog(getContext(), title, content, new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        String url = "https://gitee.com/luqichuang/MyComic/releases";
+                        Uri uri = Uri.parse(url);
+                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        startActivity(intent);
+                        dialog.dismiss();
+                    }
+                }).showWithImmersiveCheck();
+            } else {
+                String title = "存在新版本" + versionTag;
+                String content = "是否前往下载最新版本？";
+                QMUIDialogUtil.showSimpleDialog(getContext(), title, content, new QMUIDialogAction.ActionListener() {
+                    @Override
+                    public void onClick(QMUIDialog dialog, int index) {
+                        String url = "https://gitee.com" + href;
+                        Uri uri = Uri.parse(url);
+                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        startActivity(intent);
+                        dialog.dismiss();
+                    }
+                }).showWithImmersiveCheck();
+            }
         } else {
             showSuccessTips("已是最新版本");
         }

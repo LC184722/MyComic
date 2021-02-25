@@ -10,6 +10,6 @@ import the.one.base.ui.view.BaseView;
  */
 public interface UpdateView extends BaseView {
 
-    void getVersionTag(String versionTag);
+    void getVersionTag(String versionTag, String href);
 
 }
