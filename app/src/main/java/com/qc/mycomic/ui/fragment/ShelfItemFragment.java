@@ -132,7 +132,6 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
         Comic comic = shelfAdapter.getItem(position);
         if (comic.isUpdate()) {
             comic.setUpdate(false);
-            comic.setDate(new Date());
             ComicUtil.first(comic);
         }
         comic.setPriority(0);

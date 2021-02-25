@@ -1,9 +1,8 @@
 package com.qc.mynovel.ui.adapter;
 
-import android.graphics.Bitmap;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.qc.common.self.ImageConfig;
 import com.qc.mycomic.R;
 import com.qc.mynovel.util.NovelHelper;
 import com.qc.common.util.ImgUtil;
@@ -12,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 
 import the.one.base.adapter.TheBaseQuickAdapter;
 import the.one.base.adapter.TheBaseViewHolder;
-import top.luqichuang.mynovel.model.Novel;
 import top.luqichuang.mynovel.model.Novel;
 
 /**
@@ -34,14 +32,8 @@ public class NSearchAdapter extends TheBaseQuickAdapter<Novel> {
         holder.setText(R.id.tvAuthor, novel.getNovelInfo().getAuthor());
         holder.setText(R.id.tvUpdateTime, novel.getNovelInfo().getUpdateTime());
         RelativeLayout layout = holder.findView(R.id.imageRelativeLayout);
-        if (novel.getNovelInfo().getImgUrl() != null) {
-            ImgUtil.loadImage(getContext(), novel.getNovelInfo().getImgUrl(), layout);
-        } else {
-            ImageView imageView = layout.findViewById(R.id.imageView);
-            Bitmap bitmap = ImgUtil.drawableToBitmap(getDrawable(R.drawable.ic_image_none));
-            imageView.setImageBitmap(bitmap);
-            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-        }
+        ImageConfig config = ImgUtil.getDefaultConfig(getContext(), novel.getNovelInfo().getImgUrl(), layout);
+        ImgUtil.loadImage(getContext(), config);
     }
 
 }

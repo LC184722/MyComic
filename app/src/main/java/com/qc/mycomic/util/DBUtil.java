@@ -72,6 +72,7 @@ public class DBUtil {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
+                    comic.setDate(new Date());
                     if (mode == SAVE_ONLY) {
                         saveComicData(comic);
                     } else if (mode == SAVE_CUR) {
@@ -111,7 +112,6 @@ public class DBUtil {
             if (comic.getTitle() == null) {
                 comic.setTitle(comic.getComicInfo().getTitle());
                 comic.setSourceId(comic.getComicInfo().getSourceId());
-                comic.setDate(new Date());
                 comic.setStatus(STATUS_HIS);
             }
             comic.saveOrUpdate("title = ?", comic.getTitle());

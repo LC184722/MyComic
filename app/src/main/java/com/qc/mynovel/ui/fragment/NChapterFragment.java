@@ -1,6 +1,5 @@
 package com.qc.mynovel.ui.fragment;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -17,6 +16,7 @@ import androidx.annotation.Nullable;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.qc.common.constant.Constant;
 import com.qc.common.constant.TmpData;
+import com.qc.common.self.ImageConfig;
 import com.qc.common.self.MySpacesItemDecoration;
 import com.qc.common.util.PopupUtil;
 import com.qc.mycomic.R;
@@ -34,7 +34,6 @@ import com.qmuiteam.qmui.widget.QMUIRadiusImageView;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 import com.qmuiteam.qmui.widget.popup.QMUIPopup;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -258,14 +257,10 @@ public class NChapterFragment extends BaseDataFragment<ChapterInfo> implements N
 
     private void setValue() {
         String saveKey = novel.getNovelInfo().getId() != 0 ? "N" + novel.getNovelInfo().getId() : null;
-        if (novel.getNovelInfo().getImgUrl() != null) {
-            ImgUtil.loadImage(getContext(), novel.getNovelInfo().getImgUrl(), relativeLayout, saveKey);
-        } else {
-            ImageView imageView = relativeLayout.findViewById(R.id.imageView);
-            Bitmap bitmap = ImgUtil.drawableToBitmap(getDrawablee(R.drawable.ic_image_none));
-            imageView.setImageBitmap(bitmap);
-            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-        }
+        ImageConfig config = ImgUtil.getDefaultConfig(getContext(), novel.getNovelInfo().getImgUrl(), relativeLayout);
+        config.setSave(true);
+        config.setSaveKey(saveKey);
+        ImgUtil.loadImage(getContext(), config);
         tvTitle.setText(novel.getNovelInfo().getTitle());
         tvSource.setText(NovelHelper.nSourceName(novel));
         tvSourceSize.setText(String.format(Locale.CHINA, "(%d)", NovelHelper.nSourceSize(novel)));

@@ -2,6 +2,7 @@ package com.qc.mycomic.ui.fragment;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.qc.common.self.ImageConfig;
 import com.qc.mycomic.R;
 import com.qc.common.constant.Constant;
 import com.qc.common.constant.TmpData;
@@ -37,6 +39,7 @@ import the.one.base.ui.presenter.BasePresenter;
 import top.luqichuang.mycomic.model.Comic;
 import top.luqichuang.mycomic.model.ComicInfo;
 import top.luqichuang.mycomic.model.ImageInfo;
+
 import com.qc.mycomic.util.ComicHelper;
 
 import static android.view.View.VISIBLE;
@@ -132,6 +135,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
             seekBar.setMax(imageInfo.getTotal() - 1);
             seekBar.setProgress(imageInfo.getCur());
             tvInfo.setText(String.format(Locale.CHINA, "%d章/%d章", imageInfo.getChapterId() + 1, comicInfo.getChapterInfoList().size()));
+            DBUtil.saveComicInfo(comicInfo);
         }
     }
 
@@ -316,7 +320,11 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
         //Log.i(TAG, "onItemLongClick: " + imageInfo.toStringProgress());
         if (ImgUtil.getLoadStatus(imageInfo) == ImgUtil.LOAD_FAIL) {
             RelativeLayout layout = view.findViewById(R.id.imageRelativeLayout);
-            ImgUtil.loadImage(getContext(), imageInfo.getUrl(), layout);
+            ImageConfig config = ImgUtil.getDefaultConfig(getContext(), imageInfo.getUrl(), layout);
+            config.setForce(true);
+            config.setErrorBitmap(ImgUtil.drawableToBitmap(getDrawablee(R.drawable.ic_image_error_24)));
+            config.setScaleType(ImageView.ScaleType.CENTER);
+            ImgUtil.loadImage(getContext(), config);
         } else if (ImgUtil.getLoadStatus(imageInfo) == ImgUtil.LOAD_SUCCESS) {
             startFragment(ReaderDetailFragment.getInstance(imageInfo));
         }
@@ -339,14 +347,5 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
             recycleView.scrollToPosition(0);
         }
         bottomView.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        ImgUtil.clearMap();
-        comic.setDate(new Date());
-        ComicUtil.first(comic);
-        DBUtil.saveComic(comic, DBUtil.SAVE_CUR);
     }
 }

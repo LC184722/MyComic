@@ -2,6 +2,7 @@ package com.qc.mycomic.ui.adapter;
 
 import android.widget.RelativeLayout;
 
+import com.qc.common.self.ImageConfig;
 import com.qc.mycomic.R;
 import com.qc.common.util.ImgUtil;
 
@@ -10,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import the.one.base.adapter.TheBaseQuickAdapter;
 import the.one.base.adapter.TheBaseViewHolder;
 import top.luqichuang.mycomic.model.Comic;
+
 import com.qc.mycomic.util.ComicHelper;
 
 /**
@@ -31,7 +33,8 @@ public class SearchAdapter extends TheBaseQuickAdapter<Comic> {
         holder.setText(R.id.tvAuthor, comic.getComicInfo().getAuthor());
         holder.setText(R.id.tvUpdateTime, comic.getComicInfo().getUpdateTime());
         RelativeLayout layout = holder.findView(R.id.imageRelativeLayout);
-        ImgUtil.loadImage(getContext(), comic.getComicInfo().getImgUrl(), layout);
+        ImageConfig config = ImgUtil.getDefaultConfig(getContext(), comic.getComicInfo().getImgUrl(), layout);
+        ImgUtil.loadImage(getContext(), config);
     }
 
 }

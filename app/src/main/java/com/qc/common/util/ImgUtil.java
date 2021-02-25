@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -23,6 +24,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
+import com.qc.common.self.ImageConfig;
 import com.qc.mycomic.R;
 import com.qc.common.constant.AppConstant;
 import com.qmuiteam.qmui.util.QMUIDisplayHelper;
@@ -56,42 +58,59 @@ public class ImgUtil {
 
     private static final Map<String, Integer> MAP = new HashMap<>();
 
+    private static final Map<String, Integer> PROGRESS_MAP = new HashMap<>();
+
     private static int screenWidth;
 
     public static final int LOAD_ING = 1;
     public static final int LOAD_SUCCESS = 2;
     public static final int LOAD_FAIL = 3;
 
-    public static void loadImage(Context context, String url, RelativeLayout layout) {
-        loadImage(context, url, layout, null);
+    public static ImageConfig getDefaultConfig(Context context, String url, RelativeLayout layout) {
+        ImageConfig config = new ImageConfig(url, layout);
+        config.setDefaultBitmap(null);
+        config.setErrorBitmap(drawableToBitmap(getDrawable(context, R.drawable.ic_image_none)));
+        config.setDrawable(getDrawable(context, R.drawable.ic_image_background));
+        config.setScaleType(ImageView.ScaleType.FIT_XY);
+        config.setLayoutParams(getLP(context));
+        return config;
     }
 
-    public static void loadImage(Context context, String url, RelativeLayout layout, Object saveKey) {
-        if (layout != null) {
-            ImageView imageView = layout.findViewById(R.id.imageView);
-            QMUIProgressBar progressBar = layout.findViewById(R.id.progressBar);
-            if (imageView != null && progressBar != null) {
-                imageView.setTag(url);
-                progressBar.setTag(url);
-                if (!loadImageLocal(context, imageView, saveKey)) {
-                    loadImageNet(context, url, imageView, progressBar, saveKey);
-                }
+    private static void initLayout(ImageConfig config, ImageView imageView, QMUIProgressBar progressBar) {
+        imageView.setLayoutParams(config.getLayoutParams());
+        imageView.setImageBitmap(config.getDefaultBitmap());
+        imageView.setImageDrawable(config.getDrawable());
+        imageView.setScaleType(config.getScaleType());
+        imageView.setTag(config.getUrl());
+        progressBar.setTag(config.getUrl());
+    }
+
+    public static void loadImage(Context context, ImageConfig config) {
+        if (config != null && config.getLayout() != null) {
+            ImageView imageView = config.getLayout().findViewById(R.id.imageView);
+            QMUIProgressBar progressBar = config.getLayout().findViewById(R.id.progressBar);
+            initLayout(config, imageView, progressBar);
+            if (config.isForce()) {
+                loadImageNet(context, config, imageView, progressBar);
+            } else if (Objects.equals(MAP.get(config.getUrl()), LOAD_FAIL) || config.getUrl() == null) {
+                imageView.setImageBitmap(config.getErrorBitmap());
+            } else if (config.isSave() && !loadImageLocal(config, imageView)) {
+                loadImageNet(context, config, imageView, progressBar);
+            } else {
+                loadImageNet(context, config, imageView, progressBar);
             }
         }
     }
 
-    private static boolean loadImageLocal(Context context, ImageView imageView, Object saveKey) {
-        //Log.i(TAG, "loadImageLocal: saveKey = " + saveKey);
-        if (saveKey != null && !Objects.equals(saveKey, 0)) {
+    private static boolean loadImageLocal(ImageConfig config, ImageView imageView) {
+        if (config.getSaveKey() != null && !Objects.equals(config.getSaveKey(), 0)) {
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inPreferredConfig = Bitmap.Config.RGB_565;
-            File file = new File(getLocalImgUrl(saveKey));
+            File file = new File(getLocalImgUrl(config.getSaveKey()));
             if (file.exists()) {
                 Bitmap bitmap = BitmapFactory.decodeFile(file.getPath(), options);
                 if (bitmap != null) {
                     imageView.setImageBitmap(bitmap);
-                    imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-                    imageView.setLayoutParams(getLP(context, bitmap));
                     return true;
                 }
             }
@@ -99,18 +118,29 @@ public class ImgUtil {
         return false;
     }
 
-    private static void loadImageNet(Context context, String url, ImageView imageView, QMUIProgressBar progressBar, Object saveKey) {
-        GlideProgressListener listener = (progress, success) -> {
-            //Log.i(TAG, "onProgress: url = " + url.substring(url.length() - 10) + ", progress = " + progress);
-            if (Objects.equals(url, progressBar.getTag())) {
-                progressBar.setProgress(progress);
-                if (!success) {
-                    progressBar.setVisibility(View.GONE);
+    private static void loadImageNet(Context context, ImageConfig config, ImageView imageView, QMUIProgressBar progressBar) {
+        String url = config.getUrl();
+        GlideProgressInterceptor.addListener(url, new GlideProgressListener() {
+            private int count;
+
+            @Override
+            public void onProgress(int progress, boolean success) {
+                if (progress < 0 && count < 99) {
+                    progress = ++count;
+                }
+                if (Objects.equals(url, progressBar.getTag())) {
+                    PROGRESS_MAP.put(url, progress);
+                    if (success && progress != 100) {
+                        progressBar.setProgress(progress);
+                    }
+                    if (!success) {
+                        PROGRESS_MAP.remove(url);
+                        progressBar.setVisibility(View.GONE);
+                    }
                 }
             }
-        };
-        //Log.i(TAG, "loadImageNet: with url = " + url.substring(url.length() - 10));
-        GlideProgressInterceptor.addListener(url, listener);
+        });
+
         Glide.with(context)
                 .asBitmap()
                 .load(url)
@@ -118,15 +148,21 @@ public class ImgUtil {
                 .listener(new RequestListener<Bitmap>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                        GlideProgressListener listener = GlideProgressInterceptor.LISTENER_MAP.get(url);
+                        if (listener != null) {
+                            listener.onProgress(0, false);
+                        }
                         GlideProgressInterceptor.removeListener(url);
-                        listener.onProgress(0, false);
                         return false;
                     }
 
                     @Override
                     public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                        GlideProgressListener listener = GlideProgressInterceptor.LISTENER_MAP.get(url);
+                        if (listener != null) {
+                            listener.onProgress(100, false);
+                        }
                         GlideProgressInterceptor.removeListener(url);
-                        listener.onProgress(100, false);
                         return false;
                     }
                 })
@@ -134,11 +170,13 @@ public class ImgUtil {
                     @Override
                     public void onLoadStarted(@Nullable Drawable placeholder) {
                         if (Objects.equals(url, imageView.getTag())) {
-                            imageView.setImageBitmap(null);
-                            setLP(context, (RelativeLayout.LayoutParams) imageView.getLayoutParams());
+                            imageView.setImageBitmap(config.getDefaultBitmap());
+                            imageView.setLayoutParams(config.getLayoutParams());
                         }
                         if (Objects.equals(url, progressBar.getTag())) {
-                            progressBar.setProgress(0, false);
+                            Integer integer = PROGRESS_MAP.get(url);
+                            int progress = integer == null ? 0 : integer;
+                            progressBar.setProgress(progress, false);
                             progressBar.setVisibility(View.VISIBLE);
                         }
                         MAP.put(url, LOAD_ING);
@@ -152,9 +190,9 @@ public class ImgUtil {
                             imageView.setImageBitmap(resource);
                             MAP.put(url, LOAD_SUCCESS);
                         }
-                        if (saveKey != null) {
+                        if (config.isSave() && config.getSaveKey() != null) {
                             try {
-                                saveBitmapBackPath(resource, saveKey);
+                                saveBitmapBackPath(resource, config.getSaveKey());
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -164,10 +202,7 @@ public class ImgUtil {
                     @Override
                     public void onLoadFailed(@Nullable Drawable errorDrawable) {
                         if (Objects.equals(url, imageView.getTag())) {
-                            Bitmap bitmap = drawableToBitmap(getDrawable(context, R.drawable.ic_image_error_24));
-                            imageView.setLayoutParams(getLP(context));
-                            imageView.setScaleType(ImageView.ScaleType.CENTER);
-                            imageView.setImageBitmap(bitmap);
+                            imageView.setImageBitmap(config.getErrorBitmap());
                             MAP.put(url, LOAD_FAIL);
                         }
                     }

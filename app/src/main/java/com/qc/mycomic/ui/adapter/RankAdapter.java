@@ -4,6 +4,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.qc.common.self.ImageConfig;
 import com.qc.mycomic.R;
 import com.qc.common.util.ImgUtil;
 
@@ -40,7 +41,8 @@ public class RankAdapter extends TheBaseQuickAdapter<Comic> {
         }
         holder.setText(R.id.tvIndex, String.valueOf(holder.getAdapterPosition() + 1));
         RelativeLayout relativeLayout = holder.findView(R.id.imageRelativeLayout);
-        ImgUtil.loadImage(getContext(), comic.getComicInfo().getImgUrl(), relativeLayout);
+        ImageConfig config = ImgUtil.getDefaultConfig(getContext(), comic.getComicInfo().getImgUrl(), relativeLayout);
+        ImgUtil.loadImage(getContext(), config);
     }
 
     @Override

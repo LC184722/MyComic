@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.qc.common.self.ImageConfig;
 import com.qc.mycomic.R;
 import com.qc.common.constant.Constant;
 import com.qc.common.constant.TmpData;
@@ -260,7 +261,10 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
     }
 
     private void setValue() {
-        ImgUtil.loadImage(getContext(), comic.getComicInfo().getImgUrl(), relativeLayout, comic.getComicInfo().getId());
+        ImageConfig config = ImgUtil.getDefaultConfig(getContext(), comic.getComicInfo().getImgUrl(), relativeLayout);
+        config.setSave(true);
+        config.setSaveKey(comic.getComicInfo().getId());
+        ImgUtil.loadImage(getContext(), config);
         tvTitle.setText(comic.getComicInfo().getTitle());
         tvSource.setText(ComicHelper.sourceName(comic));
         tvSourceSize.setText(String.format(Locale.CHINA, "(%d)", ComicHelper.sourceSize(comic)));
@@ -354,7 +358,6 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
     public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view,
                             int position) {
         //Log.i(TAG, "onItemClick: position = " + position);
-        comic.setDate(new Date());
         ComicUtil.first(comic);
         start(position);
         DBUtil.saveComic(comic, DBUtil.SAVE_ONLY);
