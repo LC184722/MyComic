@@ -120,13 +120,13 @@ public class ImgUtil {
 
             @Override
             public void onProgress(int progress, boolean success) {
-                if (progress < 0 && count < 99) {
+                if (progress < 0 && count < 80) {
                     progress = ++count;
                 }
                 if (Objects.equals(url, progressBar.getTag())) {
-                    PROGRESS_MAP.put(url, progress);
                     if (success && progress != 100) {
                         progressBar.setProgress(progress);
+                        PROGRESS_MAP.put(url, progress);
                     }
                     if (!success) {
                         PROGRESS_MAP.remove(url);

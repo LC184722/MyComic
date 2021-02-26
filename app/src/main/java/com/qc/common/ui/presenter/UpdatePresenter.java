@@ -44,8 +44,9 @@ public class UpdatePresenter extends BasePresenter<UpdateView> {
                 AndroidSchedulers.mainThread().scheduleDirect(() -> {
                     if (view != null) {
                         JsoupNode node = new JsoupNode(html);
+                        node.init(node.html("div.release-tag-item"));
                         String versionTag = node.ownText("div.tag-name span");
-                        String href = node.href("div.release-tag-item div.item a");
+                        String href = node.href("div.item a");
                         view.getVersionTag(versionTag, href);
                     }
                 });

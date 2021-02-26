@@ -1,6 +1,7 @@
 package top.luqichuang.common.util;
 
 import org.jetbrains.annotations.NotNull;
+import org.jsoup.Jsoup;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -159,6 +160,22 @@ public class NetUtil {
     public static void startLoad(String url, Callback callback) {
         Call call = okHttpClient.newCall(getRequest(url));
         call.enqueue(callback);
+    }
+
+    /**
+     * 使用Jsoup连接网络
+     *
+     * @param url url
+     * @return String
+     */
+    public static String startLoadWithJsoup(String url) {
+        String html = null;
+        try {
+            html = Jsoup.connect(url).get().html();
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
+        return html;
     }
 
     private static String getAgent(String url) {
