@@ -1,5 +1,6 @@
 package com.qc.mycomic.ui.adapter;
 
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -35,6 +36,7 @@ public class RankAdapter extends TheBaseQuickAdapter<Comic> {
         TextView tvUpdateTime = holder.findView(R.id.tvUpdateTime);
         String updateTime = comic.getComicInfo().getUpdateTime();
         if (tvUpdateTime != null && updateTime != null) {
+            tvUpdateTime.setVisibility(View.VISIBLE);
             tvUpdateTime.setText(updateTime);
         } else if (tvUpdateTime != null) {
             goneView(tvUpdateTime);

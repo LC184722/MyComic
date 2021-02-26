@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import top.luqichuang.mycomic.model.Source;
+import top.luqichuang.mycomic.source.AiYouMan;
 import top.luqichuang.mycomic.source.BiliBili;
 import top.luqichuang.mycomic.source.Du;
 import top.luqichuang.mycomic.source.OH;
@@ -34,6 +35,7 @@ public enum SourceEnum {
     MH_118(8, "118漫画"),
     DU(9, "独漫画"),
     BL(10, "BL漫画"),
+    AI_YOU_MAN(11, "爱优漫"),
     ;
 
     private static final Map<Integer, Source> MAP = new LinkedHashMap<>();
@@ -49,6 +51,7 @@ public enum SourceEnum {
         MAP.put(MH_118.ID, new MH118());
         MAP.put(DU.ID, new Du());
         MAP.put(BL.ID, new BL());
+        MAP.put(AI_YOU_MAN.ID, new AiYouMan());
     }
 
     public static Map<Integer, Source> getMAP() {
