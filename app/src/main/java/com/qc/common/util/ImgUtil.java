@@ -73,10 +73,7 @@ public class ImgUtil {
     }
 
     private static void initLayout(ImageConfig config, ImageView imageView, QMUIProgressBar progressBar) {
-//        imageView.setLayoutParams(config.getLayoutParams());
-//        imageView.setImageBitmap(config.getDefaultBitmap());
-//        imageView.setImageDrawable(config.getDrawable());
-//        imageView.setScaleType(config.getScaleType());
+        imageView.setScaleType(config.getScaleType());
         imageView.setTag(config.getUrl());
         progressBar.setTag(config.getUrl());
     }
