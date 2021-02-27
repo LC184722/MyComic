@@ -272,17 +272,28 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
     }
 
     @Override
-    public void loadContentInfoListComplete(ContentInfo contentInfo) {
-        List<ContentInfo> list = new ArrayList<>();
-        list.add(contentInfo);
-        onComplete(list);
-        this.contentInfoList = adapter.getData();
-        initOtherView();
-        isLoadNext = true;
-        if (isFresh) {
-            isFresh = false;
-            recycleView.scrollToPosition(0);
+    public void loadContentInfoListComplete(ContentInfo contentInfo, String errorMsg) {
+        if (errorMsg != null) {
+            if (adapter.getData().isEmpty()) {
+                showErrorPage(errorMsg, v -> {
+                    showLoadingPage();
+                    requestServer();
+                });
+            } else {
+                adapter.getLoadMoreModule().loadMoreFail();
+            }
+        } else {
+            List<ContentInfo> list = new ArrayList<>();
+            list.add(contentInfo);
+            onComplete(list);
+            this.contentInfoList = adapter.getData();
+            initOtherView();
+            isLoadNext = true;
+            if (isFresh) {
+                isFresh = false;
+                recycleView.scrollToPosition(0);
+            }
+            bottomView.setVisibility(View.GONE);
         }
-        bottomView.setVisibility(View.GONE);
     }
 }

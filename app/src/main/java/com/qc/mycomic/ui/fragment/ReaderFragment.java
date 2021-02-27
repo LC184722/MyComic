@@ -339,15 +339,26 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
     }
 
     @Override
-    public void loadImageInfoListComplete(List<ImageInfo> imageInfoList) {
-        onComplete(imageInfoList);
-        this.imageInfoList = adapter.getData();
-        initOtherView();
-        isLoadNext = true;
-        if (isFresh) {
-            isFresh = false;
-            recycleView.scrollToPosition(0);
+    public void loadImageInfoListComplete(List<ImageInfo> imageInfoList, String errorMsg) {
+        if (errorMsg != null) {
+            if (adapter.getData().isEmpty()) {
+                showErrorPage(errorMsg, v -> {
+                    showLoadingPage();
+                    requestServer();
+                });
+            } else {
+                adapter.getLoadMoreModule().loadMoreFail();
+            }
+        } else {
+            onComplete(imageInfoList);
+            this.imageInfoList = adapter.getData();
+            initOtherView();
+            isLoadNext = true;
+            if (isFresh) {
+                isFresh = false;
+                recycleView.scrollToPosition(0);
+            }
+            bottomView.setVisibility(View.GONE);
         }
-        bottomView.setVisibility(View.GONE);
     }
 }

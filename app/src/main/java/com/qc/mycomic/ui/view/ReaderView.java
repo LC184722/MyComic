@@ -13,6 +13,6 @@ import top.luqichuang.mycomic.model.ImageInfo;
  */
 public interface ReaderView extends BaseView {
 
-    void loadImageInfoListComplete(List<ImageInfo> imageInfoList);
+    void loadImageInfoListComplete(List<ImageInfo> imageInfoList, String errorMsg);
 
 }

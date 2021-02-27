@@ -11,6 +11,6 @@ import top.luqichuang.mynovel.model.ContentInfo;
  */
 public interface NReaderView extends BaseView {
 
-    void loadContentInfoListComplete(ContentInfo contentInfo);
+    void loadContentInfoListComplete(ContentInfo contentInfo, String errorMsg);
 
 }

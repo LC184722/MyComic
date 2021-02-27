@@ -12,7 +12,9 @@ import top.luqichuang.mycomic.model.Comic;
 import top.luqichuang.mycomic.model.ImageInfo;
 import top.luqichuang.mycomic.model.Source;
 import top.luqichuang.common.self.SourceCallback;
+
 import com.qc.mycomic.util.ComicHelper;
+
 import top.luqichuang.common.util.NetUtil;
 
 /**
@@ -36,10 +38,7 @@ public class ReaderPresenter extends BasePresenter<ReaderView> {
                 ReaderView view = getView();
                 AndroidSchedulers.mainThread().scheduleDirect(() -> {
                     if (view != null) {
-                        showErrorPage(errorMsg, v -> {
-                            view.showLoadingPage();
-                            loadImageInfoList(comic);
-                        });
+                        view.loadImageInfoListComplete(null, errorMsg);
                     }
                 });
             }
@@ -53,7 +52,7 @@ public class ReaderPresenter extends BasePresenter<ReaderView> {
                 } else {
                     AndroidSchedulers.mainThread().scheduleDirect(() -> {
                         if (view != null) {
-                            view.loadImageInfoListComplete(imageInfoList);
+                            view.loadImageInfoListComplete(imageInfoList, null);
                         }
                     });
                 }

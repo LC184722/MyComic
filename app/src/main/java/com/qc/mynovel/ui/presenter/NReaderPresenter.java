@@ -36,10 +36,7 @@ public class NReaderPresenter extends BasePresenter<NReaderView> {
                 NReaderView view = getView();
                 AndroidSchedulers.mainThread().scheduleDirect(() -> {
                     if (view != null) {
-                        showErrorPage(errorMsg, v -> {
-                            view.showLoadingPage();
-                            loadContentInfoList(novel);
-                        });
+                        view.loadContentInfoListComplete(null, errorMsg);
                     }
                 });
             }
@@ -53,7 +50,7 @@ public class NReaderPresenter extends BasePresenter<NReaderView> {
                 } else {
                     AndroidSchedulers.mainThread().scheduleDirect(() -> {
                         if (view != null) {
-                            view.loadContentInfoListComplete(contentInfo);
+                            view.loadContentInfoListComplete(contentInfo, null);
                         }
                     });
                 }
