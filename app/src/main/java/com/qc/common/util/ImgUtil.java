@@ -7,10 +7,10 @@ import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,6 +40,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import the.one.base.Interface.GlideProgressListener;
 import the.one.base.util.glide.GlideProgressInterceptor;
 import top.luqichuang.mycomic.model.ImageInfo;
@@ -66,33 +67,47 @@ public class ImgUtil {
 
     public static ImageConfig getDefaultConfig(Context context, String url, RelativeLayout layout) {
         ImageConfig config = new ImageConfig(url, layout);
+        config.setDefaultBitmapId(R.drawable.ic_image_none);
         config.setErrorBitmapId(R.drawable.ic_image_none);
         config.setDrawableId(R.drawable.ic_image_background);
         config.setScaleType(ImageView.ScaleType.FIT_XY);
         return config;
     }
 
-    private static void initLayout(ImageConfig config, ImageView imageView, QMUIProgressBar progressBar) {
+    public static ImageConfig getReaderConfig(Context context, String url, RelativeLayout layout) {
+        ImageConfig config = new ImageConfig(url, layout);
+        config.setDefaultBitmapId(0);
+        config.setErrorBitmapId(R.drawable.ic_image_error_24);
+        config.setDrawableId(R.drawable.ic_image_reader_background);
+        config.setScaleType(ImageView.ScaleType.CENTER);
+        return config;
+    }
+
+    private static void initLayout(ImageConfig config, ImageView imageView, QMUIProgressBar progressBar, TextView textView) {
         imageView.setScaleType(config.getScaleType());
         imageView.setTag(config.getUrl());
         progressBar.setTag(config.getUrl());
+        textView.setTag(config.getUrl());
+        progressBar.setVisibility(View.GONE);
+        textView.setVisibility(View.GONE);
     }
 
     public static void loadImage(Context context, ImageConfig config) {
         if (config != null && config.getLayout() != null) {
             ImageView imageView = config.getLayout().findViewById(R.id.imageView);
             QMUIProgressBar progressBar = config.getLayout().findViewById(R.id.progressBar);
-            initLayout(config, imageView, progressBar);
+            TextView textView = config.getLayout().findViewById(R.id.textView);
+            initLayout(config, imageView, progressBar, textView);
             if (config.isForce()) {
-                loadImageNet(context, config, imageView, progressBar);
+                loadImageNet(context, config, imageView, progressBar, textView);
             } else if (Objects.equals(MAP.get(config.getUrl()), LOAD_FAIL) || config.getUrl() == null) {
                 imageView.setImageBitmap(drawableToBitmap(getDrawable(context, config.getErrorBitmapId())));
             } else if (config.isSave()) {
                 if (!loadImageLocal(config, imageView)) {
-                    loadImageNet(context, config, imageView, progressBar);
+                    loadImageNet(context, config, imageView, progressBar, textView);
                 }
             } else {
-                loadImageNet(context, config, imageView, progressBar);
+                loadImageNet(context, config, imageView, progressBar, textView);
             }
         }
     }
@@ -113,19 +128,25 @@ public class ImgUtil {
         return false;
     }
 
-    private static void loadImageNet(Context context, ImageConfig config, ImageView imageView, QMUIProgressBar progressBar) {
+    private static void loadImageNet(Context context, ImageConfig config, ImageView imageView, QMUIProgressBar progressBar, TextView textView) {
         String url = config.getUrl();
         GlideProgressInterceptor.addListener(url, new GlideProgressListener() {
             private int count;
 
             @Override
             public void onProgress(int progress, boolean success) {
-                if (progress < 0 && count < 80) {
-                    progress = ++count;
+                if (progress < 0) {
+                    progress = Math.min(++count, 80);
                 }
                 if (Objects.equals(url, progressBar.getTag())) {
-                    if (success && progress != 100) {
+                    progress = Math.min(progress * 2, 100);
+//                    System.out.println("url = " + url.substring(url.length() - 20) + ", progress = " + progress + ", success = " + success);
+                    if (!success || progress < 100) {
                         progressBar.setProgress(progress);
+                        int finalProgress = progress;
+                        AndroidSchedulers.mainThread().scheduleDirect(() -> {
+                            textView.setText(finalProgress + "%");
+                        });
                         PROGRESS_MAP.put(url, progress);
                     }
                     if (!success) {
@@ -163,15 +184,22 @@ public class ImgUtil {
                 .into(new CustomTarget<Bitmap>() {
                     @Override
                     public void onLoadStarted(@Nullable Drawable placeholder) {
+                        int bitmapId = config.getDefaultBitmapId();
                         if (Objects.equals(url, imageView.getTag())) {
-                            imageView.setImageBitmap(null);
+                            Bitmap bitmap = null;
+                            if (bitmapId != 0) {
+                                bitmap = drawableToBitmap(getDrawable(context, config.getDefaultBitmapId()));
+                            }
+                            imageView.setImageBitmap(bitmap);
                             setLP(context, (RelativeLayout.LayoutParams) imageView.getLayoutParams());
                         }
-                        if (Objects.equals(url, progressBar.getTag())) {
+                        if (Objects.equals(url, progressBar.getTag()) && bitmapId == 0) {
                             Integer integer = PROGRESS_MAP.get(url);
                             int progress = integer == null ? 0 : integer;
                             progressBar.setProgress(progress, false);
                             progressBar.setVisibility(View.VISIBLE);
+                            textView.setText(progress + "%");
+                            textView.setVisibility(View.VISIBLE);
                         }
                         MAP.put(url, LOAD_ING);
                     }
@@ -186,6 +214,7 @@ public class ImgUtil {
                         }
                         if (Objects.equals(url, progressBar.getTag())) {
                             progressBar.setVisibility(View.GONE);
+                            textView.setVisibility(View.GONE);
                         }
                         if (config.isSave() && config.getSaveKey() != null) {
                             try {
@@ -205,6 +234,7 @@ public class ImgUtil {
                         }
                         if (Objects.equals(url, progressBar.getTag())) {
                             progressBar.setVisibility(View.GONE);
+                            textView.setVisibility(View.GONE);
                         }
                     }
 

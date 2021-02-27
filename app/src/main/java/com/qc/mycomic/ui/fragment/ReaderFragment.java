@@ -324,10 +324,8 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
         //Log.i(TAG, "onItemLongClick: " + imageInfo.toStringProgress());
         if (ImgUtil.getLoadStatus(imageInfo) == ImgUtil.LOAD_FAIL) {
             RelativeLayout layout = view.findViewById(R.id.imageRelativeLayout);
-            ImageConfig config = ImgUtil.getDefaultConfig(getContext(), imageInfo.getUrl(), layout);
+            ImageConfig config = ImgUtil.getReaderConfig(getContext(), imageInfo.getUrl(), layout);
             config.setForce(true);
-            config.setErrorBitmapId(R.drawable.ic_image_error_24);
-            config.setScaleType(ImageView.ScaleType.CENTER);
             ImgUtil.loadImage(getContext(), config);
         } else if (ImgUtil.getLoadStatus(imageInfo) == ImgUtil.LOAD_SUCCESS) {
             startFragment(ReaderDetailFragment.getInstance(imageInfo));
