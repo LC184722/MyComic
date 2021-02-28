@@ -1,21 +1,25 @@
 package com.qc.mynovel.ui.fragment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.qc.common.constant.Constant;
 import com.qc.common.constant.TmpData;
+import com.qc.common.ui.adapter.ReaderListAdapter;
+import com.qc.common.util.AnimationUtil;
 import com.qc.mycomic.R;
 import com.qc.mynovel.ui.adapter.NReaderAdapter;
 import com.qc.mynovel.ui.presenter.NReaderPresenter;
@@ -24,15 +28,14 @@ import com.qc.mynovel.util.DBUtil;
 import com.qc.mynovel.util.NovelHelper;
 import com.qc.mynovel.util.NovelUtil;
 import com.qmuiteam.qmui.util.QMUIDisplayHelper;
-import com.qmuiteam.qmui.util.QMUIViewHelper;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import the.one.base.ui.fragment.BaseDataFragment;
 import the.one.base.ui.presenter.BasePresenter;
+import top.luqichuang.common.model.ChapterInfo;
 import top.luqichuang.mynovel.model.ContentInfo;
 import top.luqichuang.mynovel.model.Novel;
 import top.luqichuang.mynovel.model.NovelInfo;
@@ -54,15 +57,25 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
     private NReaderPresenter presenter = new NReaderPresenter();
     private List<ContentInfo> contentInfoList;
     private NReaderAdapter readerAdapter;
+    private ReaderListAdapter readerListAdapter;
     private int curChapterId;
 
     private View topView;
     private View bottomView;
+    private View darkView;
+    private View rightView;
     private TextView tvChapter;
     private TextView tvProgress;
     private TextView tvInfo;
+    private TextView tvChapterName;
+    private TextView tvChapterProgress;
     private LinearLayout llLeft;
     private LinearLayout llRight;
+    private LinearLayout llList;
+    private LinearLayout llDark;
+    private LinearLayout llFav;
+    private LinearLayout llSettings;
+    private LinearLayout llChapter;
     private SeekBar seekBar;
     private boolean firstLoad = true;
 
@@ -91,25 +104,74 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
     }
 
     private void addView() {
+        if (darkView == null) {
+            darkView = getView(R.layout.fragment_dark);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(QMUIDisplayHelper.getScreenWidth(_mActivity), QMUIDisplayHelper.getScreenHeight(_mActivity));
+            mStatusLayout.addView(darkView, 1, layoutParams);
+        }
         if (topView == null) {
             topView = getView(R.layout.top_reader);
             tvChapter = topView.findViewById(R.id.tvChapter);
             tvProgress = topView.findViewById(R.id.tvProgress);
             tvProgress.setVisibility(View.GONE);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(QMUIDisplayHelper.getScreenWidth(_mActivity), QMUIDisplayHelper.getScreenHeight(_mActivity));
-            mStatusLayout.addView(topView, 1, layoutParams);
+            mStatusLayout.addView(topView, 2, layoutParams);
         }
         if (bottomView == null) {
             bottomView = getView(R.layout.bottom_reader);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(QMUIDisplayHelper.getScreenWidth(_mActivity), QMUIDisplayHelper.getScreenHeight(_mActivity));
-            mStatusLayout.addView(bottomView, 1, layoutParams);
-            bottomView.setVisibility(View.GONE);
+            mStatusLayout.addView(bottomView, 3, layoutParams);
             llLeft = bottomView.findViewById(R.id.llLeft);
             llRight = bottomView.findViewById(R.id.llRight);
             seekBar = bottomView.findViewById(R.id.seekBar);
+            llList = bottomView.findViewById(R.id.llList);
+            llDark = bottomView.findViewById(R.id.llDark);
+            llFav = bottomView.findViewById(R.id.llFav);
+            llChapter = bottomView.findViewById(R.id.llChapter);
+            llSettings = bottomView.findViewById(R.id.llSettings);
+            tvChapterName = bottomView.findViewById(R.id.tvChapterName);
+            tvChapterProgress = bottomView.findViewById(R.id.tvChapterProgress);
             seekBar.setVisibility(View.GONE);
-            tvInfo = bottomView.findViewById(R.id.tvInfo);
+            tvProgress.setVisibility(View.GONE);
+            tvChapterProgress.setVisibility(View.GONE);
+            TextView tvTitleCenter = bottomView.findViewById(R.id.tvTitleCenter);
+            tvTitleCenter.setText(novel.getTitle());
+            tvTitleCenter.setVisibility(VISIBLE);
         }
+        if (rightView == null) {
+            rightView = getView(R.layout.fragment_reader_list);
+            List<ChapterInfo> items = novelInfo.getChapterInfoList();
+            readerListAdapter = new ReaderListAdapter(R.layout.item_reader_list, items);
+            readerListAdapter.setPosition(NovelHelper.getPosition(novelInfo));
+            RecyclerView listView = rightView.findViewById(R.id.recycleView);
+            listView.setLayoutManager(getLayoutManager(TYPE_LIST));
+            listView.setAdapter(readerListAdapter);
+            listView.addItemDecoration(new DividerItemDecoration(_mActivity, DividerItemDecoration.VERTICAL));
+            readerListAdapter.setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
+                    if (readerListAdapter.getPosition() != position) {
+                        readerListAdapter.setPosition(position);
+                        NovelHelper.initChapterId(novelInfo, NovelHelper.positionToChapterId(novelInfo, position));
+                        changeVisibility(rightView, false);
+                        showLoadingPage();
+                        contentInfoList = null;
+                        isFresh = true;
+                        onRefresh();
+                    } else {
+                        changeVisibility(rightView, false);
+                    }
+                }
+            });
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(QMUIDisplayHelper.getScreenWidth(_mActivity), QMUIDisplayHelper.getScreenHeight(_mActivity));
+            mStatusLayout.addView(rightView, 4, layoutParams);
+            tvInfo = rightView.findViewById(R.id.tvInfo);
+            TextView tvTitle = rightView.findViewById(R.id.tvTitle);
+            tvTitle.setText(novel.getTitle());
+        }
+        bottomView.setVisibility(View.GONE);
+        darkView.setVisibility(View.GONE);
+        rightView.setVisibility(View.GONE);
         setValue();
     }
 
@@ -128,7 +190,9 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
             }
             ContentInfo contentInfo = contentInfoList.get(first);
             tvChapter.setText(novelInfo.getCurChapterTitle());
+            tvChapterName.setText(novelInfo.getCurChapterTitle());
             tvInfo.setText(String.format(Locale.CHINA, "%d章/%d章", contentInfo.getChapterId() + 1, novelInfo.getChapterInfoList().size()));
+            readerListAdapter.setPosition(NovelHelper.getPosition(novelInfo));
             DBUtil.saveNovelInfo(novelInfo);
         }
     }
@@ -155,6 +219,56 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
             } else {
                 showFailTips("没有下一章");
             }
+        });
+
+        llList.setOnClickListener(v -> {
+            changeVisibility(bottomView, false);
+            changeVisibility(rightView, true);
+        });
+
+        TextView tvDark = bottomView.findViewById(R.id.tvDark);
+        ImageButton ibDark = bottomView.findViewById(R.id.ibDark);
+        llDark.setOnClickListener(v -> {
+            if (darkView.getVisibility() == VISIBLE) {
+                changeVisibility(darkView, false);
+                tvDark.setText("夜间");
+                AnimationUtil.changeDrawable(ibDark, getDrawablee(R.drawable.ic_baseline_brightness_2_24));
+            } else {
+                changeVisibility(darkView, true);
+                tvDark.setText("日间");
+                AnimationUtil.changeDrawable(ibDark, getDrawablee(R.drawable.ic_baseline_brightness_1_24));
+            }
+        });
+
+        TextView tvFav = bottomView.findViewById(R.id.tvFav);
+        ImageButton ibFav = bottomView.findViewById(R.id.ibFav);
+        if (novel.getStatus() == Constant.STATUS_FAV) {
+            tvFav.setText("已收藏");
+            ibFav.setImageDrawable(getDrawablee(R.drawable.ic_baseline_favorite_24));
+        } else {
+            tvFav.setText("未收藏");
+            ibFav.setImageDrawable(getDrawablee(R.drawable.ic_baseline_favorite_border_24));
+        }
+        llFav.setOnClickListener(v -> {
+            if (novel.getStatus() == Constant.STATUS_FAV) {
+                tvFav.setText("未收藏");
+                AnimationUtil.changeDrawable(ibFav, getDrawablee(R.drawable.ic_baseline_favorite_border_24));
+            } else {
+                tvFav.setText("已收藏");
+                AnimationUtil.changeDrawable(ibFav, getDrawablee(R.drawable.ic_baseline_favorite_24));
+            }
+            NovelUtil.removeNovel(novel);
+            novel.setStatus(novel.getStatus() == Constant.STATUS_FAV ? Constant.STATUS_HIS : Constant.STATUS_FAV);
+            NovelUtil.first(novel);
+            DBUtil.saveNovel(novel, DBUtil.SAVE_CUR);
+        });
+
+        llSettings.setOnClickListener(v -> {
+            showToast("待完善");
+        });
+
+        llChapter.setOnClickListener(v -> {
+            onBackPressed();
         });
     }
 
@@ -194,16 +308,13 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
                     }
                     //设置数据
                     tvChapter.setText(novelInfo.getCurChapterTitle());
+                    tvChapterName.setText(novelInfo.getCurChapterTitle());
 
                     //防止滑动seekBar与onScrolled发生冲突
                     if (!isSmooth) {
                         //改变bottomView visible
-                        if (bottomView.getTag() != "GONE") {
-                            changeVisibility(bottomView, false);
-                        }
-                        if (bottomView.getVisibility() != View.GONE) {
-                            bottomView.setVisibility(View.GONE);
-                        }
+                        changeVisibility(bottomView, false);
+                        changeVisibility(rightView, false);
                     }
 
                 } else {
@@ -215,7 +326,8 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
 
     @Override
     public void onRefresh() {
-        bottomView.setVisibility(View.GONE);
+        changeVisibility(bottomView, false);
+        changeVisibility(rightView, false);
         isLoadNext = false;
         super.onRefresh();
     }
@@ -248,17 +360,13 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
 
     @Override
     public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
-        changeVisibility(bottomView, bottomView.getVisibility() != VISIBLE);
+        if (!changeVisibility(rightView, false)) {
+            changeVisibility(bottomView, bottomView.getVisibility() != VISIBLE);
+        }
     }
 
-    private void changeVisibility(View view, boolean isVisible) {
-        if (isVisible) {
-            bottomView.setTag("VISIBLE");
-            QMUIViewHelper.fadeIn(view, 300, null, true);
-        } else {
-            bottomView.setTag("GONE");
-            QMUIViewHelper.fadeOut(view, 300, null, true);
-        }
+    private boolean changeVisibility(View view, boolean isVisible) {
+        return AnimationUtil.changeVisibility(view, isVisible);
     }
 
     @Override
@@ -293,7 +401,6 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
                 isFresh = false;
                 recycleView.scrollToPosition(0);
             }
-            bottomView.setVisibility(View.GONE);
         }
     }
 }

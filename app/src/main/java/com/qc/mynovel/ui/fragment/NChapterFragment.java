@@ -18,15 +18,15 @@ import com.qc.common.constant.Constant;
 import com.qc.common.constant.TmpData;
 import com.qc.common.self.ImageConfig;
 import com.qc.common.self.MySpacesItemDecoration;
+import com.qc.common.util.ImgUtil;
 import com.qc.common.util.PopupUtil;
 import com.qc.mycomic.R;
 import com.qc.mynovel.ui.adapter.NChapterAdapter;
 import com.qc.mynovel.ui.presenter.NChapterPresenter;
 import com.qc.mynovel.ui.view.NChapterView;
+import com.qc.mynovel.util.DBUtil;
 import com.qc.mynovel.util.NovelHelper;
 import com.qc.mynovel.util.NovelUtil;
-import com.qc.mynovel.util.DBUtil;
-import com.qc.common.util.ImgUtil;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
 import com.qmuiteam.qmui.util.QMUIDisplayHelper;
 import com.qmuiteam.qmui.util.QMUIViewHelper;
@@ -105,6 +105,7 @@ public class NChapterFragment extends BaseDataFragment<ChapterInfo> implements N
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
         if (enter && adapter != null) {
             adapter.notifyDataSetChanged();
+            setValue();
         }
         return super.onCreateAnimation(transit, enter, nextAnim);
     }

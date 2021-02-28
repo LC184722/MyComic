@@ -14,23 +14,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.qc.common.self.ImageConfig;
-import com.qc.mycomic.R;
 import com.qc.common.constant.Constant;
 import com.qc.common.constant.TmpData;
+import com.qc.common.self.ImageConfig;
 import com.qc.common.self.MySpacesItemDecoration;
+import com.qc.common.util.ImgUtil;
+import com.qc.common.util.PopupUtil;
+import com.qc.mycomic.R;
 import com.qc.mycomic.ui.adapter.ChapterAdapter;
 import com.qc.mycomic.ui.presenter.ChapterPresenter;
 import com.qc.mycomic.ui.view.ChapterView;
+import com.qc.mycomic.util.ComicHelper;
 import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DBUtil;
-import com.qc.common.util.ImgUtil;
-
-import com.qc.mycomic.util.ComicHelper;
-
-import top.luqichuang.common.util.MapUtil;
-
-import com.qc.common.util.PopupUtil;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
 import com.qmuiteam.qmui.util.QMUIDisplayHelper;
 import com.qmuiteam.qmui.util.QMUIViewHelper;
@@ -38,7 +34,6 @@ import com.qmuiteam.qmui.widget.QMUIRadiusImageView;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 import com.qmuiteam.qmui.widget.popup.QMUIPopup;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -49,10 +44,11 @@ import the.one.base.util.QMUIDialogUtil;
 import the.one.base.util.QMUIPopupUtil;
 import the.one.base.widge.decoration.SpacesItemDecoration;
 import top.luqichuang.common.model.ChapterInfo;
-import top.luqichuang.mycomic.model.Comic;
-import top.luqichuang.mycomic.model.ComicInfo;
+import top.luqichuang.common.util.MapUtil;
 import top.luqichuang.common.util.SourceUtil;
 import top.luqichuang.common.util.StringUtil;
+import top.luqichuang.mycomic.model.Comic;
+import top.luqichuang.mycomic.model.ComicInfo;
 
 /**
  * @author LuQiChuang
@@ -109,6 +105,7 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
         if (enter && adapter != null) {
             adapter.notifyDataSetChanged();
+            setValue();
         }
         return super.onCreateAnimation(transit, enter, nextAnim);
     }
