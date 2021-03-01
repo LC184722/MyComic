@@ -16,12 +16,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
+import top.luqichuang.common.util.SourceUtil;
 import top.luqichuang.mycomic.model.Comic;
 import top.luqichuang.mycomic.model.ComicInfo;
-import top.luqichuang.common.util.SourceUtil;
 
 /**
  * @author LuQiChuang
@@ -72,7 +71,6 @@ public class DBUtil {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    comic.setDate(new Date());
                     if (mode == SAVE_ONLY) {
                         saveComicData(comic);
                     } else if (mode == SAVE_CUR) {

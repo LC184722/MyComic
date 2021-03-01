@@ -9,7 +9,6 @@ import org.litepal.LitePalApplication;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import top.luqichuang.common.util.NSourceUtil;
@@ -65,7 +64,6 @@ public class DBUtil {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    novel.setDate(new Date());
                     if (mode == SAVE_ONLY) {
                         saveNovelData(novel);
                     } else if (mode == SAVE_CUR) {

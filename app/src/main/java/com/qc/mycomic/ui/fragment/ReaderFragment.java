@@ -152,7 +152,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
                         ComicHelper.initChapterId(comicInfo, ComicHelper.positionToChapterId(comicInfo, position));
                         changeVisibility(rightView, false);
                         showLoadingPage();
-                        imageInfoList = null;
+                        isForce = true;
                         isFresh = true;
                         onRefresh();
                     } else {
@@ -200,6 +200,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
 
     private boolean isSmooth = false;
     private boolean isFresh = false;
+    private boolean isForce = false;
 
     private void setListener() {
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -391,7 +392,8 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
 
     @Override
     protected void requestServer() {
-        if (imageInfoList == null) {
+        if (imageInfoList == null || isForce) {
+            isForce = false;
             presenter.loadImageInfoList(comic);
         } else {
             if (isLoadNext) {

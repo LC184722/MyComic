@@ -1,6 +1,7 @@
 package com.qc.mynovel.util;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import top.luqichuang.mynovel.model.Novel;
@@ -75,6 +76,7 @@ public class NovelUtil {
     public static void first(Novel novel) {
         List<Novel> list = getNovelList(novel.getStatus());
         list.remove(novel);
+        novel.setDate(new Date());
         if (novel.isUpdate()) {
             list.add(0, novel);
         } else {

@@ -73,8 +73,9 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_gravity="center_vertical">
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="@dimen/dp_10">
 
                 <LinearLayout
                     android:id="@+id/llLeft"
@@ -136,12 +137,13 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
+                android:alpha="0.4"
                 android:background="@color/lightGray" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_4">
+                android:layout_marginTop="@dimen/dp_10">
 
                 <LinearLayout
                     android:id="@+id/llFav"

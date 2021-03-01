@@ -1,6 +1,7 @@
 package com.qc.mycomic.util;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import top.luqichuang.mycomic.model.Comic;
@@ -75,6 +76,7 @@ public class ComicUtil {
     public static void first(Comic comic) {
         List<Comic> list = getComicList(comic.getStatus());
         list.remove(comic);
+        comic.setDate(new Date());
         if (comic.isUpdate()) {
             list.add(0, comic);
         } else {

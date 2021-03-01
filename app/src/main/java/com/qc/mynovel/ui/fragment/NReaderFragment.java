@@ -155,7 +155,7 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
                         NovelHelper.initChapterId(novelInfo, NovelHelper.positionToChapterId(novelInfo, position));
                         changeVisibility(rightView, false);
                         showLoadingPage();
-                        contentInfoList = null;
+                        isForce = true;
                         isFresh = true;
                         onRefresh();
                     } else {
@@ -199,6 +199,7 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
 
     private boolean isSmooth = false;
     private boolean isFresh = false;
+    private boolean isForce = false;
 
     private void setListener() {
         llLeft.setOnClickListener(v -> {
@@ -340,7 +341,8 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
 
     @Override
     protected void requestServer() {
-        if (contentInfoList == null) {
+        if (contentInfoList == null || isForce) {
+            isForce = false;
             presenter.loadContentInfoList(novel);
         } else {
             if (isLoadNext) {

@@ -18,6 +18,7 @@ import com.qc.common.constant.Constant;
 import com.qc.common.constant.TmpData;
 import com.qc.common.self.ImageConfig;
 import com.qc.common.self.MySpacesItemDecoration;
+import com.qc.common.util.AnimationUtil;
 import com.qc.common.util.ImgUtil;
 import com.qc.common.util.PopupUtil;
 import com.qc.mycomic.R;
@@ -29,7 +30,6 @@ import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DBUtil;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
 import com.qmuiteam.qmui.util.QMUIDisplayHelper;
-import com.qmuiteam.qmui.util.QMUIViewHelper;
 import com.qmuiteam.qmui.widget.QMUIRadiusImageView;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 import com.qmuiteam.qmui.widget.popup.QMUIPopup;
@@ -126,7 +126,6 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
     private TextView tvUpdateChapter;
     private LinearLayout favLayout;
     private ImageView ivFav;
-    private ImageView ivFavNot;
     private TextView tvFav;
 
     @Override
@@ -148,7 +147,6 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         tvUpdateChapter = headerView.findViewById(R.id.tvUpdateChapter);
         favLayout = bottomView.findViewById(R.id.favLayout);
         ivFav = favLayout.findViewById(R.id.ivFav);
-        ivFavNot = favLayout.findViewById(R.id.ivFavNot);
         tvFav = favLayout.findViewById(R.id.tvFav);
         setValue();
     }
@@ -220,8 +218,7 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         LinearLayout favLayout = bottomView.findViewById(R.id.favLayout);
         favLayout.setOnClickListener(v -> {
             boolean isFav = comic.getStatus() != Constant.STATUS_FAV;
-            startAnimation(isFav);
-            tvFav.setText(isFav ? "已收藏" : "未收藏");
+            setFavLayout(isFav, true);
             ComicUtil.removeComic(comic);
             comic.setStatus(isFav ? Constant.STATUS_FAV : Constant.STATUS_HIS);
             //Log.i(TAG, "setListener: " + comic);
@@ -277,43 +274,17 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
     }
 
     public void setFavLayout(boolean isFav) {
-        if (isFav) {
-            ivFavNot.setVisibility(View.GONE);
-            ivFav.setVisibility(View.VISIBLE);
-            tvFav.setText("已收藏");
-        } else {
-            ivFav.setVisibility(View.GONE);
-            ivFavNot.setVisibility(View.VISIBLE);
-            tvFav.setText("未收藏");
-        }
+        setFavLayout(isFav, false);
     }
 
-    public void startAnimation(boolean isFav) {
-        View outView;
-        View inView;
+    public void setFavLayout(boolean isFav, boolean needAnimation) {
         if (isFav) {
-            outView = ivFavNot;
-            inView = ivFav;
+            AnimationUtil.changeDrawable(ivFav, getDrawablee(R.drawable.ic_baseline_favorite_24), needAnimation);
+            tvFav.setText("已收藏");
         } else {
-            outView = ivFav;
-            inView = ivFavNot;
+            AnimationUtil.changeDrawable(ivFav, getDrawablee(R.drawable.ic_baseline_favorite_border_24), needAnimation);
+            tvFav.setText("未收藏");
         }
-        QMUIViewHelper.fadeOut(outView, 200, new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                QMUIViewHelper.fadeIn(inView, 200, null, true);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        }, true);
     }
 
     @Override
