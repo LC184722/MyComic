@@ -1,5 +1,8 @@
 package com.qc.common.constant;
 
+import com.qc.common.en.SettingEnum;
+import com.qc.common.util.SettingUtil;
+
 /**
  * @author LuQiChuang
  * @desc
@@ -11,5 +14,7 @@ public class TmpData {
     public static int toStatus = Constant.NORMAL;
 
     public static boolean isLight = true;
+
+    public static boolean isFull = (boolean) SettingUtil.getSettingKey(SettingEnum.IS_FULL_SCREEN);
 
 }

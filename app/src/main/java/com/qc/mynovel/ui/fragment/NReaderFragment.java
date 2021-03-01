@@ -19,8 +19,10 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.qc.common.constant.Constant;
 import com.qc.common.constant.TmpData;
+import com.qc.common.en.SettingEnum;
 import com.qc.common.ui.adapter.ReaderListAdapter;
 import com.qc.common.util.AnimationUtil;
+import com.qc.common.util.SettingUtil;
 import com.qc.mycomic.R;
 import com.qc.mynovel.ui.adapter.NReaderAdapter;
 import com.qc.mynovel.ui.presenter.NReaderPresenter;
@@ -36,12 +38,12 @@ import java.util.Locale;
 
 import the.one.base.ui.fragment.BaseDataFragment;
 import the.one.base.ui.presenter.BasePresenter;
+import the.one.base.widge.TheCheckBox;
 import top.luqichuang.common.model.ChapterInfo;
 import top.luqichuang.mynovel.model.ContentInfo;
 import top.luqichuang.mynovel.model.Novel;
 import top.luqichuang.mynovel.model.NovelInfo;
 
-import static android.view.View.VISIBLE;
 import static androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE;
 
 /**
@@ -65,6 +67,7 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
     private View bottomView;
     private View darkView;
     private View rightView;
+    private View settingsView;
     private TextView tvChapter;
     private TextView tvProgress;
     private TextView tvInfo;
@@ -77,6 +80,7 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
     private LinearLayout llFav;
     private LinearLayout llSettings;
     private LinearLayout llChapter;
+    private LinearLayout llFull;
     private SeekBar seekBar;
     private boolean firstLoad = true;
 
@@ -102,37 +106,32 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
     protected void initView(View rootView) {
         super.initView(rootView);
         mTopLayout.setVisibility(View.GONE);
-        setStatusBarVisible(false);
+        setFullScreen(TmpData.isFull);
     }
 
-    protected void setStatusBarVisible(boolean show) {
-        if (show) {
-            QMUIDisplayHelper.cancelFullScreen(_mActivity);
-        } else {
+    protected void setFullScreen(boolean isFull) {
+        if (isFull) {
             QMUIDisplayHelper.setFullScreen(_mActivity);
+        } else {
+            QMUIDisplayHelper.cancelFullScreen(_mActivity);
         }
     }
 
     private void addView() {
         if (darkView == null) {
             darkView = getView(R.layout.fragment_dark);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(QMUIDisplayHelper.getScreenWidth(_mActivity), QMUIDisplayHelper.getScreenHeight(_mActivity));
-            mStatusLayout.addView(darkView, 1, layoutParams);
+            mStatusLayout.addView(darkView, 1, getLP());
         }
         if (topView == null) {
-            topView = getView(R.layout.top_reader);
+            topView = getView(R.layout.fragment_reader_display);
             tvChapter = topView.findViewById(R.id.tvChapter);
             tvProgress = topView.findViewById(R.id.tvProgress);
             tvProgress.setVisibility(View.GONE);
-            int height = QMUIDisplayHelper.getScreenHeight(_mActivity) + QMUIDisplayHelper.getStatusBarHeight(_mActivity);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(QMUIDisplayHelper.getScreenWidth(_mActivity), height);
-            mStatusLayout.addView(topView, 2, layoutParams);
+            mStatusLayout.addView(topView, 2, getLP());
         }
         if (bottomView == null) {
-            bottomView = getView(R.layout.bottom_reader);
-            int height = QMUIDisplayHelper.getScreenHeight(_mActivity) + QMUIDisplayHelper.getStatusBarHeight(_mActivity);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(QMUIDisplayHelper.getScreenWidth(_mActivity), height);
-            mStatusLayout.addView(bottomView, 3, layoutParams);
+            bottomView = getView(R.layout.fragment_reader_bottom);
+            mStatusLayout.addView(bottomView, 3, getLP());
             llLeft = bottomView.findViewById(R.id.llLeft);
             llRight = bottomView.findViewById(R.id.llRight);
             seekBar = bottomView.findViewById(R.id.seekBar);
@@ -148,7 +147,7 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
             tvChapterProgress.setVisibility(View.GONE);
             TextView tvTitleCenter = bottomView.findViewById(R.id.tvTitleCenter);
             tvTitleCenter.setText(novel.getTitle());
-            tvTitleCenter.setVisibility(VISIBLE);
+            tvTitleCenter.setVisibility(View.VISIBLE);
         }
         if (rightView == null) {
             rightView = getView(R.layout.fragment_reader_list);
@@ -175,14 +174,19 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
                     }
                 }
             });
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(QMUIDisplayHelper.getScreenWidth(_mActivity), QMUIDisplayHelper.getScreenHeight(_mActivity));
-            mStatusLayout.addView(rightView, 4, layoutParams);
+            mStatusLayout.addView(rightView, 4, getLP());
             tvInfo = rightView.findViewById(R.id.tvInfo);
             TextView tvTitle = rightView.findViewById(R.id.tvTitle);
             tvTitle.setText(novel.getTitle());
         }
+        if (settingsView == null) {
+            settingsView = getView(R.layout.fragment_reader_settings);
+            mStatusLayout.addView(settingsView, 5, getLP());
+            llFull = settingsView.findViewById(R.id.llFull);
+        }
         bottomView.setVisibility(View.GONE);
         rightView.setVisibility(View.GONE);
+        settingsView.setVisibility(View.GONE);
         if (TmpData.isLight) {
             darkView.setVisibility(View.GONE);
         }
@@ -243,7 +247,7 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
 
         TextView tvDark = bottomView.findViewById(R.id.tvDark);
         ImageButton ibDark = bottomView.findViewById(R.id.ibDark);
-        if (darkView.getVisibility() == VISIBLE) {
+        if (darkView.getVisibility() == View.VISIBLE) {
             TmpData.isLight = false;
             tvDark.setText("日间");
             AnimationUtil.changeDrawable(ibDark, getDrawablee(R.drawable.ic_baseline_brightness_1_24), false);
@@ -253,7 +257,7 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
             AnimationUtil.changeDrawable(ibDark, getDrawablee(R.drawable.ic_baseline_brightness_2_24), false);
         }
         llDark.setOnClickListener(v -> {
-            if (darkView.getVisibility() == VISIBLE) {
+            if (darkView.getVisibility() == View.VISIBLE) {
                 changeVisibility(darkView, false, false);
                 tvDark.setText("夜间");
                 AnimationUtil.changeDrawable(ibDark, getDrawablee(R.drawable.ic_baseline_brightness_2_24));
@@ -288,11 +292,26 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
         });
 
         llSettings.setOnClickListener(v -> {
-            showToast("待完善");
+            changeVisibility(bottomView, false, false);
+            changeVisibility(settingsView, true, false);
         });
 
         llChapter.setOnClickListener(v -> {
             onBackPressed();
+        });
+
+        TheCheckBox checkBox = llFull.findViewById(R.id.checkBox);
+        checkBox.setIsCheckDrawable(R.drawable.ic_baseline_check_circle_24);
+        checkBox.setCheck(TmpData.isFull);
+        checkBox.setOnClickListener(v -> {
+            TmpData.isFull = !checkBox.isCheck();
+            SettingUtil.putSetting(SettingEnum.IS_FULL_SCREEN, TmpData.isFull);
+            checkBox.setCheck(TmpData.isFull);
+        });
+        llFull.setOnClickListener(v -> {
+            TmpData.isFull = !checkBox.isCheck();
+            SettingUtil.putSetting(SettingEnum.IS_FULL_SCREEN, TmpData.isFull);
+            checkBox.setCheck(TmpData.isFull);
         });
     }
 
@@ -385,19 +404,24 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
 
     @Override
     public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
-        if (!changeVisibility(rightView, false)) {
-            changeVisibility(bottomView, bottomView.getVisibility() != VISIBLE);
+        if (!TmpData.isFull) {
+            setFullScreen(false);
+        }
+        if (!changeVisibility(settingsView, false)) {
+            if (!changeVisibility(rightView, false)) {
+                changeVisibility(bottomView, bottomView.getVisibility() != View.VISIBLE);
+            }
         }
     }
 
     private boolean changeVisibility(View view, boolean isVisible) {
-        return changeVisibility(view, isVisible, true);
+        return changeVisibility(view, isVisible, TmpData.isFull);
     }
 
     private boolean changeVisibility(View view, boolean isVisible, boolean isChangeStatusBar) {
         if (isChangeStatusBar) {
-            setStatusBarVisible(isVisible);
-            setLP(bottomView, topView, darkView);
+            setFullScreen(!isVisible);
+            setLP(bottomView, topView, darkView, settingsView);
         }
         return AnimationUtil.changeVisibility(view, isVisible);
     }
@@ -406,8 +430,14 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
         for (View view : views) {
             ViewGroup.LayoutParams lp = view.getLayoutParams();
             lp.width = QMUIDisplayHelper.getScreenWidth(_mActivity);
-            lp.height = QMUIDisplayHelper.getScreenHeight(_mActivity) + QMUIDisplayHelper.getStatusBarHeight(_mActivity);
+            lp.height = QMUIDisplayHelper.getScreenHeight(_mActivity) + QMUIDisplayHelper.getStatusBarHeight(_mActivity) + QMUIDisplayHelper.getActionBarHeight(_mActivity);
         }
+    }
+
+    private ViewGroup.LayoutParams getLP() {
+        int width = QMUIDisplayHelper.getScreenWidth(_mActivity);
+        int height = QMUIDisplayHelper.getScreenHeight(_mActivity) + QMUIDisplayHelper.getStatusBarHeight(_mActivity) + QMUIDisplayHelper.getActionBarHeight(_mActivity);
+        return new ViewGroup.LayoutParams(width, height);
     }
 
     @Override
@@ -447,7 +477,7 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
 
     @Override
     public void onDestroy() {
-        setStatusBarVisible(true);
+        setFullScreen(false);
         super.onDestroy();
     }
 }

@@ -17,6 +17,7 @@ public enum SettingEnum {
     PRELOAD_NUM("preloadNum", 0),
     READ_CONTENT("readContent", AppConstant.COMIC_CODE),
     DEFAULT_NOVEL_SOURCE("defaultNSource", NSourceEnum.XIN_BI_QU_GE.ID),
+    IS_FULL_SCREEN("isFullScreen", true),
     ;
 
     public final String KEY;
