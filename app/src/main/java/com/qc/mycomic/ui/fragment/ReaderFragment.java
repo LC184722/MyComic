@@ -2,6 +2,7 @@ package com.qc.mycomic.ui.fragment;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -105,6 +106,15 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
     protected void initView(View rootView) {
         super.initView(rootView);
         mTopLayout.setVisibility(View.GONE);
+        setStatusBarVisible(false);
+    }
+
+    protected void setStatusBarVisible(boolean show) {
+        if (show) {
+            QMUIDisplayHelper.cancelFullScreen(_mActivity);
+        } else {
+            QMUIDisplayHelper.setFullScreen(_mActivity);
+        }
     }
 
     private void addView() {
@@ -117,12 +127,14 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
             topView = getView(R.layout.top_reader);
             tvChapter = topView.findViewById(R.id.tvChapter);
             tvProgress = topView.findViewById(R.id.tvProgress);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(QMUIDisplayHelper.getScreenWidth(_mActivity), QMUIDisplayHelper.getScreenHeight(_mActivity));
+            int height = QMUIDisplayHelper.getScreenHeight(_mActivity) + QMUIDisplayHelper.getStatusBarHeight(_mActivity);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(QMUIDisplayHelper.getScreenWidth(_mActivity), height);
             mStatusLayout.addView(topView, 2, layoutParams);
         }
         if (bottomView == null) {
             bottomView = getView(R.layout.bottom_reader);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(QMUIDisplayHelper.getScreenWidth(_mActivity), QMUIDisplayHelper.getScreenHeight(_mActivity));
+            int height = QMUIDisplayHelper.getScreenHeight(_mActivity) + QMUIDisplayHelper.getStatusBarHeight(_mActivity);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(QMUIDisplayHelper.getScreenWidth(_mActivity), height);
             mStatusLayout.addView(bottomView, 3, layoutParams);
             llLeft = bottomView.findViewById(R.id.llLeft);
             llRight = bottomView.findViewById(R.id.llRight);
@@ -167,8 +179,10 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
             tvTitle.setText(comic.getTitle());
         }
         bottomView.setVisibility(View.GONE);
-        darkView.setVisibility(View.GONE);
         rightView.setVisibility(View.GONE);
+        if (TmpData.isLight) {
+            darkView.setVisibility(View.GONE);
+        }
         setValue();
     }
 
@@ -252,13 +266,24 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
 
         TextView tvDark = bottomView.findViewById(R.id.tvDark);
         ImageButton ibDark = bottomView.findViewById(R.id.ibDark);
+        if (darkView.getVisibility() == VISIBLE) {
+            TmpData.isLight = false;
+            tvDark.setText("日间");
+            AnimationUtil.changeDrawable(ibDark, getDrawablee(R.drawable.ic_baseline_brightness_1_24), false);
+        } else {
+            TmpData.isLight = true;
+            tvDark.setText("夜间");
+            AnimationUtil.changeDrawable(ibDark, getDrawablee(R.drawable.ic_baseline_brightness_2_24), false);
+        }
         llDark.setOnClickListener(v -> {
             if (darkView.getVisibility() == VISIBLE) {
-                changeVisibility(darkView, false);
+                TmpData.isLight = true;
+                changeVisibility(darkView, false, false);
                 tvDark.setText("夜间");
                 AnimationUtil.changeDrawable(ibDark, getDrawablee(R.drawable.ic_baseline_brightness_2_24));
             } else {
-                changeVisibility(darkView, true);
+                TmpData.isLight = false;
+                changeVisibility(darkView, true, false);
                 tvDark.setText("日间");
                 AnimationUtil.changeDrawable(ibDark, getDrawablee(R.drawable.ic_baseline_brightness_1_24));
             }
@@ -420,7 +445,23 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
     }
 
     private boolean changeVisibility(View view, boolean isVisible) {
+        return changeVisibility(view, isVisible, true);
+    }
+
+    private boolean changeVisibility(View view, boolean isVisible, boolean isChangeStatusBar) {
+        if (isChangeStatusBar) {
+            setStatusBarVisible(isVisible);
+            setLP(bottomView, topView, darkView);
+        }
         return AnimationUtil.changeVisibility(view, isVisible);
+    }
+
+    private void setLP(View... views) {
+        for (View view : views) {
+            ViewGroup.LayoutParams lp = view.getLayoutParams();
+            lp.width = QMUIDisplayHelper.getScreenWidth(_mActivity);
+            lp.height = QMUIDisplayHelper.getScreenHeight(_mActivity) + QMUIDisplayHelper.getStatusBarHeight(_mActivity);
+        }
     }
 
     @Override
@@ -465,5 +506,11 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
                 recycleView.scrollToPosition(0);
             }
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        setStatusBarVisible(true);
+        super.onDestroy();
     }
 }

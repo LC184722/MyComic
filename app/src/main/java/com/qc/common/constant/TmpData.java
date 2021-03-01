@@ -1,7 +1,5 @@
 package com.qc.common.constant;
 
-import com.qc.common.constant.Constant;
-
 /**
  * @author LuQiChuang
  * @desc
@@ -11,5 +9,7 @@ import com.qc.common.constant.Constant;
 public class TmpData {
 
     public static int toStatus = Constant.NORMAL;
+
+    public static boolean isLight = true;
 
 }
