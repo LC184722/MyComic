@@ -65,6 +65,10 @@ public class NChapterAdapter extends TheBaseQuickAdapter<ChapterInfo> {
         }
     }
 
+    public void setChapterId(int chapterId) {
+        this.chapterId = chapterId;
+    }
+
     public int getChapterId() {
         return chapterId;
     }

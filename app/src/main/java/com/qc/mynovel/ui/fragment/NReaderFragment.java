@@ -96,7 +96,7 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
     public void onCreate(@Nullable Bundle savedInstanceState) {
         this.novel = (Novel) getArguments().get("novel");
         this.novelInfo = novel.getNovelInfo();
-        this.curChapterId = novelInfo.getCurChapterId();
+        this.curChapterId = -1;
         this.isLoadNext = true;
         TmpData.toStatus = Constant.READER_TO_CHAPTER;
         super.onCreate(savedInstanceState);
@@ -157,6 +157,7 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
             RecyclerView listView = rightView.findViewById(R.id.recycleView);
             listView.setLayoutManager(getLayoutManager(TYPE_LIST));
             listView.setAdapter(readerListAdapter);
+            listView.scrollToPosition(readerListAdapter.getPosition());
             listView.addItemDecoration(new DividerItemDecoration(_mActivity, DividerItemDecoration.VERTICAL));
             readerListAdapter.setOnItemClickListener(new OnItemClickListener() {
                 @Override
@@ -167,7 +168,7 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
                         changeVisibility(rightView, false);
                         showLoadingPage();
                         isForce = true;
-                        isFresh = true;
+                        isJump = true;
                         onRefresh();
                     } else {
                         changeVisibility(rightView, false);
@@ -190,7 +191,6 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
         if (TmpData.isLight) {
             darkView.setVisibility(View.GONE);
         }
-        setValue();
     }
 
     private void initOtherView() {
@@ -215,14 +215,34 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
         }
     }
 
+    private void setScrollValue(ContentInfo contentInfo) {
+        //章节变化时需要变化的数据
+        if (curChapterId != contentInfo.getChapterId()) {
+            //初始化curChapterId info
+            NovelHelper.initChapterId(novelInfo, contentInfo.getChapterId());
+            curChapterId = contentInfo.getChapterId();
+
+            //设置同一章节中不变的view
+            tvChapter.setText(novelInfo.getCurChapterTitle());
+            tvChapterName.setText(novelInfo.getCurChapterTitle());
+            tvInfo.setText(String.format(Locale.CHINA, "%d章/%d章", contentInfo.getChapterId() + 1, novelInfo.getChapterInfoList().size()));
+            readerListAdapter.setPosition(NovelHelper.getPosition(novelInfo));
+
+            //保存数据
+            DBUtil.saveNovelInfo(novelInfo);
+        }
+        //章节不变时需要实时变化的数据
+        //
+    }
+
     private boolean isSmooth = false;
-    private boolean isFresh = false;
+    private boolean isJump = false;
     private boolean isForce = false;
 
     private void setListener() {
         llLeft.setOnClickListener(v -> {
             if (NovelHelper.checkChapterId(novelInfo, NovelHelper.getPrevChapterId(novelInfo))) {
-                isFresh = true;
+                isJump = true;
                 changeVisibility(bottomView, false);
                 onRefresh();
             } else {
@@ -232,7 +252,7 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
 
         llRight.setOnClickListener(v -> {
             if (NovelHelper.checkChapterId(novelInfo, NovelHelper.getNextChapterId(novelInfo))) {
-                isFresh = true;
+                isJump = true;
                 changeVisibility(bottomView, false);
                 super.onRefresh();
             } else {
@@ -341,23 +361,12 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
                 if (manager != null) {
                     first = manager.findFirstVisibleItemPosition();//得到显示屏内的第一个list的位置数position
                     ContentInfo contentInfo = contentInfoList.get(first);
-                    //设置chapterId,chapterTitle
-                    NovelHelper.initChapterId(novelInfo, contentInfo.getChapterId());
-                    //图片id和当前id是否相等，相等则清除adapter中map数据
-                    if (curChapterId != contentInfo.getChapterId()) {
-                        curChapterId = contentInfo.getChapterId();
-                        tvInfo.setText(String.format(Locale.CHINA, "%d章/%d章", contentInfo.getChapterId() + 1, novelInfo.getChapterInfoList().size()));
-                        DBUtil.saveNovelInfo(novelInfo);
-                    }
-                    //设置数据
-                    tvChapter.setText(novelInfo.getCurChapterTitle());
-                    tvChapterName.setText(novelInfo.getCurChapterTitle());
+                    setScrollValue(contentInfo);
 
                     //防止滑动seekBar与onScrolled发生冲突
                     if (!isSmooth) {
-                        //改变bottomView visible
-                        changeVisibility(bottomView, false);
-                        changeVisibility(rightView, false);
+                        //改变views visible
+                        changeVisibility(false);
                     }
 
                 } else {
@@ -369,8 +378,7 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
 
     @Override
     public void onRefresh() {
-        changeVisibility(bottomView, false);
-        changeVisibility(rightView, false);
+        changeVisibility(false);
         isLoadNext = false;
         super.onRefresh();
     }
@@ -414,6 +422,13 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
         }
     }
 
+    private void changeVisibility(boolean isVisible) {
+        View[] views = new View[]{bottomView, rightView, settingsView};
+        for (View view : views) {
+            AnimationUtil.changeVisibility(view, isVisible);
+        }
+    }
+
     private boolean changeVisibility(View view, boolean isVisible) {
         return changeVisibility(view, isVisible, TmpData.isFull);
     }
@@ -421,17 +436,8 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
     private boolean changeVisibility(View view, boolean isVisible, boolean isChangeStatusBar) {
         if (isChangeStatusBar) {
             setFullScreen(!isVisible);
-            setLP(bottomView, topView, darkView, settingsView);
         }
         return AnimationUtil.changeVisibility(view, isVisible);
-    }
-
-    private void setLP(View... views) {
-        for (View view : views) {
-            ViewGroup.LayoutParams lp = view.getLayoutParams();
-            lp.width = QMUIDisplayHelper.getScreenWidth(_mActivity);
-            lp.height = QMUIDisplayHelper.getScreenHeight(_mActivity) + QMUIDisplayHelper.getStatusBarHeight(_mActivity) + QMUIDisplayHelper.getActionBarHeight(_mActivity);
-        }
     }
 
     private ViewGroup.LayoutParams getLP() {
@@ -466,12 +472,16 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
             list.add(contentInfo);
             onComplete(list);
             this.contentInfoList = adapter.getData();
-            initOtherView();
-            isLoadNext = true;
-            if (isFresh) {
-                isFresh = false;
+            addView();
+            if (firstLoad) {
+                firstLoad = false;
+                setListener();
+            }
+            if (isJump) {
+                isJump = false;
                 recycleView.scrollToPosition(0);
             }
+            isLoadNext = true;
         }
     }
 

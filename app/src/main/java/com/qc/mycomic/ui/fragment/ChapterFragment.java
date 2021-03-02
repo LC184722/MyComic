@@ -66,6 +66,8 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
 
     private ChapterPresenter presenter = new ChapterPresenter();
 
+    private ChapterAdapter chapterAdapter;
+
     public static ChapterFragment getInstance(Comic comic) {
         ChapterFragment fragment = new ChapterFragment();
         Bundle bundle = new Bundle();
@@ -105,6 +107,7 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
         if (enter && adapter != null) {
             adapter.notifyDataSetChanged();
+            chapterAdapter.setChapterId(comic.getComicInfo().getCurChapterId());
             setValue();
         }
         return super.onCreateAnimation(transit, enter, nextAnim);
@@ -289,7 +292,10 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
 
     @Override
     protected BaseQuickAdapter getAdapter() {
-        return new ChapterAdapter(R.layout.item_chapter, comic);
+        if (chapterAdapter == null) {
+            chapterAdapter = new ChapterAdapter(R.layout.item_chapter, comic);
+        }
+        return chapterAdapter;
     }
 
     @Override

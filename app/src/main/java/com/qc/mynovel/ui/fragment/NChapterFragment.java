@@ -66,6 +66,8 @@ public class NChapterFragment extends BaseDataFragment<ChapterInfo> implements N
 
     private NChapterPresenter presenter = new NChapterPresenter();
 
+    private NChapterAdapter chapterAdapter;
+
     public static NChapterFragment getInstance(Novel novel) {
         NChapterFragment fragment = new NChapterFragment();
         Bundle bundle = new Bundle();
@@ -105,6 +107,7 @@ public class NChapterFragment extends BaseDataFragment<ChapterInfo> implements N
     public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
         if (enter && adapter != null) {
             adapter.notifyDataSetChanged();
+            chapterAdapter.setChapterId(novel.getNovelInfo().getCurChapterId());
             setValue();
         }
         return super.onCreateAnimation(transit, enter, nextAnim);
@@ -289,7 +292,10 @@ public class NChapterFragment extends BaseDataFragment<ChapterInfo> implements N
 
     @Override
     protected BaseQuickAdapter getAdapter() {
-        return new NChapterAdapter(R.layout.item_chapter, novel);
+        if (chapterAdapter == null) {
+            chapterAdapter = new NChapterAdapter(R.layout.item_chapter, novel);
+        }
+        return chapterAdapter;
     }
 
     @Override
