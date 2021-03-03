@@ -239,7 +239,6 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
 
         llLeft.setOnClickListener(v -> {
             if (ComicHelper.checkChapterId(comicInfo, ComicHelper.getPrevChapterId(comicInfo))) {
-                isJump = true;
                 changeVisibility(bottomView, false);
                 onRefresh();
             } else {
@@ -374,7 +373,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
                         //设置seekBar position
                         seekBar.setProgress(imageInfo.getCur());
                         //改变views visible
-                        changeVisibility(false);
+                        hideView();
                     }
                     //预加载
                     int bottom = first + count;
@@ -395,7 +394,8 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
 
     @Override
     public void onRefresh() {
-        changeVisibility(false);
+        hideView();
+        isJump = true;
         isLoadNext = false;
         super.onRefresh();
     }
@@ -414,6 +414,8 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
         } else {
             if (isLoadNext) {
                 ComicHelper.initChapterId(comicInfo, imageInfoList.get(imageInfoList.size() - 1).getChapterId());
+            } else {
+                ComicHelper.initChapterId(comicInfo, curChapterId);
             }
             //Log.i(TAG, "requestServer: " + comicInfo.getCurChapterId());
             if (ComicHelper.canLoad(comicInfo, isLoadNext)) {
@@ -440,11 +442,12 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
         }
     }
 
-    private void changeVisibility(boolean isVisible) {
+    private void hideView() {
         View[] views = new View[]{bottomView, rightView, settingsView};
         for (View view : views) {
-            AnimationUtil.changeVisibility(view, isVisible);
+            AnimationUtil.changeVisibility(view, false);
         }
+        setFullScreen(TmpData.isFull);
     }
 
     private boolean changeVisibility(View view, boolean isVisible) {
@@ -502,10 +505,14 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
             addView();
             if (firstLoad) {
                 firstLoad = false;
+                isJump = true;
                 setListener();
             }
             if (isJump) {
                 isJump = false;
+                if (!this.imageInfoList.isEmpty()) {
+                    setScrollValue(this.imageInfoList.get(0));
+                }
                 recycleView.scrollToPosition(0);
             }
             isLoadNext = true;

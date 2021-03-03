@@ -242,7 +242,6 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
     private void setListener() {
         llLeft.setOnClickListener(v -> {
             if (NovelHelper.checkChapterId(novelInfo, NovelHelper.getPrevChapterId(novelInfo))) {
-                isJump = true;
                 changeVisibility(bottomView, false);
                 onRefresh();
             } else {
@@ -366,7 +365,7 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
                     //防止滑动seekBar与onScrolled发生冲突
                     if (!isSmooth) {
                         //改变views visible
-                        changeVisibility(false);
+                        hideView();
                     }
 
                 } else {
@@ -378,7 +377,8 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
 
     @Override
     public void onRefresh() {
-        changeVisibility(false);
+        hideView();
+        isJump = true;
         isLoadNext = false;
         super.onRefresh();
     }
@@ -397,6 +397,8 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
         } else {
             if (isLoadNext) {
                 NovelHelper.initChapterId(novelInfo, contentInfoList.get(contentInfoList.size() - 1).getChapterId());
+            } else {
+                NovelHelper.initChapterId(novelInfo, curChapterId);
             }
             if (NovelHelper.canLoad(novelInfo, isLoadNext)) {
                 presenter.loadContentInfoList(novel);
@@ -422,11 +424,12 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
         }
     }
 
-    private void changeVisibility(boolean isVisible) {
+    private void hideView() {
         View[] views = new View[]{bottomView, rightView, settingsView};
         for (View view : views) {
-            AnimationUtil.changeVisibility(view, isVisible);
+            AnimationUtil.changeVisibility(view, false);
         }
+        setFullScreen(TmpData.isFull);
     }
 
     private boolean changeVisibility(View view, boolean isVisible) {
@@ -475,10 +478,14 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
             addView();
             if (firstLoad) {
                 firstLoad = false;
+                isJump = true;
                 setListener();
             }
             if (isJump) {
                 isJump = false;
+                if (!this.contentInfoList.isEmpty()) {
+                    setScrollValue(this.contentInfoList.get(0));
+                }
                 recycleView.scrollToPosition(0);
             }
             isLoadNext = true;
