@@ -5,6 +5,7 @@ import java.util.Map;
 
 import top.luqichuang.mynovel.model.NSource;
 import top.luqichuang.mynovel.source.AiYue;
+import top.luqichuang.mynovel.source.K17;
 import top.luqichuang.mynovel.source.QuanShu;
 import top.luqichuang.mynovel.source.QuanXiaoShuo;
 import top.luqichuang.mynovel.source.XinBiQuGe;
@@ -24,6 +25,7 @@ public enum NSourceEnum {
     QUAN_XIAO_SHUO(3, "全小说"),
     AI_YUE(4, "爱阅小说"),
     XUAN_SHU(5, "炫书网"),
+    K17(6, "17K小说"),
     ;
 
     private static final Map<Integer, NSource> MAP = new LinkedHashMap<>();
@@ -34,6 +36,7 @@ public enum NSourceEnum {
         MAP.put(QUAN_XIAO_SHUO.ID, new QuanXiaoShuo());
         MAP.put(AI_YUE.ID, new AiYue());
         MAP.put(XUAN_SHU.ID, new XuanShu());
+        MAP.put(K17.ID, new K17());
     }
 
     public static Map<Integer, NSource> getMAP() {
