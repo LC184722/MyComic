@@ -1,9 +1,12 @@
 package com.qc.mynovel.ui.adapter;
 
-import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import androidx.annotation.Dimension;
+
+import com.qc.common.en.SettingEnum;
+import com.qc.common.util.SettingUtil;
 import com.qc.mycomic.R;
-import com.qc.common.util.ImgUtil;
 import com.qc.mynovel.util.NovelHelper;
 
 import org.jetbrains.annotations.NotNull;
@@ -26,6 +29,7 @@ public class NReaderAdapter extends TheBaseQuickAdapter<ContentInfo> {
 
     private List<ChapterInfo> chapterInfoList;
     private NovelInfo novelInfo;
+    private int fontSize = (int) SettingUtil.getSettingKey(SettingEnum.NOVEL_FONT_SIZE);
 
     public NReaderAdapter(int layoutResId, NovelInfo novelInfo) {
         super(layoutResId);
@@ -38,6 +42,29 @@ public class NReaderAdapter extends TheBaseQuickAdapter<ContentInfo> {
         int position = NovelHelper.getPosition(novelInfo, contentInfo.getChapterId());
         holder.setText(R.id.tvTitle, chapterInfoList.get(position).getTitle());
 //        holder.setText(R.id.tvTitle, novelInfo.getCurChapterTitle());
-        holder.setText(R.id.tvContent, contentInfo.getContent());
+        TextView tvContent = holder.getView(R.id.tvContent);
+        tvContent.setText(contentInfo.getContent());
+        tvContent.setTextSize(Dimension.SP, fontSize);
+    }
+
+    public String addFont() {
+        return changeFontSize(fontSize + 1);
+    }
+
+    public String subFont() {
+        return changeFontSize(fontSize - 1);
+    }
+
+    private String changeFontSize(int value) {
+        if (value >= 16 && value <= 30) {
+            fontSize = value;
+            SettingUtil.putSetting(SettingEnum.NOVEL_FONT_SIZE, fontSize);
+            notifyDataSetChanged();
+        }
+        return getFontSizeDesc();
+    }
+
+    public String getFontSizeDesc() {
+        return fontSize + "sp";
     }
 }

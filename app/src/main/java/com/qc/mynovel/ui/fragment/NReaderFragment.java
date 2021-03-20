@@ -81,6 +81,7 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
     private LinearLayout llSettings;
     private LinearLayout llChapter;
     private LinearLayout llFull;
+    private LinearLayout llFont;
     private SeekBar seekBar;
     private boolean firstLoad = true;
 
@@ -181,9 +182,10 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
             tvTitle.setText(novel.getTitle());
         }
         if (settingsView == null) {
-            settingsView = getView(R.layout.fragment_reader_settings);
+            settingsView = getView(R.layout.fragment_reader_settings_novel);
             mStatusLayout.addView(settingsView, 5, getLP());
             llFull = settingsView.findViewById(R.id.llFull);
+            llFont = settingsView.findViewById(R.id.llFont);
         }
         bottomView.setVisibility(View.GONE);
         rightView.setVisibility(View.GONE);
@@ -319,6 +321,15 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
             onBackPressed();
         });
 
+        LinearLayout llSettingsContent = settingsView.findViewById(R.id.llSettingsContent);
+        llSettingsContent.setOnClickListener(v -> {
+        });
+
+        LinearLayout llCancel = settingsView.findViewById(R.id.llCancel);
+        llCancel.setOnClickListener(v -> {
+            changeVisibility(settingsView, false, false);
+        });
+
         TheCheckBox checkBox = llFull.findViewById(R.id.checkBox);
         checkBox.setIsCheckDrawable(R.drawable.ic_baseline_check_circle_24);
         checkBox.setCheck(TmpData.isFull);
@@ -332,6 +343,17 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
             SettingUtil.putSetting(SettingEnum.IS_FULL_SCREEN, TmpData.isFull);
             checkBox.setCheck(TmpData.isFull);
         });
+
+        TextView tvSub = llFont.findViewById(R.id.tvSub);
+        TextView tvAdd = llFont.findViewById(R.id.tvAdd);
+        TextView tvFont = llFont.findViewById(R.id.tvFont);
+        tvSub.setOnClickListener(v -> {
+            tvFont.setText(readerAdapter.subFont());
+        });
+        tvAdd.setOnClickListener(v -> {
+            tvFont.setText(readerAdapter.addFont());
+        });
+        tvFont.setText(readerAdapter.getFontSizeDesc());
     }
 
     private int first;

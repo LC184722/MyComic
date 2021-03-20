@@ -54,6 +54,51 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/llFont"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_10">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="调整字体大小"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/tvSub"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:background="@color/lightGray"
+                    android:gravity="center"
+                    android:text="-" />
+
+                <TextView
+                    android:id="@+id/tvFont"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/dp_10"
+                    android:layout_marginEnd="@dimen/dp_10"
+                    android:gravity="center"
+                    android:text="12sp"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/tvAdd"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:background="@color/lightGray"
+                    android:gravity="center"
+                    android:text="+" />
+
+            </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"

@@ -18,6 +18,7 @@ public enum SettingEnum {
     READ_CONTENT("readContent", AppConstant.COMIC_CODE),
     DEFAULT_NOVEL_SOURCE("defaultNSource", NSourceEnum.XIN_BI_QU_GE.ID),
     IS_FULL_SCREEN("isFullScreen", true),
+    NOVEL_FONT_SIZE("novelFontSize", 20),
     ;
 
     public final String KEY;

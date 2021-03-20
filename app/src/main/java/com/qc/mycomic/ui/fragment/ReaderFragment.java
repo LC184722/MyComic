@@ -318,6 +318,15 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
             onBackPressed();
         });
 
+        LinearLayout llSettingsContent = settingsView.findViewById(R.id.llSettingsContent);
+        llSettingsContent.setOnClickListener(v -> {
+        });
+
+        LinearLayout llCancel = settingsView.findViewById(R.id.llCancel);
+        llCancel.setOnClickListener(v -> {
+            changeVisibility(settingsView, false, false);
+        });
+
         TheCheckBox checkBox = llFull.findViewById(R.id.checkBox);
         checkBox.setIsCheckDrawable(R.drawable.ic_baseline_check_circle_24);
         checkBox.setCheck(TmpData.isFull);
