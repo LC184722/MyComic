@@ -1,10 +1,10 @@
 package top.luqichuang.mycomic.model;
 
-import top.luqichuang.common.en.SourceEnum;
-import top.luqichuang.mycomic.model.Source;
-import top.luqichuang.common.util.NetUtil;
+import java.util.Map;
 
 import okhttp3.Request;
+import top.luqichuang.common.en.SourceEnum;
+import top.luqichuang.common.util.NetUtil;
 
 /**
  * @author LuQiChuang
@@ -52,7 +52,7 @@ public abstract class BaseSource implements Source {
     }
 
     @Override
-    public Request buildRequest(String requestUrl, String html, String tag) {
+    public Request buildRequest(String requestUrl, String html, String tag, Map<String, Object> map) {
         return null;
     }
 }

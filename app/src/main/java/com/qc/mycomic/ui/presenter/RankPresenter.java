@@ -10,11 +10,11 @@ import java.util.Map;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import okhttp3.Request;
 import the.one.base.ui.presenter.BasePresenter;
+import top.luqichuang.common.self.SourceCallback;
+import top.luqichuang.common.util.NetUtil;
 import top.luqichuang.mycomic.model.Comic;
 import top.luqichuang.mycomic.model.ComicInfo;
 import top.luqichuang.mycomic.model.Source;
-import top.luqichuang.common.self.SourceCallback;
-import top.luqichuang.common.util.NetUtil;
 
 /**
  * @author LuQiChuang
@@ -60,11 +60,11 @@ public class RankPresenter extends BasePresenter<RankView> {
             }
 
             @Override
-            public void onResponse(String html) {
+            public void onResponse(String html, Map<String, Object> map) {
                 RankView view = getView();
                 AndroidSchedulers.mainThread().scheduleDirect(() -> {
                     if (view != null) {
-                        map.put(request.url().toString(), html);
+                        RankPresenter.this.map.put(request.url().toString(), html);
                         dealHtml(view, html);
                     }
                 });

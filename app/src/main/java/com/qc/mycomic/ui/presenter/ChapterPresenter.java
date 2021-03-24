@@ -1,19 +1,20 @@
 package com.qc.mycomic.ui.presenter;
 
 import com.qc.mycomic.ui.view.ChapterView;
+import com.qc.mycomic.util.ComicHelper;
 
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import okhttp3.Request;
 import the.one.base.ui.presenter.BasePresenter;
+import top.luqichuang.common.self.SourceCallback;
+import top.luqichuang.common.util.NetUtil;
+import top.luqichuang.common.util.SourceUtil;
 import top.luqichuang.mycomic.model.Comic;
 import top.luqichuang.mycomic.model.ComicInfo;
 import top.luqichuang.mycomic.model.Source;
-import top.luqichuang.common.self.SourceCallback;
-import com.qc.mycomic.util.ComicHelper;
-import top.luqichuang.common.util.NetUtil;
-import top.luqichuang.common.util.SourceUtil;
 
 /**
  * @author LuQiChuang
@@ -42,7 +43,7 @@ public class ChapterPresenter extends BasePresenter<ChapterView> {
             }
 
             @Override
-            public void onResponse(String html) {
+            public void onResponse(String html, Map<String, Object> map) {
                 ChapterView view = getView();
                 AndroidSchedulers.mainThread().scheduleDirect(() -> {
                     if (view != null) {
@@ -70,7 +71,7 @@ public class ChapterPresenter extends BasePresenter<ChapterView> {
                 }
 
                 @Override
-                public void onResponse(String html) {
+                public void onResponse(String html, Map<String, Object> map) {
                     ChapterView view = getView();
                     AndroidSchedulers.mainThread().scheduleDirect(() -> {
                         if (view != null) {

@@ -1,9 +1,10 @@
 package com.qc.mynovel.ui.presenter;
 
-import com.qc.mynovel.util.NovelHelper;
 import com.qc.mynovel.ui.view.NChapterView;
+import com.qc.mynovel.util.NovelHelper;
 
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import okhttp3.Request;
@@ -42,7 +43,7 @@ public class NChapterPresenter extends BasePresenter<NChapterView> {
             }
 
             @Override
-            public void onResponse(String html) {
+            public void onResponse(String html, Map<String, Object> map) {
                 NChapterView view = getView();
                 AndroidSchedulers.mainThread().scheduleDirect(() -> {
                     if (view != null) {
@@ -70,7 +71,7 @@ public class NChapterPresenter extends BasePresenter<NChapterView> {
                 }
 
                 @Override
-                public void onResponse(String html) {
+                public void onResponse(String html, Map<String, Object> map) {
                     NChapterView view = getView();
                     AndroidSchedulers.mainThread().scheduleDirect(() -> {
                         if (view != null) {

@@ -2,13 +2,14 @@ package com.qc.mycomic.util;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
+import top.luqichuang.common.util.DateUtil;
+import top.luqichuang.common.util.SourceUtil;
 import top.luqichuang.mycomic.model.Comic;
 import top.luqichuang.mycomic.model.ComicInfo;
 import top.luqichuang.mycomic.model.ImageInfo;
 import top.luqichuang.mycomic.model.Source;
-import top.luqichuang.common.util.DateUtil;
-import top.luqichuang.common.util.SourceUtil;
 
 /**
  * @author LuQiChuang
@@ -38,8 +39,8 @@ public class ComicHelper {
         source(comic).setComicDetail(comic.getComicInfo(), html);
     }
 
-    public static List<ImageInfo> getImageInfoList(Comic comic, String html, int chapterId) {
-        return source(comic).getImageInfoList(html, chapterId);
+    public static List<ImageInfo> getImageInfoList(Comic comic, String html, int chapterId, Map<String, Object> map) {
+        return source(comic).getImageInfoList(html, chapterId, map);
     }
 
     public static boolean changeComicInfo(Comic comic) {

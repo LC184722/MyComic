@@ -1,17 +1,18 @@
 package com.qc.mynovel.ui.presenter;
 
-import com.qc.mynovel.util.NovelHelper;
 import com.qc.mynovel.ui.view.NSearchView;
+import com.qc.mynovel.util.NovelHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import okhttp3.Request;
 import the.one.base.ui.presenter.BasePresenter;
 import top.luqichuang.common.self.SourceCallback;
-import top.luqichuang.common.util.NetUtil;
 import top.luqichuang.common.util.NSourceUtil;
+import top.luqichuang.common.util.NetUtil;
 import top.luqichuang.mynovel.model.NSource;
 import top.luqichuang.mynovel.model.Novel;
 import top.luqichuang.mynovel.model.NovelInfo;
@@ -43,7 +44,7 @@ public class NSearchPresenter extends BasePresenter<NSearchView> {
                 }
 
                 @Override
-                public void onResponse(String html) {
+                public void onResponse(String html, Map<String, Object> map) {
                     NSearchView view = getView();
                     AndroidSchedulers.mainThread().scheduleDirect(() -> {
                         if (view != null) {

@@ -108,7 +108,7 @@ public class QuanShu extends NBaseSource {
     }
 
     @Override
-    public ContentInfo getContentInfo(String html, int chapterId) {
+    public ContentInfo getContentInfo(String html, int chapterId, Map<String, Object> map) {
         JsoupNode node = new JsoupNode(html);
         String content = node.remove("script").html("div#content");
         content = SourceHelper.getCommonContent(content);

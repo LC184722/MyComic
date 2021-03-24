@@ -25,6 +25,7 @@ public abstract class BaseSourceTest {
     public static final String DETAIL = Source.DETAIL;
     public static final String IMAGE = Source.IMAGE;
     public static final String RANK = Source.RANK;
+    private Map<String, Object> dataMap;
 
     protected abstract Source getSource();
 
@@ -42,6 +43,18 @@ public abstract class BaseSourceTest {
 
     @Test
     public abstract void testRequest();
+
+    private void testRequestDefault() {
+//        testSearchRequest();
+//        testSearch();
+//        testDetailRequest("detailUrl");
+//        testDetail();
+//        testImageRequest("imageUrl");
+//        testImage();
+//        testRankMap();
+//        testRankRequest(0);
+//        testRank();
+    }
 
     @Test
     public void testSearch() {
@@ -92,7 +105,7 @@ public abstract class BaseSourceTest {
     public void testImage() {
         String html = FileUtil.readFile(formatFileName(IMAGE));
         System.out.println("html.length() = " + html.length());
-        List<ImageInfo> imageInfoList = getSource().getImageInfoList(html, 100);
+        List<ImageInfo> imageInfoList = getSource().getImageInfoList(html, 100, dataMap);
         System.out.println("imageInfoList.size() = " + imageInfoList.size());
         for (ImageInfo imageInfo : imageInfoList) {
             System.out.println("imageInfo = " + imageInfo.getUrl());
@@ -159,7 +172,7 @@ public abstract class BaseSourceTest {
         Request imageRequest = source.getImageRequest(imageUrl);
         String image = testRequest(imageRequest, IMAGE);
         FileUtil.writeFile(image, formatFileName(comicInfo.getTitle(), IMAGE));
-        List<ImageInfo> imageInfoList = source.getImageInfoList(image, 100);
+        List<ImageInfo> imageInfoList = source.getImageInfoList(image, 100, dataMap);
         System.out.println("imageList.size() = " + imageInfoList.size());
         Assert.assertFalse("未搜索到漫画图片", imageInfoList.isEmpty());
 
@@ -192,6 +205,10 @@ public abstract class BaseSourceTest {
         testRank();
     }
 
+    protected final void testRankRequest() {
+        testRankRequest(0);
+    }
+
     protected final void testRankRequest(int index) {
         Map<String, String> map = getSource().getRankMap();
         int size = map.size();
@@ -220,9 +237,10 @@ public abstract class BaseSourceTest {
             }
 
             @Override
-            public void onResponse(String html) {
+            public void onResponse(String html, Map<String, Object> map) {
                 strings[0] = html;
                 FileUtil.writeFile(html, formatFileName(fileName));
+                dataMap = map;
                 flag[0] = true;
             }
         });

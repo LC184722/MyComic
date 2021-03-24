@@ -95,7 +95,7 @@ public class XinBiQuGe extends NBaseSource {
     }
 
     @Override
-    public ContentInfo getContentInfo(String html, int chapterId) {
+    public ContentInfo getContentInfo(String html, int chapterId, Map<String, Object> map) {
         JsoupNode node = new JsoupNode(html);
         String content = node.html("div#content");
         content = SourceHelper.getCommonContent(content, "<br>");

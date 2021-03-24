@@ -2,23 +2,22 @@ package top.luqichuang.mycomic.source;
 
 import com.alibaba.fastjson.JSONArray;
 
-import top.luqichuang.common.en.SourceEnum;
-import top.luqichuang.common.json.JsonNode;
-import top.luqichuang.mycomic.model.BaseSource;
-import top.luqichuang.mycomic.model.ImageInfo;
-import top.luqichuang.common.json.JsonStarter;
-import top.luqichuang.common.model.ChapterInfo;
-import top.luqichuang.mycomic.model.ComicInfo;
-import top.luqichuang.common.util.NetUtil;
-import top.luqichuang.common.util.SourceHelper;
-import top.luqichuang.common.util.StringUtil;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import okhttp3.Request;
+import top.luqichuang.common.en.SourceEnum;
+import top.luqichuang.common.json.JsonNode;
+import top.luqichuang.common.json.JsonStarter;
+import top.luqichuang.common.model.ChapterInfo;
+import top.luqichuang.common.util.NetUtil;
+import top.luqichuang.common.util.SourceHelper;
+import top.luqichuang.common.util.StringUtil;
+import top.luqichuang.mycomic.model.BaseSource;
+import top.luqichuang.mycomic.model.ComicInfo;
+import top.luqichuang.mycomic.model.ImageInfo;
 
 /**
  * @author LuQiChuang
@@ -62,7 +61,7 @@ public class BiliBili extends BaseSource {
     }
 
     @Override
-    public Request buildRequest(String requestUrl, String html, String tag) {
+    public Request buildRequest(String requestUrl, String html, String tag, Map<String, Object> map) {
         if (IMAGE.equals(tag)) {
             JsonStarter<Object> starter = new JsonStarter<Object>() {
                 @Override
@@ -75,7 +74,7 @@ public class BiliBili extends BaseSource {
             String url = "https://manga.bilibili.com/twirp/comic.v1.Comic/ImageToken?device=pc&platform=web";
             return NetUtil.postRequest(url, "urls", array.toString());
         }
-        return super.buildRequest(requestUrl, html, tag);
+        return super.buildRequest(requestUrl, html, tag, map);
     }
 
     @Override
@@ -137,7 +136,7 @@ public class BiliBili extends BaseSource {
     }
 
     @Override
-    public List<ImageInfo> getImageInfoList(String html, int chapterId) {
+    public List<ImageInfo> getImageInfoList(String html, int chapterId, Map<String, Object> map) {
         JsonStarter<ImageInfo> starter = new JsonStarter<ImageInfo>() {
             @Override
             protected ImageInfo dealDataList(JsonNode node, int dataId) {

@@ -12,9 +12,9 @@ import okhttp3.Request;
 import the.one.base.ui.presenter.BasePresenter;
 import top.luqichuang.common.self.SourceCallback;
 import top.luqichuang.common.util.NetUtil;
+import top.luqichuang.mynovel.model.NSource;
 import top.luqichuang.mynovel.model.Novel;
 import top.luqichuang.mynovel.model.NovelInfo;
-import top.luqichuang.mynovel.model.NSource;
 
 /**
  * @author LuQiChuang
@@ -60,11 +60,11 @@ public class NRankPresenter extends BasePresenter<NRankView> {
             }
 
             @Override
-            public void onResponse(String html) {
+            public void onResponse(String html, Map<String, Object> map) {
                 NRankView view = getView();
                 AndroidSchedulers.mainThread().scheduleDirect(() -> {
                     if (view != null) {
-                        map.put(request.url().toString(), html);
+                        NRankPresenter.this.map.put(request.url().toString(), html);
                         dealHtml(view, html);
                     }
                 });

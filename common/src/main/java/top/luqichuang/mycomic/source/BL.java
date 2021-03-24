@@ -1,20 +1,21 @@
 package top.luqichuang.mycomic.source;
 
-import top.luqichuang.common.en.SourceEnum;
-import top.luqichuang.common.model.ChapterInfo;
-import top.luqichuang.mycomic.model.BaseSource;
-import top.luqichuang.mycomic.model.ComicInfo;
-import top.luqichuang.mycomic.model.ImageInfo;
-import top.luqichuang.common.jsoup.JsoupNode;
-import top.luqichuang.common.jsoup.JsoupStarter;
-import top.luqichuang.common.util.NetUtil;
-import top.luqichuang.common.util.SourceHelper;
-import top.luqichuang.common.util.StringUtil;
+import org.jsoup.select.Elements;
 
 import java.util.List;
 import java.util.Map;
 
 import okhttp3.Request;
+import top.luqichuang.common.en.SourceEnum;
+import top.luqichuang.common.jsoup.JsoupNode;
+import top.luqichuang.common.jsoup.JsoupStarter;
+import top.luqichuang.common.model.ChapterInfo;
+import top.luqichuang.common.util.NetUtil;
+import top.luqichuang.common.util.SourceHelper;
+import top.luqichuang.common.util.StringUtil;
+import top.luqichuang.mycomic.model.BaseSource;
+import top.luqichuang.mycomic.model.ComicInfo;
+import top.luqichuang.mycomic.model.ImageInfo;
 
 /**
  * @author LuQiChuang
@@ -40,14 +41,30 @@ public class BL extends BaseSource {
     }
 
     @Override
-    public Request buildRequest(String requestUrl, String html, String tag) {
-        if (IMAGE.equals(tag) && requestUrl != null && !requestUrl.contains("?page=")) {
+    public Request buildRequest(String requestUrl, String html, String tag, Map<String, Object> map) {
+        if (IMAGE.equals(tag)) {
             JsoupNode node = new JsoupNode(html);
             node.init(node.getElements("select.selectpage option").last());
-            String value = node.attr("option", "value");
-            return NetUtil.getRequest(requestUrl + "?page=" + value);
+            int pageMax = Integer.parseInt(node.attr("option", "value"));
+            int page;
+            if (!requestUrl.contains("?page=")) {
+                page = 2;
+            } else {
+                page = Integer.parseInt(StringUtil.match("\\?page=(\\d+)", requestUrl)) + 1;
+                requestUrl = requestUrl.split("\\?")[0];
+            }
+            if (page <= pageMax) {
+                List<ImageInfo> list = (List<ImageInfo>) map.get("list");
+                if (list == null) {
+                    list = getImageInfoList(html, -1, null);
+                    map.put("list", list);
+                } else {
+                    list.addAll(getImageInfoList(html, -1, null));
+                }
+                return NetUtil.getRequest(requestUrl + "?page=" + page);
+            }
         }
-        return super.buildRequest(requestUrl, html, tag);
+        return super.buildRequest(requestUrl, html, tag, map);
     }
 
     @Override
@@ -102,19 +119,27 @@ public class BL extends BaseSource {
     }
 
     @Override
-    public List<ImageInfo> getImageInfoList(String html, int chapterId) {
+    public List<ImageInfo> getImageInfoList(String html, int chapterId, Map<String, Object> map) {
         JsoupNode node = new JsoupNode(html);
-        node.init(node.getElements("div.comiclist img").last());
-        String url = node.src("img");
-        int size = 0;
-        try {
-            size = Integer.parseInt(StringUtil.match("/(\\d+)\\.", url));
-        } catch (NumberFormatException ignored) {
+        Elements elements = node.getElements("div.comiclist img");
+        String[] urls = new String[elements.size()];
+        for (int i = 0; i < elements.size(); i++) {
+            node.init(elements.get(i));
+            urls[i] = node.src("img");
         }
-        String baseUrl = url.replaceAll("/\\d+\\.", "/%04d\\.");
-        String[] urls = new String[size];
-        for (int i = 0; i < size; i++) {
-            urls[i] = String.format(baseUrl, i + 1);
+        if (map != null) {
+            List<ImageInfo> lList = SourceHelper.getImageInfoList(urls, chapterId);
+            List<ImageInfo> list = (List<ImageInfo>) map.get("list");
+            if (list != null) {
+                list.addAll(lList);
+                int i = 0;
+                for (ImageInfo imageInfo : list) {
+                    imageInfo.setChapterId(chapterId);
+                    imageInfo.setCur(i++);
+                    imageInfo.setTotal(list.size());
+                }
+                return list;
+            }
         }
         return SourceHelper.getImageInfoList(urls, chapterId);
     }

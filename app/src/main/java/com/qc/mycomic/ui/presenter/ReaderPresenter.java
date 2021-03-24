@@ -1,21 +1,20 @@
 package com.qc.mycomic.ui.presenter;
 
 import com.qc.mycomic.ui.view.ReaderView;
+import com.qc.mycomic.util.ComicHelper;
 
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import okhttp3.Request;
 import the.one.base.ui.presenter.BasePresenter;
 import top.luqichuang.common.model.ChapterInfo;
+import top.luqichuang.common.self.SourceCallback;
+import top.luqichuang.common.util.NetUtil;
 import top.luqichuang.mycomic.model.Comic;
 import top.luqichuang.mycomic.model.ImageInfo;
 import top.luqichuang.mycomic.model.Source;
-import top.luqichuang.common.self.SourceCallback;
-
-import com.qc.mycomic.util.ComicHelper;
-
-import top.luqichuang.common.util.NetUtil;
 
 /**
  * @author LuQiChuang
@@ -44,9 +43,9 @@ public class ReaderPresenter extends BasePresenter<ReaderView> {
             }
 
             @Override
-            public void onResponse(String html) {
+            public void onResponse(String html, Map<String, Object> map) {
                 ReaderView view = getView();
-                List<ImageInfo> imageInfoList = ComicHelper.getImageInfoList(comic, html, chapterId);
+                List<ImageInfo> imageInfoList = ComicHelper.getImageInfoList(comic, html, chapterId, map);
                 if (imageInfoList.isEmpty()) {
                     onFailure("解析失败！");
                 } else {

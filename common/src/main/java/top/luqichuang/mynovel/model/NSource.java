@@ -118,9 +118,10 @@ public interface NSource {
      *
      * @param html      html
      * @param chapterId chapterId
+     * @param map       map
      * @return List<ImageInfo>
      */
-    ContentInfo getContentInfo(String html, int chapterId);
+    ContentInfo getContentInfo(String html, int chapterId, Map<String, Object> map);
 
     /**
      * 获得排行榜、分类等链接

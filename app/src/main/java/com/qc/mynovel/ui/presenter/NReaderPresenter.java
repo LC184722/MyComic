@@ -1,9 +1,10 @@
 package com.qc.mynovel.ui.presenter;
 
-import com.qc.mynovel.util.NovelHelper;
 import com.qc.mynovel.ui.view.NReaderView;
+import com.qc.mynovel.util.NovelHelper;
 
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import okhttp3.Request;
@@ -12,8 +13,8 @@ import top.luqichuang.common.model.ChapterInfo;
 import top.luqichuang.common.self.SourceCallback;
 import top.luqichuang.common.util.NetUtil;
 import top.luqichuang.mynovel.model.ContentInfo;
-import top.luqichuang.mynovel.model.Novel;
 import top.luqichuang.mynovel.model.NSource;
+import top.luqichuang.mynovel.model.Novel;
 
 /**
  * @author LuQiChuang
@@ -42,7 +43,7 @@ public class NReaderPresenter extends BasePresenter<NReaderView> {
             }
 
             @Override
-            public void onResponse(String html) {
+            public void onResponse(String html, Map<String, Object> map) {
                 NReaderView view = getView();
                 ContentInfo contentInfo = NovelHelper.getContentInfo(novel, html, chapterId);
                 if (contentInfo == null || contentInfo.getContent() == null) {

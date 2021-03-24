@@ -1,23 +1,22 @@
 package top.luqichuang.mycomic.source;
 
-import top.luqichuang.common.en.SourceEnum;
-import top.luqichuang.common.model.ChapterInfo;
-import top.luqichuang.mycomic.model.BaseSource;
-import top.luqichuang.mycomic.model.ImageInfo;
-import top.luqichuang.common.jsoup.JsoupNode;
-import top.luqichuang.common.jsoup.JsoupStarter;
-import top.luqichuang.mycomic.model.ComicInfo;
-import top.luqichuang.common.util.DecryptUtil;
-import top.luqichuang.common.util.NetUtil;
-import top.luqichuang.common.util.SourceHelper;
-import top.luqichuang.common.util.StringUtil;
-
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import okhttp3.Request;
+import top.luqichuang.common.en.SourceEnum;
+import top.luqichuang.common.jsoup.JsoupNode;
+import top.luqichuang.common.jsoup.JsoupStarter;
+import top.luqichuang.common.model.ChapterInfo;
+import top.luqichuang.common.util.DecryptUtil;
+import top.luqichuang.common.util.NetUtil;
+import top.luqichuang.common.util.SourceHelper;
+import top.luqichuang.common.util.StringUtil;
+import top.luqichuang.mycomic.model.BaseSource;
+import top.luqichuang.mycomic.model.ComicInfo;
+import top.luqichuang.mycomic.model.ImageInfo;
 
 /**
  * @author LuQiChuang
@@ -106,7 +105,7 @@ public class ManHuaFen extends BaseSource {
     }
 
     @Override
-    public List<ImageInfo> getImageInfoList(String html, int chapterId) {
+    public List<ImageInfo> getImageInfoList(String html, int chapterId, Map<String, Object> map) {
         String server = "https://img01.eshanyao.com/";
         String chapterImagesEncodeStr = StringUtil.match("var chapterImages = \"(.*?)\";", html);
         //var chapterPath = "images/comic/259/517692/";

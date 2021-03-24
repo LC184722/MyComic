@@ -1,21 +1,17 @@
 package top.luqichuang.common.self;
 
-import top.luqichuang.common.util.StringUtil;
-import top.luqichuang.mycomic.model.Source;
-import top.luqichuang.common.util.NetUtil;
-
 import org.jetbrains.annotations.NotNull;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
+import top.luqichuang.common.util.NetUtil;
+import top.luqichuang.mycomic.model.Source;
 import top.luqichuang.mynovel.model.NSource;
 
 /**
@@ -30,6 +26,7 @@ public abstract class SourceCallback implements Callback {
     private Source source;
     private NSource nSource;
     private String tag;
+    private Map<String, Object> map = new HashMap<>();
 
     public SourceCallback(Request request, Source source, String tag) {
         this.request = request;
@@ -59,7 +56,7 @@ public abstract class SourceCallback implements Callback {
         Request req = null;
         if (source != null) {
             html = getHtml(response, source.getCharsetName());
-            req = source.buildRequest(request.url().toString(), html, tag);
+            req = source.buildRequest(request.url().toString(), html, tag, map);
         } else if (nSource != null) {
             html = getHtml(response, nSource.getCharsetName());
             req = nSource.buildRequest(request.url().toString(), html, tag);
@@ -68,7 +65,7 @@ public abstract class SourceCallback implements Callback {
             request = req;
             NetUtil.startLoad(req, this);
         } else {
-            onResponse(html);
+            onResponse(html, map);
         }
     }
 
@@ -85,6 +82,6 @@ public abstract class SourceCallback implements Callback {
 
     public abstract void onFailure(String errorMsg);
 
-    public abstract void onResponse(String html);
+    public abstract void onResponse(String html, Map<String, Object> map);
 
 }

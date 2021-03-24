@@ -85,9 +85,10 @@ public interface Source {
      * @param requestUrl requestUrl
      * @param html       html
      * @param tag        表明阶段
+     * @param map
      * @return Request
      */
-    Request buildRequest(String requestUrl, String html, String tag);
+    Request buildRequest(String requestUrl, String html, String tag, Map<String, Object> map);
 
 
     /**
@@ -120,9 +121,10 @@ public interface Source {
      *
      * @param html      html
      * @param chapterId chapterId
+     * @param map       map
      * @return List<ImageInfo>
      */
-    List<ImageInfo> getImageInfoList(String html, int chapterId);
+    List<ImageInfo> getImageInfoList(String html, int chapterId, Map<String, Object> map);
 
     /**
      * 获得排行榜、分类等链接

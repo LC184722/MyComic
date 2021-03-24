@@ -91,7 +91,7 @@ public class AiYouMan extends BaseSource {
     }
 
     @Override
-    public List<ImageInfo> getImageInfoList(String html, int chapterId) {
+    public List<ImageInfo> getImageInfoList(String html, int chapterId, Map<String, Object> map) {
         String curChapterStr = StringUtil.match("current_chapter:(\\{.*?\\}),", html);
         JsonNode node = new JsonNode(curChapterStr);
         String rule = node.string("rule");

@@ -3,9 +3,9 @@ package com.qc.mynovel.util;
 import top.luqichuang.common.util.DateUtil;
 import top.luqichuang.common.util.NSourceUtil;
 import top.luqichuang.mynovel.model.ContentInfo;
+import top.luqichuang.mynovel.model.NSource;
 import top.luqichuang.mynovel.model.Novel;
 import top.luqichuang.mynovel.model.NovelInfo;
-import top.luqichuang.mynovel.model.NSource;
 
 /**
  * @author LuQiChuang
@@ -36,7 +36,7 @@ public class NovelHelper {
     }
 
     public static ContentInfo getContentInfo(Novel novel, String html, int chapterId) {
-        return nSource(novel).getContentInfo(html, chapterId);
+        return nSource(novel).getContentInfo(html, chapterId, null);
     }
 
     public static boolean changeNovelInfo(Novel novel, int nSourceId) {

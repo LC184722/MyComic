@@ -25,6 +25,7 @@ public abstract class NBaseSourceTest {
     public static final String DETAIL = NSource.DETAIL;
     public static final String CONTENT = NSource.CONTENT;
     public static final String RANK = NSource.RANK;
+    private Map<String, Object> dataMap;
 
     protected abstract NSource getNSource();
 
@@ -42,6 +43,18 @@ public abstract class NBaseSourceTest {
 
     @Test
     public abstract void testRequest();
+
+    private void testRequestDefault() {
+//        testSearchRequest();
+//        testSearch();
+//        testDetailRequest("detailUrl");
+//        testDetail();
+//        testContentRequest("contentUrl");
+//        testContent();
+//        testRankMap();
+//        testRankRequest();
+//        testRank();
+    }
 
     @Test
     public void testSearch() {
@@ -92,7 +105,7 @@ public abstract class NBaseSourceTest {
     public void testContent() {
         String html = FileUtil.readFile(formatFileName(CONTENT));
         System.out.println("html.length() = " + html.length());
-        ContentInfo contentInfo = getNSource().getContentInfo(html, 100);
+        ContentInfo contentInfo = getNSource().getContentInfo(html, 100, null);
         System.out.println("======================");
         System.out.println(contentInfo.getContent());
     }
@@ -154,7 +167,7 @@ public abstract class NBaseSourceTest {
         String imageUrl = chapterInfo.getChapterUrl();
         Request imageRequest = source.getContentRequest(imageUrl);
         String image = testRequest(imageRequest, CONTENT);
-        ContentInfo contentInfo = source.getContentInfo(image, 100);
+        ContentInfo contentInfo = source.getContentInfo(image, 100, dataMap);
         Assert.assertNotNull("未搜索到小说内容", contentInfo);
         System.out.println("======================");
         System.out.println(contentInfo.getContent());
@@ -182,6 +195,10 @@ public abstract class NBaseSourceTest {
     protected final void testRankRequest(String url) {
         testRequest(getNSource().getRankRequest(url), RANK);
         testRank();
+    }
+
+    protected final void testRankRequest() {
+        testRankRequest(0);
     }
 
     protected final void testRankRequest(int index) {
@@ -212,9 +229,10 @@ public abstract class NBaseSourceTest {
             }
 
             @Override
-            public void onResponse(String html) {
+            public void onResponse(String html, Map<String, Object> map) {
                 strings[0] = html;
                 FileUtil.writeFile(html, formatFileName(fileName));
+                dataMap = map;
                 flag[0] = true;
             }
         });

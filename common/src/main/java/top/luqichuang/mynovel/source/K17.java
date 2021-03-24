@@ -95,7 +95,7 @@ public class K17 extends NBaseSource {
     }
 
     @Override
-    public ContentInfo getContentInfo(String html, int chapterId) {
+    public ContentInfo getContentInfo(String html, int chapterId, Map<String, Object> map) {
         JsoupNode node = new JsoupNode(html);
         String content = node.html("div#readArea div.p");
         if (content == null) {

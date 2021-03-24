@@ -1,14 +1,13 @@
 package top.luqichuang.mycomic.source;
 
-import top.luqichuang.common.en.SourceEnum;
-import top.luqichuang.mycomic.model.BaseSource;
-import top.luqichuang.mycomic.model.ImageInfo;
-import top.luqichuang.mycomic.model.ComicInfo;
-
 import java.util.List;
 import java.util.Map;
 
 import okhttp3.Request;
+import top.luqichuang.common.en.SourceEnum;
+import top.luqichuang.mycomic.model.BaseSource;
+import top.luqichuang.mycomic.model.ComicInfo;
+import top.luqichuang.mycomic.model.ImageInfo;
 
 /**
  * @author LuQiChuang
@@ -44,7 +43,7 @@ public class EmptySource extends BaseSource {
     }
 
     @Override
-    public List<ImageInfo> getImageInfoList(String html, int chapterId) {
+    public List<ImageInfo> getImageInfoList(String html, int chapterId, Map<String, Object> map) {
         return null;
     }
 
