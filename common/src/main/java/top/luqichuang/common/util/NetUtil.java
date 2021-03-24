@@ -6,7 +6,6 @@ import org.jsoup.Jsoup;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.CountDownLatch;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -64,7 +63,7 @@ public class NetUtil {
      * @param map 存放头部信息
      * @return Request
      */
-    public static Request getRequest(String url, Map<String, String> map) {
+    public static Request getRequestByHeader(String url, Map<String, String> map) {
         if (map == null) {
             map = new HashMap<>();
         }
@@ -80,6 +79,24 @@ public class NetUtil {
         }
         Headers headers = builder.build();
         return new Request.Builder().url(url).headers(headers).method("GET", null).build();
+    }
+
+    /**
+     * 通过map设置请求，获得Request
+     *
+     * @param url url
+     * @param map 存放param信息
+     * @return Request
+     */
+    public static Request getRequest(String url, Map<String, String> map) {
+        if (map == null) {
+            map = new HashMap<>();
+        }
+        StringBuilder builder = new StringBuilder(url + "?");
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            builder.append(entry.getKey()).append("=").append(entry.getValue()).append("&");
+        }
+        return getRequest(builder.toString());
     }
 
     /**

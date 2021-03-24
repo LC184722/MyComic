@@ -43,25 +43,28 @@ public class BL extends BaseSource {
     @Override
     public Request buildRequest(String requestUrl, String html, String tag, Map<String, Object> map) {
         if (IMAGE.equals(tag)) {
-            JsoupNode node = new JsoupNode(html);
-            node.init(node.getElements("select.selectpage option").last());
-            int pageMax = Integer.parseInt(node.attr("option", "value"));
-            int page;
-            if (!requestUrl.contains("?page=")) {
-                page = 2;
-            } else {
-                page = Integer.parseInt(StringUtil.match("\\?page=(\\d+)", requestUrl)) + 1;
-                requestUrl = requestUrl.split("\\?")[0];
-            }
-            if (page <= pageMax) {
-                List<ImageInfo> list = (List<ImageInfo>) map.get("list");
-                if (list == null) {
-                    list = getImageInfoList(html, -1, null);
-                    map.put("list", list);
+            try {
+                JsoupNode node = new JsoupNode(html);
+                node.init(node.getElements("select.selectpage option").last());
+                int pageMax = Integer.parseInt(node.attr("option", "value"));
+                int page;
+                if (!requestUrl.contains("?page=")) {
+                    page = 2;
                 } else {
-                    list.addAll(getImageInfoList(html, -1, null));
+                    page = Integer.parseInt(StringUtil.match("\\?page=(\\d+)", requestUrl)) + 1;
+                    requestUrl = requestUrl.split("\\?")[0];
                 }
-                return NetUtil.getRequest(requestUrl + "?page=" + page);
+                if (page <= pageMax) {
+                    List<ImageInfo> list = (List<ImageInfo>) map.get("list");
+                    if (list == null) {
+                        list = getImageInfoList(html, -1, null);
+                        map.put("list", list);
+                    } else {
+                        list.addAll(getImageInfoList(html, -1, null));
+                    }
+                    return NetUtil.getRequest(requestUrl + "?page=" + page);
+                }
+            } catch (NumberFormatException ignored) {
             }
         }
         return super.buildRequest(requestUrl, html, tag, map);

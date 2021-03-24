@@ -1,14 +1,18 @@
 package top.luqichuang.mycomic.source;
 
+import com.alibaba.fastjson.JSONArray;
+
 import org.jsoup.nodes.Element;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import okhttp3.Request;
 import top.luqichuang.common.en.SourceEnum;
+import top.luqichuang.common.json.JsonNode;
 import top.luqichuang.common.jsoup.JsoupNode;
 import top.luqichuang.common.jsoup.JsoupStarter;
 import top.luqichuang.common.model.ChapterInfo;
@@ -41,6 +45,26 @@ public class ManHuaTai extends BaseSource {
     public Request getSearchRequest(String searchString) {
         String url = "https://m.manhuatai.com/sort/all.html?cache=false&search_key=";
         return NetUtil.getRequest(url + searchString);
+    }
+
+    @Override
+    public Request buildRequest(String requestUrl, String html, String tag, Map<String, Object> map) {
+        if (IMAGE.equals(tag)) {
+            String url = "https://m.manhuatai.com/api/getchapterinfov2";
+            if (!requestUrl.contains(url)) {
+                String info = StringUtil.match("window.comicInfo=(\\{.*?\\})", html);
+                Map<String, String> reqMap = new HashMap<>();
+                reqMap.put("product_id", "2");
+                reqMap.put("productname", "mht");
+                reqMap.put("platformname", "wap");
+                reqMap.put("comic_id", StringUtil.match("comic_id:(.*?),", info));
+                reqMap.put("chapter_newid", StringUtil.match("chapter_newid:\"(.*?)\",", info));
+                reqMap.put("isWebp", "1");
+                reqMap.put("quality", "high");
+                return NetUtil.getRequest(url, reqMap);
+            }
+        }
+        return super.buildRequest(requestUrl, html, tag, map);
     }
 
     @Override
@@ -100,25 +124,16 @@ public class ManHuaTai extends BaseSource {
 
     @Override
     public List<ImageInfo> getImageInfoList(String html, int chapterId, Map<String, Object> map) {
-        String[] urls;
-        try {
-            String currentChapter = StringUtil.match("current_chapter:\\{(.*?)\\}", html);
-            String endNumStr = StringUtil.match("end_num:(\\d+)", currentChapter);
-            int endNum = Integer.parseInt(endNumStr);
-            String url = StringUtil.match("rule:\"(.*?)\"", currentChapter);
-            String chapterDomain = StringUtil.match("chapter_domain:\"(.*?)\"", currentChapter);
-            String server = "https://mhpic." + chapterDomain;
-            String suffix = "-mht.middle.webp";
-            urls = new String[endNum];
-            for (int i = 0; i < urls.length; i++) {
-                String mid_url = url.replace("$$", String.valueOf(i + 1));
-                urls[i] = server + mid_url + suffix;
+        JsonNode node = new JsonNode(html);
+        node.initConditions("data", "current_chapter");
+        JSONArray chapterImgList = node.jsonArray("chapter_img_list");
+        List<String> list = new ArrayList<>();
+        if (chapterImgList != null) {
+            for (Object o : chapterImgList) {
+                list.add((String) o);
             }
-        } catch (Exception e) {
-            urls = null;
-            e.printStackTrace();
         }
-        return SourceHelper.getImageInfoList(urls, chapterId);
+        return SourceHelper.getImageInfoList(list, chapterId);
     }
 
     @Override
