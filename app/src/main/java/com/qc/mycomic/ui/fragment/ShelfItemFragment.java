@@ -9,35 +9,30 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.qc.common.constant.TmpData;
+import com.qc.common.util.PopupUtil;
 import com.qc.mycomic.ui.adapter.ShelfAdapter;
 import com.qc.mycomic.ui.presenter.ShelfPresenter;
+import com.qc.mycomic.ui.view.ShelfView;
+import com.qc.mycomic.util.ComicHelper;
 import com.qc.mycomic.util.ComicUtil;
 import com.qc.mycomic.util.DBUtil;
-
-import com.qc.mycomic.util.ComicHelper;
-
-import top.luqichuang.common.util.MapUtil;
-
-import com.qc.common.util.PopupUtil;
-import com.qc.mycomic.ui.view.ShelfView;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import the.one.base.ui.fragment.BaseDataFragment;
 import the.one.base.ui.presenter.BasePresenter;
 import the.one.base.util.QMUIDialogUtil;
+import top.luqichuang.common.util.MapUtil;
+import top.luqichuang.common.util.SourceUtil;
+import top.luqichuang.common.util.StringUtil;
 import top.luqichuang.mycomic.model.Comic;
 import top.luqichuang.mycomic.model.ComicInfo;
 import top.luqichuang.mycomic.model.Source;
-import top.luqichuang.common.util.SourceUtil;
-import top.luqichuang.common.util.StringUtil;
 
 /**
  * @author LuQiChuang
@@ -66,6 +61,7 @@ public class ShelfItemFragment extends BaseDataFragment<Comic> implements ShelfV
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         this.status = (int) getArguments().get("status");
+        this.comicList = ComicUtil.getComicList(status);
         super.onCreate(savedInstanceState);
     }
 

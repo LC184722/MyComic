@@ -58,7 +58,7 @@ public class ManHuaTai extends BaseSource {
                 reqMap.put("productname", "mht");
                 reqMap.put("platformname", "wap");
                 reqMap.put("comic_id", StringUtil.match("comic_id:(.*?),", info));
-                reqMap.put("chapter_newid", StringUtil.match("chapter_newid:\"(.*?)\",", info));
+                reqMap.put("chapter_newid", StringUtil.match(",chapter_newid:\"(.*?)\",", info));
                 reqMap.put("isWebp", "1");
                 reqMap.put("quality", "high");
                 return NetUtil.getRequest(url, reqMap);

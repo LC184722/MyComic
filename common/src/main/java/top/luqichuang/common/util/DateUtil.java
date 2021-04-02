@@ -14,8 +14,14 @@ public class DateUtil {
 
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 
+    private static SimpleDateFormat backupFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
     public static String format(Date date) {
         return date != null ? dateFormat.format(date) : null;
+    }
+
+    public static String formatAutoBackup(Date date) {
+        return date != null ? backupFormat.format(date) : null;
     }
 
 }

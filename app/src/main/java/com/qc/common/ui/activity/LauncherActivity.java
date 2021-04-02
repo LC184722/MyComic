@@ -1,19 +1,20 @@
 package com.qc.common.ui.activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.qc.common.ui.presenter.UpdatePresenter;
-import com.qc.mycomic.util.ComicUtil;
 import com.qc.common.util.VersionUtil;
+import com.qc.mycomic.util.ComicUtil;
+import com.qc.mycomic.util.DBUtil;
 import com.qmuiteam.qmui.arch.QMUILatestVisit;
 
 import org.litepal.LitePal;
@@ -73,6 +74,7 @@ public class LauncherActivity extends AppCompatActivity {
         new UpdatePresenter().checkApkUpdate();
         LitePal.initialize(this);
         ComicUtil.initComicList(ComicUtil.STATUS_ALL);
+        new Thread(() -> DBUtil.autoBackup(this)).start();
     }
 
     private boolean allPermissionsGranted() {

@@ -18,6 +18,8 @@ public interface AppConstant {
 
     String IMG_PATH = APP_PATH + "/Image";
 
+    String AUTO_SAVE_PATH = APP_PATH + "/AutoBackup";
+
     int COMIC_CODE = 1;
 
     int READER_CODE = 2;

@@ -210,7 +210,6 @@ public class NChapterFragment extends BaseDataFragment<ChapterInfo> implements N
             if (checkNotEmpty()) {
                 NovelHelper.newestChapter(novel.getNovelInfo());
                 start();
-                DBUtil.saveNovel(novel, DBUtil.SAVE_CUR);
             } else {
                 showFailTips("暂无小说章节");
             }
@@ -225,7 +224,6 @@ public class NChapterFragment extends BaseDataFragment<ChapterInfo> implements N
             novel.setStatus(isFav ? Constant.STATUS_FAV : Constant.STATUS_HIS);
             //Log.i(TAG, "setListener: " + novel);
             NovelUtil.first(novel);
-            DBUtil.saveNovel(novel, DBUtil.SAVE_ALL);
         });
 
         //开始阅读
@@ -332,9 +330,7 @@ public class NChapterFragment extends BaseDataFragment<ChapterInfo> implements N
     public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view,
                             int position) {
         //Log.i(TAG, "onItemClick: position = " + position);
-        NovelUtil.first(novel);
         start(position);
-        DBUtil.saveNovel(novel, DBUtil.SAVE_ONLY);
     }
 
     @Override
@@ -441,6 +437,7 @@ public class NChapterFragment extends BaseDataFragment<ChapterInfo> implements N
     public void start() {
         adapter.notifyDataSetChanged();
         startFragment(NReaderFragment.getInstance(novel));
+        NovelUtil.first(novel);
     }
 
     public void start(int position) {

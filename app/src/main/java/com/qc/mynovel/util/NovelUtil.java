@@ -91,5 +91,6 @@ public class NovelUtil {
                 }
             }
         }
+        DBUtil.saveNovel(novel, DBUtil.SAVE_CUR);
     }
 }

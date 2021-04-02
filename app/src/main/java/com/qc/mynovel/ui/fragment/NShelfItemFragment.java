@@ -21,7 +21,6 @@ import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -62,6 +61,7 @@ public class NShelfItemFragment extends BaseDataFragment<Novel> implements NShel
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         this.status = (int) getArguments().get("status");
+        this.novelList = NovelUtil.getNovelList(status);
         super.onCreate(savedInstanceState);
     }
 

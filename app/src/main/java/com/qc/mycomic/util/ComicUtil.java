@@ -91,5 +91,6 @@ public class ComicUtil {
                 }
             }
         }
+        DBUtil.saveComic(comic, DBUtil.SAVE_CUR);
     }
 }

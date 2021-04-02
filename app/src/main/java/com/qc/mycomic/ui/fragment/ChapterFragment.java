@@ -211,7 +211,6 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
             if (checkNotEmpty()) {
                 ComicHelper.newestChapter(comic.getComicInfo());
                 start();
-                DBUtil.saveComic(comic, DBUtil.SAVE_CUR);
             } else {
                 showFailTips("暂无漫画章节");
             }
@@ -226,7 +225,6 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
             comic.setStatus(isFav ? Constant.STATUS_FAV : Constant.STATUS_HIS);
             //Log.i(TAG, "setListener: " + comic);
             ComicUtil.first(comic);
-            DBUtil.saveComic(comic, DBUtil.SAVE_CUR);
         });
 
         //开始阅读
@@ -332,9 +330,7 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
     public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view,
                             int position) {
         //Log.i(TAG, "onItemClick: position = " + position);
-        ComicUtil.first(comic);
         start(position);
-        DBUtil.saveComic(comic, DBUtil.SAVE_ONLY);
     }
 
     @Override
@@ -441,6 +437,7 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
     public void start() {
         adapter.notifyDataSetChanged();
         startFragment(ReaderFragment.getInstance(comic));
+        ComicUtil.first(comic);
     }
 
     public void start(int position) {

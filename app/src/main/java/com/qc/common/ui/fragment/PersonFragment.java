@@ -5,22 +5,25 @@ import android.net.Uri;
 import android.view.Gravity;
 import android.view.View;
 
+import com.qc.common.constant.AppConstant;
+import com.qc.common.en.SettingEnum;
+import com.qc.common.ui.presenter.UpdatePresenter;
+import com.qc.common.ui.view.UpdateView;
 import com.qc.common.util.PopupUtil;
 import com.qc.common.util.RestartUtil;
 import com.qc.common.util.SettingItemUtil;
 import com.qc.common.util.SettingUtil;
-import com.qc.mycomic.R;
-import com.qc.common.ui.presenter.UpdatePresenter;
-import com.qc.common.ui.view.UpdateView;
-import com.qc.common.en.SettingEnum;
-import com.qc.mycomic.util.DBUtil;
 import com.qc.common.util.VersionUtil;
+import com.qc.mycomic.R;
+import com.qc.mycomic.util.DBUtil;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
 import com.qmuiteam.qmui.widget.grouplist.QMUICommonListItemView;
 
+import java.io.File;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -139,11 +142,22 @@ public class PersonFragment extends BaseGroupListFragment implements View.OnClic
                 }
             }).show();
         } else if (view == v4) {
-            QMUIDialogUtil.showSimpleDialog(getContext(), "还原数据", "是否还原阅读数据？", new QMUIDialogAction.ActionListener() {
+            Map<String, String> map = new LinkedHashMap<>();
+            map.put(DBUtil.SAVE_PATH_NAME, "手动备份");
+            try {
+                File[] files = (new File(AppConstant.AUTO_SAVE_PATH)).listFiles();
+                for (File file : files) {
+                    map.put(file.getPath(), file.getName());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            PopupUtil.showSimpleBottomSheetList(getContext(), map, null, "还原数据", new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
                 @Override
-                public void onClick(QMUIDialog dialog, int index) {
+                public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
                     showLoadingDialog("正在还原");
-                    boolean flag = DBUtil.restoreData(_mActivity);
+                    String path = MapUtil.getKeyByValue(map, tag);
+                    boolean flag = DBUtil.restoreData(_mActivity, path);
                     hideLoadingDialog();
                     if (flag) {
                         dialog.dismiss();
@@ -153,7 +167,7 @@ public class PersonFragment extends BaseGroupListFragment implements View.OnClic
                         dialog.dismiss();
                     }
                 }
-            }).show();
+            });
         } else if (view == v5) {
             String url = "https://gitee.com/luqichuang/MyComic/issues/new";
             Uri uri = Uri.parse(url);

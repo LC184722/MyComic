@@ -14,7 +14,7 @@ import top.luqichuang.common.en.SourceEnum;
 public enum SettingEnum {
 
     DEFAULT_SOURCE("defaultSource", SourceEnum.MI_TUI.ID),
-    PRELOAD_NUM("preloadNum", 0),
+    PRELOAD_NUM("preloadNum", 10000),
     READ_CONTENT("readContent", AppConstant.COMIC_CODE),
     DEFAULT_NOVEL_SOURCE("defaultNSource", NSourceEnum.XIN_BI_QU_GE.ID),
     IS_FULL_SCREEN("isFullScreen", true),

@@ -16,8 +16,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import top.luqichuang.common.util.DateUtil;
 import top.luqichuang.common.util.SourceUtil;
 import top.luqichuang.mycomic.model.Comic;
 import top.luqichuang.mycomic.model.ComicInfo;
@@ -212,23 +214,72 @@ public class DBUtil {
         return LitePal.findAll(clazz);
     }
 
+    public static void autoBackup(Context context) {
+        if (!existAuto()) {
+            backupData(context, getAutoName());
+        }
+        deleteAuto();
+    }
+
+    public static String getAutoName() {
+        return AppConstant.AUTO_SAVE_PATH + "/自动备份#" + DateUtil.formatAutoBackup(new Date());
+    }
+
+    public static boolean existAuto() {
+        return new File(getAutoName()).exists();
+    }
+
+    public static boolean deleteAuto() {
+        try {
+            File file = new File(AppConstant.AUTO_SAVE_PATH);
+            File[] files = file.listFiles();
+            while (files.length > 5) {
+                int old = 0;
+                long oldVal = files[0].lastModified();
+                for (int i = 1; i < files.length; i++) {
+                    File f = files[i];
+                    if (f.lastModified() < oldVal) {
+                        old = i;
+                        oldVal = f.lastModified();
+                    }
+                }
+                files[old].delete();
+                files = file.listFiles();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public static final String SAVE_PATH_NAME = AppConstant.APP_PATH + "/backup_comic.db";
+
     public static boolean backupData(Context context) {
-        return dealData(context, true);
+        return dealData(context, true, SAVE_PATH_NAME);
+    }
+
+    public static boolean backupData(Context context, String pathName) {
+        return dealData(context, true, pathName);
     }
 
     public static boolean restoreData(Context context) {
-        return dealData(context, false);
+        return dealData(context, false, SAVE_PATH_NAME);
     }
 
-    private static boolean dealData(Context context, boolean isBackup) {
+    public static boolean restoreData(Context context, String pathName) {
+        return dealData(context, false, pathName);
+    }
+
+    private static boolean dealData(Context context, boolean isBackup, String pathName) {
         String dbFileName = "comic.db";
-        String backupFileName = "backup_comic.db";
         String tmpFileName = "tmp.db";
         String path = AppConstant.APP_PATH;
         try {
             File dbFile = context.getDatabasePath(dbFileName);
-            File backupFile = new File(path, backupFileName);
-
+            File backupFile = new File(pathName);
+            if (!backupFile.getParentFile().exists()) {
+                backupFile.getParentFile().mkdirs();
+            }
             if (!dbFile.exists()) {
                 //Log.i(TAG, "dealData: dbFile not exists");
                 dbFile.createNewFile();
