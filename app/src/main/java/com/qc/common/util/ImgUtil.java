@@ -8,6 +8,7 @@ import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -24,9 +25,9 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
+import com.qc.common.constant.AppConstant;
 import com.qc.common.self.ImageConfig;
 import com.qc.mycomic.R;
-import com.qc.common.constant.AppConstant;
 import com.qmuiteam.qmui.util.QMUIDisplayHelper;
 import com.qmuiteam.qmui.widget.QMUIProgressBar;
 
@@ -191,7 +192,8 @@ public class ImgUtil {
                                 bitmap = drawableToBitmap(getDrawable(context, config.getDefaultBitmapId()));
                             }
                             imageView.setImageBitmap(bitmap);
-                            setLP(context, (RelativeLayout.LayoutParams) imageView.getLayoutParams());
+                            setLP(context, config.getLayout().getLayoutParams());
+                            setLP(context, imageView.getLayoutParams());
                         }
                         if (Objects.equals(url, progressBar.getTag()) && bitmapId == 0) {
                             Integer integer = PROGRESS_MAP.get(url);
@@ -207,7 +209,8 @@ public class ImgUtil {
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                         if (Objects.equals(url, imageView.getTag())) {
-                            imageView.setLayoutParams(getLP(context, resource));
+                            setLP(context, config.getLayout().getLayoutParams(), resource);
+                            setLP(context, imageView.getLayoutParams(), resource);
                             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
                             imageView.setImageBitmap(resource);
                             MAP.put(url, LOAD_SUCCESS);
@@ -245,23 +248,18 @@ public class ImgUtil {
                 });
     }
 
-    private static RelativeLayout.LayoutParams getLP(Context context, Bitmap bitmap) {
+    private static void setLP(Context context, ViewGroup.LayoutParams lp, Bitmap bitmap) {
         int sWidth = getScreenWidth(context);
         int bWidth = bitmap.getWidth();
         int bHeight = bitmap.getHeight();
         int sHeight = bHeight * sWidth / bWidth;
-        return new RelativeLayout.LayoutParams(sWidth, sHeight);
+        lp.width = sWidth;
+        lp.height = sHeight;
     }
 
-    private static void setLP(Context context, RelativeLayout.LayoutParams lp) {
+    private static void setLP(Context context, ViewGroup.LayoutParams lp) {
         lp.width = getScreenWidth(context);
         lp.height = QMUIDisplayHelper.dp2px(context, 300);
-    }
-
-    private static RelativeLayout.LayoutParams getLP(Context context) {
-        int width = getScreenWidth(context);
-        int height = QMUIDisplayHelper.dp2px(context, 300);
-        return new RelativeLayout.LayoutParams(width, height);
     }
 
     private static int getScreenWidth(Context context) {
