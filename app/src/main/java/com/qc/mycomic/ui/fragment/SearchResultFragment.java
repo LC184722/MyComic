@@ -8,14 +8,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.qc.mycomic.R;
 import com.qc.common.constant.Constant;
+import com.qc.common.constant.TmpData;
 import com.qc.common.en.SettingEnum;
+import com.qc.common.util.SettingUtil;
+import com.qc.mycomic.R;
 import com.qc.mycomic.ui.adapter.SearchAdapter;
 import com.qc.mycomic.ui.presenter.SearchPresenter;
 import com.qc.mycomic.ui.view.SearchView;
+import com.qc.mycomic.util.ComicHelper;
 import com.qc.mycomic.util.DBUtil;
-import com.qc.common.util.SettingUtil;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
 
 import java.util.ArrayList;
@@ -24,12 +26,9 @@ import java.util.List;
 import the.one.base.ui.fragment.BaseDataFragment;
 import the.one.base.ui.presenter.BasePresenter;
 import the.one.base.util.QMUIDialogUtil;
+import top.luqichuang.common.util.SourceUtil;
 import top.luqichuang.mycomic.model.Comic;
 import top.luqichuang.mycomic.model.ComicInfo;
-
-import com.qc.mycomic.util.ComicHelper;
-
-import top.luqichuang.common.util.SourceUtil;
 
 /**
  * @author LuQiChuang
@@ -103,8 +102,10 @@ public class SearchResultFragment extends BaseDataFragment<Comic> implements Sea
                     ComicHelper.addComicInfo(myComic, comicInfo);
                 }
             }
+            TmpData.toStatus = Constant.SEARCH_TO_CHAPTER;
             startFragment(ChapterFragment.getInstance(myComic));
         } else {
+            TmpData.toStatus = Constant.SEARCH_TO_CHAPTER;
             startFragment(ChapterFragment.getInstance(comic));
         }
     }

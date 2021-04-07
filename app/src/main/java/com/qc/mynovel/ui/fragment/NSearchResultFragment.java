@@ -9,14 +9,15 @@ import androidx.annotation.Nullable;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.qc.common.constant.Constant;
+import com.qc.common.constant.TmpData;
+import com.qc.common.en.SettingEnum;
 import com.qc.common.util.SettingUtil;
 import com.qc.mycomic.R;
-import com.qc.common.en.SettingEnum;
 import com.qc.mynovel.ui.adapter.NSearchAdapter;
 import com.qc.mynovel.ui.presenter.NSearchPresenter;
 import com.qc.mynovel.ui.view.NSearchView;
-import com.qc.mynovel.util.NovelHelper;
 import com.qc.mynovel.util.DBUtil;
+import com.qc.mynovel.util.NovelHelper;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
 
 import java.util.ArrayList;
@@ -101,8 +102,10 @@ public class NSearchResultFragment extends BaseDataFragment<Novel> implements NS
                     NovelHelper.addNovelInfo(myNovel, novelInfo);
                 }
             }
+            TmpData.toStatus = Constant.SEARCH_TO_CHAPTER;
             startFragment(NChapterFragment.getInstance(myNovel));
         } else {
+            TmpData.toStatus = Constant.SEARCH_TO_CHAPTER;
             startFragment(NChapterFragment.getInstance(novel));
         }
     }

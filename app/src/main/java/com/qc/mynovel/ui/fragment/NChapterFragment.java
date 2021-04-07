@@ -68,6 +68,8 @@ public class NChapterFragment extends BaseDataFragment<ChapterInfo> implements N
 
     private NChapterAdapter chapterAdapter;
 
+    private int toStatus = Constant.NORMAL;
+
     public static NChapterFragment getInstance(Novel novel) {
         NChapterFragment fragment = new NChapterFragment();
         Bundle bundle = new Bundle();
@@ -110,6 +112,8 @@ public class NChapterFragment extends BaseDataFragment<ChapterInfo> implements N
             chapterAdapter.setChapterId(novel.getNovelInfo().getCurChapterId());
             setValue();
         }
+        this.toStatus = TmpData.toStatus;
+        TmpData.toStatus = Constant.NORMAL;
         return super.onCreateAnimation(transit, enter, nextAnim);
     }
 
@@ -361,8 +365,8 @@ public class NChapterFragment extends BaseDataFragment<ChapterInfo> implements N
             setValue();
             onFirstComplete(list);
             adapter.notifyDataSetChanged();
-            if (TmpData.toStatus == Constant.RANK_TO_CHAPTER) {
-                TmpData.toStatus = Constant.NORMAL;
+            if (toStatus == Constant.RANK_TO_CHAPTER) {
+                toStatus = Constant.NORMAL;
                 showProgressDialog("正在更新小说源");
                 presenter.updateNSource(novel);
             }
@@ -438,6 +442,9 @@ public class NChapterFragment extends BaseDataFragment<ChapterInfo> implements N
         adapter.notifyDataSetChanged();
         startFragment(NReaderFragment.getInstance(novel));
         NovelUtil.first(novel);
+        if (toStatus == Constant.SEARCH_TO_CHAPTER) {
+            DBUtil.saveNovel(novel, DBUtil.SAVE_ALL);
+        }
     }
 
     public void start(int position) {

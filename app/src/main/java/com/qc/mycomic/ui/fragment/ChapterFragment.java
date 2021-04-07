@@ -68,6 +68,8 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
 
     private ChapterAdapter chapterAdapter;
 
+    private int toStatus = Constant.NORMAL;
+
     public static ChapterFragment getInstance(Comic comic) {
         ChapterFragment fragment = new ChapterFragment();
         Bundle bundle = new Bundle();
@@ -110,6 +112,8 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
             chapterAdapter.setChapterId(comic.getComicInfo().getCurChapterId());
             setValue();
         }
+        this.toStatus = TmpData.toStatus;
+        TmpData.toStatus = Constant.NORMAL;
         return super.onCreateAnimation(transit, enter, nextAnim);
     }
 
@@ -361,8 +365,8 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
             setValue();
             onFirstComplete(list);
             adapter.notifyDataSetChanged();
-            if (TmpData.toStatus == Constant.RANK_TO_CHAPTER) {
-                TmpData.toStatus = Constant.NORMAL;
+            if (toStatus == Constant.RANK_TO_CHAPTER) {
+                toStatus = Constant.NORMAL;
                 showProgressDialog("正在更新漫画源");
                 presenter.updateSource(comic);
             }
@@ -438,6 +442,9 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         adapter.notifyDataSetChanged();
         startFragment(ReaderFragment.getInstance(comic));
         ComicUtil.first(comic);
+        if (toStatus == Constant.SEARCH_TO_CHAPTER) {
+            DBUtil.saveComic(comic, DBUtil.SAVE_ALL);
+        }
     }
 
     public void start(int position) {
