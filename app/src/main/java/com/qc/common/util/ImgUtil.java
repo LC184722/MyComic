@@ -192,8 +192,10 @@ public class ImgUtil {
                                 bitmap = drawableToBitmap(getDrawable(context, config.getDefaultBitmapId()));
                             }
                             imageView.setImageBitmap(bitmap);
-                            setLP(context, config.getLayout().getLayoutParams());
-                            setLP(context, imageView.getLayoutParams());
+                            if (bitmap == null) {
+                                setLP(context, config.getLayout().getLayoutParams());
+                                setLP(context, imageView.getLayoutParams());
+                            }
                         }
                         if (Objects.equals(url, progressBar.getTag()) && bitmapId == 0) {
                             Integer integer = PROGRESS_MAP.get(url);
