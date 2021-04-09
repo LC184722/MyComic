@@ -72,6 +72,10 @@ public class ImgUtil {
         config.setErrorBitmapId(R.drawable.ic_image_none);
         config.setDrawableId(R.drawable.ic_image_background);
         config.setScaleType(ImageView.ScaleType.FIT_XY);
+        config.setWidth(0);
+        config.setHeight(0);
+        config.setEndWidth(layout.getLayoutParams().width);
+        config.setEndHeight(layout.getLayoutParams().height);
         return config;
     }
 
@@ -81,6 +85,10 @@ public class ImgUtil {
         config.setErrorBitmapId(R.drawable.ic_image_error_24);
         config.setDrawableId(R.drawable.ic_image_reader_background);
         config.setScaleType(ImageView.ScaleType.CENTER);
+        config.setWidth(getScreenWidth(context));
+        config.setHeight(QMUIDisplayHelper.dp2px(context, 300));
+        config.setEndWidth(0);
+        config.setEndHeight(0);
         return config;
     }
 
@@ -192,9 +200,9 @@ public class ImgUtil {
                                 bitmap = drawableToBitmap(getDrawable(context, config.getDefaultBitmapId()));
                             }
                             imageView.setImageBitmap(bitmap);
-                            if (bitmap == null) {
-                                setLP(context, config.getLayout().getLayoutParams());
-                                setLP(context, imageView.getLayoutParams());
+                            if (config.getWidth() != 0 && config.getHeight() != 0) {
+                                setLP(config.getLayout().getLayoutParams(), config.getHeight(), config.getWidth());
+                                setLP(imageView.getLayoutParams(), config.getHeight(), config.getWidth());
                             }
                         }
                         if (Objects.equals(url, progressBar.getTag()) && bitmapId == 0) {
@@ -211,8 +219,13 @@ public class ImgUtil {
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                         if (Objects.equals(url, imageView.getTag())) {
-                            setLP(context, config.getLayout().getLayoutParams(), resource);
-                            setLP(context, imageView.getLayoutParams(), resource);
+                            if (config.getEndWidth() != 0 && config.getEndHeight() != 0) {
+                                setLP(config.getLayout().getLayoutParams(), config.getEndHeight(), config.getEndWidth());
+                                setLP(imageView.getLayoutParams(), config.getEndHeight(), config.getEndWidth());
+                            } else {
+                                setLP(context, config.getLayout().getLayoutParams(), resource);
+                                setLP(context, imageView.getLayoutParams(), resource);
+                            }
                             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
                             imageView.setImageBitmap(resource);
                             MAP.put(url, LOAD_SUCCESS);
@@ -259,9 +272,9 @@ public class ImgUtil {
         lp.height = sHeight;
     }
 
-    private static void setLP(Context context, ViewGroup.LayoutParams lp) {
-        lp.width = getScreenWidth(context);
-        lp.height = QMUIDisplayHelper.dp2px(context, 300);
+    private static void setLP(ViewGroup.LayoutParams lp, int height, int width) {
+        lp.width = width;
+        lp.height = height;
     }
 
     private static int getScreenWidth(Context context) {

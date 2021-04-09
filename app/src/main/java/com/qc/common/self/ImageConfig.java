@@ -1,7 +1,5 @@
 package com.qc.common.self;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -28,6 +26,14 @@ public class ImageConfig {
     private int errorBitmapId;
 
     private int drawableId;
+
+    private int height;
+
+    private int width;
+
+    private int endHeight;
+
+    private int endWidth;
 
     private ImageView.ScaleType scaleType;
 
@@ -102,6 +108,38 @@ public class ImageConfig {
 
     public void setDrawableId(int drawableId) {
         this.drawableId = drawableId;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getEndHeight() {
+        return endHeight;
+    }
+
+    public void setEndHeight(int endHeight) {
+        this.endHeight = endHeight;
+    }
+
+    public int getEndWidth() {
+        return endWidth;
+    }
+
+    public void setEndWidth(int endWidth) {
+        this.endWidth = endWidth;
     }
 
     public ImageView.ScaleType getScaleType() {
