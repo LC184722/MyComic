@@ -55,6 +55,72 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/llAutoOpen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_10">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="开启自动阅读"
+                    android:textSize="18sp" />
+
+                <the.one.base.widge.TheCheckBox
+                    android:id="@+id/checkBoxAuto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llAuto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_10">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="自动阅读速度"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/tvAutoSub"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:background="@color/lightGray"
+                    android:gravity="center"
+                    android:text="-" />
+
+                <TextView
+                    android:id="@+id/tvAuto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/dp_10"
+                    android:layout_marginEnd="@dimen/dp_10"
+                    android:gravity="center"
+                    android:text="1"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/tvAutoAdd"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:background="@color/lightGray"
+                    android:gravity="center"
+                    android:text="+" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/llFont"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

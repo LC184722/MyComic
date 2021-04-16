@@ -11,15 +11,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.qc.common.constant.Constant;
 import com.qc.common.constant.TmpData;
 import com.qc.common.en.SettingEnum;
+import com.qc.common.self.ScrollSpeedLinearLayoutManger;
 import com.qc.common.ui.adapter.ReaderListAdapter;
 import com.qc.common.util.AnimationUtil;
 import com.qc.common.util.SettingUtil;
@@ -83,6 +85,8 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
     private LinearLayout llFull;
     private LinearLayout llFont;
     private SeekBar seekBar;
+    private TheCheckBox checkBoxAuto;
+    private ScrollSpeedLinearLayoutManger layoutManager;
     private boolean firstLoad = true;
 
     public static NReaderFragment getInstance(Novel novel) {
@@ -187,33 +191,15 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
             llFull = settingsView.findViewById(R.id.llFull);
             llFont = settingsView.findViewById(R.id.llFont);
         }
+        if (layoutManager == null) {
+            layoutManager = (ScrollSpeedLinearLayoutManger) recycleView.getLayoutManager();
+        }
         bottomView.setVisibility(View.GONE);
         rightView.setVisibility(View.GONE);
         settingsView.setVisibility(View.GONE);
+        hideView();
         if (TmpData.isLight) {
             darkView.setVisibility(View.GONE);
-        }
-    }
-
-    private void initOtherView() {
-        addView();
-        if (firstLoad) {
-            firstLoad = false;
-            setListener();
-        }
-    }
-
-    private void setValue() {
-        if (!contentInfoList.isEmpty()) {
-            if (contentInfoList.size() <= first) {
-                first = 0;
-            }
-            ContentInfo contentInfo = contentInfoList.get(first);
-            tvChapter.setText(novelInfo.getCurChapterTitle());
-            tvChapterName.setText(novelInfo.getCurChapterTitle());
-            tvInfo.setText(String.format(Locale.CHINA, "%d章/%d章", contentInfo.getChapterId() + 1, novelInfo.getChapterInfoList().size()));
-            readerListAdapter.setPosition(NovelHelper.getPosition(novelInfo));
-            DBUtil.saveNovelInfo(novelInfo);
         }
     }
 
@@ -354,6 +340,25 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
             tvFont.setText(readerAdapter.addFont());
         });
         tvFont.setText(readerAdapter.getFontSizeDesc());
+
+        checkBoxAuto = settingsView.findViewById(R.id.checkBoxAuto);
+        checkBoxAuto.setIsCheckDrawable(R.drawable.ic_baseline_check_circle_24);
+        checkBoxAuto.setOnClickListener(v -> {
+            checkBoxAuto.setCheck(true);
+            recycleView.smoothScrollToPosition(first + 1);
+        });
+        TextView tvAutoSub = settingsView.findViewById(R.id.tvAutoSub);
+        TextView tvAutoAdd = settingsView.findViewById(R.id.tvAutoAdd);
+        TextView tvAuto = settingsView.findViewById(R.id.tvAuto);
+        layoutManager.changeSpeed((Integer) SettingUtil.getSettingKey(SettingEnum.NOVEL_AUTO_SPEED));
+        tvAuto.setText(layoutManager.getSpeedDesc());
+        tvAutoSub.setOnClickListener(v -> {
+            tvAuto.setText(layoutManager.subSpeed());
+        });
+        tvAutoAdd.setOnClickListener(v -> {
+            tvAuto.setText(layoutManager.addSpeed());
+        });
+
     }
 
     private int first;
@@ -367,11 +372,7 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
                 super.onScrollStateChanged(recyclerView, newState);
                 if (null == _mActivity) return;
                 if (newState == SCROLL_STATE_IDLE) {
-                    isGlidePause = false;
-                    Glide.with(_mActivity).resumeRequests();
-                } else if (!isGlidePause) {
-                    isGlidePause = true;
-                    Glide.with(_mActivity).pauseRequests();
+                    checkBoxAuto.setCheck(false);
                 }
             }
 
@@ -472,6 +473,24 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
     }
 
     @Override
+    protected RecyclerView.LayoutManager getLayoutManager(int type) {
+        Object layoutManager;
+        switch (type) {
+            case 2:
+                layoutManager = new GridLayoutManager(this.getActivity(), this.setColumn());
+                break;
+            case 3:
+                layoutManager = new StaggeredGridLayoutManager(this.setColumn(), 1);
+                ((StaggeredGridLayoutManager) layoutManager).setGapStrategy(0);
+                break;
+            default:
+                layoutManager = new ScrollSpeedLinearLayoutManger(this.getActivity());
+        }
+        return (RecyclerView.LayoutManager) layoutManager;
+//        return super.getLayoutManager(type);
+    }
+
+    @Override
     public boolean onItemLongClick(@NonNull BaseQuickAdapter adapter, @NonNull View view, int position) {
         return true;
     }
@@ -509,6 +528,9 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
                     setScrollValue(this.contentInfoList.get(0));
                 }
                 recycleView.scrollToPosition(0);
+            }
+            if (checkBoxAuto.isCheck()) {
+                recycleView.smoothScrollToPosition(this.contentInfoList.size() - 1);
             }
             isLoadNext = true;
         }

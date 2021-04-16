@@ -19,6 +19,7 @@ public enum SettingEnum {
     DEFAULT_NOVEL_SOURCE("defaultNSource", NSourceEnum.XIN_BI_QU_GE.ID),
     IS_FULL_SCREEN("isFullScreen", true),
     NOVEL_FONT_SIZE("novelFontSize", 20),
+    NOVEL_AUTO_SPEED("novelAutoSpeed", 4),
     ;
 
     public final String KEY;

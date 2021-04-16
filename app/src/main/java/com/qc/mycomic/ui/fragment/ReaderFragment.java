@@ -183,6 +183,7 @@ public class ReaderFragment extends BaseDataFragment<ImageInfo> implements Reade
         bottomView.setVisibility(View.GONE);
         rightView.setVisibility(View.GONE);
         settingsView.setVisibility(View.GONE);
+        hideView();
         if (TmpData.isLight) {
             darkView.setVisibility(View.GONE);
         }
