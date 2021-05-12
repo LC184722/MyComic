@@ -3,6 +3,7 @@ package com.qc.mynovel.ui.fragment;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -346,6 +347,7 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
         checkBoxAuto.setOnClickListener(v -> {
             checkBoxAuto.setCheck(true);
             recycleView.smoothScrollToPosition(first + 1);
+            _mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         });
         TextView tvAutoSub = settingsView.findViewById(R.id.tvAutoSub);
         TextView tvAutoAdd = settingsView.findViewById(R.id.tvAutoAdd);
@@ -373,6 +375,7 @@ public class NReaderFragment extends BaseDataFragment<ContentInfo> implements NR
                 if (null == _mActivity) return;
                 if (newState == SCROLL_STATE_IDLE) {
                     checkBoxAuto.setCheck(false);
+                    _mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 }
             }
 

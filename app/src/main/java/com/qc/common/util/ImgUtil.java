@@ -74,8 +74,8 @@ public class ImgUtil {
         config.setScaleType(ImageView.ScaleType.FIT_XY);
         config.setWidth(0);
         config.setHeight(0);
-        config.setEndWidth(layout.getLayoutParams().width);
-        config.setEndHeight(layout.getLayoutParams().height);
+        config.setEndWidth(layout != null ? layout.getLayoutParams().width : 0);
+        config.setEndHeight(layout != null ? layout.getLayoutParams().height : 0);
         return config;
     }
 
