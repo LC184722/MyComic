@@ -25,10 +25,16 @@ import top.luqichuang.mynovel.model.NovelInfo;
  * @date 2021/2/12 20:02
  * @ver 1.0
  */
+@Deprecated
 public class QuanShu extends NBaseSource {
     @Override
     public NSourceEnum getNSourceEnum() {
         return NSourceEnum.QUAN_SHU;
+    }
+
+    @Override
+    public boolean isValid() {
+        return false;
     }
 
     @Override

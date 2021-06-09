@@ -24,6 +24,7 @@ import top.luqichuang.mycomic.model.ImageInfo;
  * @date 2020/8/12 15:25
  * @ver 1.0
  */
+@Deprecated
 public class ManHuaFen extends BaseSource {
 
     @Override

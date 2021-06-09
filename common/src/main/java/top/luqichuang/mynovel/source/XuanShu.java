@@ -42,12 +42,12 @@ public class XuanShu extends NBaseSource {
 
     @Override
     public String getIndex() {
-        return "http://www.iddwx.com";
+        return "https://www.ibiquta.com";
     }
 
     @Override
     public Request getSearchRequest(String searchString) {
-        String url = "http://www.iddwx.com/search.html";
+        String url = getIndex() + "/search.html";
         return NetUtil.postRequest(url, "searchkey", searchString);
     }
 
@@ -116,8 +116,9 @@ public class XuanShu extends NBaseSource {
     @Override
     public ContentInfo getContentInfo(String html, int chapterId, Map<String, Object> map) {
         JsoupNode node = new JsoupNode(html);
-        String content = node.remove("div.view_page").html("div#view_content_txt");
-        content = SourceHelper.getCommonContent(content);
+        node.init(node.html("div#view_content_txt"));
+        node.remove("div");
+        String content = SourceHelper.getCommonContent(node.clean());
         return new ContentInfo(chapterId, content);
     }
 

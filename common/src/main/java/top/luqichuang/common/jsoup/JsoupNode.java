@@ -1,7 +1,9 @@
 package top.luqichuang.common.jsoup;
 
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.safety.Whitelist;
 import org.jsoup.select.Elements;
 
 /**
@@ -145,6 +147,14 @@ public class JsoupNode {
             e.printStackTrace();
         }
         return this;
+    }
+
+    public String clean() {
+        return clean(element.html());
+    }
+
+    public String clean(String html) {
+        return Jsoup.clean(html, "", Whitelist.none(), new Document.OutputSettings().prettyPrint(false));
     }
 
     public String attr(String cssQuery, String attr) {
