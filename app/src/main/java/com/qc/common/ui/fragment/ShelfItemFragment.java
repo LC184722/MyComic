@@ -153,16 +153,22 @@ public class ShelfItemFragment extends BaseDataFragment<Entity> implements Shelf
                 if (which == 0) {
                     QMUIDialogUtil.showSimpleDialog(getContext(), "查看信息", EntityHelper.toStringView(entity)).show();
                 } else if (which == 1) {
-                    Map<Integer, String> map = PopupUtil.getMap(entity.getInfoList());
-                    PopupUtil.showSimpleBottomSheetList(getContext(), map, entity.getSourceId(), "切换" + TmpData.content + "源", new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
+                    Map<String, String> map = PopupUtil.getMap(entity.getInfoList());
+                    String key = PopupUtil.getKey(entity);
+                    PopupUtil.showSimpleBottomSheetList(getContext(), map, key, "切换" + TmpData.content + "源", new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
                         @Override
                         public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
-                            Integer integer = MapUtil.getKeyByValue(map, tag);
-                            int sourceId = position;
-                            if (integer != null) {
-                                sourceId = integer;
+                            String key = MapUtil.getKeyByValue(map, tag);
+                            if (TmpData.contentCode == AppConstant.COMIC_CODE) {
+                                int sourceId = Integer.parseInt(key);
+                                entity.setSourceId(sourceId);
+                            } else {
+                                String[] ss = key.split("-", 2);
+                                int sourceId = Integer.parseInt(ss[0]);
+                                String author = ss[1];
+                                entity.setSourceId(sourceId);
+                                entity.setAuthor(author);
                             }
-                            entity.setSourceId(sourceId);
                             if (EntityHelper.changeInfo(entity)) {
                                 adapter.notifyDataSetChanged();
                                 DBUtil.save(entity, DBUtil.SAVE_ONLY);

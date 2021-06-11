@@ -33,7 +33,7 @@ public class ShelfAdapter extends TheBaseQuickAdapter<Entity> {
         if (readText == null) {
             readText = "未阅读";
         }
-        holder.setText(R.id.tvCurChapter, readText);
+        holder.setText(R.id.tvCurChapter, "阅读至：" + readText);
         String updateChapter = entity.getUpdateChapter();
         if (updateChapter == null) {
             updateChapter = "未知";

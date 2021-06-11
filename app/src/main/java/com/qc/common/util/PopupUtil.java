@@ -13,6 +13,7 @@ import java.util.Map;
 
 import the.one.base.model.PopupItem;
 import the.one.base.util.QMUIBottomSheetUtil;
+import top.luqichuang.common.model.Entity;
 import top.luqichuang.common.model.EntityInfo;
 import top.luqichuang.common.util.MapUtil;
 import top.luqichuang.common.util.SourceUtil;
@@ -33,13 +34,21 @@ public class PopupUtil {
         return itemList;
     }
 
-    public static Map<Integer, String> getMap(List<? extends EntityInfo> infoList) {
-        Map<Integer, String> map = new LinkedHashMap<>();
+    public static String getKey(Entity entity) {
+        return entity.getSourceId() + "-" + entity.getAuthor();
+    }
+
+    public static String getKey(EntityInfo info) {
+        return info.getSourceId() + "-" + info.getAuthor();
+    }
+
+    public static Map<String, String> getMap(List<? extends EntityInfo> infoList) {
+        Map<String, String> map = new LinkedHashMap<>();
         for (EntityInfo info : infoList) {
             if (TmpData.contentCode == AppConstant.COMIC_CODE) {
-                map.put(info.getSourceId(), SourceUtil.getSourceName(info.getSourceId()));
+                map.put(getKey(info), SourceUtil.getSourceName(info.getSourceId()));
             } else {
-                map.put(info.getSourceId(), SourceUtil.getNSourceName(info.getSourceId()) + '-' + info.getAuthor());
+                map.put(getKey(info), SourceUtil.getNSourceName(info.getSourceId()) + '-' + info.getAuthor());
             }
         }
         return map;

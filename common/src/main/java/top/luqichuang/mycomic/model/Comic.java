@@ -97,6 +97,11 @@ public class Comic extends Entity {
         return comicInfo.getAuthor();
     }
 
+    @Override
+    public void setAuthor(String author) {
+        comicInfo.setAuthor(author);
+    }
+
     public int getId() {
         return id;
     }

@@ -22,8 +22,6 @@ public abstract class Entity extends LitePalSupport implements Serializable {
 
     public abstract int getInfoId();
 
-    public abstract String getAuthor();
-
     public abstract int getId();
 
     public abstract void setId(int id);
@@ -39,6 +37,10 @@ public abstract class Entity extends LitePalSupport implements Serializable {
     public abstract int getStatus();
 
     public abstract void setStatus(int status);
+
+    public abstract String getAuthor();
+
+    public abstract void setAuthor(String author);
 
     public abstract EntityInfo getInfo();
 

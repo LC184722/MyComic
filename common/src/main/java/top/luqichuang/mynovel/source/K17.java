@@ -37,7 +37,7 @@ public class K17 extends BaseNovelSource {
 
     @Override
     public Request getSearchRequest(String searchString) {
-        String url = String.format("%s/search.xhtml?c.st=0&c.q=%s", getIndex(), searchString);
+        String url = String.format("https://search.17k.com/search.xhtml?c.st=0&c.q=%s", searchString);
         return NetUtil.getRequest(url);
     }
 
