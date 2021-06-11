@@ -12,22 +12,21 @@ import top.luqichuang.common.en.SourceEnum;
 import top.luqichuang.common.jsoup.JsoupNode;
 import top.luqichuang.common.jsoup.JsoupStarter;
 import top.luqichuang.common.model.ChapterInfo;
+import top.luqichuang.common.model.Content;
 import top.luqichuang.common.util.DecryptUtil;
 import top.luqichuang.common.util.NetUtil;
 import top.luqichuang.common.util.SourceHelper;
 import top.luqichuang.common.util.StringUtil;
-import top.luqichuang.mycomic.model.BaseSource;
+import top.luqichuang.mycomic.model.BaseComicSource;
 import top.luqichuang.mycomic.model.ComicInfo;
-import top.luqichuang.mycomic.model.ImageInfo;
 
 /**
  * @author LuQiChuang
  * @desc
- * @date 2020/8/16 23:41
+ * @date 2021/6/10 15:29
  * @ver 1.0
  */
-public class OH extends BaseSource {
-
+public class OH extends BaseComicSource {
     @Override
     public SourceEnum getSourceEnum() {
         return SourceEnum.OH;
@@ -40,12 +39,12 @@ public class OH extends BaseSource {
 
     @Override
     public Request getSearchRequest(String searchString) {
-        searchString = "https://www.cocomanhua.com/search?searchString=" + searchString;
-        return NetUtil.getRequest(searchString);
+        String url = String.format("%s/search?searchString=%s", getIndex(), searchString);
+        return NetUtil.getRequest(url);
     }
 
     @Override
-    public List<ComicInfo> getComicInfoList(String html) {
+    public List<ComicInfo> getInfoList(String html) {
         JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
             @Override
             protected ComicInfo dealElement(JsoupNode node, int elementId) {
@@ -61,9 +60,8 @@ public class OH extends BaseSource {
     }
 
     @Override
-    public void setComicDetail(ComicInfo comicInfo, String html) {
+    public void setInfoDetail(ComicInfo info, String html) {
         JsoupStarter<ChapterInfo> starter = new JsoupStarter<ChapterInfo>() {
-
             @Override
             protected void dealInfo(JsoupNode node) {
                 String title = node.ownText("h1.fed-part-eone.fed-font-xvi");
@@ -72,7 +70,7 @@ public class OH extends BaseSource {
                 String intro = node.ownText("p.fed-padding.fed-part-both.fed-text-muted");
                 String updateStatus = node.ownText("div.fed-part-layout li.fed-col-md6", 0, "a");
                 String updateTime = node.ownText("div.fed-part-layout li.fed-col-md6", 2, "a");
-                comicInfo.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
+                info.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
             }
 
             @Override
@@ -83,11 +81,11 @@ public class OH extends BaseSource {
             }
         };
         starter.startInfo(html);
-        SourceHelper.initChapterInfoList(comicInfo, starter.startElements(html, "ul.fed-part-rows li.fed-col-lg3"));
+        SourceHelper.initChapterInfoList(info, starter.startElements(html, "ul.fed-part-rows li.fed-col-lg3"));
     }
 
     @Override
-    public List<ImageInfo> getImageInfoList(String html, int chapterId, Map<String, Object> map) {
+    public List<Content> getContentList(String html, int chapterId, Map<String, Object> map) {
         String[] urls = null;
         String chapterImagesStr = StringUtil.match("C_DATA='(.*?)'", html);
         String result = DecryptUtil.decryptAES(DecryptUtil.decryptBase64(chapterImagesStr), "fw122587mkertyui");
@@ -110,7 +108,7 @@ public class OH extends BaseSource {
                 e.printStackTrace();
             }
         }
-        return SourceHelper.getImageInfoList(urls, chapterId);
+        return SourceHelper.getContentList(urls, chapterId);
     }
 
     @Override
@@ -157,7 +155,7 @@ public class OH extends BaseSource {
     }
 
     @Override
-    public List<ComicInfo> getRankComicInfoList(String html) {//fed-list-item
+    public List<ComicInfo> getRankInfoList(String html) {
         JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
             @Override
             protected void dealInfo(JsoupNode node) {
@@ -176,5 +174,4 @@ public class OH extends BaseSource {
         };
         return starter.startElements(html, "li.fed-list-item");
     }
-
 }

@@ -6,16 +6,17 @@ import android.view.Gravity;
 import android.view.View;
 
 import com.qc.common.constant.AppConstant;
+import com.qc.common.constant.TmpData;
 import com.qc.common.en.SettingEnum;
 import com.qc.common.ui.presenter.UpdatePresenter;
 import com.qc.common.ui.view.UpdateView;
+import com.qc.common.util.DBUtil;
 import com.qc.common.util.PopupUtil;
 import com.qc.common.util.RestartUtil;
 import com.qc.common.util.SettingItemUtil;
 import com.qc.common.util.SettingUtil;
 import com.qc.common.util.VersionUtil;
 import com.qc.mycomic.R;
-import com.qc.mycomic.util.DBUtil;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
@@ -116,6 +117,8 @@ public class PersonFragment extends BaseGroupListFragment implements View.OnClic
                         SettingUtil.putSetting(SettingEnum.READ_CONTENT, nKey, tag);
                         change.setDetailText(tag);
                         dialog.dismiss();
+                        TmpData.contentCode = (int) nKey;
+                        TmpData.content = tag;
                         RestartUtil.restart();
                     } else {
                         dialog.dismiss();

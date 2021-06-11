@@ -3,11 +3,10 @@ package top.luqichuang.common.en;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import top.luqichuang.mynovel.model.NSource;
+import top.luqichuang.common.model.Source;
+import top.luqichuang.mynovel.model.NovelInfo;
 import top.luqichuang.mynovel.source.AiYue;
 import top.luqichuang.mynovel.source.K17;
-import top.luqichuang.mynovel.source.QuanShu;
-import top.luqichuang.mynovel.source.QuanXiaoShuo;
 import top.luqichuang.mynovel.source.XinBiQuGe;
 import top.luqichuang.mynovel.source.XuanShu;
 
@@ -28,18 +27,18 @@ public enum NSourceEnum {
     K17(6, "17K小说"),
     ;
 
-    private static final Map<Integer, NSource> MAP = new LinkedHashMap<>();
+    private static final Map<Integer, Source<NovelInfo>> MAP = new LinkedHashMap<>();
 
     static {
         MAP.put(XIN_BI_QU_GE.ID, new XinBiQuGe());
-        MAP.put(QUAN_SHU.ID, new QuanShu());
-        MAP.put(QUAN_XIAO_SHUO.ID, new QuanXiaoShuo());
+//        MAP.put(QUAN_SHU.ID, new QuanShu());
+//        MAP.put(QUAN_XIAO_SHUO.ID, new QuanXiaoShuo());
         MAP.put(AI_YUE.ID, new AiYue());
         MAP.put(XUAN_SHU.ID, new XuanShu());
         MAP.put(K17.ID, new K17());
     }
 
-    public static Map<Integer, NSource> getMAP() {
+    public static Map<Integer, Source<NovelInfo>> getMAP() {
         return MAP;
     }
 

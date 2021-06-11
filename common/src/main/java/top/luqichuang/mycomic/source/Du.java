@@ -10,12 +10,12 @@ import top.luqichuang.common.en.SourceEnum;
 import top.luqichuang.common.jsoup.JsoupNode;
 import top.luqichuang.common.jsoup.JsoupStarter;
 import top.luqichuang.common.model.ChapterInfo;
+import top.luqichuang.common.model.Content;
 import top.luqichuang.common.util.NetUtil;
 import top.luqichuang.common.util.SourceHelper;
 import top.luqichuang.common.util.StringUtil;
-import top.luqichuang.mycomic.model.BaseSource;
+import top.luqichuang.mycomic.model.BaseComicSource;
 import top.luqichuang.mycomic.model.ComicInfo;
-import top.luqichuang.mycomic.model.ImageInfo;
 
 /**
  * @author LuQiChuang
@@ -23,8 +23,7 @@ import top.luqichuang.mycomic.model.ImageInfo;
  * @date 2021/1/17 18:45
  * @ver 1.0
  */
-public class Du extends BaseSource {
-
+public class Du extends BaseComicSource {
     @Override
     public SourceEnum getSourceEnum() {
         return SourceEnum.DU;
@@ -37,12 +36,12 @@ public class Du extends BaseSource {
 
     @Override
     public Request getSearchRequest(String searchString) {
-        searchString = "https://m.dumanhhua.com/search/?keywords=" + searchString;
-        return NetUtil.getRequest(searchString);
+        String url = String.format("%s/search/?keywords=%s", getIndex(), searchString);
+        return NetUtil.getRequest(url);
     }
 
     @Override
-    public List<ComicInfo> getComicInfoList(String html) {
+    public List<ComicInfo> getInfoList(String html) {
         JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
             @Override
             protected ComicInfo dealElement(JsoupNode node, int elementId) {
@@ -58,7 +57,7 @@ public class Du extends BaseSource {
     }
 
     @Override
-    public void setComicDetail(ComicInfo comicInfo, String html) {
+    public void setInfoDetail(ComicInfo info, String html) {
         JsoupStarter<ChapterInfo> starter = new JsoupStarter<ChapterInfo>() {
             @Override
             protected void dealInfo(JsoupNode node) {
@@ -68,7 +67,7 @@ public class Du extends BaseSource {
                 String intro = node.ownText("p.txtDesc");
                 String updateStatus = null;
                 String updateTime = node.ownText("dl:eq(4) dd");
-                comicInfo.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
+                info.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
             }
 
             @Override
@@ -87,11 +86,11 @@ public class Du extends BaseSource {
             }
         };
         starter.startInfo(html);
-        SourceHelper.initChapterInfoList(comicInfo, starter.startElements(html, "ul#chapter-list-10 li", "ul#chapter-list-1 li"));
+        SourceHelper.initChapterInfoList(info, starter.startElements(html, "ul#chapter-list-10 li", "ul#chapter-list-1 li"));
     }
 
     @Override
-    public List<ImageInfo> getImageInfoList(String html, int chapterId, Map<String, Object> map) {
+    public List<Content> getContentList(String html, int chapterId, Map<String, Object> map) {
         String chapterImagesStr = StringUtil.match("chapterImages = \\[(.*?)\\]", html);
         String chapterPath = StringUtil.match("var chapterPath = \"(.*?)\";", html);
         String[] urls = null;
@@ -107,7 +106,7 @@ public class Du extends BaseSource {
                 urls[i] = server + url;
             }
         }
-        return SourceHelper.getImageInfoList(urls, chapterId);
+        return SourceHelper.getContentList(urls, chapterId);
     }
 
     @Override
@@ -132,8 +131,8 @@ public class Du extends BaseSource {
     }
 
     @Override
-    public List<ComicInfo> getRankComicInfoList(String html) {
-        List<ComicInfo> list = getComicInfoList(html);
+    public List<ComicInfo> getRankInfoList(String html) {
+        List<ComicInfo> list = getInfoList(html);
         if (list.size() > 0) {
             return list;
         } else {
@@ -151,4 +150,5 @@ public class Du extends BaseSource {
             return starter.startElements(html, "li.list-comic");
         }
     }
+
 }

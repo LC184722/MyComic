@@ -1,7 +1,7 @@
 package com.qc.common.self;
 
 import the.one.base.Interface.ImageSnap;
-import top.luqichuang.mycomic.model.ImageInfo;
+import top.luqichuang.common.model.Content;
 
 /**
  * @author LuQiChuang
@@ -11,10 +11,10 @@ import top.luqichuang.mycomic.model.ImageInfo;
  */
 public class SnapImageInfo implements ImageSnap {
 
-    public final ImageInfo INFO;
+    public final Content INFO;
 
-    public SnapImageInfo(ImageInfo imageInfo) {
-        this.INFO = imageInfo;
+    public SnapImageInfo(Content content) {
+        this.INFO = content;
     }
 
     @Override

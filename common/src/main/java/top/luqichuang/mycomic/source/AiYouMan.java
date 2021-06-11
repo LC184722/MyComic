@@ -13,12 +13,12 @@ import top.luqichuang.common.json.JsonNode;
 import top.luqichuang.common.jsoup.JsoupNode;
 import top.luqichuang.common.jsoup.JsoupStarter;
 import top.luqichuang.common.model.ChapterInfo;
+import top.luqichuang.common.model.Content;
 import top.luqichuang.common.util.NetUtil;
 import top.luqichuang.common.util.SourceHelper;
 import top.luqichuang.common.util.StringUtil;
-import top.luqichuang.mycomic.model.BaseSource;
+import top.luqichuang.mycomic.model.BaseComicSource;
 import top.luqichuang.mycomic.model.ComicInfo;
-import top.luqichuang.mycomic.model.ImageInfo;
 
 /**
  * @author LuQiChuang
@@ -26,8 +26,7 @@ import top.luqichuang.mycomic.model.ImageInfo;
  * @date 2021/2/26 11:33
  * @ver 1.0
  */
-public class AiYouMan extends BaseSource {
-
+public class AiYouMan extends BaseComicSource {
     @Override
     public SourceEnum getSourceEnum() {
         return SourceEnum.AI_YOU_MAN;
@@ -40,12 +39,12 @@ public class AiYouMan extends BaseSource {
 
     @Override
     public Request getSearchRequest(String searchString) {
-        searchString = "https://m.iyouman.com/sort/all.html?cache=false&search_key=" + searchString;
-        return NetUtil.getRequest(searchString);
+        String url = String.format("https://m.iyouman.com/sort/all.html?cache=false&search_key=%s", searchString);
+        return NetUtil.getRequest(url);
     }
 
     @Override
-    public List<ComicInfo> getComicInfoList(String html) {
+    public List<ComicInfo> getInfoList(String html) {
         JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
             @Override
             protected ComicInfo dealElement(JsoupNode node, int elementId) {
@@ -61,7 +60,7 @@ public class AiYouMan extends BaseSource {
     }
 
     @Override
-    public void setComicDetail(ComicInfo comicInfo, String html) {
+    public void setInfoDetail(ComicInfo info, String html) {
         JsoupStarter<ChapterInfo> starter = new JsoupStarter<ChapterInfo>() {
             @Override
             protected boolean isDESC() {
@@ -76,7 +75,7 @@ public class AiYouMan extends BaseSource {
                 String intro = node.ownText("p.desc-content");
                 String updateStatus = null;
                 String updateTime = null;
-                comicInfo.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
+                info.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
             }
 
             @Override
@@ -87,11 +86,11 @@ public class AiYouMan extends BaseSource {
             }
         };
         starter.startInfo(html);
-        SourceHelper.initChapterInfoList(comicInfo, starter.startElements(html, "ol#j_chapter_list li"));
+        SourceHelper.initChapterInfoList(info, starter.startElements(html, "ol#j_chapter_list li"));
     }
 
     @Override
-    public List<ImageInfo> getImageInfoList(String html, int chapterId, Map<String, Object> map) {
+    public List<Content> getContentList(String html, int chapterId, Map<String, Object> map) {
         String curChapterStr = StringUtil.match("current_chapter:(\\{.*?\\}),", html);
         JsonNode node = new JsonNode(curChapterStr);
         String rule = node.string("rule");
@@ -106,7 +105,7 @@ public class AiYouMan extends BaseSource {
         for (int i = 0; i < urls.length; i++) {
             urls[i] = url.replace("$$", String.valueOf(i + 1));
         }
-        return SourceHelper.getImageInfoList(urls, chapterId);
+        return SourceHelper.getContentList(urls, chapterId);
     }
 
     @Override
@@ -130,7 +129,7 @@ public class AiYouMan extends BaseSource {
     }
 
     @Override
-    public List<ComicInfo> getRankComicInfoList(String html) {
+    public List<ComicInfo> getRankInfoList(String html) {
         JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
             @Override
             protected ComicInfo dealElement(JsoupNode node, int elementId) {

@@ -12,19 +12,19 @@ import top.luqichuang.common.en.NSourceEnum;
 import top.luqichuang.common.jsoup.JsoupNode;
 import top.luqichuang.common.jsoup.JsoupStarter;
 import top.luqichuang.common.model.ChapterInfo;
+import top.luqichuang.common.model.Content;
 import top.luqichuang.common.util.NetUtil;
 import top.luqichuang.common.util.SourceHelper;
-import top.luqichuang.mynovel.model.ContentInfo;
-import top.luqichuang.mynovel.model.NBaseSource;
+import top.luqichuang.mynovel.model.BaseNovelSource;
 import top.luqichuang.mynovel.model.NovelInfo;
 
 /**
  * @author LuQiChuang
  * @desc
- * @date 2021/2/11 14:12
+ * @date 2021/6/10 23:23
  * @ver 1.0
  */
-public class XinBiQuGe extends NBaseSource {
+public class XinBiQuGe extends BaseNovelSource {
     @Override
     public NSourceEnum getNSourceEnum() {
         return NSourceEnum.XIN_BI_QU_GE;
@@ -37,12 +37,12 @@ public class XinBiQuGe extends NBaseSource {
 
     @Override
     public Request getSearchRequest(String searchString) {
-        String url = "https://www.vbiquge.com/search.php?keyword=" + searchString;
+        String url = String.format("%s/search.php?keyword=%s", getIndex(), searchString);
         return NetUtil.getRequest(url);
     }
 
     @Override
-    public List<NovelInfo> getNovelInfoList(String html) {
+    public List<NovelInfo> getInfoList(String html) {
         JsoupStarter<NovelInfo> starter = new JsoupStarter<NovelInfo>() {
             @Override
             protected NovelInfo dealElement(JsoupNode node, int elementId) {
@@ -51,14 +51,14 @@ public class XinBiQuGe extends NBaseSource {
                 String updateTime = node.ownText("span.result-game-item-info-tag-title", 4);
                 String imgUrl = node.src("img");
                 String detailUrl = node.href("a");
-                return new NovelInfo(getNSourceId(), title, author, detailUrl, imgUrl, updateTime);
+                return new NovelInfo(getSourceId(), title, author, detailUrl, imgUrl, updateTime);
             }
         };
         return starter.startElements(html, "div.result-item");
     }
 
     @Override
-    public void setNovelDetail(NovelInfo novelInfo, String html) {
+    public void setInfoDetail(NovelInfo info, String html) {
         JsoupStarter<ChapterInfo> starter = new JsoupStarter<ChapterInfo>() {
             @Override
             protected boolean isDESC() {
@@ -80,7 +80,7 @@ public class XinBiQuGe extends NBaseSource {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                novelInfo.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
+                info.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
             }
 
             @Override
@@ -91,15 +91,15 @@ public class XinBiQuGe extends NBaseSource {
             }
         };
         starter.startInfo(html);
-        SourceHelper.initChapterInfoList(novelInfo, starter.startElements(html, "div#list dd"));
+        SourceHelper.initChapterInfoList(info, starter.startElements(html, "div#list dd"));
     }
 
     @Override
-    public ContentInfo getContentInfo(String html, int chapterId, Map<String, Object> map) {
+    public List<Content> getContentList(String html, int chapterId, Map<String, Object> map) {
         JsoupNode node = new JsoupNode(html);
         String content = node.html("div#content");
         content = SourceHelper.getCommonContent(content, "<br>");
-        return new ContentInfo(chapterId, content);
+        return SourceHelper.getContentList(new Content(chapterId, content));
     }
 
     @Override
@@ -124,7 +124,7 @@ public class XinBiQuGe extends NBaseSource {
     }
 
     @Override
-    public List<NovelInfo> getRankNovelInfoList(String html) {
+    public List<NovelInfo> getRankInfoList(String html) {
         List<NovelInfo> list;
         JsoupStarter<NovelInfo> starter = new JsoupStarter<NovelInfo>() {
             @Override
@@ -137,7 +137,7 @@ public class XinBiQuGe extends NBaseSource {
                 String updateTime = node.ownText("span.s3 a");
                 String imgUrl = null;
                 String detailUrl = getIndex() + node.href("span.s2 a");
-                return new NovelInfo(getNSourceId(), title, author, detailUrl, imgUrl, updateTime);
+                return new NovelInfo(getSourceId(), title, author, detailUrl, imgUrl, updateTime);
             }
         };
         list = starter.startElements(html, "div.l li");

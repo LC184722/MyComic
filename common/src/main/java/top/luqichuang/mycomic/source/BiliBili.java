@@ -12,12 +12,12 @@ import top.luqichuang.common.en.SourceEnum;
 import top.luqichuang.common.json.JsonNode;
 import top.luqichuang.common.json.JsonStarter;
 import top.luqichuang.common.model.ChapterInfo;
+import top.luqichuang.common.model.Content;
 import top.luqichuang.common.util.NetUtil;
 import top.luqichuang.common.util.SourceHelper;
 import top.luqichuang.common.util.StringUtil;
-import top.luqichuang.mycomic.model.BaseSource;
+import top.luqichuang.mycomic.model.BaseComicSource;
 import top.luqichuang.mycomic.model.ComicInfo;
-import top.luqichuang.mycomic.model.ImageInfo;
 
 /**
  * @author LuQiChuang
@@ -25,7 +25,7 @@ import top.luqichuang.mycomic.model.ImageInfo;
  * @date 2020/8/12 15:25
  * @ver 1.0
  */
-public class BiliBili extends BaseSource {
+public class BiliBili extends BaseComicSource {
     @Override
     public SourceEnum getSourceEnum() {
         return SourceEnum.BILI_BILI;
@@ -54,27 +54,10 @@ public class BiliBili extends BaseSource {
     }
 
     @Override
-    public Request getImageRequest(String imageUrl) {
+    public Request getContentRequest(String imageUrl) {
         String url = "https://manga.bilibili.com/twirp/comic.v1.Comic/GetImageIndex?device=pc&platform=web";
         String id = StringUtil.matchLast("(\\d+)", imageUrl);
         return NetUtil.postRequest(url, "ep_id", id);
-    }
-
-    @Override
-    public Request buildRequest(String requestUrl, String html, String tag, Map<String, Object> map) {
-        if (IMAGE.equals(tag)) {
-            JsonStarter<Object> starter = new JsonStarter<Object>() {
-                @Override
-                public Object dealDataList(JsonNode node, int dataId) {
-                    return node.string("path");
-                }
-            };
-            List<Object> list = starter.startDataList(html, "data", "images");
-            com.alibaba.fastjson.JSONArray array = new JSONArray(list);
-            String url = "https://manga.bilibili.com/twirp/comic.v1.Comic/ImageToken?device=pc&platform=web";
-            return NetUtil.postRequest(url, "urls", array.toString());
-        }
-        return super.buildRequest(requestUrl, html, tag, map);
     }
 
     @Override
@@ -90,7 +73,24 @@ public class BiliBili extends BaseSource {
     }
 
     @Override
-    public List<ComicInfo> getComicInfoList(String html) {
+    public Request buildRequest(String requestUrl, String html, String tag, Map<String, Object> map) {
+        if (CONTENT.equals(tag)) {
+            JsonStarter<Object> starter = new JsonStarter<Object>() {
+                @Override
+                public Object dealDataList(JsonNode node, int dataId) {
+                    return node.string("path");
+                }
+            };
+            List<Object> list = starter.startDataList(html, "data", "images");
+            com.alibaba.fastjson.JSONArray array = new JSONArray(list);
+            String url = "https://manga.bilibili.com/twirp/comic.v1.Comic/ImageToken?device=pc&platform=web";
+            return NetUtil.postRequest(url, "urls", array.toString());
+        }
+        return super.buildRequest(requestUrl, html, tag, map);
+    }
+
+    @Override
+    public List<ComicInfo> getInfoList(String html) {
         JsonStarter<ComicInfo> starter = new JsonStarter<ComicInfo>() {
             @Override
             protected ComicInfo dealDataList(JsonNode node, int dataId) {
@@ -106,8 +106,8 @@ public class BiliBili extends BaseSource {
     }
 
     @Override
-    public void setComicDetail(ComicInfo comicInfo, String html) {
-        String id = StringUtil.match("(\\d+)", comicInfo.getDetailUrl());
+    public void setInfoDetail(ComicInfo info, String html) {
+        String id = StringUtil.match("(\\d+)", info.getDetailUrl());
         JsonStarter<ChapterInfo> starter = new JsonStarter<ChapterInfo>() {
             @Override
             protected void dealData(JsonNode node) {
@@ -117,7 +117,7 @@ public class BiliBili extends BaseSource {
                 String intro = node.string("classic_lines");
                 String updateStatus = node.string("renewal_time");
                 String updateTime = null;
-                comicInfo.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
+                info.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
             }
 
             @Override
@@ -132,19 +132,19 @@ public class BiliBili extends BaseSource {
             }
         };
         starter.startData(html, "data");
-        SourceHelper.initChapterInfoList(comicInfo, starter.startDataList(html, "data", "ep_list"));
+        SourceHelper.initChapterInfoList(info, starter.startDataList(html, "data", "ep_list"));
     }
 
     @Override
-    public List<ImageInfo> getImageInfoList(String html, int chapterId, Map<String, Object> map) {
-        JsonStarter<ImageInfo> starter = new JsonStarter<ImageInfo>() {
+    public List<Content> getContentList(String html, int chapterId, Map<String, Object> map) {
+        JsonStarter<Content> starter = new JsonStarter<Content>() {
             @Override
-            protected ImageInfo dealDataList(JsonNode node, int dataId) {
+            protected Content dealDataList(JsonNode node, int dataId) {
                 String url = node.string("url");
                 String token = node.string("token");
                 String chapterUrl = url + "?token=" + token;
                 chapterUrl = chapterUrl.replace("\\u0026", "&");
-                return new ImageInfo(chapterId, getCur(), getTotal(), chapterUrl);
+                return new Content(chapterId, getCur(), getTotal(), chapterUrl);
             }
         };
         return starter.startDataList(html, "data");
@@ -192,7 +192,7 @@ public class BiliBili extends BaseSource {
     }
 
     @Override
-    public List<ComicInfo> getRankComicInfoList(String html) {
+    public List<ComicInfo> getRankInfoList(String html) {
         JsonStarter<ComicInfo> starter = new JsonStarter<ComicInfo>() {
             @Override
             protected ComicInfo dealDataList(JsonNode node, int dataId) {
@@ -214,6 +214,4 @@ public class BiliBili extends BaseSource {
         }
         return list;
     }
-
-
 }

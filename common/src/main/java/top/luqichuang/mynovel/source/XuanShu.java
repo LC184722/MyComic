@@ -12,10 +12,10 @@ import top.luqichuang.common.en.NSourceEnum;
 import top.luqichuang.common.jsoup.JsoupNode;
 import top.luqichuang.common.jsoup.JsoupStarter;
 import top.luqichuang.common.model.ChapterInfo;
+import top.luqichuang.common.model.Content;
 import top.luqichuang.common.util.NetUtil;
 import top.luqichuang.common.util.SourceHelper;
-import top.luqichuang.mynovel.model.ContentInfo;
-import top.luqichuang.mynovel.model.NBaseSource;
+import top.luqichuang.mynovel.model.BaseNovelSource;
 import top.luqichuang.mynovel.model.NovelInfo;
 
 /**
@@ -24,20 +24,10 @@ import top.luqichuang.mynovel.model.NovelInfo;
  * @date 2021/2/16 19:48
  * @ver 1.0
  */
-public class XuanShu extends NBaseSource {
+public class XuanShu extends BaseNovelSource {
     @Override
     public NSourceEnum getNSourceEnum() {
         return NSourceEnum.XUAN_SHU;
-    }
-
-    @Override
-    public Request buildRequest(String requestUrl, String html, String tag) {
-        if (DETAIL.equals(tag)) {
-            JsoupNode node = new JsoupNode(html);
-            String url = node.href("li.downAddress_li:eq(1) a");
-            return NetUtil.getRequest(url);
-        }
-        return super.buildRequest(requestUrl, html, tag);
     }
 
     @Override
@@ -52,7 +42,17 @@ public class XuanShu extends NBaseSource {
     }
 
     @Override
-    public List<NovelInfo> getNovelInfoList(String html) {
+    public Request buildRequest(String requestUrl, String html, String tag, Map<String, Object> map) {
+        if (DETAIL.equals(tag)) {
+            JsoupNode node = new JsoupNode(html);
+            String url = node.href("li.downAddress_li:eq(1) a");
+            return NetUtil.getRequest(url);
+        }
+        return null;
+    }
+
+    @Override
+    public List<NovelInfo> getInfoList(String html) {
         JsoupStarter<NovelInfo> starter = new JsoupStarter<NovelInfo>() {
             @Override
             protected NovelInfo dealElement(JsoupNode node, int elementId) {
@@ -67,14 +67,14 @@ public class XuanShu extends NBaseSource {
                     updateTime = node.ownText("span.oldDate", getSize() - elementId - 1);
                 } catch (Exception ignored) {
                 }
-                return new NovelInfo(getNSourceId(), title, author, detailUrl, imgUrl, updateTime);
+                return new NovelInfo(getSourceId(), title, author, detailUrl, imgUrl, updateTime);
             }
         };
         return starter.startElements(html, "div#searchmain div.searchTopic");
     }
 
     @Override
-    public void setNovelDetail(NovelInfo novelInfo, String html) {
+    public void setInfoDetail(NovelInfo info, String html) {
         JsoupStarter<ChapterInfo> starter = new JsoupStarter<ChapterInfo>() {
             @Override
             protected boolean isDESC() {
@@ -95,7 +95,7 @@ public class XuanShu extends NBaseSource {
                     updateTime = updateTime.split("上传时间:")[1];
                 } catch (Exception ignored) {
                 }
-                novelInfo.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
+                info.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
             }
 
             @Override
@@ -110,16 +110,16 @@ public class XuanShu extends NBaseSource {
             }
         };
         starter.startInfo(html);
-        SourceHelper.initChapterInfoList(novelInfo, starter.startElements(html, "div.read_list a"));
+        SourceHelper.initChapterInfoList(info, starter.startElements(html, "div.read_list a"));
     }
 
     @Override
-    public ContentInfo getContentInfo(String html, int chapterId, Map<String, Object> map) {
+    public List<Content> getContentList(String html, int chapterId, Map<String, Object> map) {
         JsoupNode node = new JsoupNode(html);
         node.init(node.html("div#view_content_txt"));
         node.remove("div");
         String content = SourceHelper.getCommonContent(node.clean());
-        return new ContentInfo(chapterId, content);
+        return SourceHelper.getContentList(new Content(chapterId, content));
     }
 
     @Override
@@ -138,7 +138,7 @@ public class XuanShu extends NBaseSource {
     }
 
     @Override
-    public List<NovelInfo> getRankNovelInfoList(String html) {
+    public List<NovelInfo> getRankInfoList(String html) {
         JsoupStarter<NovelInfo> starter = new JsoupStarter<NovelInfo>() {
             @Override
             protected NovelInfo dealElement(JsoupNode node, int elementId) {
@@ -153,7 +153,7 @@ public class XuanShu extends NBaseSource {
                     updateTime = node.ownText("div.mainListBottom", getSize() - elementId - 1, "div.mainRunSystem a");
                 } catch (Exception ignored) {
                 }
-                return new NovelInfo(getNSourceId(), title, author, detailUrl, imgUrl, updateTime);
+                return new NovelInfo(getSourceId(), title, author, detailUrl, imgUrl, updateTime);
             }
         };
         return starter.startElements(html, "ul#mainlistUL div.mainListInfo");

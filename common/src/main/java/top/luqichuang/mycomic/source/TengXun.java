@@ -13,13 +13,13 @@ import top.luqichuang.common.en.SourceEnum;
 import top.luqichuang.common.jsoup.JsoupNode;
 import top.luqichuang.common.jsoup.JsoupStarter;
 import top.luqichuang.common.model.ChapterInfo;
+import top.luqichuang.common.model.Content;
 import top.luqichuang.common.util.DecryptUtil;
 import top.luqichuang.common.util.NetUtil;
 import top.luqichuang.common.util.SourceHelper;
 import top.luqichuang.common.util.StringUtil;
-import top.luqichuang.mycomic.model.BaseSource;
+import top.luqichuang.mycomic.model.BaseComicSource;
 import top.luqichuang.mycomic.model.ComicInfo;
-import top.luqichuang.mycomic.model.ImageInfo;
 
 /**
  * @author LuQiChuang
@@ -27,7 +27,7 @@ import top.luqichuang.mycomic.model.ImageInfo;
  * @date 2020/8/12 15:25
  * @ver 1.0
  */
-public class TengXun extends BaseSource {
+public class TengXun extends BaseComicSource {
 
     @Override
     public SourceEnum getSourceEnum() {
@@ -46,7 +46,7 @@ public class TengXun extends BaseSource {
     }
 
     @Override
-    public List<ComicInfo> getComicInfoList(String html) {
+    public List<ComicInfo> getInfoList(String html) {
         JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
             @Override
             protected ComicInfo dealElement(JsoupNode node, int elementId) {
@@ -62,7 +62,7 @@ public class TengXun extends BaseSource {
     }
 
     @Override
-    public void setComicDetail(ComicInfo comicInfo, String html) {
+    public void setInfoDetail(ComicInfo info, String html) {
         JsoupStarter<ChapterInfo> starter = new JsoupStarter<ChapterInfo>() {
 
             @Override
@@ -78,7 +78,7 @@ public class TengXun extends BaseSource {
                 String intro = node.ownText("div.works-intro p.works-intro-short");
                 String updateStatus = node.ownText("div.works-intro label.works-intro-status");
                 String updateTime = node.ownText("span.ui-pl10");
-                comicInfo.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
+                info.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
             }
 
             @Override
@@ -89,11 +89,11 @@ public class TengXun extends BaseSource {
             }
         };
         starter.startInfo(html);
-        SourceHelper.initChapterInfoList(comicInfo, starter.startElements(html, "ol.chapter-page-all span"));
+        SourceHelper.initChapterInfoList(info, starter.startElements(html, "ol.chapter-page-all span"));
     }
 
     @Override
-    public List<ImageInfo> getImageInfoList(String html, int chapterId, Map<String, Object> map) {
+    public List<Content> getContentList(String html, int chapterId, Map<String, Object> map) {
         String raw = StringUtil.match("DATA.*=.*'(.*?)',", html);
         String nonce = StringUtil.matchLast("window\\[.*?\\] *=(.*?);", html);
         if (nonce != null) {
@@ -118,7 +118,7 @@ public class TengXun extends BaseSource {
                 urlList = StringUtil.matchList("pid(.*?)\"url\":\"(.*?)\"", data, 2);
             }
         }
-        return SourceHelper.getImageInfoList(urlList, chapterId);
+        return SourceHelper.getContentList(urlList, chapterId);
     }
 
     private String getJsCode() {
@@ -168,7 +168,7 @@ public class TengXun extends BaseSource {
     }
 
     @Override
-    public List<ComicInfo> getRankComicInfoList(String html) {
+    public List<ComicInfo> getRankInfoList(String html) {
         List<ComicInfo> list = new ArrayList<>();
         JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
             @Override

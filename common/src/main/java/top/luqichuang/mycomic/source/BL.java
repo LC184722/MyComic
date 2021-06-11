@@ -10,12 +10,12 @@ import top.luqichuang.common.en.SourceEnum;
 import top.luqichuang.common.jsoup.JsoupNode;
 import top.luqichuang.common.jsoup.JsoupStarter;
 import top.luqichuang.common.model.ChapterInfo;
+import top.luqichuang.common.model.Content;
 import top.luqichuang.common.util.NetUtil;
 import top.luqichuang.common.util.SourceHelper;
 import top.luqichuang.common.util.StringUtil;
-import top.luqichuang.mycomic.model.BaseSource;
+import top.luqichuang.mycomic.model.BaseComicSource;
 import top.luqichuang.mycomic.model.ComicInfo;
-import top.luqichuang.mycomic.model.ImageInfo;
 
 /**
  * @author LuQiChuang
@@ -23,7 +23,7 @@ import top.luqichuang.mycomic.model.ImageInfo;
  * @date 2021/1/24 19:48
  * @ver 1.0
  */
-public class BL extends BaseSource {
+public class BL extends BaseComicSource {
     @Override
     public SourceEnum getSourceEnum() {
         return SourceEnum.BL;
@@ -42,7 +42,7 @@ public class BL extends BaseSource {
 
     @Override
     public Request buildRequest(String requestUrl, String html, String tag, Map<String, Object> map) {
-        if (IMAGE.equals(tag)) {
+        if (CONTENT.equals(tag)) {
             try {
                 JsoupNode node = new JsoupNode(html);
                 node.init(node.getElements("select.selectpage option").last());
@@ -55,12 +55,12 @@ public class BL extends BaseSource {
                     requestUrl = requestUrl.split("\\?")[0];
                 }
                 if (page <= pageMax) {
-                    List<ImageInfo> list = (List<ImageInfo>) map.get("list");
+                    List<Content> list = (List<Content>) map.get("list");
                     if (list == null) {
-                        list = getImageInfoList(html, -1, null);
+                        list = getContentList(html, -1, null);
                         map.put("list", list);
                     } else {
-                        list.addAll(getImageInfoList(html, -1, null));
+                        list.addAll(getContentList(html, -1, null));
                     }
                     return NetUtil.getRequest(requestUrl + "?page=" + page);
                 }
@@ -71,7 +71,7 @@ public class BL extends BaseSource {
     }
 
     @Override
-    public List<ComicInfo> getComicInfoList(String html) {
+    public List<ComicInfo> getInfoList(String html) {
         JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
             @Override
             protected ComicInfo dealElement(JsoupNode node, int elementId) {
@@ -87,7 +87,7 @@ public class BL extends BaseSource {
     }
 
     @Override
-    public void setComicDetail(ComicInfo comicInfo, String html) {
+    public void setInfoDetail(ComicInfo info, String html) {
         JsoupStarter<ChapterInfo> starter = new JsoupStarter<ChapterInfo>() {
             @Override
             protected boolean isDESC() {
@@ -107,7 +107,7 @@ public class BL extends BaseSource {
                     updateTime = updateTime.substring(updateTime.indexOf(':') + 1).trim();
                 } catch (Exception ignored) {
                 }
-                comicInfo.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
+                info.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
             }
 
             @Override
@@ -118,11 +118,11 @@ public class BL extends BaseSource {
             }
         };
         starter.startInfo(html);
-        SourceHelper.initChapterInfoList(comicInfo, starter.startElements(html, "ul#chapterList li"));
+        SourceHelper.initChapterInfoList(info, starter.startElements(html, "ul#chapterList li"));
     }
 
     @Override
-    public List<ImageInfo> getImageInfoList(String html, int chapterId, Map<String, Object> map) {
+    public List<Content> getContentList(String html, int chapterId, Map<String, Object> map) {
         JsoupNode node = new JsoupNode(html);
         Elements elements = node.getElements("div.comiclist img");
         String[] urls = new String[elements.size()];
@@ -131,12 +131,12 @@ public class BL extends BaseSource {
             urls[i] = node.src("img");
         }
         if (map != null) {
-            List<ImageInfo> lList = SourceHelper.getImageInfoList(urls, chapterId);
-            List<ImageInfo> list = (List<ImageInfo>) map.get("list");
+            List<Content> lList = SourceHelper.getContentList(urls, chapterId);
+            List<Content> list = (List<Content>) map.get("list");
             if (list != null) {
                 list.addAll(lList);
                 int i = 0;
-                for (ImageInfo imageInfo : list) {
+                for (Content imageInfo : list) {
                     imageInfo.setChapterId(chapterId);
                     imageInfo.setCur(i++);
                     imageInfo.setTotal(list.size());
@@ -144,7 +144,7 @@ public class BL extends BaseSource {
                 return list;
             }
         }
-        return SourceHelper.getImageInfoList(urls, chapterId);
+        return SourceHelper.getContentList(urls, chapterId);
     }
 
     @Override
@@ -153,7 +153,7 @@ public class BL extends BaseSource {
     }
 
     @Override
-    public List<ComicInfo> getRankComicInfoList(String html) {
+    public List<ComicInfo> getRankInfoList(String html) {
         return null;
     }
 }

@@ -1,12 +1,12 @@
 package top.luqichuang.mycomic.model;
 
-import org.litepal.crud.LitePalSupport;
-
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+
+import top.luqichuang.common.model.Entity;
+import top.luqichuang.common.model.EntityInfo;
 
 /**
  * @author LuQiChuang
@@ -14,7 +14,7 @@ import java.util.Objects;
  * @date 2020/8/12 15:27
  * @ver 1.0
  */
-public class Comic extends LitePalSupport implements Serializable {
+public class Comic extends Entity {
 
     private int id;
 
@@ -72,6 +72,31 @@ public class Comic extends LitePalSupport implements Serializable {
         return title != null ? title.hashCode() : 0;
     }
 
+    @Override
+    public String getCurChapterTitle() {
+        return comicInfo.getCurChapterTitle();
+    }
+
+    @Override
+    public String getUpdateChapter() {
+        return comicInfo.getUpdateChapter();
+    }
+
+    @Override
+    public String getImgUrl() {
+        return comicInfo.getImgUrl();
+    }
+
+    @Override
+    public int getInfoId() {
+        return comicInfo.getId();
+    }
+
+    @Override
+    public String getAuthor() {
+        return comicInfo.getAuthor();
+    }
+
     public int getId() {
         return id;
     }
@@ -102,6 +127,26 @@ public class Comic extends LitePalSupport implements Serializable {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    @Override
+    public EntityInfo getInfo() {
+        return comicInfo;
+    }
+
+    @Override
+    public void setInfo(EntityInfo entityInfo) {
+        this.comicInfo = (ComicInfo) entityInfo;
+    }
+
+    @Override
+    public List<? extends EntityInfo> getInfoList() {
+        return comicInfoList;
+    }
+
+    @Override
+    public void setInfoList(List<? extends EntityInfo> infoList) {
+        this.comicInfoList = (List<ComicInfo>) infoList;
     }
 
     public ComicInfo getComicInfo() {

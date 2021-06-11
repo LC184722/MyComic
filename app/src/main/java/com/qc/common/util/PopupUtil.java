@@ -2,21 +2,20 @@ package com.qc.common.util;
 
 import android.content.Context;
 
+import com.qc.common.constant.AppConstant;
+import com.qc.common.constant.TmpData;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.LinkedHashMap;
 
 import the.one.base.model.PopupItem;
 import the.one.base.util.QMUIBottomSheetUtil;
-import top.luqichuang.common.util.NSourceUtil;
-import top.luqichuang.mycomic.model.ComicInfo;
+import top.luqichuang.common.model.EntityInfo;
 import top.luqichuang.common.util.MapUtil;
 import top.luqichuang.common.util.SourceUtil;
-import top.luqichuang.mynovel.model.Novel;
-import top.luqichuang.mynovel.model.NovelInfo;
 
 /**
  * @author LuQiChuang
@@ -34,24 +33,16 @@ public class PopupUtil {
         return itemList;
     }
 
-    public static Map<Integer, String> getMap(List<ComicInfo> comicInfoList) {
+    public static Map<Integer, String> getMap(List<? extends EntityInfo> infoList) {
         Map<Integer, String> map = new LinkedHashMap<>();
-        for (ComicInfo comicInfo : comicInfoList) {
-            map.put(comicInfo.getSourceId(), SourceUtil.getSourceName(comicInfo.getSourceId()));
+        for (EntityInfo info : infoList) {
+            if (TmpData.contentCode == AppConstant.COMIC_CODE) {
+                map.put(info.getSourceId(), SourceUtil.getSourceName(info.getSourceId()));
+            } else {
+                map.put(info.getSourceId(), SourceUtil.getNSourceName(info.getSourceId()) + '-' + info.getAuthor());
+            }
         }
         return map;
-    }
-
-    public static Map<String, String> getNMap(List<NovelInfo> novelInfoList) {
-        Map<String, String> map = new LinkedHashMap<>();
-        for (NovelInfo novelInfo : novelInfoList) {
-            map.put(novelInfo.getNSourceId() + "-" + novelInfo.getAuthor(), NSourceUtil.getNSourceName(novelInfo.getNSourceId()) + "-" + novelInfo.getAuthor());
-        }
-        return map;
-    }
-
-    public static String getNMapKey(Novel novel) {
-        return novel.getNSourceId() + "-" + novel.getAuthor();
     }
 
     public static void showSimpleBottomSheetList(Context context, Map<?, String> map, Object key, String title, QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener listener) {

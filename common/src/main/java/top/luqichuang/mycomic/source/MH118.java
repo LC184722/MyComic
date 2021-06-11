@@ -10,13 +10,13 @@ import top.luqichuang.common.en.SourceEnum;
 import top.luqichuang.common.jsoup.JsoupNode;
 import top.luqichuang.common.jsoup.JsoupStarter;
 import top.luqichuang.common.model.ChapterInfo;
+import top.luqichuang.common.model.Content;
 import top.luqichuang.common.util.DecryptUtil;
 import top.luqichuang.common.util.NetUtil;
 import top.luqichuang.common.util.SourceHelper;
 import top.luqichuang.common.util.StringUtil;
-import top.luqichuang.mycomic.model.BaseSource;
+import top.luqichuang.mycomic.model.BaseComicSource;
 import top.luqichuang.mycomic.model.ComicInfo;
-import top.luqichuang.mycomic.model.ImageInfo;
 
 /**
  * @author LuQiChuang
@@ -24,8 +24,7 @@ import top.luqichuang.mycomic.model.ImageInfo;
  * @date 2020/11/26 20:17
  * @ver 1.0
  */
-public class MH118 extends BaseSource {
-
+public class MH118 extends BaseComicSource {
     @Override
     public SourceEnum getSourceEnum() {
         return SourceEnum.MH_118;
@@ -38,12 +37,12 @@ public class MH118 extends BaseSource {
 
     @Override
     public Request getSearchRequest(String searchString) {
-        String url = "http://www.ccshwy.com/statics/search.aspx?key=";
-        return NetUtil.getRequest(url + searchString);
+        String url = "http://www.ccshwy.com/statics/search.aspx?key=" + searchString;
+        return NetUtil.getRequest(url);
     }
 
     @Override
-    public List<ComicInfo> getComicInfoList(String html) {
+    public List<ComicInfo> getInfoList(String html) {
         JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
             @Override
             protected ComicInfo dealElement(JsoupNode node, int elementId) {
@@ -59,7 +58,7 @@ public class MH118 extends BaseSource {
     }
 
     @Override
-    public void setComicDetail(ComicInfo comicInfo, String html) {
+    public void setInfoDetail(ComicInfo info, String html) {
         JsoupStarter<ChapterInfo> starter = new JsoupStarter<ChapterInfo>() {
             @Override
             protected void dealInfo(JsoupNode node) {
@@ -73,7 +72,7 @@ public class MH118 extends BaseSource {
                     intro = intro.substring(intro.indexOf(':') + 1);
                 } catch (Exception ignored) {
                 }
-                comicInfo.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
+                info.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
             }
 
             @Override
@@ -84,11 +83,11 @@ public class MH118 extends BaseSource {
             }
         };
         starter.startInfo(html);
-        SourceHelper.initChapterInfoList(comicInfo, starter.startElements(html, "ul#mh-chapter-list-ol-0 li"));
+        SourceHelper.initChapterInfoList(info, starter.startElements(html, "ul#mh-chapter-list-ol-0 li"));
     }
 
     @Override
-    public List<ImageInfo> getImageInfoList(String html, int chapterId, Map<String, Object> map) {
+    public List<Content> getContentList(String html, int chapterId, Map<String, Object> map) {
         String[] urls;
         try {
             String chapterStr = StringUtil.match("qTcms_S_m_murl_e=\"(.*?)\"", html);
@@ -98,7 +97,7 @@ public class MH118 extends BaseSource {
             urls = null;
             e.printStackTrace();
         }
-        return SourceHelper.getImageInfoList(urls, chapterId);
+        return SourceHelper.getContentList(urls, chapterId);
     }
 
     @Override
@@ -190,7 +189,7 @@ public class MH118 extends BaseSource {
     }
 
     @Override
-    public List<ComicInfo> getRankComicInfoList(String html) {
+    public List<ComicInfo> getRankInfoList(String html) {
         JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
             @Override
             protected ComicInfo dealElement(JsoupNode node, int elementId) {

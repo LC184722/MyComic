@@ -12,10 +12,10 @@ import top.luqichuang.common.en.NSourceEnum;
 import top.luqichuang.common.jsoup.JsoupNode;
 import top.luqichuang.common.jsoup.JsoupStarter;
 import top.luqichuang.common.model.ChapterInfo;
+import top.luqichuang.common.model.Content;
 import top.luqichuang.common.util.NetUtil;
 import top.luqichuang.common.util.SourceHelper;
-import top.luqichuang.mynovel.model.ContentInfo;
-import top.luqichuang.mynovel.model.NBaseSource;
+import top.luqichuang.mynovel.model.BaseNovelSource;
 import top.luqichuang.mynovel.model.NovelInfo;
 
 /**
@@ -24,20 +24,10 @@ import top.luqichuang.mynovel.model.NovelInfo;
  * @date 2021/2/15 19:31
  * @ver 1.0
  */
-public class AiYue extends NBaseSource {
+public class AiYue extends BaseNovelSource {
     @Override
     public NSourceEnum getNSourceEnum() {
         return NSourceEnum.AI_YUE;
-    }
-
-    @Override
-    public Request buildRequest(String requestUrl, String html, String tag) {
-        if (DETAIL.equals(tag)) {
-            JsoupNode node = new JsoupNode(html);
-            String url = node.href("a.all-catalog");
-            return NetUtil.getRequest(url);
-        }
-        return super.buildRequest(requestUrl, html, tag);
     }
 
     @Override
@@ -47,12 +37,22 @@ public class AiYue extends NBaseSource {
 
     @Override
     public Request getSearchRequest(String searchString) {
-        String url = String.format("http://www.hybooks.cn/top/?search=%s", searchString);
+        String url = String.format("%s/top/?search=%s", getIndex(), searchString);
         return NetUtil.getRequest(url);
     }
 
     @Override
-    public List<NovelInfo> getNovelInfoList(String html) {
+    public Request buildRequest(String requestUrl, String html, String tag, Map<String, Object> map) {
+        if (DETAIL.equals(tag)) {
+            JsoupNode node = new JsoupNode(html);
+            String url = node.href("a.all-catalog");
+            return NetUtil.getRequest(url);
+        }
+        return null;
+    }
+
+    @Override
+    public List<NovelInfo> getInfoList(String html) {
         JsoupStarter<NovelInfo> starter = new JsoupStarter<NovelInfo>() {
             @Override
             protected NovelInfo dealElement(JsoupNode node, int elementId) {
@@ -65,14 +65,14 @@ public class AiYue extends NBaseSource {
                     updateTime = updateTime.replace("更新时间 ", "");
                 } catch (Exception ignored) {
                 }
-                return new NovelInfo(getNSourceId(), title, author, detailUrl, imgUrl, updateTime);
+                return new NovelInfo(getSourceId(), title, author, detailUrl, imgUrl, updateTime);
             }
         };
         return starter.startElements(html, "div.store_collist div.bookbox");
     }
 
     @Override
-    public void setNovelDetail(NovelInfo novelInfo, String html) {
+    public void setInfoDetail(NovelInfo info, String html) {
         JsoupStarter<ChapterInfo> starter = new JsoupStarter<ChapterInfo>() {
             @Override
             protected boolean isDESC() {
@@ -87,7 +87,7 @@ public class AiYue extends NBaseSource {
                 String intro = null;
                 String updateStatus = null;
                 String updateTime = null;
-                novelInfo.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
+                info.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
             }
 
             @Override
@@ -98,15 +98,15 @@ public class AiYue extends NBaseSource {
             }
         };
         starter.startInfo(html);
-        SourceHelper.initChapterInfoList(novelInfo, starter.startElements(html, "ul.chapter-list li"));
+        SourceHelper.initChapterInfoList(info, starter.startElements(html, "ul.chapter-list li"));
     }
 
     @Override
-    public ContentInfo getContentInfo(String html, int chapterId, Map<String, Object> map) {
+    public List<Content> getContentList(String html, int chapterId, Map<String, Object> map) {
         JsoupNode node = new JsoupNode(html);
         String content = node.remove("p").html("div.content");
         content = SourceHelper.getCommonContent(content);
-        return new ContentInfo(chapterId, content);
+        return SourceHelper.getContentList(new Content(chapterId, content));
     }
 
     @Override
@@ -147,7 +147,7 @@ public class AiYue extends NBaseSource {
     }
 
     @Override
-    public List<NovelInfo> getRankNovelInfoList(String html) {
-        return getNovelInfoList(html);
+    public List<NovelInfo> getRankInfoList(String html) {
+        return getInfoList(html);
     }
 }

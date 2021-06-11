@@ -1,14 +1,12 @@
 package top.luqichuang.mynovel.model;
 
-import org.litepal.crud.LitePalSupport;
-
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-import top.luqichuang.mynovel.model.NovelInfo;
+import top.luqichuang.common.model.Entity;
+import top.luqichuang.common.model.EntityInfo;
 
 /**
  * @author LuQiChuang
@@ -16,7 +14,7 @@ import top.luqichuang.mynovel.model.NovelInfo;
  * @date 2020/8/12 15:27
  * @ver 1.0
  */
-public class Novel extends LitePalSupport implements Serializable {
+public class Novel extends Entity {
 
     private int id;
 
@@ -55,7 +53,7 @@ public class Novel extends LitePalSupport implements Serializable {
                 ", nSourceId=" + nSourceId +
                 ", novelInfo=" + novelInfo +
                 ", title='" + title + '\'' +
-                ", novelInfoList=" + novelInfoList.size() +
+                ", novelInfoList=" + novelInfoList +
                 ", status=" + status +
                 ", priority=" + priority +
                 ", isUpdate=" + isUpdate +
@@ -84,6 +82,16 @@ public class Novel extends LitePalSupport implements Serializable {
         this.id = id;
     }
 
+    @Override
+    public int getSourceId() {
+        return nSourceId;
+    }
+
+    @Override
+    public void setSourceId(int sourceId) {
+        this.nSourceId = sourceId;
+    }
+
     public int getNSourceId() {
         return nSourceId;
     }
@@ -106,6 +114,46 @@ public class Novel extends LitePalSupport implements Serializable {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    @Override
+    public EntityInfo getInfo() {
+        return novelInfo;
+    }
+
+    @Override
+    public void setInfo(EntityInfo entityInfo) {
+        this.novelInfo = (NovelInfo) entityInfo;
+    }
+
+    @Override
+    public List<? extends EntityInfo> getInfoList() {
+        return this.novelInfoList;
+    }
+
+    @Override
+    public void setInfoList(List<? extends EntityInfo> infoList) {
+        this.novelInfoList = (List<NovelInfo>) infoList;
+    }
+
+    @Override
+    public String getCurChapterTitle() {
+        return novelInfo.getCurChapterTitle();
+    }
+
+    @Override
+    public String getUpdateChapter() {
+        return novelInfo.getUpdateChapter();
+    }
+
+    @Override
+    public String getImgUrl() {
+        return novelInfo.getImgUrl();
+    }
+
+    @Override
+    public int getInfoId() {
+        return novelInfo.getId();
     }
 
     public String getAuthor() {

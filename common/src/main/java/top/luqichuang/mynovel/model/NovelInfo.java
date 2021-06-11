@@ -1,13 +1,11 @@
 package top.luqichuang.mynovel.model;
 
-import org.litepal.crud.LitePalSupport;
-
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import top.luqichuang.common.model.ChapterInfo;
+import top.luqichuang.common.model.EntityInfo;
 
 /**
  * @author LuQiChuang
@@ -15,7 +13,7 @@ import top.luqichuang.common.model.ChapterInfo;
  * @date 2020/8/12 15:25
  * @ver 1.0
  */
-public class NovelInfo extends LitePalSupport implements Serializable {
+public class NovelInfo extends EntityInfo {
 
     public static final int DESC = 0;
 
@@ -83,20 +81,24 @@ public class NovelInfo extends LitePalSupport implements Serializable {
         this.updateTime = updateTime;
         this.updateStatus = updateStatus;
         this.intro = intro;
+        if (this.author == null) {
+            this.author = "未知";
+        }
     }
 
     @Override
     public String toString() {
-        return "ComicInfo{" +
+        return "NovelInfo{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
+                ", author='" + author + '\'' +
                 ", detailUrl='" + detailUrl + '\'' +
                 ", chapterInfoList=" + chapterInfoList.size() +
                 '}';
     }
 
     public String toStringDetail() {
-        return "ComicInfo{" +
+        return "NovelInfo{" +
                 "id=" + id +
                 ", nSourceId=" + nSourceId +
                 ", title='" + title + '\'' +
@@ -140,6 +142,16 @@ public class NovelInfo extends LitePalSupport implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public int getSourceId() {
+        return nSourceId;
+    }
+
+    @Override
+    public void setSourceId(int sourceId) {
+        this.nSourceId = sourceId;
     }
 
     public int getNSourceId() {

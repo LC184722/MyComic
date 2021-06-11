@@ -44,7 +44,7 @@ import java.util.Objects;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import the.one.base.Interface.GlideProgressListener;
 import the.one.base.util.glide.GlideProgressInterceptor;
-import top.luqichuang.mycomic.model.ImageInfo;
+import top.luqichuang.common.model.Content;
 
 /**
  * @author LuQiChuang
@@ -281,9 +281,9 @@ public class ImgUtil {
         return QMUIDisplayHelper.getScreenWidth(context);
     }
 
-    public static void preloadReaderImg(Context context, ImageInfo imageInfo) {
-        if (imageInfo != null) {
-            String url = imageInfo.getUrl();
+    public static void preloadReaderImg(Context context, Content content) {
+        if (content != null) {
+            String url = content.getUrl();
             Glide.with(context)
                     .load(url)
                     .preload();
@@ -302,12 +302,12 @@ public class ImgUtil {
     /**
      * 根据url获得图片加载状态
      *
-     * @param imageInfo imageInfo
+     * @param content content
      * @return int
      */
-    public static int getLoadStatus(ImageInfo imageInfo) {
-        if (imageInfo != null) {
-            String url = imageInfo.getUrl();
+    public static int getLoadStatus(Content content) {
+        if (content != null) {
+            String url = content.getUrl();
             Integer status = MAP.get(url);
             if (status != null) {
                 return status;

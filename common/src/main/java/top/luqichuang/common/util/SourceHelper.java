@@ -11,14 +11,14 @@ import java.util.Map;
 
 import top.luqichuang.common.jsoup.JsoupNode;
 import top.luqichuang.common.model.ChapterInfo;
+import top.luqichuang.common.model.Content;
 import top.luqichuang.mycomic.model.ComicInfo;
-import top.luqichuang.mycomic.model.ImageInfo;
 import top.luqichuang.mynovel.model.NovelInfo;
 
 /**
  * @author LuQiChuang
  * @desc
- * @date 2021/1/27 21:24
+ * @date 2021/6/11 16:46
  * @ver 1.0
  */
 public class SourceHelper {
@@ -51,38 +51,6 @@ public class SourceHelper {
                 comicInfo.setUpdateChapter(list.get(list.size() - 1).getTitle());
             }
         }
-    }
-
-    public static List<ImageInfo> getImageInfoList(String[] urls, int chapterId) {
-        return getImageInfoList(urls, chapterId, "");
-    }
-
-    public static List<ImageInfo> getImageInfoList(List<String> urlList, int chapterId) {
-        return getImageInfoList(urlList, chapterId, "");
-    }
-
-    public static List<ImageInfo> getImageInfoList(String[] urls, int chapterId, String prevUrl) {
-        List<ImageInfo> list = new ArrayList<>();
-        if (urls != null) {
-            int i = 0;
-            for (String url : urls) {
-                ImageInfo imageInfo = new ImageInfo(chapterId, i++, urls.length, prevUrl + url);
-                list.add(imageInfo);
-            }
-        }
-        return list;
-    }
-
-    public static List<ImageInfo> getImageInfoList(List<String> urlList, int chapterId, String prevUrl) {
-        List<ImageInfo> list = new ArrayList<>();
-        if (urlList != null) {
-            int i = 0;
-            for (String url : urlList) {
-                ImageInfo imageInfo = new ImageInfo(chapterId, i++, urlList.size(), prevUrl + url);
-                list.add(imageInfo);
-            }
-        }
-        return list;
     }
 
     public static void generator(String s) {
@@ -152,4 +120,44 @@ public class SourceHelper {
         }
         return content;
     }
+
+    public static List<Content> getContentList(String[] urls, int chapterId) {
+        return getContentList(urls, chapterId, "");
+    }
+
+    public static List<Content> getContentList(List<String> urlList, int chapterId) {
+        return getContentList(urlList, chapterId, "");
+    }
+
+    public static List<Content> getContentList(String[] urls, int chapterId, String prevUrl) {
+        List<Content> list = new ArrayList<>();
+        if (urls != null) {
+            int i = 0;
+            for (String url : urls) {
+                Content content = new Content(chapterId, i++, urls.length, prevUrl + url);
+                list.add(content);
+            }
+        }
+        return list;
+    }
+
+    public static List<Content> getContentList(List<String> urlList, int chapterId, String prevUrl) {
+        List<Content> list = new ArrayList<>();
+        if (urlList != null) {
+            int i = 0;
+            for (String url : urlList) {
+                Content content = new Content(chapterId, i++, urlList.size(), prevUrl + url);
+                list.add(content);
+            }
+        }
+        return list;
+    }
+
+    public static List<Content> getContentList(Content content) {
+        List<Content> list = new ArrayList<>();
+        content.setTotal(1);
+        list.add(content);
+        return list;
+    }
+
 }

@@ -12,9 +12,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.qc.common.ui.presenter.UpdatePresenter;
+import com.qc.common.util.DBUtil;
+import com.qc.common.util.EntityUtil;
 import com.qc.common.util.VersionUtil;
-import com.qc.mycomic.util.ComicUtil;
-import com.qc.mycomic.util.DBUtil;
 import com.qmuiteam.qmui.arch.QMUILatestVisit;
 
 import org.litepal.LitePal;
@@ -73,7 +73,7 @@ public class LauncherActivity extends AppCompatActivity {
         VersionUtil.initVersion(this);
         new UpdatePresenter().checkApkUpdate();
         LitePal.initialize(this);
-        ComicUtil.initComicList(ComicUtil.STATUS_ALL);
+        EntityUtil.initEntityList(EntityUtil.STATUS_ALL);
         new Thread(() -> DBUtil.autoBackup(this)).start();
     }
 

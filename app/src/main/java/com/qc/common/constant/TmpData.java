@@ -17,4 +17,8 @@ public class TmpData {
 
     public static boolean isFull = (boolean) SettingUtil.getSettingKey(SettingEnum.IS_FULL_SCREEN);
 
+    public static int contentCode = (int) SettingUtil.getSettingKey(SettingEnum.READ_CONTENT);
+
+    public static String content = SettingUtil.getSettingDesc(SettingEnum.READ_CONTENT);
+
 }

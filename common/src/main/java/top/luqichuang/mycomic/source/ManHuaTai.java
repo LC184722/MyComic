@@ -16,12 +16,12 @@ import top.luqichuang.common.json.JsonNode;
 import top.luqichuang.common.jsoup.JsoupNode;
 import top.luqichuang.common.jsoup.JsoupStarter;
 import top.luqichuang.common.model.ChapterInfo;
+import top.luqichuang.common.model.Content;
 import top.luqichuang.common.util.NetUtil;
 import top.luqichuang.common.util.SourceHelper;
 import top.luqichuang.common.util.StringUtil;
-import top.luqichuang.mycomic.model.BaseSource;
+import top.luqichuang.mycomic.model.BaseComicSource;
 import top.luqichuang.mycomic.model.ComicInfo;
-import top.luqichuang.mycomic.model.ImageInfo;
 
 /**
  * @author LuQiChuang
@@ -29,8 +29,7 @@ import top.luqichuang.mycomic.model.ImageInfo;
  * @date 2020/10/17 14:31
  * @ver 1.0
  */
-public class ManHuaTai extends BaseSource {
-
+public class ManHuaTai extends BaseComicSource {
     @Override
     public SourceEnum getSourceEnum() {
         return SourceEnum.MAN_HUA_TAI;
@@ -43,13 +42,13 @@ public class ManHuaTai extends BaseSource {
 
     @Override
     public Request getSearchRequest(String searchString) {
-        String url = "https://m.manhuatai.com/sort/all.html?cache=false&search_key=";
-        return NetUtil.getRequest(url + searchString);
+        String url = String.format("%s/sort/all.html?cache=false&search_key=%s", getIndex(), searchString);
+        return NetUtil.getRequest(url);
     }
 
     @Override
     public Request buildRequest(String requestUrl, String html, String tag, Map<String, Object> map) {
-        if (IMAGE.equals(tag)) {
+        if (CONTENT.equals(tag)) {
             String url = "https://m.manhuatai.com/api/getchapterinfov2";
             if (!requestUrl.contains(url)) {
                 String info = StringUtil.match("window.comicInfo=(\\{.*?\\})", html);
@@ -68,7 +67,7 @@ public class ManHuaTai extends BaseSource {
     }
 
     @Override
-    public List<ComicInfo> getComicInfoList(String html) {
+    public List<ComicInfo> getInfoList(String html) {
         JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
             @Override
             protected ComicInfo dealElement(JsoupNode node, int elementId) {
@@ -84,7 +83,7 @@ public class ManHuaTai extends BaseSource {
     }
 
     @Override
-    public void setComicDetail(ComicInfo comicInfo, String html) {
+    public void setInfoDetail(ComicInfo info, String html) {
         JsoupStarter<ChapterInfo> starter = new JsoupStarter<ChapterInfo>() {
             @Override
             protected boolean isDESC() {
@@ -108,7 +107,7 @@ public class ManHuaTai extends BaseSource {
                     updateStatus = null;
                     updateTime = null;
                 }
-                comicInfo.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
+                info.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
             }
 
             @Override
@@ -119,11 +118,11 @@ public class ManHuaTai extends BaseSource {
             }
         };
         starter.startInfo(html);
-        SourceHelper.initChapterInfoList(comicInfo, starter.startElements(html, "ul#js_chapter_list li"));
+        SourceHelper.initChapterInfoList(info, starter.startElements(html, "ul#js_chapter_list li"));
     }
 
     @Override
-    public List<ImageInfo> getImageInfoList(String html, int chapterId, Map<String, Object> map) {
+    public List<Content> getContentList(String html, int chapterId, Map<String, Object> map) {
         JsonNode node = new JsonNode(html);
         node.initConditions("data", "current_chapter");
         JSONArray chapterImgList = node.jsonArray("chapter_img_list");
@@ -133,7 +132,7 @@ public class ManHuaTai extends BaseSource {
                 list.add((String) o);
             }
         }
-        return SourceHelper.getImageInfoList(list, chapterId);
+        return SourceHelper.getContentList(list, chapterId);
     }
 
     @Override
@@ -189,7 +188,7 @@ public class ManHuaTai extends BaseSource {
     }
 
     @Override
-    public List<ComicInfo> getRankComicInfoList(String html) {
+    public List<ComicInfo> getRankInfoList(String html) {
         List<ComicInfo> list = new ArrayList<>();
         JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
             @Override

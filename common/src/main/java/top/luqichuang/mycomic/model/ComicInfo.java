@@ -1,13 +1,11 @@
 package top.luqichuang.mycomic.model;
 
-import org.litepal.crud.LitePalSupport;
-
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import top.luqichuang.common.model.ChapterInfo;
+import top.luqichuang.common.model.EntityInfo;
 
 /**
  * @author LuQiChuang
@@ -15,7 +13,7 @@ import top.luqichuang.common.model.ChapterInfo;
  * @date 2020/8/12 15:25
  * @ver 1.0
  */
-public class ComicInfo extends LitePalSupport implements Serializable {
+public class ComicInfo extends EntityInfo {
 
     public static final int DESC = 0;
 

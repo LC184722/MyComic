@@ -156,18 +156,6 @@ public class NetUtil {
     }
 
     /**
-     * 使用特定request开始连接网络
-     *
-     * @param request  request
-     * @param callback callback
-     * @return void
-     */
-    public static void startLoad(Request request, Callback callback) {
-        Call call = okHttpClient.newCall(request);
-        call.enqueue(callback);
-    }
-
-    /**
      * 使用默认request开始连接网络
      *
      * @param url      url
@@ -175,7 +163,19 @@ public class NetUtil {
      * @return void
      */
     public static void startLoad(String url, Callback callback) {
-        Call call = okHttpClient.newCall(getRequest(url));
+        startLoad(getRequest(url), callback);
+    }
+
+    /**
+     * 使用特定request开始连接网络
+     *
+     * @param request  request
+     * @param callback callback
+     * @return void
+     */
+    public static void startLoad(Request request, Callback callback) {
+        System.out.println("request.url() = " + request.url());
+        Call call = okHttpClient.newCall(request);
         call.enqueue(callback);
     }
 

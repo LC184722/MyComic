@@ -3,16 +3,16 @@ package top.luqichuang.common.en;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import top.luqichuang.mycomic.model.Source;
+import top.luqichuang.common.model.Source;
+import top.luqichuang.mycomic.model.ComicInfo;
 import top.luqichuang.mycomic.source.AiYouMan;
+import top.luqichuang.mycomic.source.BL;
 import top.luqichuang.mycomic.source.BiliBili;
 import top.luqichuang.mycomic.source.Du;
-import top.luqichuang.mycomic.source.OH;
-import top.luqichuang.mycomic.source.BL;
 import top.luqichuang.mycomic.source.MH118;
-import top.luqichuang.mycomic.source.ManHuaFen;
 import top.luqichuang.mycomic.source.ManHuaTai;
 import top.luqichuang.mycomic.source.MiTui;
+import top.luqichuang.mycomic.source.OH;
 import top.luqichuang.mycomic.source.PuFei;
 import top.luqichuang.mycomic.source.TengXun;
 
@@ -38,11 +38,11 @@ public enum SourceEnum {
     AI_YOU_MAN(11, "爱优漫"),
     ;
 
-    private static final Map<Integer, Source> MAP = new LinkedHashMap<>();
+    private static final Map<Integer, Source<ComicInfo>> MAP = new LinkedHashMap<>();
 
     static {
         MAP.put(MI_TUI.ID, new MiTui());
-        MAP.put(MAN_HUA_FEN.ID, new ManHuaFen());
+//        MAP.put(MAN_HUA_FEN.ID, new ManHuaFen());
         MAP.put(PU_FEI.ID, new PuFei());
         MAP.put(TENG_XUN.ID, new TengXun());
         MAP.put(BILI_BILI.ID, new BiliBili());
@@ -54,7 +54,7 @@ public enum SourceEnum {
         MAP.put(AI_YOU_MAN.ID, new AiYouMan());
     }
 
-    public static Map<Integer, Source> getMAP() {
+    public static Map<Integer, Source<ComicInfo>> getMAP() {
         return MAP;
     }
 

@@ -10,12 +10,12 @@ import top.luqichuang.common.en.SourceEnum;
 import top.luqichuang.common.jsoup.JsoupNode;
 import top.luqichuang.common.jsoup.JsoupStarter;
 import top.luqichuang.common.model.ChapterInfo;
+import top.luqichuang.common.model.Content;
 import top.luqichuang.common.util.NetUtil;
 import top.luqichuang.common.util.SourceHelper;
 import top.luqichuang.common.util.StringUtil;
-import top.luqichuang.mycomic.model.BaseSource;
+import top.luqichuang.mycomic.model.BaseComicSource;
 import top.luqichuang.mycomic.model.ComicInfo;
-import top.luqichuang.mycomic.model.ImageInfo;
 
 /**
  * @author LuQiChuang
@@ -23,8 +23,7 @@ import top.luqichuang.mycomic.model.ImageInfo;
  * @date 2020/8/12 15:25
  * @ver 1.0
  */
-public class MiTui extends BaseSource {
-
+public class MiTui extends BaseComicSource {
     @Override
     public SourceEnum getSourceEnum() {
         return SourceEnum.MI_TUI;
@@ -37,12 +36,12 @@ public class MiTui extends BaseSource {
 
     @Override
     public Request getSearchRequest(String searchString) {
-        searchString = "https://m.imitui.com/search/?keywords=" + searchString;
-        return NetUtil.getRequest(searchString);
+        String url = "https://m.imitui.com/search/?keywords=" + searchString;
+        return NetUtil.getRequest(url);
     }
 
     @Override
-    public List<ComicInfo> getComicInfoList(String html) {
+    public List<ComicInfo> getInfoList(String html) {
         JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
             @Override
             protected ComicInfo dealElement(JsoupNode node, int elementId) {
@@ -58,7 +57,7 @@ public class MiTui extends BaseSource {
     }
 
     @Override
-    public void setComicDetail(ComicInfo comicInfo, String html) {
+    public void setInfoDetail(ComicInfo info, String html) {
         JsoupStarter<ChapterInfo> starter = new JsoupStarter<ChapterInfo>() {
             @Override
             protected boolean isDESC() {
@@ -77,7 +76,7 @@ public class MiTui extends BaseSource {
                     intro = intro.substring(intro.indexOf(':') + 1);
                 } catch (Exception ignored) {
                 }
-                comicInfo.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
+                info.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
             }
 
             @Override
@@ -97,11 +96,11 @@ public class MiTui extends BaseSource {
             }
         };
         starter.startInfo(html);
-        SourceHelper.initChapterInfoList(comicInfo, starter.startElements(html, "ul#chapter-list-1 li"));
+        SourceHelper.initChapterInfoList(info, starter.startElements(html, "ul#chapter-list-1 li"));
     }
 
     @Override
-    public List<ImageInfo> getImageInfoList(String html, int chapterId, Map<String, Object> map) {
+    public List<Content> getContentList(String html, int chapterId, Map<String, Object> map) {
         String chapterImagesStr = StringUtil.match("chapterImages = \\[(.*?)\\]", html);
         String chapterPath = StringUtil.match("var chapterPath = \"(.*?)\";", html);
         chapterPath = "";
@@ -123,7 +122,7 @@ public class MiTui extends BaseSource {
                 }
             }
         }
-        return SourceHelper.getImageInfoList(urls, chapterId);
+        return SourceHelper.getContentList(urls, chapterId);
     }
 
     @Override
@@ -151,8 +150,8 @@ public class MiTui extends BaseSource {
     }
 
     @Override
-    public List<ComicInfo> getRankComicInfoList(String html) {
-        List<ComicInfo> list = getComicInfoList(html);
+    public List<ComicInfo> getRankInfoList(String html) {
+        List<ComicInfo> list = getInfoList(html);
         if (list.size() > 0) {
             return list;
         } else {

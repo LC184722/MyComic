@@ -9,13 +9,13 @@ import top.luqichuang.common.en.SourceEnum;
 import top.luqichuang.common.jsoup.JsoupNode;
 import top.luqichuang.common.jsoup.JsoupStarter;
 import top.luqichuang.common.model.ChapterInfo;
+import top.luqichuang.common.model.Content;
 import top.luqichuang.common.util.DecryptUtil;
 import top.luqichuang.common.util.NetUtil;
 import top.luqichuang.common.util.SourceHelper;
 import top.luqichuang.common.util.StringUtil;
-import top.luqichuang.mycomic.model.BaseSource;
+import top.luqichuang.mycomic.model.BaseComicSource;
 import top.luqichuang.mycomic.model.ComicInfo;
-import top.luqichuang.mycomic.model.ImageInfo;
 
 /**
  * @author LuQiChuang
@@ -23,8 +23,7 @@ import top.luqichuang.mycomic.model.ImageInfo;
  * @date 2020/8/12 15:25
  * @ver 1.0
  */
-public class PuFei extends BaseSource {
-
+public class PuFei extends BaseComicSource {
     @Override
     public SourceEnum getSourceEnum() {
         return SourceEnum.PU_FEI;
@@ -47,7 +46,7 @@ public class PuFei extends BaseSource {
     }
 
     @Override
-    public List<ComicInfo> getComicInfoList(String html) {
+    public List<ComicInfo> getInfoList(String html) {
         JsoupStarter<ComicInfo> starter = new JsoupStarter<ComicInfo>() {
             @Override
             protected ComicInfo dealElement(JsoupNode node, int elementId) {
@@ -63,7 +62,7 @@ public class PuFei extends BaseSource {
     }
 
     @Override
-    public void setComicDetail(ComicInfo comicInfo, String html) {
+    public void setInfoDetail(ComicInfo info, String html) {
         JsoupStarter<ChapterInfo> starter = new JsoupStarter<ChapterInfo>() {
             @Override
             protected void dealInfo(JsoupNode node) {
@@ -73,7 +72,7 @@ public class PuFei extends BaseSource {
                 String intro = node.ownText("div#bookIntro p");
                 String updateStatus = node.ownText("div.thumb i");
                 String updateTime = node.ownText("div.book-detail dl:eq(2) dd");
-                comicInfo.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
+                info.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
             }
 
             @Override
@@ -84,11 +83,11 @@ public class PuFei extends BaseSource {
             }
         };
         starter.startInfo(html);
-        SourceHelper.initChapterInfoList(comicInfo, starter.startElements(html, "div#chapterList2 li"));
+        SourceHelper.initChapterInfoList(info, starter.startElements(html, "div#chapterList2 li"));
     }
 
     @Override
-    public List<ImageInfo> getImageInfoList(String html, int chapterId, Map<String, Object> map) {
+    public List<Content> getContentList(String html, int chapterId, Map<String, Object> map) {
         String encodeStr = StringUtil.match("cp=\"(.*?)\"", html);
         String[] urls = null;
         if (encodeStr != null) {
@@ -100,7 +99,7 @@ public class PuFei extends BaseSource {
                 prevUrl = "";
             }
         }
-        return SourceHelper.getImageInfoList(urls, chapterId, prevUrl);
+        return SourceHelper.getContentList(urls, chapterId, prevUrl);
     }
 
     @Override
@@ -121,22 +120,11 @@ public class PuFei extends BaseSource {
     }
 
     @Override
-    public List<ComicInfo> getRankComicInfoList(String html) {
-        return getComicInfoList(html);
+    public List<ComicInfo> getRankInfoList(String html) {
+        return getInfoList(html);
     }
 
     private String[] decodeStr(String encodeStr) {
-//        String decodeStr = StringUtil.base64Decode(encodeStr);
-//        try {
-//            Context ctx = Context.enter();
-//            ctx.setOptimizationLevel(-1);
-//            Scriptable scope = ctx.initStandardObjects();
-//            Object object = ctx.evaluateString(scope, decodeStr, null, 0, null);
-//            String result = Context.toString(object);
-//            return result.split(",");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
         String code = DecryptUtil.decryptBase64(encodeStr);
         String result = DecryptUtil.exeJsCode(code);
         if (result != null) {
