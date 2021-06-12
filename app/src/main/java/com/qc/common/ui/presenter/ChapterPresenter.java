@@ -49,7 +49,7 @@ public class ChapterPresenter extends BasePresenter<ChapterView> {
                 ChapterView view = getView();
                 AndroidSchedulers.mainThread().scheduleDirect(() -> {
                     if (view != null) {
-                        EntityHelper.setInfoDetail(entity, html);
+                        EntityHelper.setInfoDetail(entity, html, map);
                         view.loadComplete();
                     }
                 });

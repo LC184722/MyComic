@@ -32,11 +32,6 @@ public abstract class CommonCallback implements Callback {
         this.tag = tag;
     }
 
-    public CommonCallback(Request request, Source source) {
-        this.request = request;
-        this.source = source;
-    }
-
     @Override
     public void onFailure(@NotNull Call call, @NotNull IOException e) {
         onFailure(e.getMessage());
@@ -47,7 +42,7 @@ public abstract class CommonCallback implements Callback {
         String html = null;
         Request req = null;
         if (source != null) {
-            html = getHtml(response, source.getCharsetName());
+            html = getHtml(response, source.getCharsetName(tag));
             req = source.buildRequest(request.url().toString(), html, tag, map);
         }
         if (req != null && !request.toString().equals(req.toString())) {
@@ -61,6 +56,9 @@ public abstract class CommonCallback implements Callback {
     public static String getHtml(Response response, String charsetName) {
         String html;
         try {
+            if (charsetName == null) {
+                charsetName = "UTF-8";
+            }
             byte[] b = response.body().bytes();
             html = new String(b, charsetName);
         } catch (Exception e) {

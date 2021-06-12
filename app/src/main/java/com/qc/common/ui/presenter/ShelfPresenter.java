@@ -47,7 +47,7 @@ public class ShelfPresenter extends BasePresenter<ShelfView> {
         System.out.println("entity.getSourceId() = " + entity.getSourceId());
         System.out.println("commonSource = " + source);
         Request request = source.getDetailRequest(info.getDetailUrl());
-        NetUtil.startLoad(request, new CommonCallback(request, source) {
+        NetUtil.startLoad(request, new CommonCallback(request, source, null) {
             @Override
             public void onFailure(String errorMsg) {
                 ShelfView view = getView();
@@ -64,7 +64,7 @@ public class ShelfPresenter extends BasePresenter<ShelfView> {
                 AndroidSchedulers.mainThread().scheduleDirect(() -> {
                     if (view != null) {
                         String curUpdateChapter = info.getUpdateChapter();
-                        source.setInfoDetail(info, html);
+                        source.setInfoDetail(info, html, map);
                         if (curUpdateChapter == null || !curUpdateChapter.equals(info.getUpdateChapter())) {
                             if (info.getUpdateChapter() != null) {
                                 entity.setUpdate(EntityHelper.changeInfo(entity, info.getSourceId()));

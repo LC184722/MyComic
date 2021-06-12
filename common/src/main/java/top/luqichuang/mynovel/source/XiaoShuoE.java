@@ -21,23 +21,31 @@ import top.luqichuang.mynovel.model.NovelInfo;
 /**
  * @author LuQiChuang
  * @desc
- * @date 2021/6/10 23:23
+ * @date 2021/6/12 16:14
  * @ver 1.0
  */
-public class XinBiQuGe extends BaseNovelSource {
+public class XiaoShuoE extends BaseNovelSource {
     @Override
     public NSourceEnum getNSourceEnum() {
-        return NSourceEnum.XIN_BI_QU_GE;
+        return NSourceEnum.XIAO_SHUO_E;
     }
 
     @Override
     public String getIndex() {
-        return "https://www.vbiquge.com";
+        return "https://www.zwda.com";
+    }
+
+    @Override
+    public String getCharsetName(String tag) {
+        if (SEARCH.equals(tag)) {
+            return "UTF-8";
+        }
+        return "GBK";
     }
 
     @Override
     public Request getSearchRequest(String searchString) {
-        String url = String.format("%s/search.php?keyword=%s", getIndex(), searchString);
+        String url = String.format("%s/search.php?q=%s", getIndex(), searchString);
         return NetUtil.getRequest(url);
     }
 
@@ -50,7 +58,7 @@ public class XinBiQuGe extends BaseNovelSource {
                 String author = node.ownText("p.result-game-item-info-tag span", 1);
                 String updateTime = node.ownText("span.result-game-item-info-tag-title", 4);
                 String imgUrl = node.src("img");
-                String detailUrl = node.href("a");
+                String detailUrl = getIndex() + node.href("a");
                 return new NovelInfo(getSourceId(), title, author, detailUrl, imgUrl, updateTime);
             }
         };
@@ -104,16 +112,17 @@ public class XinBiQuGe extends BaseNovelSource {
 
     @Override
     public Map<String, String> getRankMap() {
+        String html = "<ul>\n" +
+                "<li><a href=\"/xuanhuan/\">玄幻魔法</a></li>\n" +
+                "<li><a href=\"/xiuzhen/\">武侠仙侠</a></li>\n" +
+                "<li><a href=\"/dushi/\">都市小说</a></li>\n" +
+                "<li><a href=\"/lishi/\">历史军事</a></li>\n" +
+                "<li><a href=\"/wangyou/\">网游小说</a></li>\n" +
+                "<li><a href=\"/kehuan/\">科幻小说</a></li>\n" +
+                "<li><a href=\"/yanqing/\">言情小说</a></li>\n" +
+                "<li><a href=\"/qita/\">其他小说</a></li>\n" +
+                "</ul>";
         Map<String, String> map = new LinkedHashMap<>();
-        String html = "\t\t\t<li><a href=\"/xclass/1/1.html\">玄幻奇幻</a></li>\n" +
-                "\t\t\t<li><a href=\"/xclass/2/1.html\">武侠仙侠</a></li>\n" +
-                "\t\t\t<li><a href=\"/xclass/3/1.html\">都市言情</a></li>\n" +
-                "\t\t\t<li><a href=\"/xclass/4/1.html\">历史军事</a></li>\n" +
-                "\t\t\t<li><a href=\"/xclass/5/1.html\">科幻灵异</a></li>\n" +
-                "\t\t\t<li><a href=\"/xclass/6/1.html\">网游竞技</a></li>\n" +
-                "\t\t\t<li><a href=\"/xclass/7/1.html\">女频频道</a></li>\n" +
-                "\t\t\t<li><a href=\"/quanben/\">完本小说</a></li>\n" +
-                "\t\t\t<li><a href=\"/xbqgph.html\">排行榜单</a></li>";
         JsoupNode node = new JsoupNode(html);
         Elements elements = node.getElements("a");
         for (Element element : elements) {

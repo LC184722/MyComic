@@ -3,9 +3,9 @@ package top.luqichuang.mycomic.source;
 import com.alibaba.fastjson.JSONArray;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import okhttp3.Request;
 import top.luqichuang.common.en.SourceEnum;
@@ -106,7 +106,7 @@ public class BiliBili extends BaseComicSource {
     }
 
     @Override
-    public void setInfoDetail(ComicInfo info, String html) {
+    public void setInfoDetail(ComicInfo info, String html, Map<String, Object> map) {
         String id = StringUtil.match("(\\d+)", info.getDetailUrl());
         JsonStarter<ChapterInfo> starter = new JsonStarter<ChapterInfo>() {
             @Override
@@ -152,7 +152,7 @@ public class BiliBili extends BaseComicSource {
 
     @Override
     public Map<String, String> getRankMap() {
-        Map<String, String> map = new TreeMap<>();
+        Map<String, String> map = new LinkedHashMap<>();
         //https://manga.bilibili.com/twirp/comic.v1.Comic/HomeHot?device=pc&platform=web {"type":3}
         map.put("日漫榜", "HomeHot#{\"type\":3}");
         map.put("国漫榜", "HomeHot#{\"type\":4}");//{"type":4}
@@ -161,33 +161,33 @@ public class BiliBili extends BaseComicSource {
         map.put("飙升榜", "HomeHot#{\"type\":2}");//{"type":2}
         map.put("免费榜", "HomeHot#{\"type\":1}");//{"type":1}
         //https://manga.bilibili.com/twirp/comic.v1.Comic/ClassPage?device=pc&platform=web {"style_id":-1,"area_id":1,"is_finish":-1,"order":0,"page_num":1,"page_size":200,"is_free":-1}
-        map.put("免费", "ClassPage#{\"style_id\":-1,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":1}");
-        map.put("付费", "ClassPage#{\"style_id\":-1,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":2}");
-        map.put("等就免费", "ClassPage#{\"style_id\":-1,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":3}");
-        map.put("大陆", "ClassPage#{\"style_id\":-1,\"area_id\":1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":-1}");
-        map.put("日本", "ClassPage#{\"style_id\":-1,\"area_id\":2,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":-1}");
-        map.put("韩国", "ClassPage#{\"style_id\":-1,\"area_id\":6,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":-1}");
-        map.put("连载", "ClassPage#{\"style_id\":-1,\"area_id\":-1,\"is_finish\":0,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":-1}");
-        map.put("完结", "ClassPage#{\"style_id\":-1,\"area_id\":-1,\"is_finish\":1,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":-1}");
-        map.put("正能量", "ClassPage#{\"style_id\":1028,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":-1}");
-        map.put("冒险", "ClassPage#{\"style_id\":1013,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":-1}");
-        map.put("热血", "ClassPage#{\"style_id\":999,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":-1}");
-        map.put("搞笑", "ClassPage#{\"style_id\":994,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":-1}");
-        map.put("恋爱", "ClassPage#{\"style_id\":995,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":-1}");
-        map.put("少女", "ClassPage#{\"style_id\":1026,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":-1}");
-        map.put("日常", "ClassPage#{\"style_id\":1020,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":-1}");
-        map.put("校园", "ClassPage#{\"style_id\":1001,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":-1}");
-        map.put("运动", "ClassPage#{\"style_id\":1010,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":-1}");
-        map.put("治愈", "ClassPage#{\"style_id\":1007,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":-1}");
-        map.put("古风", "ClassPage#{\"style_id\":997,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":-1}");
-        map.put("玄幻", "ClassPage#{\"style_id\":1016,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":-1}");
-        map.put("奇幻", "ClassPage#{\"style_id\":998,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":-1}");
-        map.put("后宫", "ClassPage#{\"style_id\":1017,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":-1}");
-        map.put("惊奇", "ClassPage#{\"style_id\":996,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":-1}");
-        map.put("悬疑", "ClassPage#{\"style_id\":1023,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":-1}");
-        map.put("都市", "ClassPage#{\"style_id\":1002,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":-1}");
-        map.put("总裁", "ClassPage#{\"style_id\":1004,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":-1}");
-        map.put("剧情", "ClassPage#{\"style_id\":1030,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":200,\"is_free\":-1}");
+        map.put("免费", "ClassPage#{\"style_id\":-1,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":100,\"is_free\":1}");
+        map.put("付费", "ClassPage#{\"style_id\":-1,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":100,\"is_free\":2}");
+        map.put("等就免费", "ClassPage#{\"style_id\":-1,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":100,\"is_free\":3}");
+        map.put("大陆", "ClassPage#{\"style_id\":-1,\"area_id\":1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":100,\"is_free\":-1}");
+        map.put("日本", "ClassPage#{\"style_id\":-1,\"area_id\":2,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":100,\"is_free\":-1}");
+        map.put("韩国", "ClassPage#{\"style_id\":-1,\"area_id\":6,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":100,\"is_free\":-1}");
+        map.put("连载", "ClassPage#{\"style_id\":-1,\"area_id\":-1,\"is_finish\":0,\"order\":0,\"page_num\":1,\"page_size\":100,\"is_free\":-1}");
+        map.put("完结", "ClassPage#{\"style_id\":-1,\"area_id\":-1,\"is_finish\":1,\"order\":0,\"page_num\":1,\"page_size\":100,\"is_free\":-1}");
+        map.put("正能量", "ClassPage#{\"style_id\":1028,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":100,\"is_free\":-1}");
+        map.put("冒险", "ClassPage#{\"style_id\":1013,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":100,\"is_free\":-1}");
+        map.put("热血", "ClassPage#{\"style_id\":999,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":100,\"is_free\":-1}");
+        map.put("搞笑", "ClassPage#{\"style_id\":994,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":100,\"is_free\":-1}");
+        map.put("恋爱", "ClassPage#{\"style_id\":995,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":100,\"is_free\":-1}");
+        map.put("少女", "ClassPage#{\"style_id\":1026,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":100,\"is_free\":-1}");
+        map.put("日常", "ClassPage#{\"style_id\":1020,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":100,\"is_free\":-1}");
+        map.put("校园", "ClassPage#{\"style_id\":1001,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":100,\"is_free\":-1}");
+        map.put("运动", "ClassPage#{\"style_id\":1010,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":100,\"is_free\":-1}");
+        map.put("治愈", "ClassPage#{\"style_id\":1007,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":100,\"is_free\":-1}");
+        map.put("古风", "ClassPage#{\"style_id\":997,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":100,\"is_free\":-1}");
+        map.put("玄幻", "ClassPage#{\"style_id\":1016,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":100,\"is_free\":-1}");
+        map.put("奇幻", "ClassPage#{\"style_id\":998,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":100,\"is_free\":-1}");
+        map.put("后宫", "ClassPage#{\"style_id\":1017,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":100,\"is_free\":-1}");
+        map.put("惊奇", "ClassPage#{\"style_id\":996,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":100,\"is_free\":-1}");
+        map.put("悬疑", "ClassPage#{\"style_id\":1023,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":100,\"is_free\":-1}");
+        map.put("都市", "ClassPage#{\"style_id\":1002,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":100,\"is_free\":-1}");
+        map.put("总裁", "ClassPage#{\"style_id\":1004,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":100,\"is_free\":-1}");
+        map.put("剧情", "ClassPage#{\"style_id\":1030,\"area_id\":-1,\"is_finish\":-1,\"order\":0,\"page_num\":1,\"page_size\":100,\"is_free\":-1}");
         return map;
     }
 

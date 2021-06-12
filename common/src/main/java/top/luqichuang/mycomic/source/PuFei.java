@@ -30,7 +30,7 @@ public class PuFei extends BaseComicSource {
     }
 
     @Override
-    public String getCharsetName() {
+    public String getCharsetName(String tag) {
         return "GB2312";
     }
 
@@ -62,7 +62,7 @@ public class PuFei extends BaseComicSource {
     }
 
     @Override
-    public void setInfoDetail(ComicInfo info, String html) {
+    public void setInfoDetail(ComicInfo info, String html, Map<String, Object> map) {
         JsoupStarter<ChapterInfo> starter = new JsoupStarter<ChapterInfo>() {
             @Override
             protected void dealInfo(JsoupNode node) {

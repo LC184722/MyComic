@@ -65,7 +65,7 @@ public class K17 extends BaseNovelSource {
     }
 
     @Override
-    public void setInfoDetail(NovelInfo info, String html) {
+    public void setInfoDetail(NovelInfo info, String html, Map<String, Object> map) {
         JsoupStarter<ChapterInfo> starter = new JsoupStarter<ChapterInfo>() {
             @Override
             protected boolean isDESC() {

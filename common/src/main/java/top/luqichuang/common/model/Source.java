@@ -29,7 +29,7 @@ public interface Source<T extends EntityInfo> {
         return true;
     }
 
-    default String getCharsetName() {
+    default String getCharsetName(String tag) {
         return "UTF-8";
     }
 
@@ -53,7 +53,7 @@ public interface Source<T extends EntityInfo> {
 
     List<T> getInfoList(String html);
 
-    void setInfoDetail(T info, String html);
+    void setInfoDetail(T info, String html, Map<String, Object> map);
 
     List<Content> getContentList(String html, int chapterId, Map<String, Object> map);
 

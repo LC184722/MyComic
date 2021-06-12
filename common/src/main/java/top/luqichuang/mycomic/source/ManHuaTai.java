@@ -83,7 +83,7 @@ public class ManHuaTai extends BaseComicSource {
     }
 
     @Override
-    public void setInfoDetail(ComicInfo info, String html) {
+    public void setInfoDetail(ComicInfo info, String html, Map<String, Object> map) {
         JsoupStarter<ChapterInfo> starter = new JsoupStarter<ChapterInfo>() {
             @Override
             protected boolean isDESC() {
@@ -153,10 +153,10 @@ public class ManHuaTai extends BaseComicSource {
         map.put("运动", "https://m.manhuatai.com/sort/yundong.html");
         map.put("推理", "https://m.manhuatai.com/sort/tuili.html");
         map.put("冒险", "https://m.manhuatai.com/sort/maoxian.html");
-        map.put("耽美", "https://m.manhuatai.com/sort/danmei.html");
+        map.put("耽美", "https://m.manhuatai.com/sort/liaomei.html");
         map.put("百合", "https://m.manhuatai.com/sort/baihe.html");
         map.put("搞笑", "https://m.manhuatai.com/sort/gaoxiao.html");
-        map.put("战争", "https://m.manhuatai.com/sort/zhanzheng.html");
+        map.put("战争", "https://m.manhuatai.com/sort/zhanzhen.html");
         map.put("神魔", "https://m.manhuatai.com/sort/shenmo.html");
         map.put("忍者", "https://m.manhuatai.com/sort/renzhe.html");
         map.put("竞技", "https://m.manhuatai.com/sort/jingji.html");

@@ -43,9 +43,8 @@ public class EntityHelper {
         return commonSource(entity).getSourceName();
     }
 
-    public static void setInfoDetail(Entity entity, String html) {
-//        source(entity).setComicDetail((ComicInfo) entity.getInfo(), html);
-        commonSource(entity).setInfoDetail(entity.getInfo(), html);
+    public static void setInfoDetail(Entity entity, String html, Map<String, Object> map) {
+        commonSource(entity).setInfoDetail(entity.getInfo(), html, map);
     }
 
     public static List<Content> getContentList(Entity entity, String html, int chapterId, Map<String, Object> map) {

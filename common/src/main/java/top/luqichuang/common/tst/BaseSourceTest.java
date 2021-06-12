@@ -90,7 +90,7 @@ public abstract class BaseSourceTest<T extends EntityInfo> {
     public void testDetail() {
         String html = FileUtil.readFile(formatFileName(DETAIL));
         System.out.println("html.length() = " + html.length());
-        source.setInfoDetail(info, html);
+        source.setInfoDetail(info, html, dataMap);
         System.out.println("info.getTitle() = " + info.getTitle());
         System.out.println("info.getImgUrl() = " + info.getImgUrl());
         System.out.println("info.getAuthor() = " + info.getAuthor());
@@ -121,6 +121,7 @@ public abstract class BaseSourceTest<T extends EntityInfo> {
             }
         } else if (info instanceof NovelInfo) {
             System.out.println("=== start ===");
+            System.out.println("========|");
             for (Content content : contentList) {
                 System.out.println(content.getContent());
                 System.out.println("=============");
@@ -178,7 +179,7 @@ public abstract class BaseSourceTest<T extends EntityInfo> {
         Request detailRequest = source.getDetailRequest(detailUrl);
         String detail = testRequest(detailRequest, DETAIL);
         FileUtil.writeFile(detail, formatFileName(info.getTitle(), DETAIL));
-        source.setInfoDetail(info, detail);
+        source.setInfoDetail(info, detail, dataMap);
         System.out.println("chapterList.size() = " + info.getChapterInfoList().size());
         Assert.assertFalse("未搜索到章节信息", info.getChapterInfoList().isEmpty());
 
@@ -196,6 +197,7 @@ public abstract class BaseSourceTest<T extends EntityInfo> {
             }
         } else if (info instanceof NovelInfo) {
             System.out.println("=== start ===");
+            System.out.println("========|");
             for (Content content : contentList) {
                 System.out.println(content.getContent());
                 System.out.println("=============");

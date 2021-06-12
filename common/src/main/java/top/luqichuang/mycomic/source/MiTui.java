@@ -57,7 +57,7 @@ public class MiTui extends BaseComicSource {
     }
 
     @Override
-    public void setInfoDetail(ComicInfo info, String html) {
+    public void setInfoDetail(ComicInfo info, String html, Map<String, Object> map) {
         JsoupStarter<ChapterInfo> starter = new JsoupStarter<ChapterInfo>() {
             @Override
             protected boolean isDESC() {

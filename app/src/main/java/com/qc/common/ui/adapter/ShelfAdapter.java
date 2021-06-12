@@ -4,6 +4,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.qc.common.constant.AppConstant;
+import com.qc.common.constant.TmpData;
 import com.qc.common.self.ImageConfig;
 import com.qc.common.util.ImgUtil;
 import com.qc.mycomic.R;
@@ -51,7 +53,11 @@ public class ShelfAdapter extends TheBaseQuickAdapter<Entity> {
         RelativeLayout layout = holder.findView(R.id.imageRelativeLayout);
         ImageConfig config = ImgUtil.getDefaultConfig(getContext(), entity.getImgUrl(), layout);
         config.setSave(true);
-        config.setSaveKey(entity.getInfoId());
+        if (TmpData.contentCode == AppConstant.COMIC_CODE) {
+            config.setSaveKey(entity.getInfoId());
+        } else {
+            config.setSaveKey("N" + entity.getInfoId());
+        }
         ImgUtil.loadImage(getContext(), config);
     }
 

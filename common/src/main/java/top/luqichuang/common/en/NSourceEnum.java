@@ -7,6 +7,8 @@ import top.luqichuang.common.model.Source;
 import top.luqichuang.mynovel.model.NovelInfo;
 import top.luqichuang.mynovel.source.AiYue;
 import top.luqichuang.mynovel.source.K17;
+import top.luqichuang.mynovel.source.MoYuan;
+import top.luqichuang.mynovel.source.XiaoShuoE;
 import top.luqichuang.mynovel.source.XinBiQuGe;
 import top.luqichuang.mynovel.source.XuanShu;
 
@@ -25,6 +27,8 @@ public enum NSourceEnum {
     AI_YUE(4, "爱阅小说"),
     XUAN_SHU(5, "炫书网"),
     K17(6, "17K小说"),
+    XIAO_SHUO_E(7, "E小说"),
+    MO_YUAN(8, "墨缘文学"),
     ;
 
     private static final Map<Integer, Source<NovelInfo>> MAP = new LinkedHashMap<>();
@@ -36,6 +40,8 @@ public enum NSourceEnum {
         MAP.put(AI_YUE.ID, new AiYue());
         MAP.put(XUAN_SHU.ID, new XuanShu());
         MAP.put(K17.ID, new K17());
+        MAP.put(XIAO_SHUO_E.ID, new XiaoShuoE());
+        MAP.put(MO_YUAN.ID, new MoYuan());
     }
 
     public static Map<Integer, Source<NovelInfo>> getMAP() {
