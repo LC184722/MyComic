@@ -45,7 +45,36 @@ public class AnimationUtil {
         }
     }
 
-    public static boolean changeVisibility(View view, boolean isVisible) {
+    public static void changeViewVisibility(View view) {
+        Object tag = initTag(view);
+        if (Objects.equals(tag, View.VISIBLE)) {
+            view.setTag(View.GONE);
+            QMUIViewHelper.fadeOut(view, 300, null, true);
+        } else {
+            view.setTag(View.VISIBLE);
+            QMUIViewHelper.fadeIn(view, 300, null, true);
+        }
+    }
+
+    public static boolean changeViewVisibility(View view, boolean visible) {
+        return changeViewVisibility(view, visible, null);
+    }
+
+    public static boolean changeViewVisibility(View view, boolean visible, Animation.AnimationListener listener) {
+        Object tag = initTag(view);
+        if (Objects.equals(tag, View.VISIBLE) && !visible) {
+            view.setTag(View.GONE);
+            QMUIViewHelper.fadeOut(view, 300, listener, true);
+            return true;
+        } else if (Objects.equals(tag, View.GONE) && visible) {
+            view.setTag(View.VISIBLE);
+            QMUIViewHelper.fadeIn(view, 300, listener, true);
+            return true;
+        }
+        return false;
+    }
+
+    private static Object initTag(View view) {
         Object tag = view.getTag();
         if (tag == null) {
             if (view.getVisibility() == View.VISIBLE) {
@@ -56,16 +85,7 @@ public class AnimationUtil {
                 tag = View.GONE;
             }
         }
-        if (Objects.equals(tag, View.GONE) && isVisible) {
-            view.setTag(View.VISIBLE);
-            QMUIViewHelper.fadeIn(view, 300, null, true);
-            return true;
-        } else if (Objects.equals(tag, View.VISIBLE) && !isVisible) {
-            view.setTag(View.GONE);
-            QMUIViewHelper.fadeOut(view, 300, null, true);
-            return true;
-        }
-        return false;
+        return tag;
     }
 
 }

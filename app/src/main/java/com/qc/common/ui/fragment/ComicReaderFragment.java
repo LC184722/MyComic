@@ -59,7 +59,7 @@ public class ComicReaderFragment extends BaseReaderFragment {
 
         LinearLayout llCancel = settingsView.findViewById(R.id.llCancel);
         llCancel.setOnClickListener(v -> {
-            changeVisibility(settingsView, false, false);
+            hideView(settingsView);
         });
 
         LinearLayout llFull = settingsView.findViewById(R.id.llFull);

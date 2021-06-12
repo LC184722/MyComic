@@ -1,9 +1,12 @@
 package com.qc.common.ui.fragment;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -84,14 +87,6 @@ public abstract class BaseReaderFragment extends BaseDataFragment<Content> imple
     private SeekBar seekBar;
     private boolean firstLoad = true;
 
-//    public static BaseReaderFragment getInstance(Entity entity) {
-//        CReaderFragment fragment = new CReaderFragment();
-//        Bundle bundle = new Bundle();
-//        bundle.putSerializable("entity", entity);
-//        fragment.setArguments(bundle);
-//        return fragment;
-//    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         this.entity = (Entity) getArguments().get("entity");
@@ -158,13 +153,13 @@ public abstract class BaseReaderFragment extends BaseDataFragment<Content> imple
                     if (readerListAdapter.getPosition() != position) {
                         readerListAdapter.setPosition(position);
                         EntityHelper.initChapterId(entityInfo, EntityHelper.positionToChapterId(entityInfo, position));
-                        changeVisibility(rightView, false);
+                        hideView(rightView);
                         showLoadingPage();
                         isForce = true;
                         isJump = true;
                         onRefresh();
                     } else {
-                        changeVisibility(rightView, false);
+                        hideView(rightView);
                     }
                 }
             });
@@ -183,7 +178,7 @@ public abstract class BaseReaderFragment extends BaseDataFragment<Content> imple
         bottomView.setVisibility(View.GONE);
         rightView.setVisibility(View.GONE);
         settingsView.setVisibility(View.GONE);
-        hideView();
+        hideViews();
         if (TmpData.isLight) {
             darkView.setVisibility(View.GONE);
         }
@@ -219,7 +214,11 @@ public abstract class BaseReaderFragment extends BaseDataFragment<Content> imple
     private boolean isSmooth = false;
     private boolean isJump = false;
     private boolean isForce = false;
+    private boolean ignoreScroll = false;
+    private float touchX;
+    private float touchY;
 
+    @SuppressLint("ClickableViewAccessibility")
     private void setListener() {
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
@@ -243,7 +242,7 @@ public abstract class BaseReaderFragment extends BaseDataFragment<Content> imple
 
         llLeft.setOnClickListener(v -> {
             if (EntityHelper.checkChapterId(entityInfo, EntityHelper.getPrevChapterId(entityInfo))) {
-                changeVisibility(bottomView, false);
+                hideView(bottomView);
                 onRefresh();
             } else {
                 showFailTips("没有上一章");
@@ -253,7 +252,7 @@ public abstract class BaseReaderFragment extends BaseDataFragment<Content> imple
         llRight.setOnClickListener(v -> {
             if (EntityHelper.checkChapterId(entityInfo, EntityHelper.getNextChapterId(entityInfo))) {
                 isJump = true;
-                changeVisibility(bottomView, false);
+                hideView(bottomView);
                 super.onRefresh();
             } else {
                 showFailTips("没有下一章");
@@ -261,8 +260,12 @@ public abstract class BaseReaderFragment extends BaseDataFragment<Content> imple
         });
 
         llList.setOnClickListener(v -> {
-            changeVisibility(bottomView, false);
-            changeVisibility(rightView, true);
+            hideView(bottomView);
+            displayView(rightView);
+        });
+
+        LinearLayout llBottomMain = bottomView.findViewById(R.id.llBottomMain);
+        llBottomMain.setOnClickListener(v -> {
         });
 
         TextView tvDark = bottomView.findViewById(R.id.tvDark);
@@ -279,12 +282,12 @@ public abstract class BaseReaderFragment extends BaseDataFragment<Content> imple
         llDark.setOnClickListener(v -> {
             if (darkView.getVisibility() == View.VISIBLE) {
                 TmpData.isLight = true;
-                changeVisibility(darkView, false, false);
+                hideView(darkView);
                 tvDark.setText("夜间");
                 AnimationUtil.changeDrawable(ibDark, getDrawablee(R.drawable.ic_baseline_brightness_2_24));
             } else {
                 TmpData.isLight = false;
-                changeVisibility(darkView, true, false);
+                displayView(darkView);
                 tvDark.setText("日间");
                 AnimationUtil.changeDrawable(ibDark, getDrawablee(R.drawable.ic_baseline_brightness_1_24));
             }
@@ -314,12 +317,31 @@ public abstract class BaseReaderFragment extends BaseDataFragment<Content> imple
         });
 
         llSettings.setOnClickListener(v -> {
-            changeVisibility(bottomView, false, false);
-            changeVisibility(settingsView, true, false);
+            hideView(bottomView);
+            displayView(settingsView);
         });
 
         llChapter.setOnClickListener(v -> {
             onBackPressed();
+        });
+
+        recycleView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+                touchX = e.getX();
+                touchY = e.getY();
+                return false;
+            }
+
+            @Override
+            public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+
+            }
+
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+            }
         });
 
         setSettingsView(settingsView);
@@ -366,11 +388,11 @@ public abstract class BaseReaderFragment extends BaseDataFragment<Content> imple
                     setScrollValue(content);
 
                     //防止滑动seekBar与onScrolled发生冲突
-                    if (!isSmooth) {
+                    if (!isSmooth && !ignoreScroll) {
                         //设置seekBar position
                         seekBar.setProgress(content.getCur());
                         //改变views visible
-                        hideView();
+                        hideViews();
                     }
 
                     //预加载
@@ -394,7 +416,7 @@ public abstract class BaseReaderFragment extends BaseDataFragment<Content> imple
 
     @Override
     public void onRefresh() {
-        hideView();
+        hideViews();
         isJump = true;
         isLoadNext = false;
         super.onRefresh();
@@ -423,35 +445,69 @@ public abstract class BaseReaderFragment extends BaseDataFragment<Content> imple
         }
     }
 
+    protected boolean checkMenuClick(int position) {
+        int height = QMUIDisplayHelper.getScreenHeight(getContext());
+        int length = height / 3;
+        if (touchY < length) {
+            recycleView.scrollBy(0, -(height / 2));
+        } else if (touchY > length * 2) {
+            recycleView.scrollBy(0, (height / 2));
+        } else {
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
-        if (!TmpData.isFull) {
-            setFullScreen(false);
+        if (!checkMenuClick(position)) {
+            return;
         }
-        if (!changeVisibility(settingsView, false)) {
-            if (!changeVisibility(rightView, false)) {
-                changeVisibility(bottomView, bottomView.getVisibility() != View.VISIBLE);
-            }
+        if (!hideViews()) {
+            ignoreScroll = true;
+            setFullScreen(false);
+            AnimationUtil.changeViewVisibility(bottomView, true, new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    ignoreScroll = false;
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+            return;
+        }
+        if (TmpData.isFull) {
+            setFullScreen(true);
         }
     }
 
-    private void hideView() {
+    protected boolean hideView(View view) {
+        return AnimationUtil.changeViewVisibility(view, false);
+    }
+
+    protected boolean displayView(View view) {
+        return AnimationUtil.changeViewVisibility(view, true);
+    }
+
+    protected boolean hideViews() {
+        boolean success = false;
         View[] views = new View[]{bottomView, rightView, settingsView};
         for (View view : views) {
-            AnimationUtil.changeVisibility(view, false);
+            boolean result = hideView(view);
+            if (result && !success) {
+                success = true;
+            }
         }
         setFullScreen(TmpData.isFull);
-    }
-
-    private boolean changeVisibility(View view, boolean isVisible) {
-        return changeVisibility(view, isVisible, TmpData.isFull);
-    }
-
-    protected boolean changeVisibility(View view, boolean isVisible, boolean isChangeStatusBar) {
-        if (isChangeStatusBar) {
-            setFullScreen(!isVisible);
-        }
-        return AnimationUtil.changeVisibility(view, isVisible);
+        return success;
     }
 
     protected ViewGroup.LayoutParams getLP() {
