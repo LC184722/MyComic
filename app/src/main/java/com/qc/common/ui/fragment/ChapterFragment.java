@@ -206,16 +206,11 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
                 @Override
                 public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
                     String key = MapUtil.getKeyByValue(map, tag);
-                    if (TmpData.contentCode == AppConstant.COMIC_CODE) {
-                        int sourceId = Integer.parseInt(key);
-                        entity.setSourceId(sourceId);
-                    } else {
-                        String[] ss = key.split("-", 2);
-                        int sourceId = Integer.parseInt(ss[0]);
-                        String author = ss[1];
-                        entity.setSourceId(sourceId);
-                        entity.setAuthor(author);
-                    }
+                    String[] ss = key.split("-", 2);
+                    int sourceId = Integer.parseInt(ss[0]);
+                    String author = ss[1];
+                    entity.setSourceId(sourceId);
+                    entity.setAuthor(author);
                     if (EntityHelper.changeInfo(entity)) {
                         showLoadingPage();
                         isChangeSource = true;
