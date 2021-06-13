@@ -17,6 +17,8 @@ public abstract class EntityInfo extends LitePalSupport implements Serializable 
 
     public static final int ASC = 1;
 
+    public abstract String toStringDetail();
+
     public abstract int getId();
 
     public abstract void setId(int id);

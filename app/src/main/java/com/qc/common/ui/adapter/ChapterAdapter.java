@@ -9,6 +9,8 @@ import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 import the.one.base.adapter.TheBaseQuickAdapter;
 import the.one.base.adapter.TheBaseViewHolder;
 import top.luqichuang.common.model.ChapterInfo;
@@ -36,7 +38,7 @@ public class ChapterAdapter extends TheBaseQuickAdapter<ChapterInfo> {
     protected void convert(@NotNull TheBaseViewHolder holder, ChapterInfo chapterInfo) {
         holder.setText(R.id.tvTitle, chapterInfo.getTitle());
         TextView tvTitle = holder.findView(R.id.tvTitle);
-        if (chapterInfo.getTitle().equals(entity.getInfo().getCurChapterTitle())) {
+        if (Objects.equals(chapterInfo.getTitle(), entity.getInfo().getCurChapterTitle())) {
             tvTitle.setTextColor(getColor(R.color.white));
             QMUIRoundLinearLayout linearLayout = holder.findView(R.id.linearLayout);
             QMUIRoundButtonDrawable drawable = (QMUIRoundButtonDrawable) linearLayout.getBackground();

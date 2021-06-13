@@ -79,6 +79,9 @@ public class MH118 extends BaseComicSource {
             protected ChapterInfo dealElement(JsoupNode node, int elementId) {
                 String title = node.ownText("span");
                 String chapterUrl = "http://m.ccshwy.com" + node.href("a");
+                if (title == null) {
+                    return null;
+                }
                 return new ChapterInfo(elementId, title, chapterUrl);
             }
         };

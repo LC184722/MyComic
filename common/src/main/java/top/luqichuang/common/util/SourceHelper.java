@@ -12,8 +12,8 @@ import java.util.Map;
 import top.luqichuang.common.jsoup.JsoupNode;
 import top.luqichuang.common.model.ChapterInfo;
 import top.luqichuang.common.model.Content;
+import top.luqichuang.common.model.EntityInfo;
 import top.luqichuang.mycomic.model.ComicInfo;
-import top.luqichuang.mynovel.model.NovelInfo;
 
 /**
  * @author LuQiChuang
@@ -23,32 +23,17 @@ import top.luqichuang.mynovel.model.NovelInfo;
  */
 public class SourceHelper {
 
-    public static void initChapterInfoList(NovelInfo novelInfo, List<ChapterInfo> list) {
-        initChapterInfoList(novelInfo, list, NovelInfo.DESC);
+    public static void initChapterInfoList(EntityInfo info, List<ChapterInfo> list) {
+        initChapterInfoList(info, list, EntityInfo.DESC);
     }
 
-    public static void initChapterInfoList(NovelInfo novelInfo, List<ChapterInfo> list, int order) {
-        novelInfo.setChapterInfoList(list);
-        if (!list.isEmpty()) {
-            if (order == NovelInfo.DESC) {
-                novelInfo.setUpdateChapter(list.get(0).getTitle());
-            } else if (order == NovelInfo.ASC) {
-                novelInfo.setUpdateChapter(list.get(list.size() - 1).getTitle());
-            }
-        }
-    }
-
-    public static void initChapterInfoList(ComicInfo comicInfo, List<ChapterInfo> list) {
-        initChapterInfoList(comicInfo, list, ComicInfo.DESC);
-    }
-
-    public static void initChapterInfoList(ComicInfo comicInfo, List<ChapterInfo> list, int order) {
-        comicInfo.setChapterInfoList(list);
+    public static void initChapterInfoList(EntityInfo info, List<ChapterInfo> list, int order) {
+        info.setChapterInfoList(list);
         if (!list.isEmpty()) {
             if (order == ComicInfo.DESC) {
-                comicInfo.setUpdateChapter(list.get(0).getTitle());
+                info.setUpdateChapter(list.get(0).getTitle());
             } else if (order == ComicInfo.ASC) {
-                comicInfo.setUpdateChapter(list.get(list.size() - 1).getTitle());
+                info.setUpdateChapter(list.get(list.size() - 1).getTitle());
             }
         }
     }
@@ -70,7 +55,6 @@ public class SourceHelper {
             map.put("name", name);
             map.put("url", url);
             mapList.add(map);
-//            System.out.println("element = " + element);
         }
         printRankStr(mapList);
     }

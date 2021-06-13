@@ -84,15 +84,10 @@ public class DBUtil {
         if (entity != null) {
             init();
             POOL.execute(() -> {
-                try {
-                    if (TmpData.contentCode == AppConstant.COMIC_CODE) {
-                        entity.saveOrUpdate("title = ? and sourceId = ?", entity.getTitle(), String.valueOf(entity.getSourceId()));
-                    } else if (TmpData.contentCode == AppConstant.READER_CODE) {
-                        entity.saveOrUpdate("title = ? and nSourceId = ? and author = ?", entity.getTitle(), String.valueOf(entity.getSourceId()), entity.getInfo().getAuthor());
-                    }
-                } catch (Exception e) {
-                    System.out.println("entity = " + entity);
-                    throw e;
+                if (TmpData.contentCode == AppConstant.COMIC_CODE) {
+                    entity.saveOrUpdate("title = ? and sourceId = ?", entity.getTitle(), String.valueOf(entity.getSourceId()));
+                } else if (TmpData.contentCode == AppConstant.READER_CODE) {
+                    entity.saveOrUpdate("title = ? and nSourceId = ? and author = ?", entity.getTitle(), String.valueOf(entity.getSourceId()), entity.getInfo().getAuthor());
                 }
             });
         }

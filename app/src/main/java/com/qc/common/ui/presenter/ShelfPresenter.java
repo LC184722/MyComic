@@ -43,9 +43,6 @@ public class ShelfPresenter extends BasePresenter<ShelfView> {
 
     private void checkUpdate(Entity entity, EntityInfo info) {
         Source source = EntityHelper.commonSource(entity);
-        System.out.println("entity = " + entity);
-        System.out.println("entity.getSourceId() = " + entity.getSourceId());
-        System.out.println("commonSource = " + source);
         Request request = source.getDetailRequest(info.getDetailUrl());
         NetUtil.startLoad(request, new CommonCallback(request, source, null) {
             @Override
@@ -67,7 +64,7 @@ public class ShelfPresenter extends BasePresenter<ShelfView> {
                         source.setInfoDetail(info, html, map);
                         if (curUpdateChapter == null || !curUpdateChapter.equals(info.getUpdateChapter())) {
                             if (info.getUpdateChapter() != null) {
-                                entity.setUpdate(EntityHelper.changeInfo(entity, info.getSourceId()));
+                                entity.setUpdate(true);
                                 entity.setPriority(++priority);
                                 EntityUtil.first(entity);
                             }

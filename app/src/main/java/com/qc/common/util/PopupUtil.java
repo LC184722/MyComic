@@ -34,16 +34,16 @@ public class PopupUtil {
         return itemList;
     }
 
-    public static String getKey(Entity entity) {
-        return entity.getSourceId() + "-" + entity.getAuthor();
+    public static Integer getKey(Entity entity) {
+        return entity.getInfo().getId();
     }
 
-    public static String getKey(EntityInfo info) {
-        return info.getSourceId() + "-" + info.getAuthor();
+    public static Integer getKey(EntityInfo info) {
+        return info.getId();
     }
 
-    public static Map<String, String> getMap(List<? extends EntityInfo> infoList) {
-        Map<String, String> map = new LinkedHashMap<>();
+    public static Map<Integer, String> getMap(List<? extends EntityInfo> infoList) {
+        Map<Integer, String> map = new LinkedHashMap<>();
         for (EntityInfo info : infoList) {
             if (TmpData.contentCode == AppConstant.COMIC_CODE) {
                 map.put(getKey(info), SourceUtil.getSourceName(info.getSourceId()));

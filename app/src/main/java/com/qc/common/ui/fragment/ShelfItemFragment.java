@@ -153,18 +153,13 @@ public class ShelfItemFragment extends BaseDataFragment<Entity> implements Shelf
                 if (which == 0) {
                     QMUIDialogUtil.showSimpleDialog(getContext(), "查看信息", EntityHelper.toStringView(entity)).show();
                 } else if (which == 1) {
-                    Map<String, String> map = PopupUtil.getMap(entity.getInfoList());
-                    String key = PopupUtil.getKey(entity);
+                    Map<Integer, String> map = PopupUtil.getMap(entity.getInfoList());
+                    Integer key = PopupUtil.getKey(entity);
                     PopupUtil.showSimpleBottomSheetList(getContext(), map, key, "切换" + TmpData.content + "源", new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
                         @Override
                         public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
-                            String key = MapUtil.getKeyByValue(map, tag);
-                            String[] ss = key.split("-", 2);
-                            int sourceId = Integer.parseInt(ss[0]);
-                            String author = ss[1];
-                            entity.setSourceId(sourceId);
-                            entity.setAuthor(author);
-                            if (EntityHelper.changeInfo(entity)) {
+                            Integer key = MapUtil.getKeyByValue(map, tag);
+                            if (EntityHelper.changeInfoById(entity, key)) {
                                 adapter.notifyDataSetChanged();
                                 DBUtil.save(entity, DBUtil.SAVE_ONLY);
                             }

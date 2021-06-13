@@ -6,7 +6,6 @@ import com.qc.common.constant.TmpData;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 
 import top.luqichuang.common.model.Content;
 import top.luqichuang.common.model.Entity;
@@ -51,13 +50,20 @@ public class EntityHelper {
         return commonSource(entity).getContentList(html, chapterId, map);
     }
 
-    public static boolean changeInfo(Entity entity) {
-        return changeInfo(entity, entity.getSourceId());
+    public static boolean changeInfoById(Entity entity, int id) {
+        for (EntityInfo info : entity.getInfoList()) {
+            if (info.getId() == id) {
+                entity.setInfo(info);
+                entity.setSourceId(info.getSourceId());
+                return true;
+            }
+        }
+        return false;
     }
 
     public static boolean changeInfo(Entity entity, int sourceId) {
         for (EntityInfo info : entity.getInfoList()) {
-            if (info.getSourceId() == sourceId && Objects.equals(info.getAuthor(), entity.getAuthor())) {
+            if (info.getSourceId() == sourceId) {
                 entity.setInfo(info);
                 entity.setSourceId(sourceId);
                 return true;
