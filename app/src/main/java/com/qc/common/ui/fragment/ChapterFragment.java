@@ -1,6 +1,6 @@
 package com.qc.common.ui.fragment;
 
-import android.content.pm.ActivityInfo;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -20,6 +20,7 @@ import com.qc.common.constant.Constant;
 import com.qc.common.constant.TmpData;
 import com.qc.common.self.ImageConfig;
 import com.qc.common.self.MySpacesItemDecoration;
+import com.qc.common.ui.activity.VideoPlayerActivity;
 import com.qc.common.ui.adapter.ChapterAdapter;
 import com.qc.common.ui.presenter.ChapterPresenter;
 import com.qc.common.ui.view.ChapterView;
@@ -125,9 +126,6 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
             setValue();
             this.toStatus = TmpData.toStatus;
             TmpData.toStatus = Constant.NORMAL;
-            if (this.toStatus == Constant.READER_TO_CHAPTER) {
-                _mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_BEHIND);
-            }
         }
         return super.onCreateAnimation(transit, enter, nextAnim);
     }
@@ -463,7 +461,14 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         } else if (TmpData.contentCode == AppConstant.READER_CODE) {
             startFragment(NovelReaderFragment.getInstance(entity));
         } else {
-            startFragment(VideoReaderFragment.getInstance(entity));
+            System.out.println("x");
+            Intent intent = new Intent(_mActivity, VideoPlayerActivity.class);
+            intent.putExtra("entity", entity);
+            startActivity(intent);
+//            Bundle bundle = new Bundle();
+//            bundle.putSerializable("entity", entity);
+//            Intent intent = new Intent(_mActivity, VideoPlayerActivity.class);
+//            startActivity(intent, bundle);
         }
         EntityUtil.first(entity);
         if (toStatus == Constant.SEARCH_TO_CHAPTER) {

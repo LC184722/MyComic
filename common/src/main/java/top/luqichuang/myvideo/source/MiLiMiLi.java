@@ -1,5 +1,9 @@
 package top.luqichuang.myvideo.source;
 
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -106,11 +110,126 @@ public class MiLiMiLi extends BaseVideoSource {
 
     @Override
     public Map<String, String> getRankMap() {
-        return null;
+        String html = "<div class=\"area box\">\n" +
+                "      <div class=\"box1 l\">\n" +
+                "        <label>按地区/时间</label>\n" +
+                "        <ul>\n" +
+                "          <li>\n" +
+                "            <a href=\"/rbdm/\">日本</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/gcdm/\">国产</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/2019/\">2019</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/2018/\">2018</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/2017/\">2017</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/2016/\">2016</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/2015/\">2015</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/2014/\">2014</a></li>\n" +
+                "        </ul>\n" +
+                "      </div>\n" +
+                "      <div class=\"box2 l\">\n" +
+                "        <label>按类型</label>\n" +
+                "        <ul>\n" +
+                "          <li>\n" +
+                "            <a href=\"/tag/rexue/\">热血</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/tag/jingdian/\">经典</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/tag/hougong/\">后宫</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/tag/gaoxiao/\">搞笑</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/tag/wuxia/\">武侠</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/tag/yinv/\">乙女</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/tag/xiaoyuan/\">校园</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/tag/kehuan/\">科幻</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/tag/zhiyu/\">治愈</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/tag/lianai/\">恋爱</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/tag/jizhan/\">机战</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/tag/mofa/\">魔法</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/tag/shaonv/\">美少女</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/tag/shenhua/\">神话</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/tag/mengxi/\">萌系</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/tag/richang/\">日常</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/tag/yundong/\">运动</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/tag/tonghua/\">童话</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/tag/maoxian/\">冒险</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/tag/lishi/\">历史</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/tag/yinyue/\">音乐</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/tag/tuili/\">推理</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/tag/ouxiang/\">偶像</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/tag/zhichang/\">职场</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/tag/dushi/\">都市</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/tag/xixuegui/\">吸血鬼</a></li>\n" +
+                "        </ul>\n" +
+                "      </div>\n" +
+                "      <div class=\"box3 r\">\n" +
+                "        <label>按语言</label>\n" +
+                "        <ul>\n" +
+                "          <li>\n" +
+                "            <a href=\"/tag/riyu/\">日语</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/tag/guoyu/\">国语</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/tag/yueyu/\">粤语</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/tag/yingyu/\">英语</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/tag/hanyu/\">韩语</a></li>\n" +
+                "          <li>\n" +
+                "            <a href=\"/tag/fangyan/\">方言</a></li>\n" +
+                "        </ul>\n" +
+                "      </div>\n" +
+                "    </div>";
+        Map<String, String> map = new LinkedHashMap<>();
+        JsoupNode node = new JsoupNode(html);
+        Elements elements = node.getElements("a");
+        for (Element element : elements) {
+            node.init(element);
+            map.put(node.ownText("a"), getIndex() + node.href("a"));
+        }
+        return map;
     }
 
     @Override
     public List<VideoInfo> getRankInfoList(String html) {
-        return null;
+        JsoupStarter<VideoInfo> starter = new JsoupStarter<VideoInfo>() {
+            @Override
+            protected VideoInfo dealElement(JsoupNode node, int elementId) {
+                String title = node.ownText("p.tname a");
+                String author = null;
+                String updateTime = node.ownText("p:eq(2)");
+                String imgUrl = getIndex() + node.src("img");
+                String detailUrl = getIndex() + node.href("a");
+                return new VideoInfo(getSourceId(), title, author, detailUrl, imgUrl, updateTime);
+            }
+        };
+        return starter.startElements(html, "div.imgs li");
     }
 }

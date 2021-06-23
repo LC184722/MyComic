@@ -31,9 +31,10 @@ public class JzPlayer extends JzvdStd {
     @Override
     public void init(Context context) {
         super.init(context);
+        View retryLayout = findViewById(R.id.retry_layout);
+        retryLayout.setVisibility(GONE);
         tvSpeed = findViewById(R.id.tvSpeed);
         tvSpeed.setOnClickListener(this);
-//        JZUtils.setRequestedOrientation(getContext(), ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     }
 
     @Override

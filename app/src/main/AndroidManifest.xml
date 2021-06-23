@@ -27,7 +27,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity
+            android:name="com.qc.common.ui.activity.VideoPlayerActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="sensor" />
     </application>
 
 </manifest>
