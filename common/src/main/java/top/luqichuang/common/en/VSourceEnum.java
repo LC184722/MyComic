@@ -6,6 +6,7 @@ import java.util.Map;
 import top.luqichuang.common.model.Source;
 import top.luqichuang.myvideo.model.VideoInfo;
 import top.luqichuang.myvideo.source.MiLiMiLi;
+import top.luqichuang.myvideo.source.YingHua;
 
 /**
  * @author LuQiChuang
@@ -21,6 +22,7 @@ public enum VSourceEnum {
     private static final Map<Integer, Source<VideoInfo>> MAP = new LinkedHashMap<>();
 
     static {
+        MAP.put(YING_HUA.ID, new YingHua());
         MAP.put(MILI_MILI.ID, new MiLiMiLi());
     }
 

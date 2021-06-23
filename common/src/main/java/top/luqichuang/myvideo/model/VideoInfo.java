@@ -2,6 +2,7 @@ package top.luqichuang.myvideo.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import top.luqichuang.common.model.ChapterInfo;
 import top.luqichuang.common.model.EntityInfo;
@@ -100,6 +101,22 @@ public class VideoInfo extends EntityInfo {
                 ", chapterNum=" + chapterNum +
                 ", order=" + order +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        VideoInfo info = (VideoInfo) o;
+        if (sourceId != info.getSourceId()) return false;
+        return Objects.equals(title, info.getTitle());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = sourceId;
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        return result;
     }
 
     @Override

@@ -143,10 +143,10 @@ public abstract class BaseSourceTest<T extends EntityInfo> {
     public void testRank() {
         String html = FileUtil.readFile(formatFileName(RANK));
         System.out.println("html.length() = " + html.length());
-        List<T> comicInfoList = source.getRankInfoList(html);
-        System.out.println("comicInfoList.size() = " + comicInfoList.size());
+        List<T> infoList = source.getRankInfoList(html);
+        System.out.println("infoList.size() = " + infoList.size());
         int i = 0;
-        for (T info : comicInfoList) {
+        for (T info : infoList) {
             System.out.println("--------------------  " + (++i) + "  ----------------------");
             System.out.println("info.getTitle() = " + info.getTitle());
             System.out.println("info.getAuthor() = " + info.getAuthor());
