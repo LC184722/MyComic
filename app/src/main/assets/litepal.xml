@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <litepal>
     <dbname value="comic" />   <!-- 数据库的名字 -->
-    <version value="19" />  <!-- 数据库的版本号 -->
+    <version value="20" />  <!-- 数据库的版本号 -->
 
     <list>
         <!-- 配置模型类 -->
         <mapping class="top.luqichuang.mycomic.model.Comic" />
         <mapping class="top.luqichuang.mycomic.model.ComicInfo" />
 
-        <mapping class="top.luqichuang.mynovel.model.Novel"/>
-        <mapping class="top.luqichuang.mynovel.model.NovelInfo"/>
+        <mapping class="top.luqichuang.mynovel.model.Novel" />
+        <mapping class="top.luqichuang.mynovel.model.NovelInfo" />
+
+        <mapping class="top.luqichuang.myvideo.model.Video" />
+        <mapping class="top.luqichuang.myvideo.model.VideoInfo" />
     </list>
 
 </litepal>

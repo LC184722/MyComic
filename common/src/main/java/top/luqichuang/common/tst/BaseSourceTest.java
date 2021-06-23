@@ -17,6 +17,7 @@ import top.luqichuang.common.util.MapUtil;
 import top.luqichuang.common.util.NetUtil;
 import top.luqichuang.mycomic.model.ComicInfo;
 import top.luqichuang.mynovel.model.NovelInfo;
+import top.luqichuang.myvideo.model.VideoInfo;
 
 /**
  * @author LuQiChuang
@@ -115,7 +116,7 @@ public abstract class BaseSourceTest<T extends EntityInfo> {
         System.out.println("html.length() = " + html.length());
         List<Content> contentList = source.getContentList(html, 100, dataMap);
         System.out.println("contentList.size() = " + contentList.size());
-        if (info instanceof ComicInfo) {
+        if (info instanceof ComicInfo || info instanceof VideoInfo) {
             for (Content content : contentList) {
                 System.out.println("content.getUrl() = " + content.getUrl());
             }
@@ -191,7 +192,7 @@ public abstract class BaseSourceTest<T extends EntityInfo> {
         List<Content> contentList = source.getContentList(image, 100, dataMap);
         System.out.println("contentList.size() = " + contentList.size());
         Assert.assertFalse("未搜索到阅读页信息", contentList.isEmpty());
-        if (info instanceof ComicInfo) {
+        if (info instanceof ComicInfo || info instanceof VideoInfo) {
             for (Content content : contentList) {
                 System.out.println("content.getUrl() = " + content.getUrl());
             }

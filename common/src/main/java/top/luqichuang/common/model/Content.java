@@ -27,6 +27,12 @@ public class Content implements Serializable {
     public Content() {
     }
 
+    public Content(int chapterId) {
+        this.chapterId = chapterId;
+        this.cur = 1;
+        this.total = 1;
+    }
+
     public Content(int chapterId, String content) {
         this.chapterId = chapterId;
         this.content = content;
