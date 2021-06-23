@@ -137,13 +137,6 @@ public class SearchResultFragment extends BaseDataFragment<Entity> implements Se
         if (sourceName != null) {
             errorList.add(sourceName);
         }
-        if (size == 0) {
-            if (TmpData.contentCode == AppConstant.COMIC_CODE) {
-                size = SourceUtil.size();
-            } else {
-                size = SourceUtil.nSize();
-            }
-        }
         if (++count == size) {
             int sourceId = (int) SettingUtil.getSettingKey(SettingEnum.DEFAULT_SOURCE);
             for (Entity entity : entityList) {
@@ -172,6 +165,7 @@ public class SearchResultFragment extends BaseDataFragment<Entity> implements Se
     }
 
     private int getPercent() {
+        checkSize();
         if (size != 0) {
             return count * total / size;
         } else {
@@ -180,10 +174,23 @@ public class SearchResultFragment extends BaseDataFragment<Entity> implements Se
     }
 
     private String getLoadProcess() {
+        checkSize();
         return count + "/" + size;
     }
 
     private String getMsg() {
         return "正在搜索 " + getLoadProcess();
+    }
+
+    private void checkSize() {
+        if (size == 0) {
+            if (TmpData.contentCode == AppConstant.COMIC_CODE) {
+                size = SourceUtil.size();
+            } else if (TmpData.contentCode == AppConstant.READER_CODE) {
+                size = SourceUtil.nSize();
+            } else {
+                size = SourceUtil.vSize();
+            }
+        }
     }
 }

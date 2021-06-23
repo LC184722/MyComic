@@ -12,6 +12,7 @@ import java.util.Map;
 import top.luqichuang.common.jsoup.JsoupNode;
 import top.luqichuang.common.model.ChapterInfo;
 import top.luqichuang.common.model.Content;
+import top.luqichuang.common.model.Entity;
 import top.luqichuang.common.model.EntityInfo;
 import top.luqichuang.mycomic.model.ComicInfo;
 
@@ -144,4 +145,7 @@ public class SourceHelper {
         return list;
     }
 
+    public static String chapterKey(Entity entity) {
+        return entity.getTitle() + "-" + entity.getInfo().getCurChapterId();
+    }
 }

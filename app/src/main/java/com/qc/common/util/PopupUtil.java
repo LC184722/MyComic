@@ -47,8 +47,10 @@ public class PopupUtil {
         for (EntityInfo info : infoList) {
             if (TmpData.contentCode == AppConstant.COMIC_CODE) {
                 map.put(getKey(info), SourceUtil.getSourceName(info.getSourceId()));
-            } else {
+            } else if (TmpData.contentCode == AppConstant.READER_CODE) {
                 map.put(getKey(info), SourceUtil.getNSourceName(info.getSourceId()) + '-' + info.getAuthor());
+            } else {
+                map.put(getKey(info), SourceUtil.getVSourceName(info.getSourceId()));
             }
         }
         return map;

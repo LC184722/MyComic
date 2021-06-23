@@ -94,6 +94,11 @@ public class MiLiMiLi extends BaseVideoSource {
     public List<Content> getContentList(String html, int chapterId, Map<String, Object> map) {
         JsoupNode node = new JsoupNode(html);
         String url = node.src("iframe");
+        try {
+            url = url.split("\\?url=", 2)[1];
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Content content = new Content(chapterId);
         content.setUrl(url);
         return SourceHelper.getContentList(content);

@@ -21,6 +21,8 @@ import top.luqichuang.mycomic.model.Comic;
 import top.luqichuang.mycomic.model.ComicInfo;
 import top.luqichuang.mynovel.model.Novel;
 import top.luqichuang.mynovel.model.NovelInfo;
+import top.luqichuang.myvideo.model.Video;
+import top.luqichuang.myvideo.model.VideoInfo;
 
 /**
  * @author LuQiChuang
@@ -92,8 +94,10 @@ public class RankPresenter extends BasePresenter<RankView> {
             Entity entity;
             if (TmpData.contentCode == AppConstant.COMIC_CODE) {
                 entity = new Comic((ComicInfo) entityInfo);
-            } else {
+            } else if (TmpData.contentCode == AppConstant.READER_CODE) {
                 entity = new Novel((NovelInfo) entityInfo);
+            } else {
+                entity = new Video((VideoInfo) entityInfo);
             }
             entityList.add(entity);
         }

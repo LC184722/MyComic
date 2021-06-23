@@ -61,8 +61,10 @@ public class ChapterPresenter extends BasePresenter<ChapterView> {
         List sourceList;
         if (TmpData.contentCode == AppConstant.COMIC_CODE) {
             sourceList = SourceUtil.getSourceList();
-        } else {
+        } else if (TmpData.contentCode == AppConstant.READER_CODE) {
             sourceList = SourceUtil.getNSourceList();
+        } else {
+            sourceList = SourceUtil.getVSourceList();
         }
         for (Object o : sourceList) {
             Source source = (Source) o;

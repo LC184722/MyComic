@@ -67,8 +67,10 @@ public class RankFragment extends BaseDataFragment<Entity> implements RankView {
         int sourceId = (int) getArguments().get("sourceId");
         if (TmpData.contentCode == AppConstant.COMIC_CODE) {
             this.source = SourceUtil.getSource(sourceId);
-        } else {
+        } else if (TmpData.contentCode == AppConstant.READER_CODE) {
             this.source = SourceUtil.getNSource(sourceId);
+        } else {
+            this.source = SourceUtil.getVSource(sourceId);
         }
         this.rankAdapter = new RankAdapter(R.layout.item_rank_right);
         this.presenter = new RankPresenter(source);

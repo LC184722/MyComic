@@ -23,4 +23,6 @@ public interface AppConstant {
     int COMIC_CODE = 1;
 
     int READER_CODE = 2;
+
+    int VIDEO_CODE = 3;
 }

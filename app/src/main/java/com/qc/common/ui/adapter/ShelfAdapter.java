@@ -55,8 +55,10 @@ public class ShelfAdapter extends TheBaseQuickAdapter<Entity> {
         config.setSave(true);
         if (TmpData.contentCode == AppConstant.COMIC_CODE) {
             config.setSaveKey(entity.getInfoId());
-        } else {
+        } else if (TmpData.contentCode == AppConstant.READER_CODE) {
             config.setSaveKey("N" + entity.getInfoId());
+        } else {
+            config.setSaveKey("V" + entity.getInfoId());
         }
         ImgUtil.loadImage(getContext(), config);
     }

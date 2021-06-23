@@ -23,11 +23,27 @@ public class CommonData {
             "个人中心",
     };
 
+    private static final String[] VIDEO_TAB_BARS = {
+            "我的番剧",
+            "搜索番剧",
+            "个人中心",
+    };
+
+    private static final String[] COMMON_TAB_BARS = {
+            "主页",
+            "搜索",
+            "个人",
+    };
+
     public static String[] getTabBars() {
         if (TmpData.contentCode == AppConstant.COMIC_CODE) {
             return COMIC_TAB_BARS;
-        } else {
+        } else if (TmpData.contentCode == AppConstant.READER_CODE) {
             return NOVEL_TAB_BARS;
+        } else if (TmpData.contentCode == AppConstant.VIDEO_CODE) {
+            return VIDEO_TAB_BARS;
+        } else {
+            return COMMON_TAB_BARS;
         }
     }
 

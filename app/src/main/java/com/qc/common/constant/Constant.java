@@ -1,7 +1,5 @@
 package com.qc.common.constant;
 
-import the.one.base.util.SdCardUtil;
-
 /**
  * @author LuQiChuang
  * @desc
@@ -25,4 +23,8 @@ public interface Constant {
     int SEARCH_TO_CHAPTER = 2;
 
     int RANK_TO_CHAPTER = 3;
+
+    int SCREEN_0 = 0;
+
+    int SCREEN_1 = 1;
 }

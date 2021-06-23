@@ -25,8 +25,10 @@ public class EntityHelper {
     public static Source commonSource(Entity entity) {
         if (TmpData.contentCode == AppConstant.COMIC_CODE) {
             return SourceUtil.getSource(entity.getSourceId());
-        } else {
+        } else if (TmpData.contentCode == AppConstant.READER_CODE) {
             return SourceUtil.getNSource(entity.getSourceId());
+        } else {
+            return SourceUtil.getVSource(entity.getSourceId());
         }
     }
 

@@ -1,5 +1,6 @@
 package com.qc.common.ui.fragment;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -87,8 +88,10 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         this.chapterAdapter = new ChapterAdapter(entity);
         if (TmpData.contentCode == AppConstant.COMIC_CODE) {
             size = SourceUtil.size();
-        } else {
+        } else if (TmpData.contentCode == AppConstant.READER_CODE) {
             size = SourceUtil.nSize();
+        } else {
+            size = SourceUtil.vSize();
         }
         super.onCreate(savedInstanceState);
     }
@@ -120,9 +123,12 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
             adapter.notifyDataSetChanged();
             chapterAdapter.setChapterId(entity.getInfo().getCurChapterId());
             setValue();
+            this.toStatus = TmpData.toStatus;
+            TmpData.toStatus = Constant.NORMAL;
+            if (this.toStatus == Constant.READER_TO_CHAPTER) {
+                _mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_BEHIND);
+            }
         }
-        this.toStatus = TmpData.toStatus;
-        TmpData.toStatus = Constant.NORMAL;
         return super.onCreateAnimation(transit, enter, nextAnim);
     }
 
@@ -272,8 +278,10 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         config.setSave(true);
         if (TmpData.contentCode == AppConstant.COMIC_CODE) {
             config.setSaveKey(entity.getInfoId());
+        } else if (TmpData.contentCode == AppConstant.READER_CODE) {
+            config.setSaveKey("N" + entity.getInfoId());
         } else {
-            config.setSaveKey('N' + entity.getInfoId());
+            config.setSaveKey("V" + entity.getInfoId());
         }
         ImgUtil.loadImage(getContext(), config);
         tvTitle.setText(entity.getInfo().getTitle());
@@ -449,10 +457,13 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
 
     public void start() {
         adapter.notifyDataSetChanged();
+        TmpData.toStatus = Constant.READER_TO_CHAPTER;
         if (TmpData.contentCode == AppConstant.COMIC_CODE) {
             startFragment(ComicReaderFragment.getInstance(entity));
-        } else {
+        } else if (TmpData.contentCode == AppConstant.READER_CODE) {
             startFragment(NovelReaderFragment.getInstance(entity));
+        } else {
+            startFragment(VideoReaderFragment.getInstance(entity));
         }
         EntityUtil.first(entity);
         if (toStatus == Constant.SEARCH_TO_CHAPTER) {

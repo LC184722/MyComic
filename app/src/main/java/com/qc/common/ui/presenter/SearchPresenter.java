@@ -22,6 +22,8 @@ import top.luqichuang.mycomic.model.Comic;
 import top.luqichuang.mycomic.model.ComicInfo;
 import top.luqichuang.mynovel.model.Novel;
 import top.luqichuang.mynovel.model.NovelInfo;
+import top.luqichuang.myvideo.model.Video;
+import top.luqichuang.myvideo.model.VideoInfo;
 
 /**
  * @author LuQiChuang
@@ -38,8 +40,10 @@ public class SearchPresenter extends BasePresenter<SearchView> {
         List sourceList;
         if (TmpData.contentCode == AppConstant.COMIC_CODE) {
             sourceList = SourceUtil.getSourceList();
-        } else {
+        } else if (TmpData.contentCode == AppConstant.READER_CODE) {
             sourceList = SourceUtil.getNSourceList();
+        } else {
+            sourceList = SourceUtil.getVSourceList();
         }
         for (Object o : sourceList) {
             Source<EntityInfo> source = (Source<EntityInfo>) o;
@@ -83,8 +87,10 @@ public class SearchPresenter extends BasePresenter<SearchView> {
                 Entity entity;
                 if (TmpData.contentCode == AppConstant.COMIC_CODE) {
                     entity = new Comic((ComicInfo) entityInfo);
-                } else {
+                } else if (TmpData.contentCode == AppConstant.READER_CODE) {
                     entity = new Novel((NovelInfo) entityInfo);
+                } else {
+                    entity = new Video((VideoInfo) entityInfo);
                 }
                 entityList.add(entity);
             }

@@ -38,6 +38,7 @@ public class SettingItemUtil {
         } else if (settingEnum == SettingEnum.READ_CONTENT) {
             map.put(AppConstant.COMIC_CODE, "漫画");
             map.put(AppConstant.READER_CODE, "小说");
+            map.put(AppConstant.VIDEO_CODE, "番剧");
         }
         return map;
     }

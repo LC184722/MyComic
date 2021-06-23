@@ -30,6 +30,8 @@ import top.luqichuang.mycomic.model.Comic;
 import top.luqichuang.mycomic.model.ComicInfo;
 import top.luqichuang.mynovel.model.Novel;
 import top.luqichuang.mynovel.model.NovelInfo;
+import top.luqichuang.myvideo.model.Video;
+import top.luqichuang.myvideo.model.VideoInfo;
 
 /**
  * @author LuQiChuang
@@ -84,7 +86,7 @@ public class DBUtil {
         if (entity != null) {
             init();
             POOL.execute(() -> {
-                if (TmpData.contentCode == AppConstant.COMIC_CODE) {
+                if (TmpData.contentCode == AppConstant.COMIC_CODE || TmpData.contentCode == AppConstant.VIDEO_CODE) {
                     entity.saveOrUpdate("title = ? and sourceId = ?", entity.getTitle(), String.valueOf(entity.getSourceId()));
                 } else if (TmpData.contentCode == AppConstant.READER_CODE) {
                     entity.saveOrUpdate("title = ? and nSourceId = ? and author = ?", entity.getTitle(), String.valueOf(entity.getSourceId()), entity.getInfo().getAuthor());
@@ -97,7 +99,7 @@ public class DBUtil {
         if (info != null) {
             init();
             POOL.execute(() -> {
-                if (TmpData.contentCode == AppConstant.COMIC_CODE) {
+                if (TmpData.contentCode == AppConstant.COMIC_CODE || TmpData.contentCode == AppConstant.VIDEO_CODE) {
                     info.saveOrUpdate("title = ? and sourceId = ?", info.getTitle(), String.valueOf(info.getSourceId()));
                 } else if (TmpData.contentCode == AppConstant.READER_CODE) {
                     info.saveOrUpdate("title = ? and nSourceId = ? and author = ?", info.getTitle(), String.valueOf(info.getSourceId()), info.getAuthor());
@@ -124,96 +126,75 @@ public class DBUtil {
     public static List<? extends Entity> findListByStatus(int status) {
         String order = "priority DESC, date DESC";
         init();
+        List<? extends Entity> list;
         if (TmpData.contentCode == AppConstant.COMIC_CODE) {
-            List<Comic> list;
             if (status == Constant.STATUS_ALL) {
                 list = LitePal.order(order).find(Comic.class);
             } else {
                 list = LitePal.where("status = ?", String.valueOf(status)).order(order).find(Comic.class);
             }
-            List<Comic> dList = new ArrayList<>();
-            for (Comic comic : list) {
-                List<ComicInfo> infoList = LitePal.where("title = ?", comic.getTitle()).find(ComicInfo.class);
-                for (ComicInfo info : infoList) {
-                    Source source = SourceUtil.getSource(info.getSourceId());
-                    if (source != null && source.isValid()) {
-                        EntityHelper.addInfo(comic, info);
-                        if (comic.getSourceId() == info.getSourceId()) {
-                            comic.setComicInfo(info);
-                        }
-                        //更改detailUrl
-                        String url = info.getDetailUrl();
-                        String index = source.getIndex();
-                        if (!url.startsWith(index)) {
-                            String tmp = url.substring(url.indexOf('/', url.indexOf('.')));
-                            url = index + tmp;
-                            info.setDetailUrl(url);
-                            saveInfoData(info);
-                        }
-                        //end
-                    }
-                }
-                if (comic.getComicInfo() == null) {
-                    if (comic.getComicInfoList().isEmpty()) {
-                        dList.add(comic);
-                    } else {
-                        comic.setInfo(comic.getInfoList().get(0));
-                        comic.setSourceId(comic.getInfoList().get(0).getSourceId());
-                    }
-                }
-            }
-            if (dList.size() > 0) {
-                list.removeAll(dList);
-            }
-            return list;
-        } else {
-            List<Novel> list;
+        } else if (TmpData.contentCode == AppConstant.READER_CODE) {
             if (status == Constant.STATUS_ALL) {
                 list = LitePal.order(order).find(Novel.class);
             } else {
                 list = LitePal.where("status = ?", String.valueOf(status)).order(order).find(Novel.class);
             }
-            List<Novel> dList = new ArrayList<>();
-            for (Novel novel : list) {
-                List<NovelInfo> infoList = LitePal.where("title = ?", novel.getTitle()).find(NovelInfo.class);
-                for (NovelInfo info : infoList) {
-                    Source source = SourceUtil.getNSource(info.getSourceId());
-                    if (source != null && source.isValid()) {
-                        EntityHelper.addInfo(novel, info);
-                        if (novel.getAuthor() != null) {
-                            if (novel.getNSourceId() == info.getNSourceId() && novel.getAuthor().equals(info.getAuthor())) {
-                                novel.setNovelInfo(info);
-                            }
-                        } else if (novel.getNSourceId() == info.getNSourceId()) {
-                            novel.setAuthor(info.getAuthor());
-                            novel.setNovelInfo(info);
-                        }
-                        //更改detailUrl
-                        String url = info.getDetailUrl();
-                        String index = source.getIndex();
-                        if (!url.startsWith(index)) {
-                            String tmp = url.substring(url.indexOf('/', url.indexOf('.')));
-                            url = index + tmp;
-                            info.setDetailUrl(url);
-                            saveInfoData(info);
-                        }
-                        //end
-                    }
-                }
-                if (novel.getNovelInfo() == null) {
-                    if (novel.getNovelInfoList().isEmpty()) {
-                        dList.add(novel);
-                    } else {
-                        novel.setInfo(novel.getInfoList().get(0));
-                        novel.setSourceId(novel.getInfoList().get(0).getSourceId());
-                    }
-                }
+        } else {
+            if (status == Constant.STATUS_ALL) {
+                list = LitePal.order(order).find(Video.class);
+            } else {
+                list = LitePal.where("status = ?", String.valueOf(status)).order(order).find(Video.class);
             }
-            if (dList.size() > 0) {
-                list.removeAll(dList);
-            }
-            return list;
         }
+        List<Entity> dList = new ArrayList<>();
+        for (Entity entity : list) {
+            List<? extends EntityInfo> infoList;
+            if (TmpData.contentCode == AppConstant.COMIC_CODE) {
+                infoList = LitePal.where("title = ?", entity.getTitle()).find(ComicInfo.class);
+            } else if (TmpData.contentCode == AppConstant.READER_CODE) {
+                infoList = LitePal.where("title = ?", entity.getTitle()).find(NovelInfo.class);
+            } else {
+                infoList = LitePal.where("title = ?", entity.getTitle()).find(VideoInfo.class);
+            }
+            for (EntityInfo info : infoList) {
+                Source source;
+                if (TmpData.contentCode == AppConstant.COMIC_CODE) {
+                    source = SourceUtil.getSource(info.getSourceId());
+                } else if (TmpData.contentCode == AppConstant.READER_CODE) {
+                    source = SourceUtil.getNSource(info.getSourceId());
+                } else {
+                    source = SourceUtil.getVSource(info.getSourceId());
+                }
+                if (source != null && source.isValid()) {
+                    EntityHelper.addInfo(entity, info);
+                    if (entity.getSourceId() == info.getSourceId()) {
+                        entity.setInfo(info);
+                    }
+                    //更改detailUrl
+                    String url = info.getDetailUrl();
+                    String index = source.getIndex();
+                    if (!url.startsWith(index)) {
+                        String tmp = url.substring(url.indexOf('/', url.indexOf('.')));
+                        url = index + tmp;
+                        info.setDetailUrl(url);
+                        saveInfoData(info);
+                    }
+                    //end
+                }
+            }
+            if (entity.getInfo() == null) {
+                if (entity.getInfoList().isEmpty()) {
+                    dList.add(entity);
+                } else {
+                    entity.setInfo(entity.getInfoList().get(0));
+                    entity.setSourceId(entity.getInfoList().get(0).getSourceId());
+                }
+            }
+        }
+        if (dList.size() > 0) {
+            list.removeAll(dList);
+        }
+        return list;
     }
 
     public static void autoBackup(Context context) {
