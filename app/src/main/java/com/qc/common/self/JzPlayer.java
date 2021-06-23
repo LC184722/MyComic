@@ -19,6 +19,7 @@ import cn.jzvd.JzvdStd;
 public class JzPlayer extends JzvdStd {
 
     private TextView tvSpeed;
+    private View batteryLevel;
 
     public JzPlayer(Context context) {
         super(context);
@@ -34,17 +35,21 @@ public class JzPlayer extends JzvdStd {
         View retryLayout = findViewById(R.id.retry_layout);
         retryLayout.setVisibility(GONE);
         tvSpeed = findViewById(R.id.tvSpeed);
+        batteryLevel = findViewById(R.id.battery_level);
+        batteryLevel.setVisibility(GONE);
         tvSpeed.setOnClickListener(this);
     }
 
     @Override
     public void setScreenNormal() {
         super.setScreenNormal();
+        batteryLevel.setVisibility(GONE);
     }
 
     @Override
     public void setScreenFullscreen() {
         super.setScreenFullscreen();
+        batteryLevel.setVisibility(VISIBLE);
         if (TmpData.videoSpeed == 2) {
             tvSpeed.setText("倍速");
         } else {

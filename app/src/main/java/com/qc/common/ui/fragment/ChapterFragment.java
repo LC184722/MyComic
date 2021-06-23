@@ -461,14 +461,9 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         } else if (TmpData.contentCode == AppConstant.READER_CODE) {
             startFragment(NovelReaderFragment.getInstance(entity));
         } else {
-            System.out.println("x");
             Intent intent = new Intent(_mActivity, VideoPlayerActivity.class);
             intent.putExtra("entity", entity);
             startActivity(intent);
-//            Bundle bundle = new Bundle();
-//            bundle.putSerializable("entity", entity);
-//            Intent intent = new Intent(_mActivity, VideoPlayerActivity.class);
-//            startActivity(intent, bundle);
         }
         EntityUtil.first(entity);
         if (toStatus == Constant.SEARCH_TO_CHAPTER) {

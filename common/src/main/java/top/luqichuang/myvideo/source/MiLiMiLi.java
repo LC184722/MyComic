@@ -15,6 +15,7 @@ import top.luqichuang.common.model.ChapterInfo;
 import top.luqichuang.common.model.Content;
 import top.luqichuang.common.util.NetUtil;
 import top.luqichuang.common.util.SourceHelper;
+import top.luqichuang.common.util.StringUtil;
 import top.luqichuang.myvideo.model.BaseVideoSource;
 import top.luqichuang.myvideo.model.VideoInfo;
 
@@ -99,7 +100,9 @@ public class MiLiMiLi extends BaseVideoSource {
         JsoupNode node = new JsoupNode(html);
         String url = node.src("iframe");
         try {
-            url = url.split("\\?url=", 2)[1];
+            if (StringUtil.count(url, "http") > 1) {
+                url = url.substring(url.lastIndexOf("http"));
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

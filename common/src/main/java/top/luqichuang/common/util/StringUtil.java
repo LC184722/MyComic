@@ -228,6 +228,20 @@ public class StringUtil {
         }
     }
 
+    public static int count(String input, String child) {
+        if (input == null || child == null || child.equals("")) {
+            return -1;
+        }
+        int count = 0;
+        int index;
+        String tmp = input;
+        while ((index = tmp.indexOf(child)) != -1) {
+            tmp = tmp.substring(index + child.length());
+            count++;
+        }
+        return count;
+    }
+
 //    public static void printHashCode(Object... objects) {
 //        printHashCode(TAG, objects);
 //    }
