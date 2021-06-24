@@ -9,6 +9,7 @@ import com.qc.common.self.JzPlayer;
 import com.qc.common.ui.presenter.ReaderPresenter;
 import com.qc.common.ui.view.ReaderView;
 import com.qc.mycomic.R;
+import com.qmuiteam.qmui.util.QMUIDisplayHelper;
 
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class VideoPlayerActivity extends BaseActivity implements ReaderView {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.entity = (Entity) getIntent().getSerializableExtra("entity");
+        QMUIDisplayHelper.setFullScreen(this);
     }
 
     @Override
@@ -72,7 +74,6 @@ public class VideoPlayerActivity extends BaseActivity implements ReaderView {
             System.out.println("url = " + url);
             player.setUp(url, entity.getCurChapterTitle());
             hideLoadingDialog();
-            showSuccessTips("加载完成");
         }
     }
 

@@ -53,12 +53,16 @@ public class ShelfAdapter extends TheBaseQuickAdapter<Entity> {
         RelativeLayout layout = holder.findView(R.id.imageRelativeLayout);
         ImageConfig config = ImgUtil.getDefaultConfig(getContext(), entity.getImgUrl(), layout);
         config.setSave(true);
-        if (TmpData.contentCode == AppConstant.COMIC_CODE) {
-            config.setSaveKey(entity.getInfoId());
-        } else if (TmpData.contentCode == AppConstant.READER_CODE) {
-            config.setSaveKey("N" + entity.getInfoId());
+        if (entity.getInfoId() == 0) {
+            config.setSaveKey(null);
         } else {
-            config.setSaveKey("V" + entity.getInfoId());
+            if (TmpData.contentCode == AppConstant.COMIC_CODE) {
+                config.setSaveKey(entity.getInfoId());
+            } else if (TmpData.contentCode == AppConstant.READER_CODE) {
+                config.setSaveKey("N" + entity.getInfoId());
+            } else {
+                config.setSaveKey("V" + entity.getInfoId());
+            }
         }
         ImgUtil.loadImage(getContext(), config);
     }

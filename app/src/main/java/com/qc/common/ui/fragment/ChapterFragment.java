@@ -274,12 +274,16 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
     private void setValue() {
         ImageConfig config = ImgUtil.getDefaultConfig(getContext(), entity.getInfo().getImgUrl(), relativeLayout);
         config.setSave(true);
-        if (TmpData.contentCode == AppConstant.COMIC_CODE) {
-            config.setSaveKey(entity.getInfoId());
-        } else if (TmpData.contentCode == AppConstant.READER_CODE) {
-            config.setSaveKey("N" + entity.getInfoId());
+        if (entity.getInfoId() == 0) {
+            config.setSaveKey(null);
         } else {
-            config.setSaveKey("V" + entity.getInfoId());
+            if (TmpData.contentCode == AppConstant.COMIC_CODE) {
+                config.setSaveKey(entity.getInfoId());
+            } else if (TmpData.contentCode == AppConstant.READER_CODE) {
+                config.setSaveKey("N" + entity.getInfoId());
+            } else {
+                config.setSaveKey("V" + entity.getInfoId());
+            }
         }
         ImgUtil.loadImage(getContext(), config);
         tvTitle.setText(entity.getInfo().getTitle());

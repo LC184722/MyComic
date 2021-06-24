@@ -86,6 +86,11 @@ public class YingHua extends BaseVideoSource {
     public void setInfoDetail(VideoInfo info, String html, Map<String, Object> map) {
         JsoupStarter<ChapterInfo> starter = new JsoupStarter<ChapterInfo>() {
             @Override
+            protected boolean isDESC() {
+                return false;
+            }
+
+            @Override
             protected void dealInfo(JsoupNode node) {
                 String title = node.ownText("span.names");
                 String imgUrl = node.src("div.tpic.l img");
@@ -109,7 +114,6 @@ public class YingHua extends BaseVideoSource {
 
     @Override
     public List<Content> getContentList(String html, int chapterId, Map<String, Object> map) {
-        System.out.println("html = " + html);
         List<String> list = new ArrayList<>();
         String[] ss = html.split(",");
         for (String s : ss) {

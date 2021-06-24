@@ -122,7 +122,7 @@ public class ImgUtil {
     }
 
     private static boolean loadImageLocal(ImageConfig config, ImageView imageView) {
-        if (config.getSaveKey() != null && !Objects.equals(config.getSaveKey(), 0)) {
+        if (config.getSaveKey() != null) {
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inPreferredConfig = Bitmap.Config.RGB_565;
             File file = new File(getLocalImgUrl(config.getSaveKey()));
