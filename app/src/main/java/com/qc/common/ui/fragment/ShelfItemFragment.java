@@ -135,7 +135,7 @@ public class ShelfItemFragment extends BaseDataFragment<Entity> implements Shelf
         }
         entity.setPriority(0);
         DBUtil.save(entity, DBUtil.SAVE_ONLY);
-        startFragment(ChapterBaseFragment.getInstance(entity));
+        startFragment(ChapterFragment.getInstance(entity));
     }
 
     @Override

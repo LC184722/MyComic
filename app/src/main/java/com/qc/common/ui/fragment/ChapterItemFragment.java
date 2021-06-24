@@ -31,15 +31,15 @@ import top.luqichuang.common.model.Entity;
  * @date 2021/6/24 12:53
  * @ver 1.0
  */
-public class TstFragment extends BaseDataFragment<ChapterInfo> {
+public class ChapterItemFragment extends BaseDataFragment<ChapterInfo> {
 
     private List<ChapterInfo> list;
     private Entity entity;
 
     private ChapterItemAdapter itemAdapter;
 
-    public static TstFragment getInstance(String key, Entity entity) {
-        TstFragment fragment = new TstFragment();
+    public static ChapterItemFragment getInstance(String key, Entity entity) {
+        ChapterItemFragment fragment = new ChapterItemFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable("entity", entity);
         bundle.putString("key", key);

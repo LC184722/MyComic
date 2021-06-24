@@ -1,6 +1,5 @@
 package com.qc.common.ui.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -11,17 +10,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.qc.common.constant.AppConstant;
 import com.qc.common.constant.Constant;
 import com.qc.common.constant.TmpData;
 import com.qc.common.self.ImageConfig;
-import com.qc.common.self.MySpacesItemDecoration;
-import com.qc.common.ui.activity.VideoPlayerActivity;
-import com.qc.common.ui.adapter.ChapterAdapter;
 import com.qc.common.ui.presenter.ChapterPresenter;
 import com.qc.common.ui.view.ChapterView;
 import com.qc.common.util.AnimationUtil;
@@ -32,20 +26,19 @@ import com.qc.common.util.ImgUtil;
 import com.qc.common.util.PopupUtil;
 import com.qc.mycomic.R;
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
-import com.qmuiteam.qmui.util.QMUIDisplayHelper;
 import com.qmuiteam.qmui.widget.QMUIRadiusImageView;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 import com.qmuiteam.qmui.widget.popup.QMUIPopup;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import the.one.base.ui.fragment.BaseDataFragment;
-import the.one.base.ui.presenter.BasePresenter;
+import the.one.base.ui.fragment.BaseFragment;
+import the.one.base.ui.fragment.BaseTabFragment;
 import the.one.base.util.QMUIDialogUtil;
 import the.one.base.util.QMUIPopupUtil;
-import the.one.base.widge.decoration.SpacesItemDecoration;
 import top.luqichuang.common.model.ChapterInfo;
 import top.luqichuang.common.model.Entity;
 import top.luqichuang.common.model.EntityInfo;
@@ -56,24 +49,37 @@ import top.luqichuang.common.util.StringUtil;
 /**
  * @author LuQiChuang
  * @desc
- * @date 2021/6/10 17:44
+ * @date 2021/6/24 12:27
  * @ver 1.0
  */
-public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements ChapterView {
+public class ChapterFragment extends BaseTabFragment implements ChapterView {
 
     private Entity entity;
-
     private boolean isChangeOrder = false;
-
     private boolean isChangeSource = false;
-
     private ChapterPresenter presenter = new ChapterPresenter();
-
-    private ChapterAdapter chapterAdapter;
-
     private int toStatus = Constant.NORMAL;
-
     private int size;
+
+    private QMUIPopup mSettingPopup;
+    private String[] mMenus = new String[]{
+            "更新" + TmpData.content + "源",
+            "查看信息",
+    };
+    private ImageButton ibMenu;
+    private ImageButton ibSwap;
+
+    private QMUIRadiusImageView imageView;
+    private RelativeLayout relativeLayout;
+    private TextView tvTitle;
+    private TextView tvSource;
+    private TextView tvSourceSize;
+    private TextView tvUpdateTime;
+    private TextView tvUpdateChapter;
+    private LinearLayout favLayout;
+    private ImageView ivFav;
+    private TextView tvFav;
+    private View llIndicator;
 
     public static ChapterFragment getInstance(Entity entity) {
         ChapterFragment fragment = new ChapterFragment();
@@ -86,7 +92,6 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         this.entity = (Entity) getArguments().get("entity");
-        this.chapterAdapter = new ChapterAdapter(entity);
         if (TmpData.contentCode == AppConstant.COMIC_CODE) {
             size = SourceUtil.size();
         } else if (TmpData.contentCode == AppConstant.READER_CODE) {
@@ -98,13 +103,19 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
     }
 
     @Override
-    protected int setType() {
-        return TYPE_GRID;
+    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
+        if (enter && entity != null && !fragments.isEmpty()) {
+            ((ChapterItemFragment) fragments.get(INDEX)).updateData();
+            setValue();
+            this.toStatus = TmpData.toStatus;
+            TmpData.toStatus = Constant.NORMAL;
+        }
+        return super.onCreateAnimation(transit, enter, nextAnim);
     }
 
     @Override
-    protected int setColumn() {
-        return 3;
+    protected boolean isTabFromNet() {
+        return true;
     }
 
     @Override
@@ -113,72 +124,25 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
     }
 
     @Override
-    protected SpacesItemDecoration getSpacesItemDecoration() {
-        int space = QMUIDisplayHelper.dp2px(_mActivity, setSpacing());
-        return new MySpacesItemDecoration(setColumn(), 0, space);
-    }
-
-    @Override
-    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
-        if (enter && adapter != null) {
-            adapter.notifyDataSetChanged();
-            chapterAdapter.setChapterId(entity.getInfo().getCurChapterId());
-            setValue();
-            this.toStatus = TmpData.toStatus;
-            TmpData.toStatus = Constant.NORMAL;
-        }
-        return super.onCreateAnimation(transit, enter, nextAnim);
-    }
-
-    private QMUIPopup mSettingPopup;
-    private String[] mMenus = new String[]{
-            "更新" + TmpData.content + "源",
-            "查看信息",
-    };
-    private ImageButton ibMenu;
-    private ImageButton ibSwap;
-    private View headerView;
-    private View bottomView;
-
-    private QMUIRadiusImageView imageView;
-    private RelativeLayout relativeLayout;
-    private TextView tvTitle;
-    private TextView tvSource;
-    private TextView tvSourceSize;
-    private TextView tvUpdateTime;
-    private TextView tvUpdateChapter;
-    private LinearLayout favLayout;
-    private ImageView ivFav;
-    private TextView tvFav;
-
-    @Override
     protected void initView(View rootView) {
         super.initView(rootView);
+        showLoadingPage();
+        mMagicIndicator = rootView.findViewById(R.id.indicator);
+        mViewPager = rootView.findViewById(R.id.viewPager);
+
         QMUIQQFaceView mTitle = mTopLayout.setTitle("" + TmpData.content + "详情");
         mTopLayout.setTitleGravity(Gravity.CENTER);
         mTitle.setTextColor(getColorr(R.color.qmui_config_color_gray_1));
         mTitle.getPaint().setFakeBoldText(true);
         addTopBarBackBtn();
-        headerView = getView(R.layout.fragment_chapter);
-        bottomView = getView(R.layout.bottom_chapter);
-        relativeLayout = headerView.findViewById(R.id.imageRelativeLayout);
-        imageView = headerView.findViewById(R.id.imageView);
-        tvTitle = headerView.findViewById(R.id.tvTitle);
-        tvSource = headerView.findViewById(R.id.tvSource);
-        tvSourceSize = headerView.findViewById(R.id.tvSourceSize);
-        tvUpdateTime = headerView.findViewById(R.id.tvUpdateTime);
-        tvUpdateChapter = headerView.findViewById(R.id.tvUpdateChapter);
-        favLayout = bottomView.findViewById(R.id.favLayout);
-        ivFav = favLayout.findViewById(R.id.ivFav);
-        tvFav = favLayout.findViewById(R.id.tvFav);
-        setValue();
     }
 
     private void setListener() {
         //菜单按钮: 更新源、查看信息
         ibMenu.setOnClickListener(v -> {
             if (null == mSettingPopup) {
-                mSettingPopup = QMUIPopupUtil.createListPop(_mActivity, mMenus, (adapter, view, position) -> {
+                mSettingPopup = QMUIPopupUtil.createListPop(_mActivity, mMenus, (adapter, view, position) ->
+                {
                     if (position == 0) {
                         showProgressDialog(0, size, "正在更新" + TmpData.content + "源");
                         presenter.updateSource(entity);
@@ -202,7 +166,7 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         });
 
         //改变源
-        TextView tvSource = headerView.findViewById(R.id.tvSource);
+        TextView tvSource = mRootView.findViewById(R.id.tvSource);
         tvSource.setOnClickListener(v -> {
             Map<Integer, String> map = PopupUtil.getMap(entity.getInfoList());
             Integer key = PopupUtil.getKey(entity);
@@ -222,18 +186,18 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         });
 
         //阅读最新章节
-        TextView tvUpdateChapter = headerView.findViewById(R.id.tvUpdateChapter);
+        TextView tvUpdateChapter = mRootView.findViewById(R.id.tvUpdateChapter);
         tvUpdateChapter.setOnClickListener(v -> {
             if (checkNotEmpty()) {
                 EntityHelper.newestChapter(entity.getInfo());
-                start();
+                ((ChapterItemFragment) fragments.get(INDEX)).start();
             } else {
                 showFailTips("暂无" + TmpData.content + "章节");
             }
         });
 
         //收藏
-        LinearLayout favLayout = bottomView.findViewById(R.id.favLayout);
+        LinearLayout favLayout = mRootView.findViewById(R.id.favLayout);
         favLayout.setOnClickListener(v -> {
             boolean isFav = entity.getStatus() != Constant.STATUS_FAV;
             setFavLayout(isFav, true);
@@ -244,16 +208,10 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         });
 
         //开始阅读
-        TextView tvRead = bottomView.findViewById(R.id.tvRead);
+        TextView tvRead = mRootView.findViewById(R.id.tvRead);
         tvRead.setOnClickListener(v -> {
             if (checkNotEmpty()) {
-                int chapterId = ((ChapterAdapter) adapter).getChapterId();
-                if (EntityHelper.checkChapterId(entity.getInfo(), chapterId)) {
-                    EntityHelper.initChapterId(entity.getInfo(), chapterId);
-                    start();
-                } else {
-                    start(EntityHelper.getPosition(entity.getInfo(), 0));
-                }
+                ((ChapterItemFragment) fragments.get(INDEX)).startRead();
             } else {
                 showFailTips("暂无" + TmpData.content + "章节");
             }
@@ -263,12 +221,17 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
     private void addView() {
         ibMenu = mTopLayout.addRightImageButton(R.drawable.ic_baseline_menu_24, R.id.topbar_right_button1);
         ibSwap = mTopLayout.addRightImageButton(R.drawable.ic_baseline_swap_vert_24, R.id.topbar_right_button2);
-        adapter.setHeaderView(headerView);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(QMUIDisplayHelper.getScreenWidth(_mActivity), QMUIDisplayHelper.getScreenHeight(_mActivity));
-        mStatusLayout.addView(bottomView, layoutParams);
-        View blankView = new View(_mActivity);
-        blankView.setLayoutParams(new LinearLayout.LayoutParams(QMUIDisplayHelper.getScreenWidth(_mActivity), QMUIDisplayHelper.dp2px(_mActivity, 50)));
-        adapter.setFooterView(blankView);
+        relativeLayout = mRootView.findViewById(R.id.imageRelativeLayout);
+        imageView = mRootView.findViewById(R.id.imageView);
+        tvTitle = mRootView.findViewById(R.id.tvTitle);
+        tvSource = mRootView.findViewById(R.id.tvSource);
+        tvSourceSize = mRootView.findViewById(R.id.tvSourceSize);
+        tvUpdateTime = mRootView.findViewById(R.id.tvUpdateTime);
+        tvUpdateChapter = mRootView.findViewById(R.id.tvUpdateChapter);
+        favLayout = mRootView.findViewById(R.id.favLayout);
+        ivFav = favLayout.findViewById(R.id.ivFav);
+        tvFav = favLayout.findViewById(R.id.tvFav);
+        llIndicator = mRootView.findViewById(R.id.llIndicator);
     }
 
     private void setValue() {
@@ -294,12 +257,6 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         setFavLayout(entity.getStatus() == Constant.STATUS_FAV);
     }
 
-    @Override
-    protected void initAdapter() {
-        super.initAdapter();
-        adapter.getLoadMoreModule().setOnLoadMoreListener(null);
-    }
-
     public void setFavLayout(boolean isFav) {
         setFavLayout(isFav, false);
     }
@@ -314,22 +271,6 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         }
     }
 
-    @Override
-    protected BaseQuickAdapter getAdapter() {
-        return chapterAdapter;
-    }
-
-    @Override
-    protected void requestServer() {
-        List<ChapterInfo> chapterInfoList = entity.getInfo().getChapterInfoList();
-        //Log.i(TAG, "requestServer: Constant.toStatus = " + Constant.toStatus);
-        if (chapterInfoList == null || chapterInfoList.size() == 0) {
-            presenter.load(entity);
-        } else {
-            loadComplete();
-        }
-    }
-
     private void changeView() {
         showLoadingPage();
         if (isChangeOrder) {
@@ -337,37 +278,36 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
             EntityInfo entityInfo = entity.getInfo();
             StringUtil.swapList(entityInfo.getChapterInfoList());
             entityInfo.setOrder(entityInfo.getOrder() == EntityInfo.ASC ? EntityInfo.DESC : EntityInfo.ASC);
-            adapter.notifyDataSetChanged();
+            ((ChapterItemFragment) fragments.get(INDEX)).updateData();
             DBUtil.saveInfoData(entityInfo);
-        }
-        if (isChangeSource) {
-            isChangeSource = false;
-            onFirstComplete(entity.getInfo().getChapterInfoList());
-            setValue();
-            adapter.notifyDataSetChanged();
         }
         showContentPage();
     }
 
+    private boolean firstLoad = true;
+
     @Override
-    public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view,
-                            int position) {
-        //Log.i(TAG, "onItemClick: position = " + position);
-        start(position);
+    protected void requestServer() {
+        Map<String, List<ChapterInfo>> map = entity.getInfo().getChapterInfoMap();
+        if (map == null || map.size() == 0) {
+            showLoadingPage();
+            presenter.load(entity);
+        } else {
+            loadComplete();
+        }
     }
 
     @Override
-    public boolean onItemLongClick(@NonNull BaseQuickAdapter adapter, @NonNull View view,
-                                   int position) {
-        return false;
-    }
-
-    @Override
-    public BasePresenter getPresenter() {
+    public ChapterPresenter getPresenter() {
         return presenter;
     }
 
-    private boolean firstLoad = true;
+    @Override
+    protected void startInit() {
+        fragments.clear();
+        mTabs.clear();
+        super.startInit();
+    }
 
     @Override
     public void loadComplete() {
@@ -382,8 +322,8 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
                 StringUtil.swapList(list);
             }
             setValue();
-            onFirstComplete(list);
-            adapter.notifyDataSetChanged();
+            startInit();
+            showContentPage();
             if (toStatus == Constant.RANK_TO_CHAPTER) {
                 toStatus = Constant.NORMAL;
                 showProgressDialog("正在更新" + TmpData.content + "源");
@@ -457,30 +397,31 @@ public class ChapterFragment extends BaseDataFragment<ChapterInfo> implements Ch
         EntityHelper.addInfo(entity, info);
     }
 
-    public void start() {
-        adapter.notifyDataSetChanged();
-        TmpData.toStatus = Constant.READER_TO_CHAPTER;
-        if (TmpData.contentCode == AppConstant.COMIC_CODE) {
-            startFragment(ComicReaderFragment.getInstance(entity));
-        } else if (TmpData.contentCode == AppConstant.READER_CODE) {
-            startFragment(NovelReaderFragment.getInstance(entity));
-        } else {
-            Intent intent = new Intent(_mActivity, VideoPlayerActivity.class);
-            intent.putExtra("entity", entity);
-            startActivity(intent);
-        }
-        EntityUtil.first(entity);
-        if (toStatus == Constant.SEARCH_TO_CHAPTER) {
-            DBUtil.save(entity, DBUtil.SAVE_ALL);
-        }
-    }
-
-    public void start(int position) {
-        EntityHelper.setPosition(entity.getInfo(), position);
-        start();
-    }
-
     private boolean checkNotEmpty() {
         return !entity.getInfo().getChapterInfoList().isEmpty();
+    }
+
+    @Override
+    protected void addTabs() {
+        Map<String, List<ChapterInfo>> map = entity.getInfo().getChapterInfoMap();
+        if (map.size() == 1 && map.containsKey("正文")) {
+            llIndicator.setVisibility(View.GONE);
+        } else {
+            for (String key : entity.getInfo().getChapterInfoMap().keySet()) {
+                addTab(key);
+            }
+        }
+    }
+
+    @Override
+    protected void addFragment(ArrayList<BaseFragment> fragments) {
+        for (String key : entity.getInfo().getChapterInfoMap().keySet()) {
+            fragments.add(ChapterItemFragment.getInstance(key, entity));
+        }
+    }
+
+    @Override
+    protected int getContentViewId() {
+        return R.layout.fragment_chapter;
     }
 }
