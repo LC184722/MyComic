@@ -108,6 +108,15 @@ public abstract class BaseSourceTest<T extends EntityInfo> {
             System.out.println(".......................................");
             System.out.println("first chapter = " + info.getChapterInfoList().get(last));
         }
+        int mSize = info.getChapterInfoMap().size();
+        System.out.println("mSize = " + mSize);
+        for (Map.Entry<String, List<ChapterInfo>> entry : info.getChapterInfoMap().entrySet()) {
+            System.out.println(entry.getKey() + "\t-->\t" + entry.getValue().size());
+            if (!entry.getValue().isEmpty()) {
+                System.out.println("first = " + entry.getValue().get(0));
+                System.out.println("last  = " + entry.getValue().get(entry.getValue().size() - 1));
+            }
+        }
     }
 
     @Test

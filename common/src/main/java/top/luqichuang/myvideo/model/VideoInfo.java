@@ -1,7 +1,9 @@
 package top.luqichuang.myvideo.model;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import top.luqichuang.common.model.ChapterInfo;
@@ -46,6 +48,8 @@ public class VideoInfo extends EntityInfo {
     private int order;
 
     private List<ChapterInfo> chapterInfoList = new ArrayList<>();
+
+    private Map<String, List<ChapterInfo>> chapterInfoMap = new LinkedHashMap<>();
 
     public VideoInfo() {
     }
@@ -277,5 +281,15 @@ public class VideoInfo extends EntityInfo {
     @Override
     public void setChapterInfoList(List<ChapterInfo> chapterInfoList) {
         this.chapterInfoList = chapterInfoList;
+    }
+
+    @Override
+    public Map<String, List<ChapterInfo>> getChapterInfoMap() {
+        return chapterInfoMap;
+    }
+
+    @Override
+    public void setChapterInfoMap(Map<String, List<ChapterInfo>> chapterInfoMap) {
+        this.chapterInfoMap = chapterInfoMap;
     }
 }

@@ -1,7 +1,9 @@
 package top.luqichuang.mynovel.model;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import top.luqichuang.common.model.ChapterInfo;
@@ -14,10 +16,6 @@ import top.luqichuang.common.model.EntityInfo;
  * @ver 1.0
  */
 public class NovelInfo extends EntityInfo {
-
-    public static final int DESC = 0;
-
-    public static final int ASC = 1;
 
     private int id;
 
@@ -50,6 +48,8 @@ public class NovelInfo extends EntityInfo {
     private int order;
 
     private List<ChapterInfo> chapterInfoList = new ArrayList<>();
+
+    private Map<String, List<ChapterInfo>> chapterInfoMap = new LinkedHashMap<>();
 
     public NovelInfo() {
     }
@@ -272,5 +272,15 @@ public class NovelInfo extends EntityInfo {
 
     public void setChapterInfoList(List<ChapterInfo> chapterInfoList) {
         this.chapterInfoList = chapterInfoList;
+    }
+
+    @Override
+    public Map<String, List<ChapterInfo>> getChapterInfoMap() {
+        return chapterInfoMap;
+    }
+
+    @Override
+    public void setChapterInfoMap(Map<String, List<ChapterInfo>> chapterInfoMap) {
+        this.chapterInfoMap = chapterInfoMap;
     }
 }

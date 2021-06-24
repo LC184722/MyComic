@@ -1,7 +1,9 @@
 package top.luqichuang.mycomic.model;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import top.luqichuang.common.model.ChapterInfo;
@@ -50,6 +52,8 @@ public class ComicInfo extends EntityInfo {
     private int order;
 
     private List<ChapterInfo> chapterInfoList = new ArrayList<>();
+
+    private Map<String, List<ChapterInfo>> chapterInfoMap = new LinkedHashMap<>();
 
     public ComicInfo() {
     }
@@ -256,5 +260,15 @@ public class ComicInfo extends EntityInfo {
 
     public void setChapterInfoList(List<ChapterInfo> chapterInfoList) {
         this.chapterInfoList = chapterInfoList;
+    }
+
+    @Override
+    public Map<String, List<ChapterInfo>> getChapterInfoMap() {
+        return chapterInfoMap;
+    }
+
+    @Override
+    public void setChapterInfoMap(Map<String, List<ChapterInfo>> chapterInfoMap) {
+        this.chapterInfoMap = chapterInfoMap;
     }
 }

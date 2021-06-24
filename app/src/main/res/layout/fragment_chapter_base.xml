@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom">
+
+        <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            app:qmui_backgroundColor="@color/white"
+            app:qmui_borderColor="@color/lightGray"
+            app:qmui_borderWidth="2dp"
+            app:qmui_radiusTopLeft="@dimen/dp_10"
+            app:qmui_radiusTopRight="@dimen/dp_10">
+
+            <com.qmuiteam.qmui.layout.QMUILinearLayout
+                android:id="@+id/favLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingStart="@dimen/dp_40">
+
+                <the.one.base.widge.ScaleImageView
+                    android:id="@+id/ivFav"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_baseline_favorite_24" />
+
+                <TextView
+                    android:id="@+id/tvFav"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:text="已收藏"
+                    android:textSize="@dimen/qmui_btn_text_size" />
+
+            </com.qmuiteam.qmui.layout.QMUILinearLayout>
+
+
+            <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:qmui_backgroundColor="@color/colorPrimary"
+                app:qmui_radiusTopRight="@dimen/dp_10">
+
+                <TextView
+                    android:id="@+id/tvRead"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="继续阅读"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/qmui_btn_text_size" />
+
+            </com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>
+
+        </com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="176dp"
+            android:layout_marginBottom="@dimen/dp_4"
+            android:padding="8dp"
+            app:qmui_borderColor="@color/lightGray"
+            app:qmui_borderWidth="2dp"
+            app:qmui_radius="10dp">
+
+            <RelativeLayout
+                android:layout_width="120dp"
+                android:layout_height="160dp">
+
+                <include layout="@layout/module_image_shelf" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dp_10">
+
+                    <com.qmuiteam.qmui.widget.QMUIFontFitTextView
+                        android:id="@+id/tvTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="2"
+                        android:text="标题"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dp_10"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="漫画源：" />
+
+                    <TextView
+                        android:id="@+id/tvSource"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="米推漫画"
+                        android:textColor="@color/qmui_config_color_blue" />
+
+                    <TextView
+                        android:id="@+id/tvSourceSize"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="(2)"
+                        android:textColor="@color/qmui_config_color_red" />
+
+                </LinearLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/llUpdateTime"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/dp_10"
+                            android:text="最新章节：" />
+
+                        <TextView
+                            android:id="@+id/tvUpdateChapter"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/dp_10"
+                            android:text="最新章节！"
+                            android:textColor="@color/qmui_config_color_blue" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llUpdateTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/dp_10"
+                            android:text="更新时间：" />
+
+                        <TextView
+                            android:id="@+id/tvUpdateTime"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="0dp"
+                            android:text="2020-6-6" />
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+        </com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>
+
+        <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout
+            android:id="@+id/llIndicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_4"
+            android:padding="8dp"
+            app:qmui_borderColor="@color/lightGray"
+            app:qmui_borderWidth="2dp"
+            app:qmui_radius="10dp">
+
+            <net.lucode.hackware.magicindicator.MagicIndicator
+                android:id="@+id/indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_gravity="center_horizontal"
+                android:paddingLeft="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_10" />
+
+        </com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>
+
+        <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="54dp"
+            android:padding="8dp"
+            app:qmui_borderColor="@color/lightGray"
+            app:qmui_borderWidth="2dp"
+            app:qmui_radius="10dp">
+
+            <com.qmuiteam.qmui.widget.QMUIViewPager
+                android:id="@+id/viewPager"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

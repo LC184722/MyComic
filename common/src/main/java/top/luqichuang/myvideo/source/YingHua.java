@@ -110,6 +110,7 @@ public class YingHua extends BaseVideoSource {
         };
         starter.startInfo(html);
         SourceHelper.initChapterInfoList(info, starter.startElements(html, "div.movurl li"));
+        SourceHelper.initChapterInfoMap(info, html, "div.tabs li:eq(0),div.movurl ul");
     }
 
     @Override

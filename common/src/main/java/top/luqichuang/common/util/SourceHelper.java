@@ -15,6 +15,7 @@ import top.luqichuang.common.model.Content;
 import top.luqichuang.common.model.Entity;
 import top.luqichuang.common.model.EntityInfo;
 import top.luqichuang.mycomic.model.ComicInfo;
+import top.luqichuang.myvideo.model.VideoInfo;
 
 /**
  * @author LuQiChuang
@@ -30,11 +31,30 @@ public class SourceHelper {
 
     public static void initChapterInfoList(EntityInfo info, List<ChapterInfo> list, int order) {
         info.setChapterInfoList(list);
+        info.getChapterInfoMap().put("正文", list);
         if (!list.isEmpty()) {
             if (order == ComicInfo.DESC) {
                 info.setUpdateChapter(list.get(0).getTitle());
             } else if (order == ComicInfo.ASC) {
                 info.setUpdateChapter(list.get(list.size() - 1).getTitle());
+            }
+        }
+    }
+
+    public static void initChapterInfoMap(VideoInfo info, String html, String cssQuery) {
+        info.getChapterInfoMap().clear();
+        JsoupNode node = new JsoupNode(html);
+        Elements elements = node.getElements(cssQuery);
+        List<ChapterInfo> list;
+        String key = "正文";
+        int i = 0;
+        for (Element element : elements) {
+            if (!element.ownText().equals("")) {
+                key = element.ownText();
+            } else {
+                list = info.getChapterInfoList().subList(i, i + element.childNodeSize());
+                i = i + element.childNodeSize();
+                info.getChapterInfoMap().put(key, new ArrayList<>(list));
             }
         }
     }

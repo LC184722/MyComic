@@ -4,6 +4,7 @@ import org.litepal.crud.LitePalSupport;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author LuQiChuang
@@ -82,4 +83,8 @@ public abstract class EntityInfo extends LitePalSupport implements Serializable 
     public abstract List<ChapterInfo> getChapterInfoList();
 
     public abstract void setChapterInfoList(List<ChapterInfo> chapterInfoList);
+
+    public abstract Map<String, List<ChapterInfo>> getChapterInfoMap();
+
+    public abstract void setChapterInfoMap(Map<String, List<ChapterInfo>> chapterInfoMap);
 }
