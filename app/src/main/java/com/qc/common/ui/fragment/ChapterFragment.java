@@ -3,6 +3,7 @@ package com.qc.common.ui.fragment;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -86,6 +87,14 @@ public class ChapterFragment extends BaseTabFragment implements ChapterView {
         bundle.putSerializable("entity", entity);
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    @Override
+    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
+        if (enter && entity != null && !fragments.isEmpty()) {
+            ((ChapterItemFragment) fragments.get(INDEX)).updateData();
+        }
+        return super.onCreateAnimation(transit, enter, nextAnim);
     }
 
     @Override
