@@ -86,11 +86,6 @@ public class YingHua extends BaseVideoSource {
     public void setInfoDetail(VideoInfo info, String html, Map<String, Object> map) {
         JsoupStarter<ChapterInfo> starter = new JsoupStarter<ChapterInfo>() {
             @Override
-            protected boolean isDESC() {
-                return false;
-            }
-
-            @Override
             protected void dealInfo(JsoupNode node) {
                 String title = node.ownText("span.names");
                 String imgUrl = node.src("div.tpic.l img");

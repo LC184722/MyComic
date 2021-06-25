@@ -3,7 +3,6 @@ package com.qc.common.ui.fragment;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
-import android.view.animation.Animation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -103,24 +102,8 @@ public class ChapterFragment extends BaseTabFragment implements ChapterView {
     }
 
     @Override
-    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
-        if (enter && entity != null && !fragments.isEmpty()) {
-            ((ChapterItemFragment) fragments.get(INDEX)).updateData();
-            setValue();
-            this.toStatus = TmpData.toStatus;
-            TmpData.toStatus = Constant.NORMAL;
-        }
-        return super.onCreateAnimation(transit, enter, nextAnim);
-    }
-
-    @Override
     protected boolean isTabFromNet() {
         return true;
-    }
-
-    @Override
-    protected boolean restoreSubWindowWhenDragBack() {
-        return false;
     }
 
     @Override
@@ -168,13 +151,14 @@ public class ChapterFragment extends BaseTabFragment implements ChapterView {
         //改变源
         TextView tvSource = mRootView.findViewById(R.id.tvSource);
         tvSource.setOnClickListener(v -> {
-            Map<Integer, String> map = PopupUtil.getMap(entity.getInfoList());
-            Integer key = PopupUtil.getKey(entity);
+            Map<String, String> map = PopupUtil.getMap(entity.getInfoList());
+            String key = PopupUtil.getKey(entity);
             PopupUtil.showSimpleBottomSheetList(getContext(), map, key, "切换" + TmpData.content + "源", new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
                 @Override
                 public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {
-                    Integer key = MapUtil.getKeyByValue(map, tag);
-                    if (EntityHelper.changeInfoById(entity, key)) {
+                    String key = MapUtil.getKeyByValue(map, tag);
+                    String[] ss = key.split("#");
+                    if (EntityHelper.changeInfo(entity, ss)) {
                         showLoadingPage();
                         isChangeSource = true;
                         requestServer();
@@ -288,9 +272,9 @@ public class ChapterFragment extends BaseTabFragment implements ChapterView {
 
     @Override
     protected void requestServer() {
+        showLoadingPage();
         Map<String, List<ChapterInfo>> map = entity.getInfo().getChapterInfoMap();
         if (map == null || map.size() == 0) {
-            showLoadingPage();
             presenter.load(entity);
         } else {
             loadComplete();
@@ -304,26 +288,30 @@ public class ChapterFragment extends BaseTabFragment implements ChapterView {
 
     @Override
     protected void startInit() {
-        fragments.clear();
         mTabs.clear();
         super.startInit();
+        Map<String, List<ChapterInfo>> map = entity.getInfo().getChapterInfoMap();
+        int i = 0;
+        for (List<ChapterInfo> list : map.values()) {
+            ChapterItemFragment fragment = (ChapterItemFragment) fragments.get(i++);
+            fragment.setList(list);
+        }
     }
 
     @Override
     public void loadComplete() {
         try {
+            List<ChapterInfo> list = entity.getInfo().getChapterInfoList();
+            if (isNeedSwap(list, entity.getInfo().getOrder())) {
+                StringUtil.swapList(list);
+            }
             if (firstLoad) {
                 firstLoad = false;
                 addView();
                 setListener();
             }
-            List<ChapterInfo> list = entity.getInfo().getChapterInfoList();
-            if (isNeedSwap(list, entity.getInfo().getOrder())) {
-                StringUtil.swapList(list);
-            }
             setValue();
             startInit();
-            showContentPage();
             if (toStatus == Constant.RANK_TO_CHAPTER) {
                 toStatus = Constant.NORMAL;
                 showProgressDialog("正在更新" + TmpData.content + "源");
@@ -391,6 +379,7 @@ public class ChapterFragment extends BaseTabFragment implements ChapterView {
         int index = entity.getInfoList().indexOf(info);
         if (index > -1) {
             EntityInfo oInfo = entity.getInfoList().remove(index);
+            info.setId(oInfo.getId());
             info.setCurChapterId(oInfo.getCurChapterId());
             info.setCurChapterTitle(oInfo.getCurChapterTitle());
         }
@@ -407,6 +396,7 @@ public class ChapterFragment extends BaseTabFragment implements ChapterView {
         if (map.size() == 1 && map.containsKey("正文")) {
             llIndicator.setVisibility(View.GONE);
         } else {
+            llIndicator.setVisibility(View.VISIBLE);
             for (String key : entity.getInfo().getChapterInfoMap().keySet()) {
                 addTab(key);
             }
@@ -415,8 +405,17 @@ public class ChapterFragment extends BaseTabFragment implements ChapterView {
 
     @Override
     protected void addFragment(ArrayList<BaseFragment> fragments) {
-        for (String key : entity.getInfo().getChapterInfoMap().keySet()) {
-            fragments.add(ChapterItemFragment.getInstance(key, entity));
+        int mapSize = entity.getInfo().getChapterInfoMap().size();
+        int fSize = fragments.size();
+        if (mapSize > fSize) {
+            for (int i = 0; i < mapSize - fSize; i++) {
+                ChapterItemFragment fragment = ChapterItemFragment.getInstance(entity);
+                fragments.add(fragment);
+            }
+        } else if (mapSize < fSize) {
+            if (fSize > mapSize + 1) {
+                fragments.subList(mapSize, fSize).clear();
+            }
         }
     }
 

@@ -38,11 +38,10 @@ public class ChapterItemFragment extends BaseDataFragment<ChapterInfo> {
 
     private ChapterItemAdapter itemAdapter;
 
-    public static ChapterItemFragment getInstance(String key, Entity entity) {
+    public static ChapterItemFragment getInstance(Entity entity) {
         ChapterItemFragment fragment = new ChapterItemFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable("entity", entity);
-        bundle.putString("key", key);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -51,8 +50,6 @@ public class ChapterItemFragment extends BaseDataFragment<ChapterInfo> {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.entity = (Entity) getArguments().get("entity");
-        String key = (String) getArguments().get("key");
-        this.list = entity.getInfo().getChapterInfoMap().get(key);
     }
 
     @Override
@@ -75,14 +72,25 @@ public class ChapterItemFragment extends BaseDataFragment<ChapterInfo> {
     @Override
     protected BaseQuickAdapter getAdapter() {
         if (itemAdapter == null) {
-            itemAdapter = new ChapterItemAdapter(list, entity);
+            itemAdapter = new ChapterItemAdapter(entity);
         }
         return itemAdapter;
     }
 
     @Override
     protected void requestServer() {
-        showContentPage();
+        loadComplete();
+    }
+
+    public void loadComplete() {
+        if (entity != null && adapter != null) {
+            if (list == null || list.isEmpty()) {
+                showEmptyPage("章节加载失败");
+            } else {
+                onFirstComplete(list);
+            }
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -100,6 +108,11 @@ public class ChapterItemFragment extends BaseDataFragment<ChapterInfo> {
     @Override
     public BasePresenter getPresenter() {
         return null;
+    }
+
+    public void setList(List<ChapterInfo> list) {
+        this.list = list;
+        loadComplete();
     }
 
     public void updateData() {

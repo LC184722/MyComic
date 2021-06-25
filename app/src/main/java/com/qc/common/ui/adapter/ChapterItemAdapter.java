@@ -3,15 +3,12 @@ package com.qc.common.ui.adapter;
 import android.content.res.ColorStateList;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
-
 import com.qc.mycomic.R;
 import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButtonDrawable;
 import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundLinearLayout;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.Objects;
 
 import the.one.base.adapter.TheBaseQuickAdapter;
@@ -29,8 +26,8 @@ public class ChapterItemAdapter extends TheBaseQuickAdapter<ChapterInfo> {
 
     private Entity entity;
 
-    public ChapterItemAdapter(@Nullable List<ChapterInfo> data, Entity entity) {
-        super(R.layout.item_chapter, data);
+    public ChapterItemAdapter(Entity entity) {
+        super(R.layout.item_chapter);
         this.entity = entity;
     }
 
