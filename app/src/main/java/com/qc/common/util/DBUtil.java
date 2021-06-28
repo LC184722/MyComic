@@ -86,11 +86,7 @@ public class DBUtil {
         if (entity != null) {
             init();
             POOL.execute(() -> {
-                if (TmpData.contentCode == AppConstant.COMIC_CODE || TmpData.contentCode == AppConstant.VIDEO_CODE) {
-                    entity.saveOrUpdate("title = ? and sourceId = ?", entity.getTitle(), String.valueOf(entity.getSourceId()));
-                } else if (TmpData.contentCode == AppConstant.READER_CODE) {
-                    entity.saveOrUpdate("title = ? and nSourceId = ? and author = ?", entity.getTitle(), String.valueOf(entity.getSourceId()), entity.getInfo().getAuthor());
-                }
+                entity.saveOrUpdate("title = ?", entity.getTitle());
             });
         }
     }

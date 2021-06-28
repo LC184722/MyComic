@@ -42,18 +42,30 @@ public class SourceHelper {
     }
 
     public static void initChapterInfoMap(VideoInfo info, String html, String cssQuery) {
+        initChapterInfoMap(info, html, cssQuery, true);
+    }
+
+    public static void initChapterInfoMap(VideoInfo info, String html, String cssQuery, boolean isDesc) {
         info.getChapterInfoMap().clear();
         JsoupNode node = new JsoupNode(html);
         Elements elements = node.getElements(cssQuery);
         List<ChapterInfo> list;
         String key = "正文";
         int i = 0;
+        if (!isDesc) {
+            i = info.getChapterInfoList().size();
+        }
         for (Element element : elements) {
             if (!element.ownText().equals("")) {
                 key = element.ownText();
             } else {
-                list = info.getChapterInfoList().subList(i, i + element.childNodeSize());
-                i = i + element.childNodeSize();
+                if (isDesc) {
+                    list = info.getChapterInfoList().subList(i, i + element.childNodeSize());
+                    i = i + element.childNodeSize();
+                } else {
+                    list = info.getChapterInfoList().subList(i - element.childNodeSize(), i);
+                    i = i - element.childNodeSize();
+                }
                 info.getChapterInfoMap().put(key, new ArrayList<>(list));
             }
         }

@@ -44,17 +44,14 @@ public class JzPlayer extends JzvdStd {
     public void setScreenNormal() {
         super.setScreenNormal();
         batteryLevel.setVisibility(GONE);
+        setSpeed();
     }
 
     @Override
     public void setScreenFullscreen() {
         super.setScreenFullscreen();
         batteryLevel.setVisibility(VISIBLE);
-        if (TmpData.videoSpeed == 2) {
-            tvSpeed.setText("倍速");
-        } else {
-            tvSpeed.setText(getSpeedFromIndex(TmpData.videoSpeed) + "X");
-        }
+        setSpeed();
     }
 
     @Override
@@ -66,10 +63,8 @@ public class JzPlayer extends JzvdStd {
             } else {
                 TmpData.videoSpeed += 1;
             }
-            if (mediaInterface != null) {
-                mediaInterface.setSpeed(getSpeedFromIndex(TmpData.videoSpeed));
-                tvSpeed.setText(getSpeedFromIndex(TmpData.videoSpeed) + "X");
-            }
+            setSpeed();
+            cancelDismissControlViewTimer();
         }
     }
 
@@ -98,5 +93,18 @@ public class JzPlayer extends JzvdStd {
         return ret;
     }
 
+    protected void setSpeed() {
+        if (TmpData.videoSpeed == 2) {
+            tvSpeed.setText("倍速");
+        } else {
+            tvSpeed.setText(getSpeedFromIndex(TmpData.videoSpeed) + "X");
+        }
+        if (mediaInterface != null) {
+            mediaInterface.setSpeed(getSpeedFromIndex(TmpData.videoSpeed));
+            if (state == STATE_PAUSE) {
+                mediaInterface.pause();
+            }
+        }
+    }
 
 }

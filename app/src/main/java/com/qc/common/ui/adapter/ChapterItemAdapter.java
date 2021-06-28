@@ -24,7 +24,7 @@ import top.luqichuang.common.model.Entity;
  */
 public class ChapterItemAdapter extends TheBaseQuickAdapter<ChapterInfo> {
 
-    private Entity entity;
+    private final Entity entity;
 
     public ChapterItemAdapter(Entity entity) {
         super(R.layout.item_chapter);

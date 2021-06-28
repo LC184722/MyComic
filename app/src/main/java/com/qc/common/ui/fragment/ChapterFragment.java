@@ -3,7 +3,6 @@ package com.qc.common.ui.fragment;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
-import android.view.animation.Animation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -90,11 +89,12 @@ public class ChapterFragment extends BaseTabFragment implements ChapterView {
     }
 
     @Override
-    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
-        if (enter && entity != null && !fragments.isEmpty()) {
+    public void onResume() {
+        super.onResume();
+        if (entity != null && !fragments.isEmpty()) {
+            startInit();
             ((ChapterItemFragment) fragments.get(INDEX)).updateData();
         }
-        return super.onCreateAnimation(transit, enter, nextAnim);
     }
 
     @Override
@@ -270,6 +270,9 @@ public class ChapterFragment extends BaseTabFragment implements ChapterView {
             isChangeOrder = false;
             EntityInfo entityInfo = entity.getInfo();
             StringUtil.swapList(entityInfo.getChapterInfoList());
+            for (List<ChapterInfo> list : entityInfo.getChapterInfoMap().values()) {
+                StringUtil.swapList(list);
+            }
             entityInfo.setOrder(entityInfo.getOrder() == EntityInfo.ASC ? EntityInfo.DESC : EntityInfo.ASC);
             ((ChapterItemFragment) fragments.get(INDEX)).updateData();
             DBUtil.saveInfoData(entityInfo);
@@ -313,6 +316,9 @@ public class ChapterFragment extends BaseTabFragment implements ChapterView {
             List<ChapterInfo> list = entity.getInfo().getChapterInfoList();
             if (isNeedSwap(list, entity.getInfo().getOrder())) {
                 StringUtil.swapList(list);
+                for (List<ChapterInfo> value : entity.getInfo().getChapterInfoMap().values()) {
+                    StringUtil.swapList(value);
+                }
             }
             if (firstLoad) {
                 firstLoad = false;
@@ -414,6 +420,9 @@ public class ChapterFragment extends BaseTabFragment implements ChapterView {
 
     @Override
     protected void addFragment(ArrayList<BaseFragment> fragments) {
+        if (fragments.isEmpty()) {
+            fragments.addAll((List<BaseFragment>) (List<?>) getChildFragmentManager().getFragments());
+        }
         int mapSize = entity.getInfo().getChapterInfoMap().size();
         int fSize = fragments.size();
         if (mapSize > fSize) {

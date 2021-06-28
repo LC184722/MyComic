@@ -120,6 +120,9 @@ public class ChapterItemFragment extends BaseDataFragment<ChapterInfo> {
     }
 
     public void startRead() {
+        if (entity == null) {
+            this.entity = (Entity) getArguments().get("entity");
+        }
         if (EntityHelper.checkChapterId(entity.getInfo(), entity.getInfo().getCurChapterId())) {
             EntityHelper.initChapterId(entity.getInfo(), entity.getInfo().getCurChapterId());
             start();

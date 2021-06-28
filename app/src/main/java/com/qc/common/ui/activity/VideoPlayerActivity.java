@@ -72,7 +72,7 @@ public class VideoPlayerActivity extends BaseActivity implements ReaderView {
         } else {
             String url = contentList.get(0).getUrl();
             System.out.println("url = " + url);
-            player.setUp(url, entity.getCurChapterTitle());
+            player.setUp(url, entity.getTitle() + "-" + entity.getCurChapterTitle());
             hideLoadingDialog();
         }
     }
