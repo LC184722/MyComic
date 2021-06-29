@@ -6,6 +6,7 @@ import android.view.View;
 import androidx.annotation.Nullable;
 
 import com.qc.common.self.JzPlayer;
+import com.qc.common.self.media.JzMediaAliyun;
 import com.qc.common.ui.presenter.ReaderPresenter;
 import com.qc.common.ui.view.ReaderView;
 import com.qc.mycomic.R;
@@ -73,6 +74,9 @@ public class VideoPlayerActivity extends BaseActivity implements ReaderView {
             String url = contentList.get(0).getUrl();
             System.out.println("url = " + url);
             player.setUp(url, entity.getTitle() + "-" + entity.getCurChapterTitle());
+            player.setMediaInterface(JzMediaAliyun.class);
+//            player.setMediaInterface(JzMediaDefault.class);
+            Jzvd.setVideoImageDisplayType(Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_ADAPTER);
             hideLoadingDialog();
         }
     }
