@@ -30,7 +30,7 @@ public class ChapterPresenter extends BasePresenter<ChapterView> {
         Source source = EntityHelper.commonSource(entity);
         EntityInfo info = entity.getInfo();
         Request request = source.getDetailRequest(info.getDetailUrl());
-        NetUtil.startLoad(request, new CommonCallback(request, source, Source.DETAIL) {
+        NetUtil.startLoad(new CommonCallback(request, source, Source.DETAIL) {
             @Override
             public void onFailure(String errorMsg) {
                 ChapterView view = getView();
@@ -69,7 +69,7 @@ public class ChapterPresenter extends BasePresenter<ChapterView> {
         for (Object o : sourceList) {
             Source source = (Source) o;
             Request request = source.getSearchRequest(entity.getTitle());
-            NetUtil.startLoad(request, new CommonCallback(request, source, Source.SEARCH) {
+            NetUtil.startLoad(new CommonCallback(request, source, Source.SEARCH) {
                 @Override
                 public void onFailure(String errorMsg) {
                     ChapterView view = getView();

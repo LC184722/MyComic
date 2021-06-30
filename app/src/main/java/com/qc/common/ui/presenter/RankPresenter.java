@@ -53,7 +53,7 @@ public class RankPresenter extends BasePresenter<RankView> {
     }
 
     private void loadWithNet(Request request) {
-        NetUtil.startLoad(request, new CommonCallback(request, source, Source.RANK) {
+        NetUtil.startLoad(new CommonCallback(request, source, Source.RANK) {
             @Override
             public void onFailure(String errorMsg) {
                 RankView view = getView();

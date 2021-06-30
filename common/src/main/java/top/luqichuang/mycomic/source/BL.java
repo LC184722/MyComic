@@ -41,9 +41,10 @@ public class BL extends BaseComicSource {
     }
 
     @Override
-    public Request buildRequest(String requestUrl, String html, String tag, Map<String, Object> map) {
+    public Request buildRequest(String html, String tag, Map<String, Object> data, Map<String, Object> map) {
         if (CONTENT.equals(tag)) {
             try {
+                String requestUrl = (String) data.get("url");
                 JsoupNode node = new JsoupNode(html);
                 node.init(node.getElements("select.selectpage option").last());
                 int pageMax = Integer.parseInt(node.attr("option", "value"));
@@ -67,7 +68,7 @@ public class BL extends BaseComicSource {
             } catch (NumberFormatException ignored) {
             }
         }
-        return super.buildRequest(requestUrl, html, tag, map);
+        return super.buildRequest(html, tag, data, map);
     }
 
     @Override

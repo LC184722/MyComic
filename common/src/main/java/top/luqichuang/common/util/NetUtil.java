@@ -14,6 +14,7 @@ import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import top.luqichuang.common.self.CommonCallback;
 
 /**
  * @author LuQiChuang
@@ -164,6 +165,16 @@ public class NetUtil {
      */
     public static void startLoad(String url, Callback callback) {
         startLoad(getRequest(url), callback);
+    }
+
+    /**
+     * 使用特定request开始连接网络
+     *
+     * @param callback callback
+     * @return void
+     */
+    public static void startLoad(CommonCallback callback) {
+        startLoad(callback.getRequest(), callback);
     }
 
     /**

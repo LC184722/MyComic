@@ -3,6 +3,7 @@ package top.luqichuang.common.tst;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +32,7 @@ public abstract class BaseSourceTest<T extends EntityInfo> {
     public static final String DETAIL = Source.DETAIL;
     public static final String CONTENT = Source.CONTENT;
     public static final String RANK = Source.RANK;
-    private Map<String, Object> dataMap;
+    private Map<String, Object> dataMap = new HashMap<>();
     private final Source<T> source = getSource();
     private final T info = getInfo();
 
@@ -265,7 +266,7 @@ public abstract class BaseSourceTest<T extends EntityInfo> {
     protected final String testRequest(Request request, String fileName) {
         String[] strings = new String[1];
         boolean[] flag = new boolean[1];
-        NetUtil.startLoad(request, new CommonCallback(request, source, fileName) {
+        NetUtil.startLoad(new CommonCallback(request, source, fileName) {
             @Override
             public void onFailure(String errorMsg) {
                 System.err.println(errorMsg);

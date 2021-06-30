@@ -47,7 +47,7 @@ public interface Source<T extends EntityInfo> {
         return NetUtil.getRequest(rankUrl);
     }
 
-    default Request buildRequest(String requestUrl, String html, String tag, Map<String, Object> map) {
+    default Request buildRequest(String html, String tag, Map<String, Object> data, Map<String, Object> map) {
         return null;
     }
 

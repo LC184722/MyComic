@@ -25,6 +25,7 @@ public abstract class CommonCallback implements Callback {
     private Source source;
     private String tag;
     private Map<String, Object> map = new HashMap<>();
+    private Map<String, Object> data = new HashMap<>();
 
     public CommonCallback(Request request, Source source, String tag) {
         this.request = request;
@@ -41,13 +42,15 @@ public abstract class CommonCallback implements Callback {
     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
         String html = null;
         Request req = null;
+        initData(data);
         if (source != null) {
             html = getHtml(response, source.getCharsetName(tag));
-            req = source.buildRequest(request.url().toString(), html, tag, map);
+            req = source.buildRequest(html, tag, data, map);
         }
-        if (req != null && !request.toString().equals(req.toString())) {
+//        if (req != null && !request.toString().equals(req.toString())) {
+        if (req != null) {
             request = req;
-            NetUtil.startLoad(req, this);
+            NetUtil.startLoad(this);
         } else {
             onResponse(html, map);
         }
@@ -65,6 +68,14 @@ public abstract class CommonCallback implements Callback {
             html = "";
         }
         return html;
+    }
+
+    protected void initData(Map<String, Object> data) {
+        data.put("url", request.url().toString());
+    }
+
+    public Request getRequest() {
+        return request;
     }
 
     public abstract void onFailure(String errorMsg);

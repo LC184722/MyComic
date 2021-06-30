@@ -48,7 +48,7 @@ public class SearchPresenter extends BasePresenter<SearchView> {
         for (Object o : sourceList) {
             Source<EntityInfo> source = (Source<EntityInfo>) o;
             Request request = source.getSearchRequest(searchString);
-            NetUtil.startLoad(request, new CommonCallback(request, source, Source.SEARCH) {
+            NetUtil.startLoad(new CommonCallback(request, source, Source.SEARCH) {
                 @Override
                 public void onFailure(String errorMsg) {
                     SearchView view = getView();

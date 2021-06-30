@@ -31,7 +31,13 @@ public class ReaderPresenter extends BasePresenter<ReaderView> {
         String url = chapterInfoList.get(position).getChapterUrl();
         Source source = EntityHelper.commonSource(entity);
         Request request = source.getContentRequest(url);
-        NetUtil.startLoad(request, new CommonCallback(request, source, Source.CONTENT) {
+        NetUtil.startLoad(new CommonCallback(request, source, Source.CONTENT) {
+            @Override
+            protected void initData(Map<String, Object> data) {
+                super.initData(data);
+                data.put("chapterId", chapterId);
+            }
+
             @Override
             public void onFailure(String errorMsg) {
                 ReaderView view = getView();

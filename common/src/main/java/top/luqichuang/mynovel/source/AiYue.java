@@ -42,10 +42,11 @@ public class AiYue extends BaseNovelSource {
     }
 
     @Override
-    public Request buildRequest(String requestUrl, String html, String tag, Map<String, Object> map) {
-        if (DETAIL.equals(tag)) {
+    public Request buildRequest(String html, String tag, Map<String, Object> data, Map<String, Object> map) {
+        if (DETAIL.equals(tag) && map.isEmpty()) {
             JsoupNode node = new JsoupNode(html);
             String url = node.href("a.all-catalog");
+            map.put("url", url);
             return NetUtil.getRequest(url);
         }
         return null;

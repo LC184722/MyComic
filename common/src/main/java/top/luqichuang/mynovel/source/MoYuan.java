@@ -38,7 +38,7 @@ public class MoYuan extends BaseNovelSource {
     }
 
     @Override
-    public Request buildRequest(String requestUrl, String html, String tag, Map<String, Object> map) {
+    public Request buildRequest(String html, String tag, Map<String, Object> data, Map<String, Object> map) {
         if (DETAIL.equals(tag) && map.isEmpty()) {
             JsoupNode node = new JsoupNode(html);
             String title = node.ownText("div.l2.r h1");
@@ -54,7 +54,7 @@ public class MoYuan extends BaseNovelSource {
             String detailUrl = node.href("div.zjlistc a");
             return NetUtil.getRequest(detailUrl);
         }
-        return super.buildRequest(requestUrl, html, tag, map);
+        return super.buildRequest(html, tag, data, map);
     }
 
     @Override

@@ -1,6 +1,8 @@
 package top.luqichuang.myvideo.source;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
 import java.util.List;
 import java.util.Map;
@@ -43,6 +45,30 @@ public class BiliBili extends BaseVideoSource {
     }
 
     @Override
+    public Request buildRequest(String html, String tag, Map<String, Object> data, Map<String, Object> map) {
+        if (CONTENT.equals(tag) && map.isEmpty()) {
+            String json = StringUtil.match("__INITIAL_STATE__=(.*?);", html);
+            JsonNode node = new JsonNode(json);
+            JSONArray array = node.jsonArray("epList");
+            Integer chapterId = (Integer) data.get("chapterId");
+            if (chapterId == null) {
+                chapterId = 0;
+            }
+            if (array != null && !array.isEmpty()) {
+                node.init((JSONObject) array.get(chapterId));
+                String api = "https://api.bilibili.com/x/player/playurl?otype=json&fnver=0&fnval=2&player=1&qn=64&bvid=%s&cid=%s";
+                String bvid = node.string("bvid");
+                String cid = node.string("cid");
+                String referer = "https://www.bilibili.com/bangumi/play/ep" + node.string("id");
+                String url = String.format(api, bvid, cid);
+                map.put("referer", referer);
+                return NetUtil.getRequest(url);
+            }
+        }
+        return null;
+    }
+
+    @Override
     public List<VideoInfo> getInfoList(String html) {
         JsoupStarter<VideoInfo> starter = new JsoupStarter<VideoInfo>() {
             @Override
@@ -76,6 +102,11 @@ public class BiliBili extends BaseVideoSource {
 
         JsonStarter<ChapterInfo> jsonStarter = new JsonStarter<ChapterInfo>() {
             @Override
+            protected boolean isDESC() {
+                return false;
+            }
+
+            @Override
             protected ChapterInfo dealDataList(JsonNode node, int dataId) {
                 String title = node.string("titleFormat");
                 String chapterUrl = String.format("https://www.bilibili.com/bangumi/play/ep%s", node.string("id"));
@@ -88,9 +119,18 @@ public class BiliBili extends BaseVideoSource {
 
     @Override
     public List<Content> getContentList(String html, int chapterId, Map<String, Object> map) {
+        JsonNode node = new JsonNode(html);
+        node.init(node.string("data"));
+        JSONArray array = node.jsonArray("durl");
         String url = null;
+        if (array != null && !array.isEmpty()) {
+            node.init((JSONObject) array.get(0));
+            url = node.string("url");
+        }
         Content content = new Content(chapterId);
         content.setUrl(url);
+        String[] headers = {"Referer:" + map.get("referer")};
+        content.getMap().put("headers", headers);
         return SourceHelper.getContentList(content);
     }
 

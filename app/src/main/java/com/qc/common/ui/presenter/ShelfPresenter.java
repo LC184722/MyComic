@@ -44,7 +44,7 @@ public class ShelfPresenter extends BasePresenter<ShelfView> {
     private void checkUpdate(Entity entity, EntityInfo info) {
         Source source = EntityHelper.commonSource(entity);
         Request request = source.getDetailRequest(info.getDetailUrl());
-        NetUtil.startLoad(request, new CommonCallback(request, source, null) {
+        NetUtil.startLoad(new CommonCallback(request, source, null) {
             @Override
             public void onFailure(String errorMsg) {
                 ShelfView view = getView();

@@ -71,12 +71,14 @@ public class VideoPlayerActivity extends BaseActivity implements ReaderView {
                 requestServer();
             });
         } else {
-            String url = contentList.get(0).getUrl();
+            Content content = contentList.get(0);
+            String url = content.getUrl();
             System.out.println("url = " + url);
             player.setUp(url, entity.getTitle() + "-" + entity.getCurChapterTitle());
             player.setMediaInterface(JzMediaAliyun.class);
 //            player.setMediaInterface(JzMediaDefault.class);
-            Jzvd.setVideoImageDisplayType(Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_ADAPTER);
+//            player.initContent(content);
+            player.setContent(content);
             hideLoadingDialog();
         }
     }

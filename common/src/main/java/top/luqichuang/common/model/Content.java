@@ -1,6 +1,8 @@
 package top.luqichuang.common.model;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author LuQiChuang
@@ -21,6 +23,8 @@ public class Content implements Serializable {
     private String url;
 
     private String content;
+
+    private Map<String, Object> map = new HashMap<>();
 
     private int status;
 
@@ -104,6 +108,14 @@ public class Content implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Map<String, Object> getMap() {
+        return map;
+    }
+
+    public void setMap(Map<String, Object> map) {
+        this.map = map;
     }
 
     public int getStatus() {

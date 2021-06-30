@@ -73,8 +73,8 @@ public class BiliBili extends BaseComicSource {
     }
 
     @Override
-    public Request buildRequest(String requestUrl, String html, String tag, Map<String, Object> map) {
-        if (CONTENT.equals(tag)) {
+    public Request buildRequest(String html, String tag, Map<String, Object> data, Map<String, Object> map) {
+        if (CONTENT.equals(tag) && map.isEmpty()) {
             JsonStarter<Object> starter = new JsonStarter<Object>() {
                 @Override
                 public Object dealDataList(JsonNode node, int dataId) {
@@ -84,9 +84,10 @@ public class BiliBili extends BaseComicSource {
             List<Object> list = starter.startDataList(html, "data", "images");
             com.alibaba.fastjson.JSONArray array = new JSONArray(list);
             String url = "https://manga.bilibili.com/twirp/comic.v1.Comic/ImageToken?device=pc&platform=web";
+            map.put("url", url);
             return NetUtil.postRequest(url, "urls", array.toString());
         }
-        return super.buildRequest(requestUrl, html, tag, map);
+        return super.buildRequest(html, tag, data, map);
     }
 
     @Override

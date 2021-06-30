@@ -6,9 +6,11 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.qc.common.constant.TmpData;
+import com.qc.common.self.media.JzMediaAliyun;
 import com.qc.mycomic.R;
 
 import cn.jzvd.JzvdStd;
+import top.luqichuang.common.model.Content;
 
 /**
  * @author LuQiChuang
@@ -20,6 +22,7 @@ public class JzPlayer extends JzvdStd {
 
     private TextView tvSpeed;
     private View batteryLevel;
+    private Content content;
 
     public JzPlayer(Context context) {
         super(context);
@@ -27,6 +30,18 @@ public class JzPlayer extends JzvdStd {
 
     public JzPlayer(Context context, AttributeSet attrs) {
         super(context, attrs);
+    }
+
+    public void setContent(Content content) {
+        this.content = content;
+    }
+
+    @Override
+    public void startVideo() {
+        super.startVideo();
+        if (mediaInterface instanceof JzMediaAliyun) {
+            ((JzMediaAliyun) mediaInterface).setContent(content);
+        }
     }
 
     @Override

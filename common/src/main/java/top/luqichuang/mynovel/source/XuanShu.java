@@ -42,10 +42,11 @@ public class XuanShu extends BaseNovelSource {
     }
 
     @Override
-    public Request buildRequest(String requestUrl, String html, String tag, Map<String, Object> map) {
-        if (DETAIL.equals(tag)) {
+    public Request buildRequest(String html, String tag, Map<String, Object> data, Map<String, Object> map) {
+        if (DETAIL.equals(tag) && map.isEmpty()) {
             JsoupNode node = new JsoupNode(html);
             String url = node.href("li.downAddress_li:eq(1) a");
+            map.put("url", url);
             return NetUtil.getRequest(url);
         }
         return null;

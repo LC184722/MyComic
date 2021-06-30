@@ -47,23 +47,22 @@ public class ManHuaTai extends BaseComicSource {
     }
 
     @Override
-    public Request buildRequest(String requestUrl, String html, String tag, Map<String, Object> map) {
-        if (CONTENT.equals(tag)) {
+    public Request buildRequest(String html, String tag, Map<String, Object> data, Map<String, Object> map) {
+        if (CONTENT.equals(tag) && map.isEmpty()) {
             String url = "https://m.manhuatai.com/api/getchapterinfov2";
-            if (!requestUrl.contains(url)) {
-                String info = StringUtil.match("window.comicInfo=(\\{.*?\\})", html);
-                Map<String, String> reqMap = new HashMap<>();
-                reqMap.put("product_id", "2");
-                reqMap.put("productname", "mht");
-                reqMap.put("platformname", "wap");
-                reqMap.put("comic_id", StringUtil.match("comic_id:(.*?),", info));
-                reqMap.put("chapter_newid", StringUtil.match(",chapter_newid:\"(.*?)\",", info));
-                reqMap.put("isWebp", "1");
-                reqMap.put("quality", "high");
-                return NetUtil.getRequest(url, reqMap);
-            }
+            String info = StringUtil.match("window.comicInfo=(\\{.*?\\})", html);
+            Map<String, String> reqMap = new HashMap<>();
+            reqMap.put("product_id", "2");
+            reqMap.put("productname", "mht");
+            reqMap.put("platformname", "wap");
+            reqMap.put("comic_id", StringUtil.match("comic_id:(.*?),", info));
+            reqMap.put("chapter_newid", StringUtil.match(",chapter_newid:\"(.*?)\",", info));
+            reqMap.put("isWebp", "1");
+            reqMap.put("quality", "high");
+            map.put("url", url);
+            return NetUtil.getRequest(url, reqMap);
         }
-        return super.buildRequest(requestUrl, html, tag, map);
+        return super.buildRequest(html, tag, data, map);
     }
 
     @Override

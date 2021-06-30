@@ -44,7 +44,7 @@ public class MiLiMiLi extends BaseVideoSource {
     }
 
     @Override
-    public Request buildRequest(String requestUrl, String html, String tag, Map<String, Object> map) {
+    public Request buildRequest(String html, String tag, Map<String, Object> data, Map<String, Object> map) {
         if (CONTENT.equals(tag) && map.isEmpty()) {
             JsoupNode node = new JsoupNode(html);
             String url = node.href("link");
