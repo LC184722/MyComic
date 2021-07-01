@@ -88,10 +88,14 @@ public class VideoPlayerActivity extends BaseActivity implements ReaderView {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {//横屏
-            player.setScreenFullscreen();
-        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {//竖屏
-            player.setScreenNormal();
+        try {
+            if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {//横屏
+                player.setScreenFullscreen();
+            } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {//竖屏
+                player.setScreenNormal();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

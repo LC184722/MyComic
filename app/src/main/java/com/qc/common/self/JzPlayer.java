@@ -79,6 +79,7 @@ public class JzPlayer extends JzvdStd {
         batteryLevel = findViewById(R.id.battery_level);
         batteryLevel.setVisibility(GONE);
         tvSpeed.setOnClickListener(this);
+        PROGRESS_DRAG_RATE = 4f;
     }
 
     @Override
