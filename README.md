@@ -4,6 +4,10 @@
 
 MyComic安卓在线漫画、小说、番剧阅读器。
 
+[![](https://img.shields.io/badge/Gitee-MyComic-blue.svg)](https://gitee.com/luqichuang/MyComic)
+[![](https://img.shields.io/badge/GitHub-MyComic-blue.svg)](https://github.com/LC184722/MyComic)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/LC184722/MyComic?color=green)](https://github.com/LC184722/MyComic/releases)
+
 #### 软件架构
 
 1.  [Tencent / QMUI_Android](https://github.com/Tencent/QMUI_Android "Tencent / QMUI_Android") : 腾讯UI框架。
@@ -21,7 +25,7 @@ MyComic安卓在线漫画、小说、番剧阅读器。
 2.  详情页可以切换漫画源、阅读最新章节、继续阅读等。
 3.  阅读页面长按加载失败图片可以重新加载，长按已显示图片可以单独缩放。
 4.  个人中心可以检查更新，获得最新软件。
-5.  前往[下载最新APK](https://gitee.com/luqichuang/MyComic/releases "下载最新APK")。
+5.  前往下载[最新APK](https://gitee.com/luqichuang/MyComic/releases "Gitee地址")：[Gitee](https://gitee.com/luqichuang/MyComic/releases "Gitee地址")、[GitHub](https://github.com/LC184722/MyComic/releases "GitHub地址")。
 
 #### 数据源
 
