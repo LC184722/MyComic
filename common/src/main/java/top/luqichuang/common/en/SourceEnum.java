@@ -23,10 +23,8 @@ import top.luqichuang.mycomic.source.TengXun;
  * @ver 1.0
  */
 public enum SourceEnum {
-
-    EMPTY(-1, "空"),
     MI_TUI(1, "米推漫画"),
-    MAN_HUA_FEN(2, "漫画粉"),
+//    MAN_HUA_FEN(2, "漫画粉"),
     PU_FEI(3, "扑飞漫画"),
     TENG_XUN(4, "腾讯动漫"),
     BILI_BILI(5, "哔哩哔哩"),

@@ -15,7 +15,6 @@ import top.luqichuang.common.model.Content;
 import top.luqichuang.common.model.Entity;
 import top.luqichuang.common.model.EntityInfo;
 import top.luqichuang.mycomic.model.ComicInfo;
-import top.luqichuang.myvideo.model.VideoInfo;
 
 /**
  * @author LuQiChuang
@@ -41,33 +40,72 @@ public class SourceHelper {
         }
     }
 
-    public static void initChapterInfoMap(VideoInfo info, String html, String cssQuery) {
+    public static void initChapterInfoMap(EntityInfo info, String html, String titleCss, String tdCss, String chapterCss, String cdCss) {
+        initChapterInfoMap(info, html, titleCss, tdCss, chapterCss, cdCss, true);
+    }
+
+    public static void initChapterInfoMap(EntityInfo info, String html, String titleCss, String tdCss, String chapterCss, String cdCss, boolean isDesc) {
+        JsoupNode node = new JsoupNode(html);
+        Elements titleElements = node.getElements(titleCss);
+        Elements chapterElements = node.getElements(chapterCss);
+        List<String> titleList = new ArrayList<>();
+        List<Integer> sizeList = new ArrayList<>();
+        for (Element element : titleElements) {
+            node.init(element);
+            String title = node.ownText(tdCss);
+            if (title != null) {
+                titleList.add(title);
+            }
+        }
+        for (Element element : chapterElements) {
+            node.init(element);
+            int size = node.getElements(cdCss).size();
+            sizeList.add(size);
+        }
+        Map<String, Integer> map = new LinkedHashMap<>();
+        for (int i = 0; i < titleList.size(); i++) {
+            map.put(titleList.get(i), sizeList.get(i));
+        }
+        initChapterInfoMap(info, map, isDesc);
+    }
+
+    public static void initChapterInfoMap(EntityInfo info, String html, String cssQuery) {
         initChapterInfoMap(info, html, cssQuery, true);
     }
 
-    public static void initChapterInfoMap(VideoInfo info, String html, String cssQuery, boolean isDesc) {
-        info.getChapterInfoMap().clear();
+    public static void initChapterInfoMap(EntityInfo info, String html, String cssQuery, boolean isDesc) {
+        Map<String, Integer> map = new LinkedHashMap<>();
         JsoupNode node = new JsoupNode(html);
         Elements elements = node.getElements(cssQuery);
-        List<ChapterInfo> list;
         String key = "正文";
+        for (Element element : elements) {
+            if (!"".equals(element.ownText())) {
+                key = element.ownText();
+            } else {
+                map.put(key, element.childNodeSize());
+            }
+        }
+        initChapterInfoMap(info, map, isDesc);
+    }
+
+    private static void initChapterInfoMap(EntityInfo info, Map<String, Integer> map, boolean isDesc) {
+        info.getChapterInfoMap().clear();
+        List<ChapterInfo> list;
         int i = 0;
         if (!isDesc) {
             i = info.getChapterInfoList().size();
         }
-        for (Element element : elements) {
-            if (!element.ownText().equals("")) {
-                key = element.ownText();
+        for (Map.Entry<String, Integer> entry : map.entrySet()) {
+            String key = entry.getKey();
+            Integer value = entry.getValue();
+            if (isDesc) {
+                list = info.getChapterInfoList().subList(i, i + value);
+                i = i + value;
             } else {
-                if (isDesc) {
-                    list = info.getChapterInfoList().subList(i, i + element.childNodeSize());
-                    i = i + element.childNodeSize();
-                } else {
-                    list = info.getChapterInfoList().subList(i - element.childNodeSize(), i);
-                    i = i - element.childNodeSize();
-                }
-                info.getChapterInfoMap().put(key, new ArrayList<>(list));
+                list = info.getChapterInfoList().subList(i - value, i);
+                i = i - value;
             }
+            info.getChapterInfoMap().put(key, new ArrayList<>(list));
         }
     }
 

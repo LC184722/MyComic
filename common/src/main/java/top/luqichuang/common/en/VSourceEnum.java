@@ -5,6 +5,7 @@ import java.util.Map;
 
 import top.luqichuang.common.model.Source;
 import top.luqichuang.myvideo.model.VideoInfo;
+import top.luqichuang.myvideo.source.AiYun;
 import top.luqichuang.myvideo.source.BiliBili;
 import top.luqichuang.myvideo.source.FengChe;
 import top.luqichuang.myvideo.source.FengChe2;
@@ -25,6 +26,7 @@ public enum VSourceEnum {
     YING_HUA_2(4, "樱花动漫[2]"),
     BILI_BILI(5, "哔哩哔哩"),
     FENG_CHE_2(6, "风车动漫[2]"),
+    AI_YUN(7, "爱云影视"),
     ;
 
     private static final Map<Integer, Source<VideoInfo>> MAP = new LinkedHashMap<>();
@@ -36,6 +38,7 @@ public enum VSourceEnum {
         MAP.put(YING_HUA_2.ID, new YingHua2());
         MAP.put(BILI_BILI.ID, new BiliBili());
         MAP.put(FENG_CHE_2.ID, new FengChe2());
+        MAP.put(AI_YUN.ID, new AiYun());
     }
 
     public static Map<Integer, Source<VideoInfo>> getMAP() {
