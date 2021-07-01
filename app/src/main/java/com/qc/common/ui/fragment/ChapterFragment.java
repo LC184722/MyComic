@@ -93,7 +93,9 @@ public class ChapterFragment extends BaseTabFragment implements ChapterView {
         super.onResume();
         if (entity != null && !fragments.isEmpty()) {
             startInit();
-            ((ChapterItemFragment) fragments.get(INDEX)).updateData();
+            for (BaseFragment fragment : fragments) {
+                ((ChapterItemFragment) fragment).updateData();
+            }
         }
     }
 

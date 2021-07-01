@@ -1,5 +1,6 @@
 package com.qc.common.ui.activity;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 
@@ -79,14 +80,29 @@ public class VideoPlayerActivity extends BaseActivity implements ReaderView {
 //            player.setMediaInterface(JzMediaDefault.class);
 //            player.initContent(content);
             player.setContent(content);
+            onConfigurationChanged(getResources().getConfiguration());
             hideLoadingDialog();
         }
     }
 
     @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {//横屏
+            player.setScreenFullscreen();
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {//竖屏
+            player.setScreenNormal();
+        }
+    }
+
+    @Override
     protected void doOnBackPressed() {
-        if (Jzvd.backPress()) {
-            return;
+        try {
+            if (Jzvd.backPress()) {
+                return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         super.doOnBackPressed();
     }

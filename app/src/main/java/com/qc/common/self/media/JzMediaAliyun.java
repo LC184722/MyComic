@@ -18,7 +18,6 @@ import com.aliyun.player.nativeclass.CacheConfig;
 import com.aliyun.player.nativeclass.PlayerConfig;
 import com.aliyun.player.source.UrlSource;
 
-import java.util.Arrays;
 import java.util.Map;
 
 import cn.jzvd.JZMediaInterface;
@@ -93,7 +92,6 @@ public class JzMediaAliyun extends JZMediaInterface implements IPlayer.OnPrepare
 
     @Override
     public void prepare() {
-        System.out.println("JzMediaAliyun.prepare");
         release();
         mMediaHandler = new Handler();
         handler = new Handler();
@@ -113,7 +111,6 @@ public class JzMediaAliyun extends JZMediaInterface implements IPlayer.OnPrepare
                 Map<String, Object> map = content.getMap();
                 if (map.get("headers") != null) {
                     String[] headers = (String[]) map.get("headers");
-                    System.out.println("headers = " + Arrays.toString(headers));
                     config.setCustomHeaders(headers);
 //                    config.mUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36";
                     config.mUserAgent = NetUtil.USER_AGENT_WEB;

@@ -45,6 +45,32 @@ public class JzPlayer extends JzvdStd {
     }
 
     @Override
+    public void onPrepared() {
+        super.onPrepared();
+        setSpeed();
+        if (CURRENT_JZVD == null) {
+            setCurrentJzvd(this);
+        }
+    }
+
+    @Override
+    public void dissmissControlView() {
+        if (state != STATE_NORMAL
+                && state != STATE_ERROR
+                && state != STATE_AUTO_COMPLETE) {
+            post(() -> {
+                bottomContainer.setVisibility(View.INVISIBLE);
+                topContainer.setVisibility(View.INVISIBLE);
+                startButton.setVisibility(View.INVISIBLE);
+
+                if (screen != SCREEN_TINY) {
+                    bottomProgressBar.setVisibility(View.VISIBLE);
+                }
+            });
+        }
+    }
+
+    @Override
     public void init(Context context) {
         super.init(context);
         View retryLayout = findViewById(R.id.retry_layout);
@@ -59,14 +85,12 @@ public class JzPlayer extends JzvdStd {
     public void setScreenNormal() {
         super.setScreenNormal();
         batteryLevel.setVisibility(GONE);
-        setSpeed();
     }
 
     @Override
     public void setScreenFullscreen() {
         super.setScreenFullscreen();
         batteryLevel.setVisibility(VISIBLE);
-        setSpeed();
     }
 
     @Override
