@@ -47,6 +47,12 @@ public class AiYue extends BaseNovelSource {
             JsoupNode node = new JsoupNode(html);
             String url = node.href("a.all-catalog");
             map.put("url", url);
+            String imgUrl = node.src("div.book-img-w img");
+            String intro = node.ownText("div.book-dec.Jbook-dec p");
+            String updateTime = node.ownText("div.time");
+            map.put("imgUrl", imgUrl);
+            map.put("intro", intro);
+            map.put("updateTime", updateTime);
             return NetUtil.getRequest(url);
         }
         return null;
@@ -83,11 +89,11 @@ public class AiYue extends BaseNovelSource {
             @Override
             protected void dealInfo(JsoupNode node) {
                 String title = node.ownText("div.book-meta h1");
-                String imgUrl = null;
+                String imgUrl = (String) map.get("imgUrl");
                 String author = node.ownText("div.book-meta span");
-                String intro = null;
+                String intro = (String) map.get("intro");
                 String updateStatus = null;
-                String updateTime = null;
+                String updateTime = (String) map.get("updateTime");
                 info.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
             }
 

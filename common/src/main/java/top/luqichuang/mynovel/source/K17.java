@@ -42,6 +42,25 @@ public class K17 extends BaseNovelSource {
     }
 
     @Override
+    public Request buildRequest(String html, String tag, Map<String, Object> data, Map<String, Object> map) {
+        if (DETAIL.equals(tag) && map.isEmpty()) {
+            String url = (String) data.get("url");
+            try {
+                url = url.replace("book", "list");
+            } catch (Exception ignored) {
+            }
+            JsoupNode node = new JsoupNode(html);
+            String imgUrl = node.src("img.book");
+            String intro = node.ownText("p.intro a");
+            map.put("imgUrl", imgUrl);
+            map.put("intro", intro);
+            map.put("url", url);
+            return NetUtil.getRequest(url);
+        }
+        return null;
+    }
+
+    @Override
     public List<NovelInfo> getInfoList(String html) {
         JsoupStarter<NovelInfo> starter = new JsoupStarter<NovelInfo>() {
             @Override
@@ -54,10 +73,6 @@ public class K17 extends BaseNovelSource {
                 String updateTime = node.ownText("ul code", 1);
                 String imgUrl = node.src("img");
                 String detailUrl = "https:" + node.href("div.textmiddle a");
-                try {
-                    detailUrl = detailUrl.replace("book", "list");
-                } catch (Exception ignored) {
-                }
                 return new NovelInfo(getSourceId(), title, author, detailUrl, imgUrl, updateTime);
             }
         };
@@ -75,9 +90,9 @@ public class K17 extends BaseNovelSource {
             @Override
             protected void dealInfo(JsoupNode node) {
                 String title = node.ownText("h1.Title");
-                String imgUrl = null;
+                String imgUrl = (String) map.get("imgUrl");
                 String author = node.ownText("div.Author a");
-                String intro = null;
+                String intro = (String) map.get("intro");
                 String updateStatus = null;
                 String updateTime = null;
                 info.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
@@ -92,6 +107,7 @@ public class K17 extends BaseNovelSource {
         };
         starter.startInfo(html);
         SourceHelper.initChapterInfoList(info, starter.startElements(html, "dl.Volume dd a"));
+        SourceHelper.initChapterInfoMap(info, html, "dl.Volume dt", "span.tit", "dl.Volume dd", "a", false);
     }
 
     @Override

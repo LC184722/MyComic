@@ -47,6 +47,10 @@ public class XuanShu extends BaseNovelSource {
             JsoupNode node = new JsoupNode(html);
             String url = node.href("li.downAddress_li:eq(1) a");
             map.put("url", url);
+            String imgUrl = node.src("dd.downInfoRowL img");
+            String intro = node.ownText("div#mainSoftIntro p");
+            map.put("imgUrl", imgUrl);
+            map.put("intro", intro);
             return NetUtil.getRequest(url);
         }
         return null;
@@ -85,9 +89,9 @@ public class XuanShu extends BaseNovelSource {
             @Override
             protected void dealInfo(JsoupNode node) {
                 String title = node.ownText("div.view_t");
-                String imgUrl = null;
+                String imgUrl = (String) map.get("imgUrl");
                 String author = node.ownText("div.view_info");
-                String intro = null;
+                String intro = (String) map.get("intro");
                 String updateStatus = null;
                 String updateTime = node.ownText("div.view_info");
                 try {

@@ -68,7 +68,7 @@ public class AiYun extends BaseVideoSource {
                 String author = node.ownText("div.fed-part-layout li.fed-col-md6", 1, "a");
                 String intro = node.ownText("p.fed-padding.fed-part-both.fed-text-muted");
                 String updateStatus = node.ownText("div.fed-part-layout li.fed-col-md6", 0, "a");
-                String updateTime = node.ownText("div.fed-part-layout li.fed-col-md6", 2, "a");
+                String updateTime = node.ownText("div.fed-part-layout li.fed-col-md6", 4, "a");
                 info.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
             }
 

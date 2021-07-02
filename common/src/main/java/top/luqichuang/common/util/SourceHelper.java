@@ -82,9 +82,11 @@ public class SourceHelper {
             if (!"".equals(element.ownText())) {
                 key = element.ownText();
             } else {
+                System.out.println("element = " + element);
                 map.put(key, element.childNodeSize());
             }
         }
+        System.out.println("map = " + map);
         initChapterInfoMap(info, map, isDesc);
     }
 
