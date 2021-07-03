@@ -36,8 +36,6 @@ public class ChapterItemFragment extends BaseDataFragment<ChapterInfo> {
     private List<ChapterInfo> list;
     private Entity entity;
 
-    private ChapterItemAdapter itemAdapter;
-
     public static ChapterItemFragment getInstance(Entity entity) {
         ChapterItemFragment fragment = new ChapterItemFragment();
         Bundle bundle = new Bundle();
@@ -50,6 +48,7 @@ public class ChapterItemFragment extends BaseDataFragment<ChapterInfo> {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.entity = (Entity) getArguments().get("entity");
+        adapter = new ChapterItemAdapter(entity);
     }
 
     @Override
@@ -71,10 +70,7 @@ public class ChapterItemFragment extends BaseDataFragment<ChapterInfo> {
 
     @Override
     protected BaseQuickAdapter getAdapter() {
-        if (itemAdapter == null) {
-            itemAdapter = new ChapterItemAdapter(entity);
-        }
-        return itemAdapter;
+        return adapter;
     }
 
     @Override

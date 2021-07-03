@@ -1,5 +1,7 @@
 package com.qc.common.ui.fragment;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -64,6 +66,7 @@ public class ChapterFragment extends BaseTabFragment implements ChapterView {
     private String[] mMenus = new String[]{
             "更新" + TmpData.content + "源",
             "查看信息",
+            "访问源网站",
     };
     private ImageButton ibMenu;
     private ImageButton ibSwap;
@@ -142,6 +145,11 @@ public class ChapterFragment extends BaseTabFragment implements ChapterView {
                         presenter.updateSource(entity);
                     } else if (position == 1) {
                         QMUIDialogUtil.showSimpleDialog(getContext(), "查看信息", EntityHelper.toStringView(entity)).show();
+                    } else if (position == 2) {
+                        String url = entity.getInfo().getDetailUrl();
+                        Uri uri = Uri.parse(url);
+                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        startActivity(intent);
                     }
                     mSettingPopup.dismiss();
                 });
