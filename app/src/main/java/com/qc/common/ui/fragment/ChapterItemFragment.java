@@ -112,7 +112,9 @@ public class ChapterItemFragment extends BaseDataFragment<ChapterInfo> {
     }
 
     public void updateData() {
-        getAdapter().notifyDataSetChanged();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
     }
 
     public void startRead() {

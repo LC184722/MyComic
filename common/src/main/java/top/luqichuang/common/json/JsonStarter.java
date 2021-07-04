@@ -2,10 +2,11 @@ package top.luqichuang.common.json;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import top.luqichuang.common.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import top.luqichuang.common.util.StringUtil;
 
 /**
  * @author LuQiChuang
@@ -69,9 +70,9 @@ public abstract class JsonStarter<T> {
                 if (t != null) {
                     list.add(t);
                 }
-                if (!isDESC()) {
-                    StringUtil.swapList(list);
-                }
+            }
+            if (!isDESC()) {
+                StringUtil.swapList(list);
             }
         }
         return list;
