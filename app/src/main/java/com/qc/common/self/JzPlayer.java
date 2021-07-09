@@ -83,6 +83,11 @@ public class JzPlayer extends JzvdStd {
     }
 
     @Override
+    public void changeStartButtonSize(int size) {
+//        super.changeStartButtonSize(size);
+    }
+
+    @Override
     public void setScreenNormal() {
         super.setScreenNormal();
         batteryLevel.setVisibility(GONE);
