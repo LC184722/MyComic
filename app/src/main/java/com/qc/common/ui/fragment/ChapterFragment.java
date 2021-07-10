@@ -59,7 +59,6 @@ public class ChapterFragment extends BaseTabFragment implements ChapterView {
     private boolean isChangeOrder = false;
     private boolean isChangeSource = false;
     private ChapterPresenter presenter = new ChapterPresenter();
-    private int toStatus = Constant.NORMAL;
     private int size;
 
     private QMUIPopup mSettingPopup;
@@ -295,6 +294,7 @@ public class ChapterFragment extends BaseTabFragment implements ChapterView {
     @Override
     protected void requestServer() {
         showLoadingPage();
+        mViewPager.setVisibility(View.GONE);
         Map<String, List<ChapterInfo>> map = entity.getInfo().getChapterInfoMap();
         if (map == null || map.size() == 0) {
             presenter.load(entity);
@@ -318,6 +318,7 @@ public class ChapterFragment extends BaseTabFragment implements ChapterView {
             ChapterItemFragment fragment = (ChapterItemFragment) fragments.get(i++);
             fragment.setList(list);
         }
+        mViewPager.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -337,8 +338,8 @@ public class ChapterFragment extends BaseTabFragment implements ChapterView {
             }
             setValue();
             startInit();
-            if (toStatus == Constant.RANK_TO_CHAPTER) {
-                toStatus = Constant.NORMAL;
+            if (TmpData.toStatus == Constant.RANK_TO_CHAPTER) {
+                TmpData.toStatus = Constant.NORMAL;
                 showProgressDialog("正在更新" + TmpData.content + "源");
                 presenter.updateSource(entity);
             }
