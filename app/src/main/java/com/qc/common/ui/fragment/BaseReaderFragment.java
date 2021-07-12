@@ -242,6 +242,7 @@ public abstract class BaseReaderFragment extends BaseDataFragment<Content> imple
 
         llLeft.setOnClickListener(v -> {
             if (EntityHelper.checkChapterId(entityInfo, EntityHelper.getPrevChapterId(entityInfo))) {
+                showLoadingPage();
                 hideView(bottomView);
                 onRefresh();
             } else {
@@ -251,6 +252,7 @@ public abstract class BaseReaderFragment extends BaseDataFragment<Content> imple
 
         llRight.setOnClickListener(v -> {
             if (EntityHelper.checkChapterId(entityInfo, EntityHelper.getNextChapterId(entityInfo))) {
+                showLoadingPage();
                 isJump = true;
                 hideView(bottomView);
                 super.onRefresh();
