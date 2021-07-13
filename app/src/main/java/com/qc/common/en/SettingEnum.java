@@ -2,6 +2,8 @@ package com.qc.common.en;
 
 import com.qc.common.constant.AppConstant;
 
+import java.util.LinkedHashMap;
+
 import top.luqichuang.common.en.NSourceEnum;
 import top.luqichuang.common.en.SourceEnum;
 
@@ -20,6 +22,7 @@ public enum SettingEnum {
     IS_FULL_SCREEN("isFullScreen", true),
     NOVEL_FONT_SIZE("novelFontSize", 20),
     NOVEL_AUTO_SPEED("novelAutoSpeed", 4),
+    VIDEO_PROGRESS("videoProgress", new LinkedHashMap<>()),
     ;
 
     public final String KEY;

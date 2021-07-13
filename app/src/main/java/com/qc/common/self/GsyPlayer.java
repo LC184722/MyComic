@@ -3,11 +3,18 @@ package com.qc.common.self;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.qc.common.constant.TmpData;
+import com.qc.common.en.SettingEnum;
+import com.qc.common.util.SettingUtil;
 import com.qc.mycomic.R;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
+
+import java.util.Map;
+
+import top.luqichuang.common.util.MapUtil;
 
 /**
  * @author LuQiChuang
@@ -18,6 +25,8 @@ import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 public class GsyPlayer extends StandardGSYVideoPlayer {
 
     protected TextView tvSpeed;
+
+    private final Map<String, String> PROGRESS_MAP = (Map<String, String>) SettingUtil.getSettingKey(SettingEnum.VIDEO_PROGRESS);
 
     public GsyPlayer(Context context) {
         super(context);
@@ -41,7 +50,30 @@ public class GsyPlayer extends StandardGSYVideoPlayer {
         super.init(context);
         tvSpeed = findViewById(R.id.tvSpeed);
         tvSpeed.setOnClickListener(this);
+    }
+
+    @Override
+    public void onPrepared() {
+        super.onPrepared();
+        try {
+            int progress = Integer.parseInt(PROGRESS_MAP.get(mOriginUrl));
+            seekTo(progress);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         updateSpeed();
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        super.onProgressChanged(seekBar, progress, fromUser);
+        if (PROGRESS_MAP.size() > 30) {
+            Map.Entry<String, String> entry = MapUtil.getFirst(PROGRESS_MAP);
+            PROGRESS_MAP.remove(entry.getKey());
+        }
+        long curPosition = getGSYVideoManager().getCurrentPosition();
+        PROGRESS_MAP.put(mOriginUrl, String.valueOf(curPosition));
+        SettingUtil.putSetting(SettingEnum.VIDEO_PROGRESS, PROGRESS_MAP);
     }
 
     @Override

@@ -72,7 +72,6 @@ public class GsyVideoActivity extends BaseGsyVideoActivity<StandardGSYVideoPlaye
                     .setCacheWithPlay(true)
                     .setVideoTitle(entity.getTitle() + "-" + entity.getCurChapterTitle())
                     .setIsTouchWiget(true)
-                    //.setAutoFullWithSize(true)
                     .setRotateViewAuto(false)
                     .setLockLand(false)
                     .setShowFullAnimation(false)//打开动画
@@ -97,7 +96,7 @@ public class GsyVideoActivity extends BaseGsyVideoActivity<StandardGSYVideoPlaye
     }
 
     protected void requestServer() {
-        showLoadingPage();
+        showLoadingDialog("");
         if (entity == null) {
             entity = (Entity) getIntent().getSerializableExtra("entity");
         }
@@ -117,7 +116,10 @@ public class GsyVideoActivity extends BaseGsyVideoActivity<StandardGSYVideoPlaye
             String url = content.getUrl();
             System.out.println("url = " + url);
             initVideoBuilderMode();
-            showContentPage();
+            hideLoadingDialog();
+            if (url == null) {
+                ToastUtil.show("视频地址无效！");
+            }
         }
     }
 

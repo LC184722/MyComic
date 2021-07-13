@@ -213,6 +213,9 @@ public class ChapterFragment extends BaseTabFragment implements ChapterView {
         TextView tvRead = mRootView.findViewById(R.id.tvRead);
         tvRead.setOnClickListener(v -> {
             if (checkNotEmpty()) {
+                if (fragments.size() <= INDEX) {
+                    INDEX = 0;
+                }
                 ((ChapterItemFragment) fragments.get(INDEX)).startRead();
             } else {
                 showFailTips("暂无" + TmpData.content + "章节");
