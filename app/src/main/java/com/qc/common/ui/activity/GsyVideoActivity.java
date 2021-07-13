@@ -76,7 +76,7 @@ public class GsyVideoActivity extends BaseGsyVideoActivity<StandardGSYVideoPlaye
                     .setLockLand(false)
                     .setShowFullAnimation(false)//打开动画
                     .setNeedLockFull(true)
-                    .setSeekRatio(1);
+                    .setSeekRatio(3);
             if (content != null) {
                 builder.setUrl(content.getUrl());
                 builder.setMapHeadData(content.getHeaderMap());

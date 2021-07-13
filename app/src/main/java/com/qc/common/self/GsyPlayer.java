@@ -65,6 +65,19 @@ public class GsyPlayer extends StandardGSYVideoPlayer {
     }
 
     @Override
+    public void onVideoSizeChanged() {
+        super.onVideoSizeChanged();
+        updateSpeed();
+    }
+
+    @Override
+    public void onCompletion() {
+        super.onCompletion();
+        PROGRESS_MAP.remove(mOriginUrl);
+        SettingUtil.putSetting(SettingEnum.VIDEO_PROGRESS, PROGRESS_MAP);
+    }
+
+    @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         super.onProgressChanged(seekBar, progress, fromUser);
         if (PROGRESS_MAP.size() > 30) {
