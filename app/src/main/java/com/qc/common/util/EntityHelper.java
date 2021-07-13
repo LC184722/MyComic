@@ -56,7 +56,10 @@ public class EntityHelper {
     public static boolean changeInfo(Entity entity, String[] ss) {
         int id = Integer.parseInt(ss[0]);
         int sourceId = Integer.parseInt(ss[1]);
-        String author = ss[2];
+        String author = "";
+        if (ss.length > 2) {
+            author = ss[2];
+        }
         for (EntityInfo info : entity.getInfoList()) {
             if (info.getId() == id && info.getSourceId() == sourceId) {
                 if (info.getAuthor() == null || Objects.equals(info.getAuthor(), author)) {

@@ -64,6 +64,7 @@ dependencies {
     api 'cn.jzvd:jiaozivideoplayer:7.6.0'
     api 'com.aliyun.sdk.android:AliyunPlayer:4.5.0-full'
     api 'com.alivc.conan:AlivcConan:0.9.5'
+    api 'com.github.CarGuo.GSYVideoPlayer:gsyVideoPlayer:v8.1.5-jitpack'
     api 'androidx.appcompat:appcompat:1.2.0'
     api 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

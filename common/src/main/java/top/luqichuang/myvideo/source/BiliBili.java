@@ -156,8 +156,8 @@ public class BiliBili extends BaseVideoSource {
         }
         Content content = new Content(chapterId);
         content.setUrl(url);
-        String[] headers = {"Referer:" + map.get("referer")};
-        content.getMap().put("headers", headers);
+        content.getHeaderMap().put("Referer", (String) map.get("referer"));
+        content.getHeaderMap().put("User-Agent", NetUtil.USER_AGENT_WEB);
         return SourceHelper.getContentList(content);
     }
 

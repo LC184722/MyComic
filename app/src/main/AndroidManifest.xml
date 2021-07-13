@@ -31,6 +31,10 @@
             android:name="com.qc.common.ui.activity.VideoPlayerActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="sensor" />
+        <activity
+            android:name="com.qc.common.ui.activity.GsyVideoActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="sensor" />
     </application>
 
 </manifest>

@@ -11,8 +11,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.qc.common.constant.AppConstant;
 import com.qc.common.constant.Constant;
 import com.qc.common.constant.TmpData;
+import com.qc.common.ui.activity.GsyVideoActivity;
 import com.qc.common.ui.activity.MainActivity;
-import com.qc.common.ui.activity.VideoPlayerActivity;
 import com.qc.common.ui.adapter.ChapterItemAdapter;
 import com.qc.common.util.DBUtil;
 import com.qc.common.util.EntityHelper;
@@ -136,7 +136,8 @@ public class ChapterItemFragment extends BaseDataFragment<ChapterInfo> {
         } else if (TmpData.contentCode == AppConstant.READER_CODE) {
             startFragment(NovelReaderFragment.getInstance(entity));
         } else {
-            Intent intent = new Intent(MainActivity.getInstance(), VideoPlayerActivity.class);
+//            Intent intent = new Intent(MainActivity.getInstance(), VideoPlayerActivity.class);
+            Intent intent = new Intent(MainActivity.getInstance(), GsyVideoActivity.class);
             intent.putExtra("entity", entity);
             startActivity(intent);
         }

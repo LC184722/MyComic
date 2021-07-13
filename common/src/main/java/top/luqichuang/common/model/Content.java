@@ -24,7 +24,7 @@ public class Content implements Serializable {
 
     private String content;
 
-    private Map<String, Object> map = new HashMap<>();
+    private Map<String, String> headerMap = new HashMap<>();
 
     private int status;
 
@@ -110,12 +110,12 @@ public class Content implements Serializable {
         this.content = content;
     }
 
-    public Map<String, Object> getMap() {
-        return map;
+    public Map<String, String> getHeaderMap() {
+        return headerMap;
     }
 
-    public void setMap(Map<String, Object> map) {
-        this.map = map;
+    public void setHeaderMap(Map<String, String> headerMap) {
+        this.headerMap = headerMap;
     }
 
     public int getStatus() {
