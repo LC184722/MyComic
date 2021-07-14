@@ -55,12 +55,16 @@ public class GsyPlayer extends StandardGSYVideoPlayer {
     @Override
     public void onPrepared() {
         super.onPrepared();
+        int progress = 0;
         try {
-            int progress = Integer.parseInt(PROGRESS_MAP.get(mOriginUrl));
-            seekTo(progress);
+            progress = Integer.parseInt(PROGRESS_MAP.get(mOriginUrl));
+            if (progress >= getDuration()) {
+                progress = 0;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        seekTo(progress);
         updateSpeed();
     }
 
