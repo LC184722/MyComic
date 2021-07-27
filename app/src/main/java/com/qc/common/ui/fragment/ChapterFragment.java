@@ -94,7 +94,6 @@ public class ChapterFragment extends BaseTabFragment implements ChapterView {
     public void onResume() {
         super.onResume();
         if (entity != null && !fragments.isEmpty()) {
-            startInit();
             for (BaseFragment fragment : fragments) {
                 ((ChapterItemFragment) fragment).updateData();
             }
@@ -406,13 +405,9 @@ public class ChapterFragment extends BaseTabFragment implements ChapterView {
             return;
         }
         int index = entity.getInfoList().indexOf(info);
-        if (index > -1) {
-            EntityInfo oInfo = entity.getInfoList().remove(index);
-            info.setId(oInfo.getId());
-            info.setCurChapterId(oInfo.getCurChapterId());
-            info.setCurChapterTitle(oInfo.getCurChapterTitle());
+        if (index == -1) {
+            EntityHelper.addInfo(entity, info);
         }
-        EntityHelper.addInfo(entity, info);
     }
 
     private boolean checkNotEmpty() {
