@@ -159,7 +159,7 @@ public class JsoupNode {
 
     public String attr(String cssQuery, String attr) {
         try {
-            return element.selectFirst(cssQuery).attr(attr);
+            return element.selectFirst(cssQuery).attr(attr).trim();
         } catch (Exception e) {
             return null;
         }
