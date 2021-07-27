@@ -21,29 +21,24 @@ import top.luqichuang.mynovel.model.NovelInfo;
 /**
  * @author LuQiChuang
  * @desc
- * @date 2021/6/10 23:23
+ * @date 2021/7/27 9:30
  * @ver 1.0
  */
-public class XinBiQuGe extends BaseNovelSource {
+public class XinBiQuGe2 extends BaseNovelSource {
     @Override
     public NSourceEnum getNSourceEnum() {
-        return NSourceEnum.XIN_BI_QU_GE;
+        return NSourceEnum.XIN_BI_QU_GE_2;
     }
 
     @Override
     public String getIndex() {
-        return "https://www.vbiquge.com";
-    }
-
-    @Override
-    public boolean isValid() {
-        return false;
+        return "https://www.xbiquge.la";
     }
 
     @Override
     public Request getSearchRequest(String searchString) {
-        String url = String.format("%s/search.php?keyword=%s", getIndex(), searchString);
-        return NetUtil.getRequest(url);
+        String url = getIndex() + "/modules/article/waps.php";
+        return NetUtil.postRequest(url, "searchkey", searchString);
     }
 
     @Override
@@ -51,15 +46,18 @@ public class XinBiQuGe extends BaseNovelSource {
         JsoupStarter<NovelInfo> starter = new JsoupStarter<NovelInfo>() {
             @Override
             protected NovelInfo dealElement(JsoupNode node, int elementId) {
-                String title = node.ownText("a.result-game-item-title-link span");
-                String author = node.ownText("p.result-game-item-info-tag span", 1);
-                String updateTime = node.ownText("span.result-game-item-info-tag-title", 4);
-                String imgUrl = node.src("img");
+                String title = node.ownText("td.even a");
+                if (title == null) {
+                    return null;
+                }
+                String author = node.ownText("td.even", 1);
+                String updateTime = node.ownText("td.odd", 1);
+                String imgUrl = null;
                 String detailUrl = node.href("a");
                 return new NovelInfo(getSourceId(), title, author, detailUrl, imgUrl, updateTime);
             }
         };
-        return starter.startElements(html, "div.result-item");
+        return starter.startElements(html, "div#main tr");
     }
 
     @Override
@@ -75,15 +73,13 @@ public class XinBiQuGe extends BaseNovelSource {
                 String title = node.ownText("div#info h1");
                 String imgUrl = node.src("div#fmimg img");
                 String author = node.ownText("div#info p");
-                String intro = node.text("div#intro");
-                String updateStatus = node.ownText("div#info p", 1);
+                String intro = node.ownText("div#intro p", 1);
+                String updateStatus = null;
                 String updateTime = node.ownText("div#info p", 2);
                 try {
-                    author = author.substring(author.indexOf('：') + 1);
-                    updateTime = updateTime.substring(updateTime.indexOf('：') + 1);
-                    updateStatus = updateStatus.substring(updateStatus.indexOf('：') + 1).replace(",", "");
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    author = author.replace("作 者：", "");
+                    updateTime = updateTime.replace("最后更新：", "");
+                } catch (Exception ignored) {
                 }
                 info.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
             }
@@ -102,23 +98,15 @@ public class XinBiQuGe extends BaseNovelSource {
     @Override
     public List<Content> getContentList(String html, int chapterId, Map<String, Object> map) {
         JsoupNode node = new JsoupNode(html);
-        String content = node.html("div#content");
-        content = SourceHelper.getCommonContent(content, "<br>");
+        String content = node.remove("p").html("div#content");
+        content = SourceHelper.getCommonContent(content);
         return SourceHelper.getContentList(new Content(chapterId, content));
     }
 
     @Override
     public Map<String, String> getRankMap() {
+        String html = "<ul>\t<li><a href=\"/xuanhuanxiaoshuo/\">玄幻小说</a></li>\t<li><a href=\"/xiuzhenxiaoshuo/\">修真小说</a></li>\t<li><a href=\"/dushixiaoshuo/\">都市小说</a></li>\t<li><a href=\"/chuanyuexiaoshuo/\">穿越小说</a></li>\t<li><a href=\"/wangyouxiaoshuo/\">网游小说</a></li>\t<li><a href=\"/kehuanxiaoshuo/\">科幻小说</a></li></ul>";
         Map<String, String> map = new LinkedHashMap<>();
-        String html = "\t\t\t<li><a href=\"/xclass/1/1.html\">玄幻奇幻</a></li>\n" +
-                "\t\t\t<li><a href=\"/xclass/2/1.html\">武侠仙侠</a></li>\n" +
-                "\t\t\t<li><a href=\"/xclass/3/1.html\">都市言情</a></li>\n" +
-                "\t\t\t<li><a href=\"/xclass/4/1.html\">历史军事</a></li>\n" +
-                "\t\t\t<li><a href=\"/xclass/5/1.html\">科幻灵异</a></li>\n" +
-                "\t\t\t<li><a href=\"/xclass/6/1.html\">网游竞技</a></li>\n" +
-                "\t\t\t<li><a href=\"/xclass/7/1.html\">女频频道</a></li>\n" +
-                "\t\t\t<li><a href=\"/quanben/\">完本小说</a></li>\n" +
-                "\t\t\t<li><a href=\"/xbqgph.html\">排行榜单</a></li>";
         JsoupNode node = new JsoupNode(html);
         Elements elements = node.getElements("a");
         for (Element element : elements) {
@@ -130,7 +118,6 @@ public class XinBiQuGe extends BaseNovelSource {
 
     @Override
     public List<NovelInfo> getRankInfoList(String html) {
-        List<NovelInfo> list;
         JsoupStarter<NovelInfo> starter = new JsoupStarter<NovelInfo>() {
             @Override
             protected NovelInfo dealElement(JsoupNode node, int elementId) {
@@ -139,16 +126,12 @@ public class XinBiQuGe extends BaseNovelSource {
                     return null;
                 }
                 String author = node.ownText("span.s5");
-                String updateTime = node.ownText("span.s3 a");
+                String updateTime = null;
                 String imgUrl = null;
-                String detailUrl = getIndex() + node.href("span.s2 a");
+                String detailUrl = node.href("span.s2 a");
                 return new NovelInfo(getSourceId(), title, author, detailUrl, imgUrl, updateTime);
             }
         };
-        list = starter.startElements(html, "div.l li");
-        if (list.isEmpty()) {
-            list = starter.startElements(html, "div.novelslist2 li");
-        }
-        return list;
+        return starter.startElements(html, "div.r li");
     }
 }

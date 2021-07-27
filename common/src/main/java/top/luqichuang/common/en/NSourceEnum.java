@@ -11,6 +11,7 @@ import top.luqichuang.mynovel.source.MiKanShu;
 import top.luqichuang.mynovel.source.MoYuan;
 import top.luqichuang.mynovel.source.XiaoShuoE;
 import top.luqichuang.mynovel.source.XinBiQuGe;
+import top.luqichuang.mynovel.source.XinBiQuGe2;
 import top.luqichuang.mynovel.source.XuanShu;
 
 /**
@@ -29,6 +30,7 @@ public enum NSourceEnum {
     XIAO_SHUO_E(7, "E小说"),
     MO_YUAN(8, "墨缘文学"),
     MI_KAN_SHU(9, "Mi看书"),
+    XIN_BI_QU_GE_2(10, "新笔趣阁[2]"),
     ;
 
     private static final Map<Integer, Source<NovelInfo>> MAP = new LinkedHashMap<>();
@@ -43,6 +45,7 @@ public enum NSourceEnum {
         MAP.put(XIAO_SHUO_E.ID, new XiaoShuoE());
         MAP.put(MO_YUAN.ID, new MoYuan());
         MAP.put(MI_KAN_SHU.ID, new MiKanShu());
+        MAP.put(XIN_BI_QU_GE_2.ID, new XinBiQuGe2());
     }
 
     public static Map<Integer, Source<NovelInfo>> getMAP() {
