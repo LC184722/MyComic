@@ -14,6 +14,7 @@ import top.luqichuang.common.jsoup.JsoupNode;
 import top.luqichuang.common.jsoup.JsoupStarter;
 import top.luqichuang.common.model.ChapterInfo;
 import top.luqichuang.common.model.Content;
+import top.luqichuang.common.util.DecryptUtil;
 import top.luqichuang.common.util.NetUtil;
 import top.luqichuang.common.util.SourceHelper;
 import top.luqichuang.common.util.StringUtil;
@@ -46,7 +47,7 @@ public class YingHua extends BaseVideoSource {
     @Override
     public Request getSearchRequest(String searchString) {
         String url = getIndex() + "/search.asp?page=1&searchword=%s&searchtype=-1";
-        return NetUtil.getRequest(String.format(url, StringUtil.getGBKDecodedStr(searchString)));
+        return NetUtil.getRequest(String.format(url, DecryptUtil.getGBKEncodeStr(searchString)));
     }
 
     @Override

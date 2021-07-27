@@ -93,11 +93,21 @@ public class DecryptUtil {
         return null;
     }
 
-    public static String getUrlEncodeStr(String url) {
+    public static String getUtf8EncodeStr(String string) {
         String resUrl = null;
         try {
-            resUrl = URLEncoder.encode(url, "UTF-8");
+            resUrl = URLEncoder.encode(string, "UTF-8");
             resUrl = resUrl.replace("%2F", "/").replace("+", "%20");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resUrl;
+    }
+
+    public static String getGBKEncodeStr(String string) {
+        String resUrl = null;
+        try {
+            resUrl = URLEncoder.encode(string, "GBK");
         } catch (Exception e) {
             e.printStackTrace();
         }

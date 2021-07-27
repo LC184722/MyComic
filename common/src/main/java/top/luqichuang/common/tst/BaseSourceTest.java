@@ -145,7 +145,7 @@ public abstract class BaseSourceTest<T extends EntityInfo> {
     public void testRankMap() {
         Map<String, String> map = source.getRankMap();
         for (Map.Entry<String, String> entry : map.entrySet()) {
-            System.out.println(entry.getKey() + "\t-->\t" + entry.getValue());
+            System.out.println("[" + entry.getKey() + "]\t-->\t" + entry.getValue());
         }
     }
 

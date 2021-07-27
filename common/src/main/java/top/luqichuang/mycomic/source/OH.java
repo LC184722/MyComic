@@ -96,7 +96,7 @@ public class OH extends BaseComicSource {
                 JSONObject jsonObject = JSONObject.parseObject(result);
                 String imgPath = jsonObject.getString("enc_code2");
                 imgPath = DecryptUtil.decryptAES(DecryptUtil.decryptBase64(imgPath), "fw125gjdi9ertyui");
-                imgPath = DecryptUtil.getUrlEncodeStr(imgPath);
+                imgPath = DecryptUtil.getUtf8EncodeStr(imgPath);
                 String encCode1 = jsonObject.getString("enc_code1");
                 encCode1 = DecryptUtil.decryptAES(DecryptUtil.decryptBase64(encCode1), "fw122587mkertyui");
                 int total = encCode1 != null ? Integer.parseInt(encCode1) : 50;

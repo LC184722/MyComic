@@ -1,7 +1,5 @@
 package top.luqichuang.common.util;
 
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -168,47 +166,6 @@ public class StringUtil {
      */
     public static String[] matchArray(String regex, String input) {
         return matchArray(regex, input, 1);
-    }
-
-    /**
-     * 获得GBK编码的字符串
-     *
-     * @param str str
-     * @return String
-     */
-    public static String getGBKDecodedStr(String str) {
-        byte[] helloBytes = str.getBytes(Charset.forName("GBK"));
-        char[] hexArray = "0123456789ABCDEF".toCharArray();
-        char[] hexChars = new char[helloBytes.length * 2];
-        for (int j = 0; j < helloBytes.length; j++) {
-            int v = helloBytes[j] & 0xFF;
-            hexChars[j * 2] = hexArray[v >>> 4];
-            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
-        }
-        String helloHex = new String(hexChars);
-        StringBuilder decodedStr = new StringBuilder();
-        int count = 0;
-        for (int i = 0; i < helloHex.length(); i++) {
-            if (count++ % 2 == 0) {
-                decodedStr.append("%").append(helloHex.charAt(i));
-            } else {
-                decodedStr.append(helloHex.charAt(i));
-            }
-        }
-        return decodedStr.toString();
-    }
-
-    public static String getURLEncodedStr(String str) {
-        String result = "";
-        if (null == str) {
-            return "";
-        }
-        try {
-            result = java.net.URLEncoder.encode(str, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return result;
     }
 
     /**
