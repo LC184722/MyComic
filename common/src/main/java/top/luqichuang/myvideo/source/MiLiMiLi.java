@@ -38,6 +38,11 @@ public class MiLiMiLi extends BaseVideoSource {
     }
 
     @Override
+    public boolean isValid() {
+        return false;
+    }
+
+    @Override
     public Request getSearchRequest(String searchString) {
         String url = getIndex() + "/e/search/index.php";
         return NetUtil.postRequest(url, "show", "title,ftitle", "tbname", "movie", "tempid", "1", "keyboard", searchString);

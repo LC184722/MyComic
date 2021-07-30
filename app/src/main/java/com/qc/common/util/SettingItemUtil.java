@@ -11,6 +11,7 @@ import top.luqichuang.common.util.MapUtil;
 import top.luqichuang.common.util.SourceUtil;
 import top.luqichuang.mycomic.model.ComicInfo;
 import top.luqichuang.mynovel.model.NovelInfo;
+import top.luqichuang.myvideo.model.VideoInfo;
 
 /**
  * @author LuQiChuang
@@ -28,6 +29,10 @@ public class SettingItemUtil {
             }
         } else if (settingEnum == SettingEnum.DEFAULT_NOVEL_SOURCE) {
             for (Source<NovelInfo> source : SourceUtil.getNSourceList()) {
+                map.put(source.getSourceId(), source.getSourceName());
+            }
+        } else if (settingEnum == SettingEnum.DEFAULT_VIDEO_SOURCE) {
+            for (Source<VideoInfo> source : SourceUtil.getVSourceList()) {
                 map.put(source.getSourceId(), source.getSourceName());
             }
         } else if (settingEnum == SettingEnum.PRELOAD_NUM) {
@@ -54,7 +59,7 @@ public class SettingItemUtil {
     public static String getDefaultDesc(SettingEnum settingEnum) {
         Map<Object, String> map = getMap(settingEnum);
         if (!map.isEmpty()) {
-            return MapUtil.getValueByIndex(map, 0);
+            return map.get(settingEnum.DEFAULT_VALUE);
         }
         return "";
     }

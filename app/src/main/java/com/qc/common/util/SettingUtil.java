@@ -22,6 +22,7 @@ public class SettingUtil {
     }
 
     private static String getData() {
+        SpUtil.getInstance().putString(SAVE_STR, "{}");
         return SpUtil.getInstance().getString(SAVE_STR, "{}");
     }
 

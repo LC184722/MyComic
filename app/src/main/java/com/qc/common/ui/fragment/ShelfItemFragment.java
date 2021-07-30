@@ -3,7 +3,6 @@ package com.qc.common.ui.fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
-import android.view.animation.Animation;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -69,15 +68,15 @@ public class ShelfItemFragment extends BaseDataFragment<Entity> implements Shelf
     }
 
     @Override
-    public Animation onCreateAnimation(int transit, boolean enter, int nextAnim) {
-        if (enter && adapter != null) {
+    public void onResume() {
+        super.onResume();
+        if (adapter != null) {
             if (entityList != EntityUtil.getEntityList(status)) {
                 requestServer();
             } else {
                 adapter.notifyDataSetChanged();
             }
         }
-        return super.onCreateAnimation(transit, enter, nextAnim);
     }
 
     @Override
@@ -109,7 +108,8 @@ public class ShelfItemFragment extends BaseDataFragment<Entity> implements Shelf
 
     @Override
     protected void requestServer() {
-        if (entityList == null) {
+        showLoadingPage();
+        if (entityList == null || entityList.isEmpty()) {
             entityList = EntityUtil.getEntityList(status);
             if (EntityUtil.getEntityList().isEmpty() && status == EntityUtil.STATUS_FAV) {
                 showToast("快去搜索" + TmpData.content + "吧！");
@@ -123,6 +123,7 @@ public class ShelfItemFragment extends BaseDataFragment<Entity> implements Shelf
         } else {
             onFirstComplete(entityList);
         }
+        recycleView.scrollBy(0, 0);
         adapter.notifyDataSetChanged();
     }
 

@@ -138,7 +138,14 @@ public class SearchResultFragment extends BaseDataFragment<Entity> implements Se
             errorList.add(sourceName);
         }
         if (++count == size) {
-            int sourceId = (int) SettingUtil.getSettingKey(SettingEnum.DEFAULT_SOURCE);
+            int sourceId;
+            if (TmpData.contentCode == AppConstant.COMIC_CODE) {
+                sourceId = (int) SettingUtil.getSettingKey(SettingEnum.DEFAULT_SOURCE);
+            } else if (TmpData.contentCode == AppConstant.READER_CODE) {
+                sourceId = (int) SettingUtil.getSettingKey(SettingEnum.DEFAULT_NOVEL_SOURCE);
+            } else {
+                sourceId = (int) SettingUtil.getSettingKey(SettingEnum.DEFAULT_VIDEO_SOURCE);
+            }
             for (Entity entity : entityList) {
                 EntityHelper.changeInfo(entity, sourceId);
             }

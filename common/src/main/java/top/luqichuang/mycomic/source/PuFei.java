@@ -93,7 +93,7 @@ public class PuFei extends BaseComicSource {
         if (encodeStr != null) {
             urls = decodeStr(encodeStr);
         }
-        String prevUrl = "http://res.img.chanshi37.com/";
+        String prevUrl = "http://res.img.scbrxhwl.com/";
         if (urls != null && urls.length > 0) {
             if (urls[0].startsWith("http")) {
                 prevUrl = "";

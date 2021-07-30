@@ -1,10 +1,18 @@
 package com.qc.common.util;
 
+import com.qc.common.constant.AppConstant;
+import com.qc.common.constant.TmpData;
+import com.qc.common.en.SettingEnum;
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import top.luqichuang.common.model.Entity;
+import top.luqichuang.common.model.Source;
+import top.luqichuang.common.util.SourceUtil;
 
 /**
  * @author LuQiChuang
@@ -24,6 +32,25 @@ public class EntityUtil {
 
     public static List<Entity> initEntityList(int status) {
         entityList = null;
+        SourceUtil.init();
+        List<Source> sourceList;
+        Collection<Integer> ids;
+        if (TmpData.contentCode == AppConstant.COMIC_CODE) {
+            sourceList = (List) SourceUtil.getSourceList();
+            ids = (Collection<Integer>) SettingUtil.getSettingKey(SettingEnum.COMIC_SOURCE_OPEN);
+        } else if (TmpData.contentCode == AppConstant.READER_CODE) {
+            sourceList = (List) SourceUtil.getSourceList();
+            ids = (Collection<Integer>) SettingUtil.getSettingKey(SettingEnum.COMIC_SOURCE_OPEN);
+        } else {
+            sourceList = (List) SourceUtil.getSourceList();
+            ids = (Collection<Integer>) SettingUtil.getSettingKey(SettingEnum.COMIC_SOURCE_OPEN);
+        }
+        Iterator<Source> iterator = sourceList.iterator();
+        while (iterator.hasNext()) {
+            if (!ids.contains(iterator.next().getSourceId())) {
+                iterator.remove();
+            }
+        }
         return getEntityList(status);
     }
 
