@@ -1,7 +1,5 @@
 package top.luqichuang.mycomic.source;
 
-import com.alibaba.fastjson.JSONObject;
-
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -9,6 +7,7 @@ import java.util.Map;
 
 import okhttp3.Request;
 import top.luqichuang.common.en.SourceEnum;
+import top.luqichuang.common.json.JsonNode;
 import top.luqichuang.common.jsoup.JsoupNode;
 import top.luqichuang.common.jsoup.JsoupStarter;
 import top.luqichuang.common.model.ChapterInfo;
@@ -82,6 +81,7 @@ public class OH extends BaseComicSource {
         };
         starter.startInfo(html);
         SourceHelper.initChapterInfoList(info, starter.startElements(html, "ul.fed-part-rows li.fed-col-lg3"));
+        SourceHelper.initChapterInfoMap(info, html, "div.fed-drop-boxs.fed-drop-tops.fed-matp-v li", "a", "div.fed-play-item.fed-drop-item", "div.all_data_list li");
     }
 
     @Override
@@ -91,18 +91,27 @@ public class OH extends BaseComicSource {
         String result = DecryptUtil.decryptAES(DecryptUtil.decryptBase64(chapterImagesStr), "fw122587mkertyui");
         if (result != null) {
             try {
-                String server = "https://img.cocomanhua.com/comic/";
-                result = StringUtil.match("(\\{.*?\\})", result);
-                JSONObject jsonObject = JSONObject.parseObject(result);
-                String imgPath = jsonObject.getString("enc_code2");
-                imgPath = DecryptUtil.decryptAES(DecryptUtil.decryptBase64(imgPath), "fw125gjdi9ertyui");
-                imgPath = DecryptUtil.getUtf8EncodeStr(imgPath);
-                String encCode1 = jsonObject.getString("enc_code1");
-                encCode1 = DecryptUtil.decryptAES(DecryptUtil.decryptBase64(encCode1), "fw122587mkertyui");
-                int total = encCode1 != null ? Integer.parseInt(encCode1) : 50;
-                urls = new String[total];
-                for (int i = 0; i < total; i++) {
-                    urls[i] = server + imgPath + String.format(Locale.CHINA, "%04d.jpg", i + 1);
+                String mhInfo = StringUtil.match("mh_info=(\\{.*?\\})", result);
+                String mhImage = StringUtil.match("image_info=(\\{.*?\\})", result);
+                JsonNode node = new JsonNode(mhImage);
+                String direct = node.string("urls__direct");
+                if (direct != null && !direct.equals("")) {
+                    direct = DecryptUtil.decryptBase64(direct);
+                    urls = direct.split("\\|SEPARATER\\|");
+                } else {
+                    node.init(mhInfo);
+                    String server = "https://img.cocomanhua.com/comic/";
+                    String imgPath = node.string("enc_code2");
+                    imgPath = DecryptUtil.decryptAES(DecryptUtil.decryptBase64(imgPath), "fw125gjdi9ertyui");
+                    imgPath = DecryptUtil.getUtf8EncodeStr(imgPath);
+//                    imgPath = imgPath.replace("%3D", "=");
+                    String encCode1 = node.string("enc_code1");
+                    encCode1 = DecryptUtil.decryptAES(DecryptUtil.decryptBase64(encCode1), "fw122587mkertyui");
+                    int total = encCode1 != null ? Integer.parseInt(encCode1) : 50;
+                    urls = new String[total];
+                    for (int i = 0; i < total; i++) {
+                        urls[i] = server + imgPath + String.format(Locale.CHINA, "%04d.jpg", i + 1);
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();

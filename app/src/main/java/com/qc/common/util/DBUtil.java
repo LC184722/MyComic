@@ -156,10 +156,19 @@ public class DBUtil {
                 Source source;
                 if (TmpData.contentCode == AppConstant.COMIC_CODE) {
                     source = SourceUtil.getSource(info.getSourceId());
+                    if (!SourceUtil.getSourceList().contains(source)) {
+                        source = null;
+                    }
                 } else if (TmpData.contentCode == AppConstant.READER_CODE) {
                     source = SourceUtil.getNSource(info.getSourceId());
+                    if (!SourceUtil.getNSourceList().contains(source)) {
+                        source = null;
+                    }
                 } else {
                     source = SourceUtil.getVSource(info.getSourceId());
+                    if (!SourceUtil.getVSourceList().contains(source)) {
+                        source = null;
+                    }
                 }
                 if (source != null && source.isValid()) {
                     EntityHelper.addInfo(entity, info);

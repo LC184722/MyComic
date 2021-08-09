@@ -4,8 +4,8 @@ import android.view.Gravity;
 import android.view.View;
 
 import com.qc.common.en.SettingEnum;
-import com.qc.common.util.EntityUtil;
 import com.qc.common.util.PopupUtil;
+import com.qc.common.util.RestartUtil;
 import com.qc.common.util.SettingItemUtil;
 import com.qc.common.util.SettingUtil;
 import com.qc.mycomic.R;
@@ -137,11 +137,12 @@ public class PersonSourceFragment extends BaseGroupListFragment implements View.
                 }
                 if (!list.contains(defaultSourceId)) {
                     showToast("默认数据源:[" + title + "]不可关闭！");
+                    dialog.dismiss();
                 } else {
                     SettingUtil.putSetting(settingEnum, list);
-                    EntityUtil.initEntityList(EntityUtil.STATUS_ALL);
+                    dialog.dismiss();
+                    RestartUtil.restart();
                 }
-                dialog.dismiss();
             }
         });
     }

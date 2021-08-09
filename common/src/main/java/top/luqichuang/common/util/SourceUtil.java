@@ -37,16 +37,7 @@ public class SourceUtil {
     private static final List<String> NOVEL_SOURCE_NAME_LIST = new ArrayList<>();
     private static final List<String> VIDEO_SOURCE_NAME_LIST = new ArrayList<>();
 
-    public static void init() {
-        COMIC_NAME_MAP.clear();
-        COMIC_SOURCE_LIST.clear();
-        COMIC_SOURCE_NAME_LIST.clear();
-        NOVEL_NAME_MAP.clear();
-        NOVEL_SOURCE_LIST.clear();
-        NOVEL_SOURCE_NAME_LIST.clear();
-        VIDEO_NAME_MAP.clear();
-        VIDEO_SOURCE_LIST.clear();
-        VIDEO_SOURCE_NAME_LIST.clear();
+    static {
         for (Source<ComicInfo> source : COMIC_MAP.values()) {
             COMIC_NAME_MAP.put(source.getSourceId(), source.getSourceName());
             if (source.isValid()) {
@@ -66,6 +57,27 @@ public class SourceUtil {
             if (source.isValid()) {
                 VIDEO_SOURCE_LIST.add(source);
                 VIDEO_SOURCE_NAME_LIST.add(source.getSourceName());
+            }
+        }
+    }
+
+    public static void init() {
+        COMIC_SOURCE_LIST.clear();
+        NOVEL_SOURCE_LIST.clear();
+        VIDEO_SOURCE_LIST.clear();
+        for (Source<ComicInfo> source : COMIC_MAP.values()) {
+            if (source.isValid()) {
+                COMIC_SOURCE_LIST.add(source);
+            }
+        }
+        for (Source<NovelInfo> source : NOVEL_MAP.values()) {
+            if (source.isValid()) {
+                NOVEL_SOURCE_LIST.add(source);
+            }
+        }
+        for (Source<VideoInfo> source : VIDEO_MAP.values()) {
+            if (source.isValid()) {
+                VIDEO_SOURCE_LIST.add(source);
             }
         }
     }

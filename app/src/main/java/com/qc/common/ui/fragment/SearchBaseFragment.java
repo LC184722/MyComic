@@ -14,7 +14,6 @@ import java.util.List;
 
 import the.one.base.ui.fragment.BaseFragment;
 import the.one.base.ui.fragment.BaseTitleTabFragment;
-import top.luqichuang.common.model.EntityInfo;
 import top.luqichuang.common.model.Source;
 import top.luqichuang.common.util.SourceUtil;
 
@@ -25,6 +24,8 @@ import top.luqichuang.common.util.SourceUtil;
  * @ver 1.0
  */
 public class SearchBaseFragment extends BaseTitleTabFragment {
+
+    private List<Source> sourceList;
 
     @Override
     protected void initView(View rootView) {
@@ -39,20 +40,22 @@ public class SearchBaseFragment extends BaseTitleTabFragment {
         ibSearch.setOnClickListener(v -> {
             startFragment(new SearchFragment());
         });
+        initList();
+    }
+
+    private void initList() {
+        if (TmpData.contentCode == AppConstant.COMIC_CODE) {
+            sourceList = (List) SourceUtil.getSourceList();
+        } else if (TmpData.contentCode == AppConstant.READER_CODE) {
+            sourceList = (List) SourceUtil.getNSourceList();
+        } else {
+            sourceList = (List) SourceUtil.getVSourceList();
+        }
     }
 
     @Override
     protected void addTabs() {
-        List sourceList;
-        if (TmpData.contentCode == AppConstant.COMIC_CODE) {
-            sourceList = SourceUtil.getSourceList();
-        } else if (TmpData.contentCode == AppConstant.READER_CODE) {
-            sourceList = SourceUtil.getNSourceList();
-        } else {
-            sourceList = SourceUtil.getVSourceList();
-        }
-        for (Object o : sourceList) {
-            Source<EntityInfo> source = (Source<EntityInfo>) o;
+        for (Source source : sourceList) {
             if (source.isValid() && source.getRankMap() != null) {
                 addTab(source.getSourceName());
             }
@@ -61,16 +64,7 @@ public class SearchBaseFragment extends BaseTitleTabFragment {
 
     @Override
     protected void addFragment(ArrayList<BaseFragment> fragments) {
-        List sourceList;
-        if (TmpData.contentCode == AppConstant.COMIC_CODE) {
-            sourceList = SourceUtil.getSourceList();
-        } else if (TmpData.contentCode == AppConstant.READER_CODE) {
-            sourceList = SourceUtil.getNSourceList();
-        } else {
-            sourceList = SourceUtil.getVSourceList();
-        }
-        for (Object o : sourceList) {
-            Source<EntityInfo> source = (Source<EntityInfo>) o;
+        for (Source source : sourceList) {
             if (source.isValid() && source.getRankMap() != null) {
                 fragments.add(RankFragment.getInstance(source.getSourceId()));
             }

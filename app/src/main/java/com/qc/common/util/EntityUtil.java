@@ -39,15 +39,16 @@ public class EntityUtil {
             sourceList = (List) SourceUtil.getSourceList();
             ids = (Collection<Integer>) SettingUtil.getSettingKey(SettingEnum.COMIC_SOURCE_OPEN);
         } else if (TmpData.contentCode == AppConstant.READER_CODE) {
-            sourceList = (List) SourceUtil.getSourceList();
-            ids = (Collection<Integer>) SettingUtil.getSettingKey(SettingEnum.COMIC_SOURCE_OPEN);
+            sourceList = (List) SourceUtil.getNSourceList();
+            ids = (Collection<Integer>) SettingUtil.getSettingKey(SettingEnum.NOVEL_SOURCE_OPEN);
         } else {
-            sourceList = (List) SourceUtil.getSourceList();
-            ids = (Collection<Integer>) SettingUtil.getSettingKey(SettingEnum.COMIC_SOURCE_OPEN);
+            sourceList = (List) SourceUtil.getVSourceList();
+            ids = (Collection<Integer>) SettingUtil.getSettingKey(SettingEnum.VIDEO_SOURCE_OPEN);
         }
         Iterator<Source> iterator = sourceList.iterator();
         while (iterator.hasNext()) {
-            if (!ids.contains(iterator.next().getSourceId())) {
+            int n = iterator.next().getSourceId();
+            if (!ids.contains(n)) {
                 iterator.remove();
             }
         }

@@ -55,7 +55,6 @@ public class TaDu extends BaseNovelSource {
         } else if (CONTENT.equals(tag) && map.isEmpty()) {
             JsoupNode node = new JsoupNode(html);
             String url = node.attr("input#bookPartResourceUrl", "value");
-            System.out.println("url = " + url);
             map.put("url", url);
             return NetUtil.getRequest(url);
         }
@@ -110,7 +109,6 @@ public class TaDu extends BaseNovelSource {
 
     @Override
     public List<Content> getContentList(String html, int chapterId, Map<String, Object> map) {
-        System.out.println("html = " + html);
         String content = null;
         try {
             content = html;
