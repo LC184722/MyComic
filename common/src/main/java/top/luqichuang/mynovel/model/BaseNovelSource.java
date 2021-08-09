@@ -1,5 +1,7 @@
 package top.luqichuang.mynovel.model;
 
+import java.util.Map;
+
 import top.luqichuang.common.en.NSourceEnum;
 import top.luqichuang.common.model.Source;
 
@@ -23,4 +25,8 @@ public abstract class BaseNovelSource implements Source<NovelInfo> {
         return getNSourceEnum().NAME;
     }
 
+    @Override
+    public Map<String, String> getImageHeaders() {
+        return null;
+    }
 }

@@ -20,6 +20,7 @@ import androidx.core.content.ContextCompat;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.CustomTarget;
@@ -139,6 +140,12 @@ public class ImgUtil {
 
     private static void loadImageNet(Context context, ImageConfig config, ImageView imageView, QMUIProgressBar progressBar, TextView textView) {
         String url = config.getUrl();
+        GlideUrl glideUrl;
+        if (config.getHeaders() != null) {
+            glideUrl = new GlideUrl(url, config::getHeaders);
+        } else {
+            glideUrl = new GlideUrl(url);
+        }
         GlideProgressInterceptor.addListener(url, new GlideProgressListener() {
             private int count;
 
@@ -167,7 +174,7 @@ public class ImgUtil {
 
         Glide.with(context)
                 .asBitmap()
-                .load(url)
+                .load(glideUrl)
                 .transition(new BitmapTransitionOptions().crossFade())
                 .listener(new RequestListener<Bitmap>() {
                     @Override
@@ -286,6 +293,15 @@ public class ImgUtil {
             String url = content.getUrl();
             Glide.with(context)
                     .load(url)
+                    .preload();
+        }
+    }
+
+    public static void preloadReaderImg(Context context, ImageConfig config) {
+        if (config != null) {
+            GlideUrl glideUrl = new GlideUrl(config.getUrl(), config::getHeaders);
+            Glide.with(context)
+                    .load(glideUrl)
                     .preload();
         }
     }

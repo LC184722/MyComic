@@ -1,5 +1,6 @@
 package top.luqichuang.mycomic.source;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -29,6 +30,14 @@ public class OH extends BaseComicSource {
     @Override
     public SourceEnum getSourceEnum() {
         return SourceEnum.OH;
+    }
+
+    @Override
+    public Map<String, String> getImageHeaders() {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Referer", getIndex());
+        headers.put("User-Agent", NetUtil.USER_AGENT_WEB);
+        return headers;
     }
 
     @Override

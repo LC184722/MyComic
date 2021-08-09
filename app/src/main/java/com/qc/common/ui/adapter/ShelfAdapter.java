@@ -7,6 +7,7 @@ import android.widget.RelativeLayout;
 import com.qc.common.constant.AppConstant;
 import com.qc.common.constant.TmpData;
 import com.qc.common.self.ImageConfig;
+import com.qc.common.util.EntityHelper;
 import com.qc.common.util.ImgUtil;
 import com.qc.mycomic.R;
 
@@ -15,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import the.one.base.adapter.TheBaseQuickAdapter;
 import the.one.base.adapter.TheBaseViewHolder;
 import top.luqichuang.common.model.Entity;
+import top.luqichuang.common.model.Source;
 
 /**
  * @author LuQiChuang
@@ -64,6 +66,8 @@ public class ShelfAdapter extends TheBaseQuickAdapter<Entity> {
                 config.setSaveKey("V" + entity.getInfoId());
             }
         }
+        Source source = EntityHelper.commonSource(entity);
+        config.setHeaders(source.getImageHeaders());
         ImgUtil.loadImage(getContext(), config);
     }
 

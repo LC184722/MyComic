@@ -1,5 +1,7 @@
 package top.luqichuang.myvideo.model;
 
+import java.util.Map;
+
 import top.luqichuang.common.en.VSourceEnum;
 import top.luqichuang.common.model.Source;
 
@@ -23,4 +25,8 @@ public abstract class BaseVideoSource implements Source<VideoInfo> {
         return getVSourceEnum().NAME;
     }
 
+    @Override
+    public Map<String, String> getImageHeaders() {
+        return null;
+    }
 }

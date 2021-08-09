@@ -26,6 +26,7 @@ import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.qc.common.constant.Constant;
 import com.qc.common.constant.TmpData;
 import com.qc.common.en.SettingEnum;
+import com.qc.common.self.ImageConfig;
 import com.qc.common.self.ScrollSpeedLinearLayoutManger;
 import com.qc.common.ui.adapter.ReaderListAdapter;
 import com.qc.common.ui.presenter.ReaderPresenter;
@@ -49,6 +50,7 @@ import top.luqichuang.common.model.ChapterInfo;
 import top.luqichuang.common.model.Content;
 import top.luqichuang.common.model.Entity;
 import top.luqichuang.common.model.EntityInfo;
+import top.luqichuang.common.model.Source;
 
 /**
  * @author LuQiChuang
@@ -404,7 +406,11 @@ public abstract class BaseReaderFragment extends BaseDataFragment<Content> imple
                         int min = Math.min(bottom + preloadNum, contentList.size());
                         if (bottomIndex < min) {
                             for (int i = bottomIndex; i < min; i++) {
-                                ImgUtil.preloadReaderImg(getContext(), contentList.get(i));
+                                ImageConfig config = new ImageConfig();
+                                config.setUrl(contentList.get(i).getUrl());
+                                Source source = EntityHelper.commonSource(entity);
+                                config.setHeaders(source.getImageHeaders());
+                                ImgUtil.preloadReaderImg(getContext(), config);
                             }
                             bottomIndex = min;
                         }

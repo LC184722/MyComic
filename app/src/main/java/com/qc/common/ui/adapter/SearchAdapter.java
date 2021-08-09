@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import the.one.base.adapter.TheBaseQuickAdapter;
 import the.one.base.adapter.TheBaseViewHolder;
 import top.luqichuang.common.model.Entity;
+import top.luqichuang.common.model.Source;
 
 /**
  * @author LuQiChuang
@@ -34,6 +35,8 @@ public class SearchAdapter extends TheBaseQuickAdapter<Entity> {
         holder.setText(R.id.tvUpdateTime, entity.getInfo().getUpdateTime());
         RelativeLayout layout = holder.findView(R.id.imageRelativeLayout);
         ImageConfig config = ImgUtil.getDefaultConfig(getContext(), entity.getInfo().getImgUrl(), layout);
+        Source source = EntityHelper.commonSource(entity);
+        config.setHeaders(source.getImageHeaders());
         ImgUtil.loadImage(getContext(), config);
     }
 }

@@ -3,6 +3,8 @@ package com.qc.common.self;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import java.util.Map;
+
 /**
  * @author LuQiChuang
  * @desc
@@ -12,6 +14,8 @@ import android.widget.RelativeLayout;
 public class ImageConfig {
 
     private String url;
+
+    private Map<String, String> headers;
 
     private RelativeLayout layout;
 
@@ -52,6 +56,14 @@ public class ImageConfig {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public Map<String, String> getHeaders() {
+        return headers;
+    }
+
+    public void setHeaders(Map<String, String> headers) {
+        this.headers = headers;
     }
 
     public RelativeLayout getLayout() {

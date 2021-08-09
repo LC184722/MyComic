@@ -6,6 +6,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.qc.common.self.ImageConfig;
+import com.qc.common.util.EntityHelper;
 import com.qc.common.util.ImgUtil;
 import com.qc.mycomic.R;
 
@@ -14,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import the.one.base.adapter.TheBaseQuickAdapter;
 import the.one.base.adapter.TheBaseViewHolder;
 import top.luqichuang.common.model.Entity;
+import top.luqichuang.common.model.Source;
 
 /**
  * @author LuQiChuang
@@ -44,6 +46,8 @@ public class RankAdapter extends TheBaseQuickAdapter<Entity> {
         holder.setText(R.id.tvIndex, String.valueOf(holder.getAdapterPosition() + 1));
         RelativeLayout relativeLayout = holder.findView(R.id.imageRelativeLayout);
         ImageConfig config = ImgUtil.getDefaultConfig(getContext(), entity.getInfo().getImgUrl(), relativeLayout);
+        Source source = EntityHelper.commonSource(entity);
+        config.setHeaders(source.getImageHeaders());
         ImgUtil.loadImage(getContext(), config);
     }
 

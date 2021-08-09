@@ -43,6 +43,7 @@ import the.one.base.util.QMUIPopupUtil;
 import top.luqichuang.common.model.ChapterInfo;
 import top.luqichuang.common.model.Entity;
 import top.luqichuang.common.model.EntityInfo;
+import top.luqichuang.common.model.Source;
 import top.luqichuang.common.util.MapUtil;
 import top.luqichuang.common.util.SourceUtil;
 import top.luqichuang.common.util.StringUtil;
@@ -252,6 +253,8 @@ public class ChapterFragment extends BaseTabFragment implements ChapterView {
                 config.setSaveKey("V" + entity.getInfoId());
             }
         }
+        Source source = EntityHelper.commonSource(entity);
+        config.setHeaders(source.getImageHeaders());
         ImgUtil.loadImage(getContext(), config);
         tvTitle.setText(entity.getInfo().getTitle());
         tvSource.setText(EntityHelper.sourceName(entity));
@@ -315,12 +318,16 @@ public class ChapterFragment extends BaseTabFragment implements ChapterView {
         mTabs.clear();
         super.startInit();
         Map<String, List<ChapterInfo>> map = entity.getInfo().getChapterInfoMap();
-        int i = 0;
-        for (List<ChapterInfo> list : map.values()) {
-            ChapterItemFragment fragment = (ChapterItemFragment) fragments.get(i++);
-            fragment.setList(list);
+        if (!map.isEmpty()) {
+            int i = 0;
+            for (List<ChapterInfo> list : map.values()) {
+                ChapterItemFragment fragment = (ChapterItemFragment) fragments.get(i++);
+                fragment.setList(list);
+            }
+            mViewPager.setVisibility(View.VISIBLE);
+        } else {
+            mViewPager.setVisibility(View.GONE);
         }
-        mViewPager.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -417,7 +424,7 @@ public class ChapterFragment extends BaseTabFragment implements ChapterView {
     @Override
     protected void addTabs() {
         Map<String, List<ChapterInfo>> map = entity.getInfo().getChapterInfoMap();
-        if (map.size() == 1 && map.containsKey("正文")) {
+        if ((map.size() == 1 && map.containsKey("正文")) || map.isEmpty()) {
             llIndicator.setVisibility(View.GONE);
         } else {
             llIndicator.setVisibility(View.VISIBLE);

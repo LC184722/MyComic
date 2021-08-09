@@ -1,5 +1,7 @@
 package top.luqichuang.mycomic.model;
 
+import java.util.Map;
+
 import top.luqichuang.common.en.SourceEnum;
 import top.luqichuang.common.model.Source;
 
@@ -23,4 +25,8 @@ public abstract class BaseComicSource implements Source<ComicInfo> {
         return getSourceEnum().NAME;
     }
 
+    @Override
+    public Map<String, String> getImageHeaders() {
+        return null;
+    }
 }

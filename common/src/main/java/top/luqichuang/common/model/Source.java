@@ -61,4 +61,5 @@ public interface Source<T extends EntityInfo> {
 
     List<T> getRankInfoList(String html);
 
+    Map<String, String> getImageHeaders();
 }
