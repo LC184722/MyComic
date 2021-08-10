@@ -318,16 +318,18 @@ public class ChapterFragment extends BaseTabFragment implements ChapterView {
         mTabs.clear();
         super.startInit();
         Map<String, List<ChapterInfo>> map = entity.getInfo().getChapterInfoMap();
-        if (!map.isEmpty()) {
+        if (!map.isEmpty() && !entity.getInfoList().isEmpty()) {
             int i = 0;
             for (List<ChapterInfo> list : map.values()) {
                 ChapterItemFragment fragment = (ChapterItemFragment) fragments.get(i++);
                 fragment.setList(list);
             }
-            mViewPager.setVisibility(View.VISIBLE);
         } else {
-            mViewPager.setVisibility(View.GONE);
+            if (!fragments.isEmpty()) {
+                fragments.get(INDEX).showEmptyPage("章节加载失败");
+            }
         }
+        mViewPager.setVisibility(View.VISIBLE);
     }
 
     @Override
