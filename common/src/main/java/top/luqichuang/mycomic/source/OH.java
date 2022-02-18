@@ -42,7 +42,7 @@ public class OH extends BaseComicSource {
 
     @Override
     public String getIndex() {
-        return "https://www.cocomanhua.com";
+        return "https://www.cocomanga.com";
     }
 
     @Override
@@ -109,7 +109,7 @@ public class OH extends BaseComicSource {
                     urls = direct.split("\\|SEPARATER\\|");
                 } else {
                     node.init(mhInfo);
-                    String server = "https://img.cocomanhua.com/comic/";
+                    String server = "https://img.cocomanga.com/comic/";
                     String imgPath = node.string("enc_code2");
                     imgPath = DecryptUtil.decryptAES(DecryptUtil.decryptBase64(imgPath), "fw125gjdi9ertyui");
                     imgPath = DecryptUtil.getUtf8EncodeStr(imgPath);
