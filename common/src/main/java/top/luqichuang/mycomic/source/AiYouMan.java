@@ -1,5 +1,7 @@
 package top.luqichuang.mycomic.source;
 
+import com.alibaba.fastjson.JSONArray;
+
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -41,6 +43,34 @@ public class AiYouMan extends BaseComicSource {
     public Request getSearchRequest(String searchString) {
         String url = String.format("https://m.iyouman.com/sort/all.html?cache=false&search_key=%s", searchString);
         return NetUtil.getRequest(url);
+    }
+
+    @Override
+    public Request buildRequest(String html, String tag, Map<String, Object> data, Map<String, Object> map) {
+        if (CONTENT.equals(tag) && map.isEmpty()) {
+            String url = getIndex() + "/api/getchapterinfov2?product_id=%s&productname=%s&platformname=%s&comic_id=%s&chapter_newid=%s&isWebp=%s&quality=%s";
+            String productId = "4";
+            String productName = "aym";
+            String platformName = "pc";
+            String comicId = "000000";
+            String chapterNewId = "1";
+            String isWebp = "1";
+            String quality = "high";
+            String curChapterStr = StringUtil.match("current_chapter:(\\{.*?\\})", html);
+            if (curChapterStr != null) {
+                JsonNode node = new JsonNode(curChapterStr);
+                try {
+                    comicId = StringUtil.match("comic_id:(.*?),", html);
+                    chapterNewId = node.string("chapter_newid");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            url = String.format(url, productId, productName, platformName, comicId, chapterNewId, isWebp, quality);
+            map.put("url", url);
+            return NetUtil.getRequest(url);
+        }
+        return super.buildRequest(html, tag, data, map);
     }
 
     @Override
@@ -91,19 +121,16 @@ public class AiYouMan extends BaseComicSource {
 
     @Override
     public List<Content> getContentList(String html, int chapterId, Map<String, Object> map) {
-        String curChapterStr = StringUtil.match("current_chapter:(\\{.*?\\}),", html);
-        JsonNode node = new JsonNode(curChapterStr);
-        String rule = node.string("rule");
-        int endNum = 50;
-        try {
-            endNum = Integer.parseInt(node.string("end_num"));
-        } catch (NumberFormatException ignored) {
-        }
-        String chapterDomain = node.string("chapter_domain");
-        String url = "https://mhpic." + chapterDomain + rule + "-aym.high.webp";
-        String[] urls = new String[endNum];
-        for (int i = 0; i < urls.length; i++) {
-            urls[i] = url.replace("$$", String.valueOf(i + 1));
+        String curChapterStr = StringUtil.match("current_chapter\":(\\{.*?\\})", html);
+        String[] urls = new String[0];
+        if (curChapterStr != null) {
+            JsonNode node = new JsonNode(curChapterStr);
+            JSONArray array = node.jsonArray("chapter_img_list");
+            try {
+                urls = array.toArray(new String[0]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return SourceHelper.getContentList(urls, chapterId);
     }

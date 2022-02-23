@@ -40,6 +40,11 @@ public class PuFei extends BaseComicSource {
     }
 
     @Override
+    public boolean isValid() {
+        return false;
+    }
+
+    @Override
     public Request getSearchRequest(String searchString) {
         searchString = "http://m.pufei8.com/e/search/?searchget=1&tbname=mh&show=title,player,playadmin,bieming,pinyin,playadmin&tempid=4&keyboard=" + DecryptUtil.getGBKEncodeStr(searchString);
         return NetUtil.getRequest(searchString);

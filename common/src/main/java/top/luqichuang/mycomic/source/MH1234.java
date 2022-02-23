@@ -37,6 +37,11 @@ public class MH1234 extends BaseComicSource {
     }
 
     @Override
+    public boolean isValid() {
+        return false;
+    }
+
+    @Override
     public Request getSearchRequest(String searchString) {
         String url = String.format(getIndex() + "/search/?keywords=%s", searchString);
         return NetUtil.getRequest(url);

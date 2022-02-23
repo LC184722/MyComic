@@ -35,6 +35,11 @@ public class BL extends BaseComicSource {
     }
 
     @Override
+    public boolean isValid() {
+        return false;
+    }
+
+    @Override
     public Request getSearchRequest(String searchString) {
         String url = "https://www.kanbl.com/search?keyword=" + searchString;
         return NetUtil.getRequest(url);
@@ -42,7 +47,7 @@ public class BL extends BaseComicSource {
 
     @Override
     public Request buildRequest(String html, String tag, Map<String, Object> data, Map<String, Object> map) {
-        if (CONTENT.equals(tag)) {
+        if (CONTENT.equals(tag) && map.isEmpty()) {
             try {
                 String requestUrl = (String) data.get("url");
                 JsoupNode node = new JsoupNode(html);

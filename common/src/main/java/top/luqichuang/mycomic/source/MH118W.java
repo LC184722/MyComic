@@ -89,16 +89,18 @@ public class MH118W extends BaseComicSource {
 
     @Override
     public List<Content> getContentList(String html, int chapterId, Map<String, Object> map) {
-        String[] urls;
+        String[] urls = null;
+        String prevUrl = "";
         try {
             String chapterStr = StringUtil.match("qTcms_S_m_murl_e=\"(.*?)\"", html);
             chapterStr = DecryptUtil.decryptBase64(chapterStr);
+            String id = StringUtil.match("qTcms_S_m_id=\"(.*?)\"", html);
+            prevUrl = "http://res.xzcstjx.com/statics/pic/?picid=" + id + "&p=";
             urls = chapterStr.split("\\$qingtiandy\\$");
         } catch (Exception e) {
-            urls = null;
             e.printStackTrace();
         }
-        return SourceHelper.getContentList(urls, chapterId);
+        return SourceHelper.getContentList(urls, chapterId, prevUrl);
     }
 
     @Override
