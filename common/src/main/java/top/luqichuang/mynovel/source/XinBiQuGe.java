@@ -32,7 +32,7 @@ public class XinBiQuGe extends BaseNovelSource {
 
     @Override
     public String getIndex() {
-        return "https://www.vbiquge.com";
+        return "https://www.biqupai.com";
     }
 
     @Override

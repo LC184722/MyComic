@@ -32,7 +32,7 @@ public class XiaoShuoE extends BaseNovelSource {
 
     @Override
     public String getIndex() {
-        return "https://www.zwda.com";
+        return "https://www.eexiaoshuo.com";
     }
 
     @Override

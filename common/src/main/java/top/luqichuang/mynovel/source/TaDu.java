@@ -45,7 +45,7 @@ public class TaDu extends BaseNovelSource {
     public Request buildRequest(String html, String tag, Map<String, Object> data, Map<String, Object> map) {
         if (DETAIL.equals(tag) && map.isEmpty()) {
             JsoupNode node = new JsoupNode(html);
-            String url = getIndex() + node.href("div.readBtn a:eq(1)");
+            String url = getIndex() + node.href("a.chapterMore");
             map.put("url", url);
             String imgUrl = node.src("a.bookImg img");
             String intro = node.ownText("div.bookIntro p");

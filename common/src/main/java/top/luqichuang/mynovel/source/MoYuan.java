@@ -32,6 +32,11 @@ public class MoYuan extends BaseNovelSource {
     }
 
     @Override
+    public boolean isValid() {
+        return false;
+    }
+
+    @Override
     public Request getSearchRequest(String searchString) {
         String url = String.format("%s/book/Search.aspx?id=%s", getIndex(), searchString);
         return NetUtil.getRequest(url);
