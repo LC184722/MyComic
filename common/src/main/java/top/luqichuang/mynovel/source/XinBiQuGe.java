@@ -36,11 +36,6 @@ public class XinBiQuGe extends BaseNovelSource {
     }
 
     @Override
-    public boolean isValid() {
-        return false;
-    }
-
-    @Override
     public Request getSearchRequest(String searchString) {
         String url = String.format("%s/search.php?keyword=%s", getIndex(), searchString);
         return NetUtil.getRequest(url);

@@ -20,6 +20,7 @@ import top.luqichuang.mynovel.model.NovelInfo;
  * @date 2021/6/12 17:07
  * @ver 1.0
  */
+@Deprecated
 public class MoYuan extends BaseNovelSource {
     @Override
     public NSourceEnum getNSourceEnum() {

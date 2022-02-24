@@ -25,6 +25,7 @@ import top.luqichuang.myvideo.model.VideoInfo;
  * @date 2021/6/22 23:06
  * @ver 1.0
  */
+@Deprecated
 public class MiLiMiLi extends BaseVideoSource {
 
     @Override

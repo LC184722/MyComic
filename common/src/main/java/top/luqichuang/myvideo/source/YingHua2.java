@@ -24,6 +24,7 @@ import top.luqichuang.myvideo.model.VideoInfo;
  * @date 2021/6/24 22:33
  * @ver 1.0
  */
+@Deprecated
 public class YingHua2 extends BaseVideoSource {
 
     @Override
@@ -34,6 +35,11 @@ public class YingHua2 extends BaseVideoSource {
     @Override
     public String getIndex() {
         return "http://www.yhdm.so";
+    }
+
+    @Override
+    public boolean isValid() {
+        return false;
     }
 
     @Override

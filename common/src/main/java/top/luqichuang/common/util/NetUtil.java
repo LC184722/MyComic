@@ -185,7 +185,8 @@ public class NetUtil {
      * @return void
      */
     public static void startLoad(Request request, Callback callback) {
-        System.out.println("request.url() = " + request.url());
+//        System.out.println("request.url() = " + request.url());
+        System.out.println("request = " + request);
         Call call = okHttpClient.newCall(request);
         call.enqueue(callback);
     }

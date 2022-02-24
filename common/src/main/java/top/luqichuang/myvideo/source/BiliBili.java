@@ -182,6 +182,7 @@ public class BiliBili extends BaseVideoSource {
         map.put("4月", "{\"season_month\":4}");
         map.put("7月", "{\"season_month\":7}");
         map.put("10月", "{\"season_month\":10}");
+        map.put("2022", "{\"year\":\"%5B2022%2C2023)\"}");
         map.put("2021", "{\"year\":\"%5B2021%2C2022)\"}");
         map.put("2020", "{\"year\":\"%5B2020%2C2021)\"}");
         map.put("2019", "{\"year\":\"%5B2019%2C2020)\"}");

@@ -14,6 +14,7 @@ import top.luqichuang.common.jsoup.JsoupNode;
 import top.luqichuang.common.jsoup.JsoupStarter;
 import top.luqichuang.common.model.ChapterInfo;
 import top.luqichuang.common.model.Content;
+import top.luqichuang.common.util.DecryptUtil;
 import top.luqichuang.common.util.NetUtil;
 import top.luqichuang.common.util.SourceHelper;
 import top.luqichuang.common.util.StringUtil;
@@ -102,6 +103,7 @@ public class FengChe2 extends BaseVideoSource {
         String url = null;
         try {
             url = node.string("url").replace("\\", "");
+            url = DecryptUtil.unescape(url);
         } catch (Exception e) {
             e.printStackTrace();
         }

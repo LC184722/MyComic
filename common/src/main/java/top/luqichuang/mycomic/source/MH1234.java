@@ -25,6 +25,7 @@ import top.luqichuang.mycomic.model.ComicInfo;
  * @date 2021/7/28 13:27
  * @ver 1.0
  */
+@Deprecated
 public class MH1234 extends BaseComicSource {
     @Override
     public SourceEnum getSourceEnum() {

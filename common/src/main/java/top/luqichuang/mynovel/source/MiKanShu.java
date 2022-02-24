@@ -24,6 +24,7 @@ import top.luqichuang.mynovel.model.NovelInfo;
  * @date 2021/7/1 21:26
  * @ver 1.0
  */
+@Deprecated
 public class MiKanShu extends BaseNovelSource {
     @Override
     public NSourceEnum getNSourceEnum() {

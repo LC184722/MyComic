@@ -36,7 +36,7 @@ public class YingHua extends BaseVideoSource {
 
     @Override
     public String getIndex() {
-        return "http://www.imomoe.la";
+        return "http://www.imomoe.live";
     }
 
     @Override

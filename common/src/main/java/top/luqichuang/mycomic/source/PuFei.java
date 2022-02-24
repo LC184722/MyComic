@@ -23,6 +23,7 @@ import top.luqichuang.mycomic.model.ComicInfo;
  * @date 2020/8/12 15:25
  * @ver 1.0
  */
+@Deprecated
 public class PuFei extends BaseComicSource {
     @Override
     public SourceEnum getSourceEnum() {
