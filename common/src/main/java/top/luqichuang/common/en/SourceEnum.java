@@ -16,6 +16,7 @@ import top.luqichuang.mycomic.source.ManHuaTai;
 import top.luqichuang.mycomic.source.MiTui;
 import top.luqichuang.mycomic.source.OH;
 import top.luqichuang.mycomic.source.PuFei;
+import top.luqichuang.mycomic.source.QiMiao;
 import top.luqichuang.mycomic.source.TengXun;
 
 /**
@@ -38,6 +39,7 @@ public enum SourceEnum {
     AI_YOU_MAN(11, "爱优漫"),
     MH_1234(12, "1234漫画"),
     MH_118_2(13, "118漫画[2]"),
+    QI_MIAO(14, "奇妙漫画"),
     ;
 
     private static final Map<Integer, Source<ComicInfo>> MAP = new LinkedHashMap<>();
@@ -56,6 +58,7 @@ public enum SourceEnum {
         MAP.put(AI_YOU_MAN.ID, new AiYouMan());
         MAP.put(MH_1234.ID, new MH1234());
         MAP.put(MH_118_2.ID, new MH118W());
+        MAP.put(QI_MIAO.ID, new QiMiao());
     }
 
     public static Map<Integer, Source<ComicInfo>> getMAP() {
