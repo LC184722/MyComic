@@ -28,6 +28,9 @@ public enum SettingEnum {
     COMIC_SOURCE_OPEN("comicSourceOpen", SourceEnum.getMAP().keySet()),
     NOVEL_SOURCE_OPEN("novelSourceOpen", NSourceEnum.getMAP().keySet()),
     VIDEO_SOURCE_OPEN("videoSourceOpen", VSourceEnum.getMAP().keySet()),
+    COMIC_SOURCE_TOTAL("comicSourceTotal", SourceEnum.getMAP().keySet()),
+    NOVEL_SOURCE_TOTAL("novelSourceTotal", SourceEnum.getMAP().keySet()),
+    VIDEO_SOURCE_TOTAL("videoSourceTotal", SourceEnum.getMAP().keySet()),
     ;
 
     public final String KEY;

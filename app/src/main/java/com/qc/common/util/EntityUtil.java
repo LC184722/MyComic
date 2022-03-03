@@ -7,9 +7,13 @@ import com.qc.common.en.SettingEnum;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+import top.luqichuang.common.en.NSourceEnum;
+import top.luqichuang.common.en.SourceEnum;
+import top.luqichuang.common.en.VSourceEnum;
 import top.luqichuang.common.model.Entity;
 import top.luqichuang.common.model.Source;
 import top.luqichuang.common.util.SourceUtil;
@@ -38,12 +42,33 @@ public class EntityUtil {
         if (TmpData.contentCode == AppConstant.COMIC_CODE) {
             sourceList = (List) SourceUtil.getSourceList();
             ids = (Collection<Integer>) SettingUtil.getSettingKey(SettingEnum.COMIC_SOURCE_OPEN);
+            Collection<Integer> totalIds = (Collection<Integer>) SettingUtil.getSettingKey(SettingEnum.COMIC_SOURCE_TOTAL);
+            Collection<Integer> allIds = new HashSet<>(SourceEnum.getMAP().keySet());
+            allIds.removeAll(totalIds);
+            if (!allIds.isEmpty()) {
+                ids.addAll(allIds);
+                SettingUtil.putSetting(SettingEnum.COMIC_SOURCE_OPEN, ids);
+            }
         } else if (TmpData.contentCode == AppConstant.READER_CODE) {
             sourceList = (List) SourceUtil.getNSourceList();
             ids = (Collection<Integer>) SettingUtil.getSettingKey(SettingEnum.NOVEL_SOURCE_OPEN);
+            Collection<Integer> totalIds = (Collection<Integer>) SettingUtil.getSettingKey(SettingEnum.NOVEL_SOURCE_TOTAL);
+            Collection<Integer> allIds = new HashSet<>(NSourceEnum.getMAP().keySet());
+            allIds.removeAll(totalIds);
+            if (!allIds.isEmpty()) {
+                ids.addAll(allIds);
+                SettingUtil.putSetting(SettingEnum.NOVEL_SOURCE_OPEN, ids);
+            }
         } else {
             sourceList = (List) SourceUtil.getVSourceList();
             ids = (Collection<Integer>) SettingUtil.getSettingKey(SettingEnum.VIDEO_SOURCE_OPEN);
+            Collection<Integer> totalIds = (Collection<Integer>) SettingUtil.getSettingKey(SettingEnum.VIDEO_SOURCE_TOTAL);
+            Collection<Integer> allIds = new HashSet<>(VSourceEnum.getMAP().keySet());
+            allIds.removeAll(totalIds);
+            if (!allIds.isEmpty()) {
+                ids.addAll(allIds);
+                SettingUtil.putSetting(SettingEnum.VIDEO_SOURCE_OPEN, ids);
+            }
         }
         Iterator<Source> iterator = sourceList.iterator();
         while (iterator.hasNext()) {
