@@ -36,6 +36,13 @@ public class ManHuaTai extends BaseComicSource {
     }
 
     @Override
+    public Map<String, String> getImageHeaders() {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Referer", getIndex());
+        return headers;
+    }
+
+    @Override
     public String getIndex() {
         return "https://m.manhuatai.com";
     }

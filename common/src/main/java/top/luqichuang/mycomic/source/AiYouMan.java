@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,13 @@ public class AiYouMan extends BaseComicSource {
     @Override
     public SourceEnum getSourceEnum() {
         return SourceEnum.AI_YOU_MAN;
+    }
+
+    @Override
+    public Map<String, String> getImageHeaders() {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Referer", getIndex());
+        return headers;
     }
 
     @Override
