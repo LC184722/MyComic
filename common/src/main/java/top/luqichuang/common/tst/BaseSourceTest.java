@@ -3,6 +3,7 @@ package top.luqichuang.common.tst;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +34,7 @@ public abstract class BaseSourceTest<T extends EntityInfo> {
     public static final String CONTENT = Source.CONTENT;
     public static final String RANK = Source.RANK;
     private Map<String, Object> dataMap = new HashMap<>();
-    private final Source<T> source = getSource();
+    private Source<T> source = getSource();
     private final T info = getInfo();
 
     protected abstract Source<T> getSource();
@@ -216,6 +217,61 @@ public abstract class BaseSourceTest<T extends EntityInfo> {
             System.out.println("===  end  ===");
         }
 
+    }
+
+    protected final void allTest(List<Source<T>> sourceList) {
+        List<String> nameList = new ArrayList<>();
+        for (Source<T> s : sourceList) {
+            this.source = s;
+            System.out.println("=== test === " + s.getSourceName() + " === start");
+            try {
+                String searchString = "我的";
+                int index = 0;
+                Request searchRequest = source.getSearchRequest(searchString);
+                String search = testRequest(searchRequest, SEARCH);
+                FileUtil.writeFile(search, formatFileName(searchString, SEARCH));
+                List<T> searchList = source.getInfoList(search);
+                System.out.println("searchList.size() = " + searchList.size());
+
+                T info = searchList.get(index);
+                System.out.println("info.getTitle() = " + info.getTitle());
+                String detailUrl = info.getDetailUrl();
+                Request detailRequest = source.getDetailRequest(detailUrl);
+                String detail = testRequest(detailRequest, DETAIL);
+                FileUtil.writeFile(detail, formatFileName(info.getTitle(), DETAIL));
+                source.setInfoDetail(info, detail, dataMap);
+                System.out.println("chapterList.size() = " + info.getChapterInfoList().size());
+
+                ChapterInfo chapterInfo = info.getChapterInfoList().get(0);
+                String chapterUrl = chapterInfo.getChapterUrl();
+                Request contentRequest = source.getContentRequest(chapterUrl);
+                String image = testRequest(contentRequest, CONTENT);
+                FileUtil.writeFile(image, formatFileName(info.getTitle(), CONTENT));
+                List<Content> contentList = source.getContentList(image, 100, dataMap);
+                System.out.println("contentList.size() = " + contentList.size());
+                if (info instanceof ComicInfo || info instanceof VideoInfo) {
+                    for (Content content : contentList) {
+                        System.out.println("content.getUrl() = " + content.getUrl());
+                    }
+                } else if (info instanceof NovelInfo) {
+                    System.out.println("=== start ===");
+                    System.out.println("========|");
+                    for (Content content : contentList) {
+                        System.out.println(content.getContent());
+                        System.out.println("=============");
+                    }
+                    System.out.println("===  end  ===");
+                }
+            } catch (Exception e) {
+//                e.printStackTrace();
+                System.err.println(String.format("=== error === %s ===", s.getSourceName()));
+                nameList.add(s.getSourceName());
+            }
+            System.out.println("=== test === " + s.getSourceName() + " === end");
+        }
+        System.out.println("BaseSourceTest.allTest");
+        System.out.println(String.format("=== errorSize ==> %s/%s ===", nameList.size(), sourceList.size()));
+        System.out.println(String.format("errorList ==> %s", nameList));
     }
 
     protected final void testSearchRequest() {
