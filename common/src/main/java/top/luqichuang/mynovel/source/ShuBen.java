@@ -25,6 +25,7 @@ import top.luqichuang.mynovel.model.NovelInfo;
  * @date 2021/7/27 15:54
  * @ver 1.0
  */
+@Deprecated
 public class ShuBen extends BaseNovelSource {
     @Override
     public NSourceEnum getNSourceEnum() {
@@ -34,6 +35,11 @@ public class ShuBen extends BaseNovelSource {
     @Override
     public String getIndex() {
         return "http://www.jiaotongshigu.org";
+    }
+
+    @Override
+    public boolean isValid() {
+        return false;
     }
 
     @Override
