@@ -64,23 +64,44 @@ public class QiMiao extends BaseComicSource {
             @Override
             protected void dealInfo(JsoupNode node) {
                 String title = node.ownText("div.ncp1_bac h1");
-                String imgUrl = node.src("img.lazyload");
-                String author = node.ownText("span.ncp1b_author");
-                String intro = node.ownText("div.nmain_com_p.nmain_com_p2 p");
-                String updateStatus = null;
-                String updateTime = null;
-                info.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
+                if (title != null) {
+                    String imgUrl = node.src("img.lazyload");
+                    String author = node.ownText("span.ncp1b_author");
+                    String intro = node.ownText("div.nmain_com_p.nmain_com_p2 p");
+                    String updateStatus = null;
+                    String updateTime = null;
+                    try {
+                        updateTime = updateTime.replace("更新：", "");
+                    } catch (Exception ignored) {
+                    }
+                    info.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
+                } else {
+                    title = node.ownText("h1.title");
+                    String imgUrl = node.src("div.ctdbLeft img");
+                    String author = node.ownText("p.author");
+                    String intro = node.ownText("p#worksDesc");
+                    String updateStatus = node.ownText("a.status h2");
+                    String updateTime = node.ownText("span.date");
+                    info.setDetail(title, imgUrl, author, updateTime, updateStatus, intro);
+                }
             }
 
             @Override
             protected ChapterInfo dealElement(JsoupNode node, int elementId) {
                 String title = node.ownText("div");
+                if (title == null) {
+                    title = node.title("a");
+                }
                 String chapterUrl = getIndex() + node.href("a");
                 return new ChapterInfo(elementId, title, chapterUrl);
             }
         };
         starter.startInfo(html);
-        SourceHelper.initChapterInfoList(info, starter.startElements(html, "ul#ncp3_ul li"));
+        List list = starter.startElements(html, "ul.comic-content-c");
+        if (list.isEmpty()) {
+            list = starter.startElements(html, "ul#ncp3_ul li");
+        }
+        SourceHelper.initChapterInfoList(info, list);
     }
 
     @Override
