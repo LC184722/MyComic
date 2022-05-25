@@ -102,7 +102,7 @@ public class DaShu extends BaseComicSource {
 
     @Override
     public Map<String, String> getRankMap() {
-        String html = "<div class=\"tkcon ty\">\t<a class=\"on\" href=\"https://www.dashuhuwai.com/category/all/\">全部</a>\t<a href=\"https://www.dashuhuwai.com/category/maoxianrexue/\" class=\"\">冒险热血</a>\t<a href=\"https://www.dashuhuwai.com/category/xuanhuankehuan/\" class=\"\">玄幻科幻</a>\t<a href=\"https://www.dashuhuwai.com/category/zhentantuili/\" class=\"\">侦探推理</a>\t<a href=\"https://www.dashuhuwai.com/category/danmeiaiqing/\" class=\"\">耽美爱情</a>\t<a href=\"https://www.dashuhuwai.com/category/shenghuomanhua/\" class=\"\">生活漫画</a>\t<a href=\"https://www.dashuhuwai.com/category/qita/\" class=\"\">其他</a>\t<a href=\"https://www.dashuhuwai.com/category/wuxiagedou/\" class=\"\">武侠格斗</a></div>";
+        String html = "<div class=\"tkcon ty\">\t<a href=\"https://www.dashuhuwai.com/category/maoxianrexue/\" class=\"\">冒险热血</a>\t<a href=\"https://www.dashuhuwai.com/category/xuanhuankehuan/\" class=\"\">玄幻科幻</a>\t<a href=\"https://www.dashuhuwai.com/category/zhentantuili/\" class=\"\">侦探推理</a>\t<a href=\"https://www.dashuhuwai.com/category/danmeiaiqing/\" class=\"\">耽美爱情</a>\t<a href=\"https://www.dashuhuwai.com/category/shenghuomanhua/\" class=\"\">生活漫画</a>\t<a href=\"https://www.dashuhuwai.com/category/qita/\" class=\"\">其他</a>\t<a href=\"https://www.dashuhuwai.com/category/wuxiagedou/\" class=\"\">武侠格斗</a></div>";
         Map<String, String> map = new LinkedHashMap<>();
         JsoupNode node = new JsoupNode(html);
         Elements elements = node.getElements("a");
