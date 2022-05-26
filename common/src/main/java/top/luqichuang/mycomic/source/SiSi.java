@@ -84,7 +84,6 @@ public class SiSi extends BaseComicSource {
                     if (!chapterUrl.startsWith("http")) {
                         chapterUrl = getIndex() + chapterUrl;
                     }
-                    chapterUrl = chapterUrl.replace("//m.", "//www.");
                     return new ChapterInfo(elementId, title, chapterUrl);
                 } else {
                     return null;
@@ -97,26 +96,18 @@ public class SiSi extends BaseComicSource {
 
     @Override
     public List<Content> getContentList(String html, int chapterId, Map<String, Object> map) {
-        String chapterImagesStr = StringUtil.match("chapterImages = \\[(.*?)\\]", html);
-        String chapterPath = StringUtil.match("var chapterPath = \"(.*?)\";", html);
-        chapterPath = "";
-        String chapterImageHost = StringUtil.match("var chapterImageHost = \"(.*?)\";", html);
         String[] urls = null;
-        if (chapterImagesStr != null && !chapterImagesStr.equals("")) {
-            urls = chapterImagesStr.split(",");
-            String server = "https://res6.sisimanhua.com";
-            if (chapterImageHost != null && !chapterImageHost.equals("")) {
-                server = chapterImageHost;
-            }
+        try {
+            JsoupNode node = new JsoupNode(html);
+            String baseUrl = "https://res6.sisimanhua.com/image/view/%s/%s.webp";
+            String cId = StringUtil.match(getIndex() + ".*?" + "(\\d+).html", html);
+            int total = Integer.parseInt(node.ownText("span#k_total"));
+            urls = new String[total];
             for (int i = 0; i < urls.length; i++) {
-                String url = urls[i];
-                url = url.replace("\"", "").replace("\\", "");
-                if (!url.startsWith("http")) {
-                    urls[i] = server + chapterPath + url;
-                } else {
-                    urls[i] = url;
-                }
+                urls[i] = String.format(baseUrl, cId, i);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return SourceHelper.getContentList(urls, chapterId);
     }
