@@ -23,7 +23,6 @@ import top.luqichuang.mycomic.model.ComicInfo;
  * @date 2020/8/12 15:25
  * @ver 1.0
  */
-@Deprecated
 public class PuFei extends BaseComicSource {
     @Override
     public SourceEnum getSourceEnum() {
@@ -37,12 +36,7 @@ public class PuFei extends BaseComicSource {
 
     @Override
     public String getIndex() {
-        return "http://m.pufei8.com";
-    }
-
-    @Override
-    public boolean isValid() {
-        return false;
+        return "http://m.pufei.cc";
     }
 
     @Override
@@ -99,7 +93,7 @@ public class PuFei extends BaseComicSource {
         if (encodeStr != null) {
             urls = decodeStr(encodeStr);
         }
-        String prevUrl = "http://res.img.scbrxhwl.com/";
+        String prevUrl = "http://res.img.tueqi.com/";
         if (urls != null && urls.length > 0) {
             if (urls[0].startsWith("http")) {
                 prevUrl = "";
