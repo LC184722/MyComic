@@ -53,7 +53,10 @@ public class DaShu extends BaseComicSource {
                 String author = null;
                 String updateTime = null;
                 String imgUrl = node.src("img");
-                String detailUrl = getIndex() + node.href("a");
+                String detailUrl = node.href("a");
+                if (detailUrl != null && !detailUrl.startsWith("http")) {
+                    detailUrl = getIndex() + detailUrl;
+                }
                 return new ComicInfo(getSourceId(), title, author, detailUrl, imgUrl, updateTime);
             }
         };
