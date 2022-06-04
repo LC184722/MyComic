@@ -91,11 +91,13 @@ public class BaoZi extends BaseComicSource {
     public List<Content> getContentList(String html, int chapterId, Map<String, Object> map) {
         String[] urls = null;
         JsoupNode node = new JsoupNode(html);
-        Elements elements = node.getElements("li.chapter-img");
-        urls = new String[elements.size()];
-        for (int i = 0; i < urls.length; i++) {
-            node.init(elements.get(i));
-            urls[i] = node.attr("li>img", "data-src");
+        Elements elements = node.getElements("ul.comic-contain amp-img");
+        if (!elements.isEmpty()) {
+            urls = new String[elements.size()];
+            for (int i = 0; i < urls.length; i++) {
+                node.init(elements.get(i));
+                urls[i] = node.src("amp-img");
+            }
         }
         return SourceHelper.getContentList(urls, chapterId);
     }
