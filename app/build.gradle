@@ -2,7 +2,11 @@ apply plugin: 'com.android.application'
 
 static def gitVersionCode() {
     def cmd = 'git rev-list HEAD --first-parent --count'
-    cmd.execute().text.trim().toInteger()
+    if (cmd.execute().text != '') {
+        return cmd.execute().text.trim().toInteger()
+    } else {
+        return 100
+    }
 }
 
 static def gitVersionTag() {
